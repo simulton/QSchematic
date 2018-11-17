@@ -4,7 +4,7 @@
 #include <QGraphicsSceneHoverEvent>
 #include <QTimer>
 #include "item.h"
-#include "schematic/scene.h"
+#include "../scene.h"
 
 using namespace QSchematic;
 
