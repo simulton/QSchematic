@@ -25,6 +25,8 @@ Item::Item(ItemType type, QGraphicsItem* parent) :
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setFlag(QGraphicsItem::ItemIsMovable, true);
+    connect(this, &Item::xChanged, this, &Item::posChanged);
+    connect(this, &Item::yChanged, this, &Item::posChanged);
 }
 
 int Item::type() const
@@ -74,11 +76,24 @@ void Item::setSettings(const Settings& settings)
 
     // Store the new settings
     _settings = settings;
+
+    // Update
+    update();
 }
 
 const Settings& Item::settings() const
 {
     return _settings;
+}
+
+void Item::setMovable(bool enabled)
+{
+    setFlag(QGraphicsItem::ItemIsMovable, enabled);
+}
+
+bool Item::movable() const
+{
+    return flags() & QGraphicsItem::ItemIsMovable;
 }
 
 void Item::setSnapToGrid(bool enabled)

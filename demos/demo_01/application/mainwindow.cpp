@@ -108,12 +108,13 @@ void MainWindow::demo()
 {
     QSchematic::Node* n1 = new QSchematic::Node();
     n1->setGridPoint(-5, -2);
-    n1->addConnector(QPoint(0, 3));
-    n1->addConnector(QPoint(0, 5));
+    n1->addConnector(QPoint(0, 3), QStringLiteral("Foo"));
+    n1->addConnector(QPoint(0, 5), QStringLiteral("Bar"));
+    n1->setConnectorsMovable(true);
     _scene->addItem(n1);
 
     QSchematic::Node* n2 = new QSchematic::Node();
     n2->setGridPoint(6, 7);
-    n2->addConnector(QPoint(0, 2));
+    n2->addConnector(QPoint(0, 2), QStringLiteral("Connector"));
     _scene->addItem(n2);
 }

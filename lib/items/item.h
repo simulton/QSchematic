@@ -34,6 +34,8 @@ namespace QSchematic {
         int gridPointY() const;
         void setSettings(const Settings& settings);
         const Settings& settings() const;
+        void setMovable(bool enabled);
+        bool movable() const;
         void setSnapToGrid(bool enabled);
         bool snapToGrid() const;
         void setHighlighted(bool highlighted);
@@ -54,7 +56,6 @@ namespace QSchematic {
         virtual void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
         virtual void hoverMoveEvent(QGraphicsSceneHoverEvent* event) override;
         virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;
-
         virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value) override;
 
     private slots:

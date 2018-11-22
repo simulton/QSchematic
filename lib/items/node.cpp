@@ -16,7 +16,8 @@ const int DEFAULT_HEIGHT    = 12;
 
 Node::Node(QGraphicsItem* parent) :
     Item(ItemType::NodeType, parent),
-    _size(DEFAULT_WIDTH, DEFAULT_HEIGHT)
+    _size(DEFAULT_WIDTH, DEFAULT_HEIGHT),
+    _connectorsMovable(false)
 {
 }
 
@@ -25,11 +26,18 @@ QSize Node::size() const
     return _size;
 }
 
-bool Node::addConnector(const QPoint& point)
+QRect Node::bodyRect() const
+{
+    return QRect(0, 0, _size.width(), _size.height());
+}
+
+bool Node::addConnector(const QPoint& point, const QString& text)
 {
     // Create connector
     auto connector = new Connector(this);
     connector->setGridPoint(point);
+    connector->setText(text);
+    connector->setMovable(_connectorsMovable);
     _connectors << connector;
 
     return true;
@@ -51,9 +59,28 @@ bool Node::isConnectionPoint(const QPoint& gridPoint) const
     return connectionPoints().contains(gridPoint);
 }
 
+void Node::setConnectorsMovable(bool enabled)
+{
+    // Update connectors
+    for (auto connector : _connectors) {
+        connector->setMovable(enabled);
+    }
+
+    // Update local
+    _connectorsMovable = enabled;
+}
+
+bool Node::connectorsMovable() const
+{
+    return _connectorsMovable;
+}
+
 QRectF Node::boundingRect() const
 {
-    qreal adj = qCeil(PEN_WIDTH / 2.0) + _settings.highlightRectPadding;
+    qreal adj = qCeil(PEN_WIDTH / 2.0);
+    if (highlighted()) {
+        adj += _settings.highlightRectPadding;
+    }
 
     return QRectF(QPoint(0, 0), _size*_settings.gridSize).adjusted(-adj, -adj, adj, adj);
 }
@@ -85,7 +112,8 @@ void Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         painter->setPen(highlightPen);
         painter->setBrush(highlightBrush);
         painter->setOpacity(0.5);
-        painter->drawRoundRect(boundingRect(), _settings.gridSize/2, _settings.gridSize/2);
+        int adj = _settings.highlightRectPadding;
+        painter->drawRoundRect(QRect(QPoint(0, 0), _size*_settings.gridSize).adjusted(-adj, -adj, adj, adj), _settings.gridSize/2, _settings.gridSize/2);
     }
 
     painter->setOpacity(1.0);

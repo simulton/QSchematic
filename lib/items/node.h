@@ -17,16 +17,20 @@ namespace QSchematic {
         virtual ~Node() override = default;
 
         QSize size() const;
+        QRect bodyRect() const; // relative (x & y == 0)
 
-        bool addConnector(const QPoint& point);
+        bool addConnector(const QPoint& point, const QString& text = QString());
         QList<QPoint> connectionPoints() const;
         bool isConnectionPoint(const QPoint& gridPoint) const;
+        void setConnectorsMovable(bool enabled);
+        bool connectorsMovable() const;
 
         virtual QRectF boundingRect() const override;
         virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
     private:
         QSize _size;
+        bool _connectorsMovable;
 
         QList<Connector*> _connectors;
     };
