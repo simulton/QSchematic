@@ -37,8 +37,8 @@ bool WireNet::addWire(Wire& wire)
     }
 
     // Add the wire
-    connect(&wire, SIGNAL(pointMoved(Wire&, WirePoint&)), this, SLOT(wirePointMoved(Wire&, WirePoint&)));
-    connect(&wire, SIGNAL(highlightChanged(SchematicObject, bool)), this, SLOT(wireHighlightChanged(SchematicObject, bool)));
+    connect(&wire, &Wire::pointMoved, this, &WireNet::wirePointMoved);
+    connect(&wire, &Wire::highlightChanged, this, &WireNet::wireHighlightChanged);
     _wires.append(&wire);
 
     return true;
