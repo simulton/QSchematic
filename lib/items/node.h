@@ -16,6 +16,8 @@ namespace QSchematic {
         Node(QGraphicsItem* parent = nullptr);
         virtual ~Node() override = default;
 
+        void setSize(const QSize& size);
+        void setSize(int width, int height);
         QSize size() const;
         QRect bodyRect() const; // relative (x & y == 0)
 

@@ -21,6 +21,18 @@ Node::Node(QGraphicsItem* parent) :
 {
 }
 
+void Node::setSize(const QSize& size)
+{
+    _size = size;
+
+    update();
+}
+
+void Node::setSize(int width, int height)
+{
+    setSize(QSize(width, height));
+}
+
 QSize Node::size() const
 {
     return _size;
