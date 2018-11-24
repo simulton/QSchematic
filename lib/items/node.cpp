@@ -1,3 +1,4 @@
+#include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 #include <QtMath>
 #include "node.h"
@@ -87,6 +88,21 @@ bool Node::connectorsMovable() const
     return _connectorsMovable;
 }
 
+void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
+{
+    Item::mouseMoveEvent(event);
+}
+
+void Node::mousePressEvent(QGraphicsSceneMouseEvent* event)
+{
+    Item::mousePressEvent(event);
+}
+
+void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+{
+    Item::mouseReleaseEvent(event);
+}
+
 QRectF Node::boundingRect() const
 {
     qreal adj = qCeil(PEN_WIDTH / 2.0);
@@ -145,4 +161,55 @@ void Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     painter->setPen(bodyPen);
     painter->setBrush(bodyBrush);
     painter->drawRoundedRect(QRect(QPoint(0, 0), _size*_settings.gridSize), _settings.gridSize/2, _settings.gridSize/2);
+
+    // Resize handles
+    if (isSelected()) {
+        for (const QRect& rect : resizeHandles()) {
+            // Handle pen
+            QPen handlePen;
+            handlePen.setStyle(Qt::NoPen);
+            painter->setPen(handlePen);
+
+            // Handle Brush
+            QBrush handleBrush;
+            handleBrush.setStyle(Qt::SolidPattern);
+            painter->setBrush(handleBrush);
+
+            // Draw the outer handle
+            handleBrush.setColor("#3fa9f5");
+            painter->setBrush(handleBrush);
+            painter->drawRect(rect.adjusted(-handlePen.width(), -handlePen.width(), handlePen.width()/2, handlePen.width()/2));
+
+            // Draw the inner handle
+            handleBrush.setColor(Qt::white);
+            painter->setBrush(handleBrush);
+            painter->drawRect(rect.adjusted(-handlePen.width()+2, -handlePen.width()+2, (handlePen.width()/2)-2, (handlePen.width()/2)-2));
+        }
+    }
+}
+
+QMap<Node::ResizeMode, QRect> Node::resizeHandles() const
+{
+    QMap<Node::ResizeMode, QRect> map;
+    const int& resizeHandleSize = _settings.resizeHandleSize;
+
+    QRect r(QPoint(0, 0), _size*_settings.gridSize);
+
+    // Corners
+    map.insert(ResizeBottomRight, QRect(r.bottomRight()+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+    map.insert(ResizeBottomLeft, QRect(r.bottomLeft()+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+    map.insert(ResizeTopRight, QRect(r.topRight()+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+    map.insert(ResizeTopLeft, QRect(r.topLeft()+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+
+    // Sides
+    if (r.topRight().x() - r.topLeft().x() > 7*resizeHandleSize) {
+        map.insert(ResizeTop, QRect(Settings::centerPoint(r.topRight(), r.topLeft())+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+        map.insert(ResizeBottom, QRect(Settings::centerPoint(r.bottomRight(), r.bottomLeft())+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+    }
+    if (r.bottomLeft().y() - r.topLeft().y() > 7*resizeHandleSize) {
+        map.insert(ResizeRight, QRect(Settings::centerPoint(r.topRight(), r.bottomRight())+QPoint(1,0)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+        map.insert(ResizeLeft, QRect(Settings::centerPoint(r.bottomLeft(), r.topLeft())+QPoint(1,0)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+    }
+
+    return map;
 }

@@ -8,6 +8,7 @@ Settings::Settings() :
     gridPointSize(3),
     showGrid(true),
     highlightRectPadding(10),
+    resizeHandleSize(3),
     routeStraightAngles(true),
     antialiasing(true),
     popupDelay(400)
@@ -33,4 +34,9 @@ QPoint Settings::snapToGridPoint(const QPointF& scenePoint) const
     int yV = qRound(scenePoint.y() / gridSize) * gridSize;
 
     return QPoint(xV, yV);
+}
+
+QPoint Settings::centerPoint(const QPoint& p1, const QPoint& p2)
+{
+    return (p1 + p2) / 2;
 }

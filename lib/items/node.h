@@ -27,10 +27,27 @@ namespace QSchematic {
         void setConnectorsMovable(bool enabled);
         bool connectorsMovable() const;
 
+        virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
+        virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+        virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
         virtual QRectF boundingRect() const override;
         virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
     private:
+        enum ResizeMode {
+            None,
+            ResizeTopLeft,
+            ResizeTop,
+            ResizeTopRight,
+            ResizeRight,
+            ResizeBottomRight,
+            ResizeBottom,
+            ResizeBottomLeft,
+            ResizeLeft
+        };
+
+        QMap<ResizeMode, QRect> resizeHandles() const;
+
         QSize _size;
         bool _connectorsMovable;
 
