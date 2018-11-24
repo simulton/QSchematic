@@ -123,6 +123,7 @@ void View::setSettings(const Settings& settings)
 
 void View::setMode(Scene::Mode mode)
 {
+#warning ToDo: Remove this and exclusively use the Scene::proposedCursor() signal
     // Set the cursor shape
     switch (mode) {
     case Scene::NormalMode:

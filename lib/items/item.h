@@ -32,13 +32,16 @@ namespace QSchematic {
         QPoint gridPoint() const;
         int gridPointX() const;
         int gridPointY() const;
+        QPointF scenePoint() const;
+        qreal scenePointX() const;
+        qreal scenePointY() const;
         void setSettings(const Settings& settings);
         const Settings& settings() const;
         void setMovable(bool enabled);
-        bool movable() const;
+        bool isMovable() const;
         void setSnapToGrid(bool enabled);
         bool snapToGrid() const;
-        void setHighlighted(bool highlighted);
+        void setHighlighted(bool isHighlighted);
         void setHighlightEnabled(bool enabled);
         QPixmap toPixmap(qreal scale = 1.0);
         virtual void update();
@@ -47,12 +50,12 @@ namespace QSchematic {
     signals:
         void moved(Item& item, const QVector2D& movedBy);
         void showPopup(const Item& item);
-        void highlightChanged(const Item& item, bool highlighted);
+        void highlightChanged(const Item& item, bool isHighlighted);
 
     protected:
         Settings _settings;
 
-        bool highlighted() const;
+        bool isHighlighted() const;
         virtual void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
         virtual void hoverMoveEvent(QGraphicsSceneHoverEvent* event) override;
         virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;

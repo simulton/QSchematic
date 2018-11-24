@@ -4,11 +4,12 @@
 #include <QScopedPointer>
 #include <QGraphicsProxyWidget>
 #include "settings.h"
+#include "items/item.h"
 #include "items/wire.h"
 
 namespace QSchematic {
 
-    class Item;
+    class Node;
     class Connector;
     class WireNet;
 
@@ -33,6 +34,8 @@ namespace QSchematic {
 
         bool addItem(Item* item); // Takes ownership
         QList<Item*> items() const;
+        QList<Item*> items(Item::ItemType itemType) const;
+        QList<Node*> nodes() const;
         bool addWire(Wire* wire);
         bool removeWire(Wire& wire);
         QList<Wire*> wires() const;

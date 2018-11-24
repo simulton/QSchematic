@@ -21,7 +21,7 @@ void WireNetLabel::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
     Q_UNUSED(widget)
 
     // Draw a dashed line to the wire if selected
-    if (highlighted()) {
+    if (isHighlighted()) {
         QPen penLine;
         penLine.setColor(COLOR_WIRE_HIGHLIGHTED);
         penLine.setStyle(Qt::DashLine);

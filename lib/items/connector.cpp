@@ -72,7 +72,7 @@ QPoint Connector::connectionPoint() const
 QRectF Connector::boundingRect() const
 {
     qreal adj = qCeil(PEN_WIDTH / 2.0);
-    if (highlighted()) {
+    if (isHighlighted()) {
         adj += _settings.highlightRectPadding;
     }
 

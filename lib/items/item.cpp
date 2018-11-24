@@ -69,6 +69,21 @@ int Item::gridPointY() const
     return gridPoint().y();
 }
 
+QPointF Item::scenePoint() const
+{
+    return scenePos();
+}
+
+qreal Item::scenePointX() const
+{
+    return scenePoint().x();
+}
+
+qreal Item::scenePointY() const
+{
+    return scenePoint().y();
+}
+
 void Item::setSettings(const Settings& settings)
 {
     // Update grid size
@@ -91,7 +106,7 @@ void Item::setMovable(bool enabled)
     setFlag(QGraphicsItem::ItemIsMovable, enabled);
 }
 
-bool Item::movable() const
+bool Item::isMovable() const
 {
     return flags() & QGraphicsItem::ItemIsMovable;
 }
@@ -106,7 +121,7 @@ bool Item::snapToGrid() const
     return _snapToGrid;
 }
 
-bool Item::highlighted() const
+bool Item::isHighlighted() const
 {
     return (_highlighted || isSelected()) && _highlightEnabled;
 }

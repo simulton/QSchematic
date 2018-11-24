@@ -1,5 +1,6 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
+#include <QCursor>
 #include <QtMath>
 #include "node.h"
 #include "connector.h"
@@ -17,6 +18,7 @@ const int DEFAULT_HEIGHT    = 12;
 
 Node::Node(QGraphicsItem* parent) :
     Item(ItemType::NodeType, parent),
+    _mode(None),
     _size(DEFAULT_WIDTH, DEFAULT_HEIGHT),
     _connectorsMovable(false)
 {
@@ -24,9 +26,14 @@ Node::Node(QGraphicsItem* parent) :
 
 void Node::setSize(const QSize& size)
 {
-    _size = size;
+    // Boundary checks
+    if (size.width() < 1 or size.height() < 1) {
+        return;
+    }
 
-    update();
+    prepareGeometryChange();
+
+    _size = size;
 }
 
 void Node::setSize(int width, int height)
@@ -37,6 +44,32 @@ void Node::setSize(int width, int height)
 QSize Node::size() const
 {
     return _size;
+}
+
+QMap<ResizeHandle, QRect> Node::resizeHandles() const
+{
+    QMap<ResizeHandle, QRect> map;
+    const int& resizeHandleSize = _settings.resizeHandleSize;
+
+    QRect r(QPoint(0, 0), _size*_settings.gridSize);
+
+    // Corners
+    map.insert(ResizeBottomRight, QRect(r.bottomRight()+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+    map.insert(ResizeBottomLeft, QRect(r.bottomLeft()+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+    map.insert(ResizeTopRight, QRect(r.topRight()+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+    map.insert(ResizeTopLeft, QRect(r.topLeft()+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+
+    // Sides
+    if (r.topRight().x() - r.topLeft().x() > 7*resizeHandleSize) {
+        map.insert(ResizeTop, QRect(Settings::centerPoint(r.topRight(), r.topLeft())+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+        map.insert(ResizeBottom, QRect(Settings::centerPoint(r.bottomRight(), r.bottomLeft())+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+    }
+    if (r.bottomLeft().y() - r.topLeft().y() > 7*resizeHandleSize) {
+        map.insert(ResizeRight, QRect(Settings::centerPoint(r.topRight(), r.bottomRight())+QPoint(1,0)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+        map.insert(ResizeLeft, QRect(Settings::centerPoint(r.bottomLeft(), r.topLeft())+QPoint(1,0)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+    }
+
+    return map;
 }
 
 bool Node::addConnector(const QPoint& point, const QString& text)
@@ -83,29 +116,206 @@ bool Node::connectorsMovable() const
     return _connectorsMovable;
 }
 
-void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
-{
-    Item::mouseMoveEvent(event);
-}
-
 void Node::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
+    event->accept();
+
+    // Let the base class handle selection and so on
     Item::mousePressEvent(event);
+
+    // Presume no mode
+    _mode = None;
+
+    // Check if clicked on a resize handle
+    if (isSelected()) {
+        auto handles = resizeHandles();
+        auto it = handles.constBegin();
+        while (it != handles.constEnd()) {
+            if (it.value().contains(event->pos().toPoint())) {
+                _mode = Resize;
+                _resizeHandle = it.key();
+                break;
+            }
+            it++;
+        }
+    }
 }
 
 void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
+    event->accept();
+
     Item::mouseReleaseEvent(event);
+
+    _mode = None;
+}
+
+void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
+{
+    event->accept();
+
+    QPoint newMouseGridPos(_settings.toGridPoint(event->scenePos()));
+
+    switch (_mode) {
+    case None:
+    {
+        Item::mouseMoveEvent(event);
+
+        break;
+    }
+
+    case Resize:
+    {
+        // Left mouse button to move
+        if (event->buttons() & Qt::LeftButton) {
+            static QPoint lastMousePosWithGridMove = newMouseGridPos;
+
+            // Calculate mouse movement in grid units
+            QPoint d = newMouseGridPos - lastMousePosWithGridMove;
+            int dx = d.x();
+            int dy = d.y();
+
+            // Don't do anything if there's nothing to do
+            if (dx == 0 and dy == 0) {
+                break;
+            }
+            lastMousePosWithGridMove = newMouseGridPos;
+
+            // Perform resizing
+            int newX = gridPointX();
+            int newY = gridPointY();
+            int newWidth = _size.width();
+            int newHeight = _size.height();
+            switch (_resizeHandle) {
+            case ResizeTopLeft:
+                newX += dx;
+                newY += dy;
+                newWidth -= dx;
+                newHeight -= dy;
+                break;
+
+            case ResizeTop:
+                newY += dy;
+                newHeight -= dy;
+                break;
+
+            case ResizeTopRight:
+                newY += dy;
+                newWidth += dx;
+                newHeight -= dy;
+                break;
+
+            case ResizeRight:
+                newWidth += dx;
+                break;
+
+            case ResizeBottomRight:
+                newWidth += dx;
+                newHeight += dy;
+                break;
+
+            case ResizeBottom:
+                newHeight += dy;
+                break;
+
+            case ResizeBottomLeft:
+                newX += dx;
+                newWidth -= dx;
+                newHeight += dy;
+                break;
+
+            case ResizeLeft:
+                newX += dx;
+                newWidth -= dx;
+                break;
+            }
+
+            setSize(newWidth, newHeight);
+            setGridPoint(newX, newY);
+        }
+
+        break;
+    }
+    }
+}
+
+void Node::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
+{
+    Item::hoverEnterEvent(event);
+}
+
+void Node::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
+{
+    Item::hoverLeaveEvent(event);
+
+    unsetCursor();
+}
+
+void Node::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
+{
+    Item::hoverMoveEvent(event);
+
+    // Set the cursor
+    {
+        setCursor(Qt::ArrowCursor);
+
+        // If selected, we should adjust the cursor for the resize handles
+        if (isSelected()) {
+            auto handles = resizeHandles();
+            auto it = handles.constBegin();
+            while (it != handles.constEnd()) {
+                if (it.value().contains(event->pos().toPoint())) {
+                    switch (it.key()) {
+                    case ResizeTopLeft:
+                    case ResizeBottomRight:
+                        setCursor(Qt::SizeFDiagCursor);
+                        break;
+
+                    case ResizeBottom:
+                    case ResizeTop:
+                        setCursor(Qt::SizeVerCursor);
+                        break;
+
+                    case ResizeBottomLeft:
+                    case ResizeTopRight:
+                        setCursor(Qt::SizeBDiagCursor);
+                        break;
+
+                    case ResizeRight:
+                    case ResizeLeft:
+                        setCursor(Qt::SizeHorCursor);
+                        break;
+                    }
+                    break;
+                }
+                it++;
+            }
+        }
+    }
 }
 
 QRectF Node::boundingRect() const
 {
-    qreal adj = qCeil(PEN_WIDTH / 2.0);
-    if (highlighted()) {
-        adj += _settings.highlightRectPadding;
+    QRectF rect;
+    qreal adj = 0.0;
+
+    // Body rect
+    rect = rect.united(QRectF(QPoint(0, 0), _size*_settings.gridSize));
+
+    // Add half the pen width
+    adj = qMax(adj, PEN_WIDTH / 2.0);
+
+    // Add resize handles
+    if (isSelected()) {
+        adj = qMax(adj, static_cast<qreal>(_settings.resizeHandleSize));
     }
 
-    return QRectF(QPoint(0, 0), _size*_settings.gridSize).adjusted(-adj, -adj, adj, adj);
+    // Add highlight rect
+    if (isHighlighted()) {
+        adj = qMax(adj, static_cast<qreal>(_settings.highlightRectPadding));
+    }
+
+    return rect.adjusted(-adj, -adj, adj, adj);
 }
 
 void Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
@@ -121,7 +331,7 @@ void Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     }
 
     // Highlight rectangle
-    if (highlighted()) {
+    if (isHighlighted()) {
         // Highlight pen
         QPen highlightPen;
         highlightPen.setStyle(Qt::NoPen);
@@ -176,35 +386,10 @@ void Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
             painter->drawRect(rect.adjusted(-handlePen.width(), -handlePen.width(), handlePen.width()/2, handlePen.width()/2));
 
             // Draw the inner handle
+            int adj = _settings.resizeHandleSize/2;
             handleBrush.setColor(Qt::white);
             painter->setBrush(handleBrush);
-            painter->drawRect(rect.adjusted(-handlePen.width()+2, -handlePen.width()+2, (handlePen.width()/2)-2, (handlePen.width()/2)-2));
+            painter->drawRect(rect.adjusted(-handlePen.width()+adj, -handlePen.width()+adj, (handlePen.width()/2)-adj, (handlePen.width()/2)-adj));
         }
     }
-}
-
-QMap<Node::ResizeMode, QRect> Node::resizeHandles() const
-{
-    QMap<Node::ResizeMode, QRect> map;
-    const int& resizeHandleSize = _settings.resizeHandleSize;
-
-    QRect r(QPoint(0, 0), _size*_settings.gridSize);
-
-    // Corners
-    map.insert(ResizeBottomRight, QRect(r.bottomRight()+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
-    map.insert(ResizeBottomLeft, QRect(r.bottomLeft()+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
-    map.insert(ResizeTopRight, QRect(r.topRight()+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
-    map.insert(ResizeTopLeft, QRect(r.topLeft()+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
-
-    // Sides
-    if (r.topRight().x() - r.topLeft().x() > 7*resizeHandleSize) {
-        map.insert(ResizeTop, QRect(Settings::centerPoint(r.topRight(), r.topLeft())+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
-        map.insert(ResizeBottom, QRect(Settings::centerPoint(r.bottomRight(), r.bottomLeft())+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
-    }
-    if (r.bottomLeft().y() - r.topLeft().y() > 7*resizeHandleSize) {
-        map.insert(ResizeRight, QRect(Settings::centerPoint(r.topRight(), r.bottomRight())+QPoint(1,0)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
-        map.insert(ResizeLeft, QRect(Settings::centerPoint(r.bottomLeft(), r.topLeft())+QPoint(1,0)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
-    }
-
-    return map;
 }

@@ -2,6 +2,10 @@
 
 #include <QList>
 #include "item.h"
+#include "../types.h"
+
+class QGraphicsSceneMouseEvent;
+class QGraphicsSceneHoverEvent;
 
 namespace QSchematic {
 
@@ -26,30 +30,27 @@ namespace QSchematic {
         void setConnectorsMovable(bool enabled);
         bool connectorsMovable() const;
 
-        virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
         virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
         virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
+        virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
+        virtual void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
+        virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;
+        virtual void hoverMoveEvent(QGraphicsSceneHoverEvent* event) override;
         virtual QRectF boundingRect() const override;
         virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
     private:
-        enum ResizeMode {
+        enum Mode {
             None,
-            ResizeTopLeft,
-            ResizeTop,
-            ResizeTopRight,
-            ResizeRight,
-            ResizeBottomRight,
-            ResizeBottom,
-            ResizeBottomLeft,
-            ResizeLeft
+            Resize
         };
 
-        QMap<ResizeMode, QRect> resizeHandles() const;
+        QMap<ResizeHandle, QRect> resizeHandles() const;
 
+        Mode _mode;
+        ResizeHandle _resizeHandle;
         QSize _size;
         bool _connectorsMovable;
-
         QList<Connector*> _connectors;
     };
 

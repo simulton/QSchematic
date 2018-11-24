@@ -505,7 +505,7 @@ void Wire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     case Bus:
         if (isSelected()) {
             penColor = COLOR_BUS_SELECTED;
-        } else if (highlighted()) {
+        } else if (isHighlighted()) {
             penColor = COLOR_BUS_HIGHLIGHTED;
         } else {
             penColor = COLOR_BUS;
@@ -516,7 +516,7 @@ void Wire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     default:
         if (isSelected()) {
             penColor = COLOR_WIRE_SELECTED;
-        } else if (highlighted()) {
+        } else if (isHighlighted()) {
             penColor = COLOR_WIRE_HIGHLIGHTED;
         } else {
             penColor = COLOR_WIRE;
@@ -536,11 +536,11 @@ void Wire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     brushJunction.setStyle(Qt::SolidPattern);
     switch (_type) {
     case Bus:
-        brushJunction.setColor(highlighted() ? COLOR_BUS_HIGHLIGHTED : COLOR_BUS);
+        brushJunction.setColor(isHighlighted() ? COLOR_BUS_HIGHLIGHTED : COLOR_BUS);
         break;
 
     default:
-        brushJunction.setColor(highlighted() ? COLOR_WIRE_HIGHLIGHTED : COLOR_WIRE);
+        brushJunction.setColor(isHighlighted() ? COLOR_WIRE_HIGHLIGHTED : COLOR_WIRE);
         break;
     }
 

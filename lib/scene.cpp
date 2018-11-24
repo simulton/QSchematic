@@ -13,6 +13,7 @@ using namespace QSchematic;
 
 Scene::Scene(QObject* parent) :
     QGraphicsScene(parent),
+    _mode(NormalMode),
     _newWireSegment(false),
     _invertWirePosture(false)
 {
@@ -89,6 +90,38 @@ QList<Item*> Scene::items() const
     }
 
     return items;
+}
+
+QList<Item*> Scene::items(Item::ItemType itemType) const
+{
+    QList<Item*> items;
+
+    for (QGraphicsItem* i : QGraphicsScene::items()) {
+        Item* item = dynamic_cast<Item*>(i);
+        if (!item or item->type() != itemType) {
+            continue;
+        }
+
+        items << item;
+    }
+
+    return items;
+}
+
+QList<Node*> Scene::nodes() const
+{
+    QList<Node*> nodes;
+
+    for (QGraphicsItem* i : QGraphicsScene::items()) {
+        Node* node = dynamic_cast<Node*>(i);
+        if (!node or node->type() != Item::NodeType) {
+            continue;
+        }
+
+        nodes << node;
+    }
+
+    return nodes;
 }
 
 bool Scene::addWire(Wire* wire)
@@ -300,6 +333,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
     switch (_mode) {
     case NormalMode:
     {
+        // Reset stuff
         _newWire.reset();
 
         // Handle selection stuff internally (do not remove this!)
@@ -329,7 +363,9 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 
         }
 
+        return;
     }
+
     }
 }
 
@@ -342,6 +378,8 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
     {
         // Handle stuff like mouse movement (do not remove this!)
         QGraphicsScene::mouseReleaseEvent(event);
+
+        break;
     }
 
     case WireMode:
@@ -357,6 +395,8 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
             // Show the context menu stuff
             QGraphicsScene::mouseReleaseEvent(event);
         }
+
+        break;
     }
     }
 }
@@ -366,8 +406,8 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
     // Get rid of any popup infobox
     _popupInfobox.reset();
 
-    // Save the last mouse position (used for popup-infoboxes)
-    _lastMousePos = event->scenePos();
+    // Retrieve the new mouse position
+    QPointF newMousePos = event->scenePos();
 
     switch (_mode) {
     case NormalMode:
@@ -375,17 +415,17 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
         // Perform the move
         QGraphicsScene::mouseMoveEvent(event);
 
-        return;
+        break;
 
     case WireMode:
     {
         // Make sure that there's a wire
         if (!_newWire) {
-            return;
+            break;
         }
 
         // Transform mouse coordinates to grid positions (snapped to nearest grid point)
-        QPoint mouseGridPos = _settings.toGridPoint(event->scenePos());
+        QPoint mouseGridPos = _settings.toGridPoint(newMousePos);
 
         // Add a new wire segment. Only allow straight angles (if supposed to)
         if (_settings.routeStraightAngles) {
@@ -423,7 +463,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             }
         } else {
             // Don't care about angles and stuff. Fuck geometry, right?
-            QPoint newGridPoint = _settings.toGridPoint(event->scenePos());
+            QPoint newGridPoint = _settings.toGridPoint(newMousePos);
             if (_newWire->points().count() > 1) {
                 _newWire->movePointTo(_newWire->points().count()-1, newGridPoint);
             } else {
@@ -431,9 +471,13 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             }
         }
 
-        return;
+        break;
     }
+
     }
+
+    // Save the last mouse position
+    _lastMousePos = newMousePos;
 }
 
 void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
@@ -522,7 +566,10 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 
             return;
         }
+
+        return;
     }
+
     }
 }
 
