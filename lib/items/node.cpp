@@ -39,11 +39,6 @@ QSize Node::size() const
     return _size;
 }
 
-QRect Node::bodyRect() const
-{
-    return QRect(0, 0, _size.width(), _size.height());
-}
-
 bool Node::addConnector(const QPoint& point, const QString& text)
 {
     // Create connector
