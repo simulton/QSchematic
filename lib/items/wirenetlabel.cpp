@@ -4,6 +4,7 @@
 #include <QVector2D>
 #include "wirenetlabel.h"
 #include "wirenet.h"
+#include "../utils.h"
 
 const QColor COLOR_WIRE             = QColor("#000000");
 const QColor COLOR_WIRE_HIGHLIGHTED = QColor("#dc2479");
@@ -36,7 +37,7 @@ void WireNetLabel::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
             QPointF lineP2 = _settings.toScenePoint(line.p2());
             QPointF labelCenter = mapToScene(textRect().center());
 
-            QPointF pointOnCurrentLine = Line::closestPointTo(QLineF(lineP1, lineP2), labelCenter).toPoint();
+            QPointF pointOnCurrentLine = Utils::pointOnLineClosestToPoint(lineP1, lineP2, labelCenter).toPoint();
 
             if (QVector2D(pointOnCurrentLine).distanceToPoint(QVector2D(labelCenter)) < QVector2D(pointOnLine).distanceToPoint(QVector2D(labelCenter))) {
                 pointOnLine = pointOnCurrentLine;

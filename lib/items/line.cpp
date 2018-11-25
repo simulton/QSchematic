@@ -1,7 +1,7 @@
 #include <QtGlobal>
 #include <QLineF>
-#include <QVector2D>
 #include "line.h"
+#include "../utils.h"
 
 using namespace QSchematic;
 
@@ -57,9 +57,9 @@ bool Line::containsPoint(const QPointF& point, unsigned tolerance) const
     return containsPoint(QLineF(_p1, _p2), point, tolerance);
 }
 
-QPointF Line::closestPointTo(const QPointF& point)
+QPointF Line::pointOnLineClosestToPoint(const QPointF& point)
 {
-    return closestPointTo(QLineF(_p1, _p2), point);
+    return Utils::pointOnLineClosestToPoint(_p1, _p2, point);
 }
 
 bool Line::containsPoint(const QLineF& line, const QPointF& point, unsigned tolerance)
@@ -72,26 +72,4 @@ bool Line::containsPoint(const QLineF& line, const QPointF& point, unsigned tole
     }
 
     return false;
-}
-
-QPointF Line::closestPointTo(const QLineF& line, const QPointF& point)
-{
-    // Algorithm based on: http://nic-gamedev.blogspot.ch/2011/11/using-vector-mathematics-and-bit-of_08.html
-    QVector2D lineDiffVector = QVector2D(line.p2() - line.p1());
-    double lineSegSqrLength = lineDiffVector.lengthSquared();
-
-    QVector2D lineToPointVect = QVector2D(point - line.p1());
-    double dotProduct = QVector2D::dotProduct(lineDiffVector, lineToPointVect);
-
-    double percAlongLine = dotProduct / lineSegSqrLength;
-
-    // Return the end points
-    if (percAlongLine <= 0.0) {
-        return line.p1();
-    } else if (percAlongLine >= 1.0) {
-        return line.p2();
-    }
-
-    // Return the point along the line
-    return ( line.p1() + ( percAlongLine * ( line.p2() - line.p1() )));
 }

@@ -3,6 +3,7 @@
 #include <QCursor>
 #include <QtMath>
 #include "node.h"
+#include "../utils.h"
 #include "../scene.h"
 
 const QColor COLOR_HIGHLIGHTED = QColor(Qt::blue).lighter();
@@ -62,12 +63,12 @@ QMap<ResizeHandle, QRect> Node::resizeHandles() const
 
     // Sides
     if (r.topRight().x() - r.topLeft().x() > 7*resizeHandleSize) {
-        map.insert(ResizeTop, QRect(Settings::centerPoint(r.topRight(), r.topLeft())+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
-        map.insert(ResizeBottom, QRect(Settings::centerPoint(r.bottomRight(), r.bottomLeft())+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+        map.insert(ResizeTop, QRect(Utils::centerPoint(r.topRight(), r.topLeft())+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+        map.insert(ResizeBottom, QRect(Utils::centerPoint(r.bottomRight(), r.bottomLeft())+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
     }
     if (r.bottomLeft().y() - r.topLeft().y() > 7*resizeHandleSize) {
-        map.insert(ResizeRight, QRect(Settings::centerPoint(r.topRight(), r.bottomRight())+QPoint(1,0)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
-        map.insert(ResizeLeft, QRect(Settings::centerPoint(r.bottomLeft(), r.topLeft())+QPoint(1,0)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+        map.insert(ResizeRight, QRect(Utils::centerPoint(r.topRight(), r.bottomRight())+QPoint(1,0)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+        map.insert(ResizeLeft, QRect(Utils::centerPoint(r.bottomLeft(), r.topLeft())+QPoint(1,0)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
     }
 
     return map;

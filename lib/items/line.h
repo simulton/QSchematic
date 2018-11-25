@@ -21,10 +21,9 @@ namespace QSchematic {
         qreal lenght() const;
         QPointF midPoint() const;
         bool containsPoint(const QPointF& point, unsigned tolerance = 0) const;
-        QPointF closestPointTo(const QPointF& point);
+        QPointF pointOnLineClosestToPoint(const QPointF& point);
 
         static bool containsPoint(const QLineF& line, const QPointF& point, unsigned tolerance = 0);
-        static QPointF closestPointTo(const QLineF& line, const QPointF& point); // Returns the point on the line segment that is the closest to the specified point
 
     private:
         QPoint _p1;

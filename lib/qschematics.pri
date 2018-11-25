@@ -11,7 +11,8 @@ HEADERS += \
     $$PWD/scene.h \
     $$PWD/settings.h \
     $$PWD/types.h \
-    $$PWD/view.h
+    $$PWD/view.h \
+    $$PWD/utils.h
 
 SOURCES += \
     $$PWD/items/connector.cpp \
@@ -25,4 +26,5 @@ SOURCES += \
     $$PWD/items/wirepoint.cpp \
     $$PWD/scene.cpp \
     $$PWD/settings.cpp \
-    $$PWD/view.cpp
+    $$PWD/view.cpp \
+    $$PWD/utils.cpp

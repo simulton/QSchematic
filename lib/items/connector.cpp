@@ -3,6 +3,7 @@
 #include <QFontMetrics>
 #include "connector.h"
 #include "node.h"
+#include "../utils.h"
 
 const qreal SIZE               = 1;
 const QColor COLOR_BODY_FILL   = QColor(Qt::green);
@@ -104,16 +105,16 @@ QVariant Connector::itemChange(QGraphicsItem::GraphicsItemChange change, const Q
             break;
 
         case NodeSizerect:
-            proposedPos = Settings::clipPointToRect(proposedPos, parentNodeSizeRect);
+            proposedPos = Utils::clipPointToRect(proposedPos, parentNodeSizeRect);
             break;
 
         case NodeSizerectOutline:
-            proposedPos = Settings::clipPointToRectOutline(proposedPos, parentNodeSizeRect);
+            proposedPos = Utils::clipPointToRectOutline(proposedPos, parentNodeSizeRect);
             break;
 
         case NodeShape:
 #warning ToDo: Implement me
-            proposedPos = Settings::clipPointToPath(proposedPos, QPainterPath());
+            proposedPos = Utils::clipPointToPath(proposedPos, QPainterPath());
             break;
         }
 
