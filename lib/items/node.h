@@ -32,6 +32,8 @@ namespace QSchematic {
         bool connectorsMovable() const;
         void setConnectorsSnapPolicy(Connector::SnapPolicy policy);
         Connector::SnapPolicy connectorsSnapPolicy() const;
+        void setConnectorsSnapToGrid(bool enabled);
+        bool connectorsSnapToGrid() const;
 
         virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
         virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
@@ -55,6 +57,7 @@ namespace QSchematic {
         QSize _size;
         bool _connectorsMovable;
         Connector::SnapPolicy _connectorsSnapPolicy;
+        bool _connectorsSnapToGrid;
         QList<Connector*> _connectors;
     };
 

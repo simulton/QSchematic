@@ -20,7 +20,8 @@ Node::Node(QGraphicsItem* parent) :
     _mode(None),
     _size(DEFAULT_WIDTH, DEFAULT_HEIGHT),
     _connectorsMovable(false),
-    _connectorsSnapPolicy(Connector::NodeSizerectOutline)
+    _connectorsSnapPolicy(Connector::NodeSizerectOutline),
+    _connectorsSnapToGrid(false)
 {
 }
 
@@ -131,6 +132,22 @@ void Node::setConnectorsSnapPolicy(Connector::SnapPolicy policy)
 Connector::SnapPolicy Node::connectorsSnapPolicy() const
 {
     return _connectorsSnapPolicy;
+}
+
+void Node::setConnectorsSnapToGrid(bool enabled)
+{
+    // Update connectors
+    for (auto connector : _connectors) {
+        connector->setSnapToGrid(enabled);
+    }
+
+    // Update local
+    _connectorsSnapToGrid = enabled;
+}
+
+bool Node::connectorsSnapToGrid() const
+{
+    return _connectorsSnapToGrid;
 }
 
 void Node::mousePressEvent(QGraphicsSceneMouseEvent* event)
