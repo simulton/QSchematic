@@ -102,8 +102,12 @@ QVariant Connector::itemChange(QGraphicsItem::GraphicsItemChange change, const Q
 
         case NodeSizerect:
         {
-#warning ToDo: Implement me
-            return proposedPos;
+            QPainterPath path;
+            const Node* parentNode = qgraphicsitem_cast<const Node*>(parentItem());
+            if (!parentNode) {
+                return proposedPos;
+            }
+            return snapPointToRect(proposedPos, QRectF(0, 0, parentNode->size().width()*_settings.gridSize, parentNode->size().height()*_settings.gridSize));
         }
 
         case NodeSizerectOutline:
@@ -191,6 +195,26 @@ void Connector::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
     }
     painter->setTransform(t);
     painter->drawText(_textRect, text(), textOption);
+}
+
+QPointF Connector::snapPointToRect(QPointF point, const QRectF& rect) const
+{
+    // Clip X
+    if (point.x() < rect.x()) {
+        point.rx() = rect.x();
+    } else if (point.x() > rect.width()) {
+        point.rx() = rect.width();
+    }
+
+    // Clip Y
+    if (point.y() < rect.y()) {
+        point.ry() = rect.y();
+    } else if (point.y() > rect.height()) {
+        point.ry() = rect.height();
+    }
+
+    // Snap to grid
+    return _settings.snapToGridPoint(point);
 }
 
 QPointF Connector::snapPointToRectOutline(const QPointF& point, const QRectF& rect) const
