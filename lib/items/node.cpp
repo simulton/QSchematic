@@ -3,7 +3,6 @@
 #include <QCursor>
 #include <QtMath>
 #include "node.h"
-#include "connector.h"
 #include "../scene.h"
 
 const QColor COLOR_HIGHLIGHTED = QColor(Qt::blue).lighter();
@@ -20,7 +19,8 @@ Node::Node(QGraphicsItem* parent) :
     Item(ItemType::NodeType, parent),
     _mode(None),
     _size(DEFAULT_WIDTH, DEFAULT_HEIGHT),
-    _connectorsMovable(false)
+    _connectorsMovable(false),
+    _connectorsSnapPolicy(Connector::NodeSizerectOutline)
 {
 }
 
@@ -79,6 +79,7 @@ bool Node::addConnector(const QPoint& point, const QString& text)
     connector->setGridPoint(point);
     connector->setText(text);
     connector->setMovable(_connectorsMovable);
+    connector->setSnapPolicy(_connectorsSnapPolicy);
     _connectors << connector;
 
     return true;
@@ -114,6 +115,22 @@ void Node::setConnectorsMovable(bool enabled)
 bool Node::connectorsMovable() const
 {
     return _connectorsMovable;
+}
+
+void Node::setConnectorsSnapPolicy(Connector::SnapPolicy policy)
+{
+    // Update connectors
+    for (auto connector : _connectors) {
+        connector->setSnapPolicy(policy);
+    }
+
+    // Update local
+    _connectorsSnapPolicy = policy;
+}
+
+Connector::SnapPolicy Node::connectorsSnapPolicy() const
+{
+    return _connectorsSnapPolicy;
 }
 
 void Node::mousePressEvent(QGraphicsSceneMouseEvent* event)

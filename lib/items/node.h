@@ -2,6 +2,7 @@
 
 #include <QList>
 #include "item.h"
+#include "connector.h"
 #include "../types.h"
 
 class QGraphicsSceneMouseEvent;
@@ -29,6 +30,8 @@ namespace QSchematic {
         bool isConnectionPoint(const QPoint& gridPoint) const;
         void setConnectorsMovable(bool enabled);
         bool connectorsMovable() const;
+        void setConnectorsSnapPolicy(Connector::SnapPolicy policy);
+        Connector::SnapPolicy connectorsSnapPolicy() const;
 
         virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
         virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
@@ -51,6 +54,7 @@ namespace QSchematic {
         ResizeHandle _resizeHandle;
         QSize _size;
         bool _connectorsMovable;
+        Connector::SnapPolicy _connectorsSnapPolicy;
         QList<Connector*> _connectors;
     };
 
