@@ -18,21 +18,9 @@ QPoint Utils::centerPoint(const QPoint& p1, const QPoint& p2)
 
 QPointF Utils::clipPointToRect(QPointF point, const QRectF& rect)
 {
-    // Clip X
-    if (point.x() < rect.x()) {
-        point.rx() = rect.x();
-    } else if (point.x() > rect.width()) {
-        point.rx() = rect.width();
-    }
-
-    // Clip Y
-    if (point.y() < rect.y()) {
-        point.ry() = rect.y();
-    } else if (point.y() > rect.height()) {
-        point.ry() = rect.height();
-    }
-
-#warning ToDo: Use qBound()
+    // Clip
+    point.rx() = qBound(rect.x(), point.x(), rect.width());
+    point.ry() = qBound(rect.y(), point.y(), rect.height());
 
     return point;
 }
