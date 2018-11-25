@@ -1,5 +1,7 @@
+#include <limits>
 #include <QPoint>
 #include <QPointF>
+#include <QLine>
 #include <QLineF>
 #include <QRectF>
 #include <QPainterPath>
@@ -30,15 +32,33 @@ QPointF Utils::clipPointToRect(QPointF point, const QRectF& rect)
         point.ry() = rect.height();
     }
 
+#warning ToDo: Use qBound()
+
     return point;
 }
 
 QPointF Utils::clipPointToRectOutline(QPointF point, const QRectF& rect)
 {
-    // Clip to rect
-    point = Utils::clipPointToRect(point, rect);
+    // Create list of edges
+    QVector<QLineF> edges(4);
+    edges << QLineF(rect.topLeft(), rect.topRight());
+    edges << QLineF(rect.topRight(), rect.bottomRight());
+    edges << QLineF(rect.bottomRight(), rect.bottomLeft());
+    edges << QLineF(rect.bottomLeft(), rect.topLeft());
 
+    // Figure out to which line we're closest to
+    QPair<QLineF, qreal> nearest(edges.first(), std::numeric_limits<qreal>::max());
+    for (const QLineF& edge : edges) {
+        QPointF pointOnEdge = Utils::pointOnLineClosestToPoint(edge.p1(), edge.p2(), point);
+        qreal distance = QLineF(pointOnEdge, point).length();
+        if (distance < nearest.second) {
+            nearest = QPair<QLineF, qreal>(edge, distance);
+        }
+    }
 
+    // Snap to that edge
+    const QLineF& nearestEdge = nearest.first;
+    point = Utils::pointOnLineClosestToPoint(nearestEdge.p1(), nearestEdge.p2(), point);
 
     return point;
 }
