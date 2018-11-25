@@ -33,9 +33,6 @@ namespace QSchematic {
         virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
     private:
-        QPointF snapPointToRect(QPointF point, const QRectF& rect) const;
-        QPointF snapPointToRectOutline(const QPointF& point, const QRectF& rect) const;
-        QPointF snapPointToPath(const QPointF& point, const QPainterPath& path) const;
         void calculateSymbolRect();
         void calculateTextRect();
 

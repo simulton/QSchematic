@@ -90,41 +90,40 @@ QVariant Connector::itemChange(QGraphicsItem::GraphicsItemChange change, const Q
     case QGraphicsItem::ItemPositionChange:
     {
         QPointF proposedPos = value.toPointF();
+
+        // Retrieve parent Node's size rect
+        const Node* parentNode = qgraphicsitem_cast<const Node*>(parentItem());
+        if (!parentNode) {
+            return proposedPos;
+        }
+        QRectF parentNodeSizeRect(0, 0, parentNode->size().width()*_settings.gridSize, parentNode->size().height()*_settings.gridSize);
+
+        // Honor snap policy
         switch (_snapPolicy) {
         case Anywhere:
-        {
-            if (snapToGrid()) {
-                return _settings.snapToGridPoint(proposedPos);
-            } else {
-                return proposedPos.toPoint();
-            }
-        }
+            break;
 
         case NodeSizerect:
-        {
-            QPainterPath path;
-            const Node* parentNode = qgraphicsitem_cast<const Node*>(parentItem());
-            if (!parentNode) {
-                return proposedPos;
-            }
-            return snapPointToRect(proposedPos, QRectF(0, 0, parentNode->size().width()*_settings.gridSize, parentNode->size().height()*_settings.gridSize));
-        }
+            proposedPos = Settings::clipPointToRect(proposedPos, parentNodeSizeRect);
+            break;
 
         case NodeSizerectOutline:
-        {
-            QPainterPath path;
-            const Node* parentNode = qgraphicsitem_cast<const Node*>(parentItem());
-            if (!parentNode) {
-                return proposedPos;
-            }
-            return snapPointToRectOutline(proposedPos, QRectF(0, 0, parentNode->size().width()*_settings.gridSize, parentNode->size().height()*_settings.gridSize));
-        }
+            proposedPos = Settings::clipPointToRectOutline(proposedPos, parentNodeSizeRect);
+            break;
 
         case NodeShape:
-        {
-            return snapPointToPath(proposedPos, QPainterPath());
+#warning ToDo: Implement me
+            proposedPos = Settings::clipPointToPath(proposedPos, QPainterPath());
+            break;
         }
+
+        // Snap to grid if supposed to
+        if (snapToGrid()) {
+            return _settings.snapToGridPoint(proposedPos);
+        } else {
+            return proposedPos;
         }
+
         break;
     }
 
@@ -195,82 +194,6 @@ void Connector::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
     }
     painter->setTransform(t);
     painter->drawText(_textRect, text(), textOption);
-}
-
-QPointF Connector::snapPointToRect(QPointF point, const QRectF& rect) const
-{
-    // Clip X
-    if (point.x() < rect.x()) {
-        point.rx() = rect.x();
-    } else if (point.x() > rect.width()) {
-        point.rx() = rect.width();
-    }
-
-    // Clip Y
-    if (point.y() < rect.y()) {
-        point.ry() = rect.y();
-    } else if (point.y() > rect.height()) {
-        point.ry() = rect.height();
-    }
-
-    // Snap to grid
-    return _settings.snapToGridPoint(point);
-}
-
-QPointF Connector::snapPointToRectOutline(const QPointF& point, const QRectF& rect) const
-{
-    // Create a list of points that we might snap to. Start topLeft and rotate CW. Don't add corners.
-    QList<QPointF> listSnapPoints;
-    unsigned nbrPoints;
-
-    // Add points of top edge
-    const QLineF topEdge(rect.topLeft(), rect.topRight());
-    nbrPoints = topEdge.length() / _settings.gridSize;
-    for (unsigned i = 1; i < nbrPoints; i++)
-        listSnapPoints.append(QPointF(rect.topLeft().x() + i*_settings.gridSize, rect.topLeft().y()));
-
-    // Add points of right edge
-    const QLineF rightEdge(rect.topRight(), rect.bottomRight());
-    nbrPoints = rightEdge.length() / _settings.gridSize;
-    for (unsigned i = 1; i < nbrPoints; i++)
-        listSnapPoints.append(QPointF(rect.topRight().x(), rect.topRight().y() + i*_settings.gridSize));
-
-    // Add points of bottom edge
-    const QLineF bottomEdge(rect.bottomRight(), rect.bottomLeft());
-    nbrPoints = bottomEdge.length() / _settings.gridSize;
-    for (unsigned i = 1; i < nbrPoints; i++)
-        listSnapPoints.append(QPointF(rect.bottomLeft().x() + i*_settings.gridSize, rect.bottomLeft().y()));
-
-    // Add points of left edge
-    const QLineF leftEdge(rect.topLeft(), rect.bottomLeft());
-    nbrPoints = leftEdge.length() / _settings.gridSize;
-    for (unsigned i = 1; i < nbrPoints; i++)
-        listSnapPoints.append(QPointF(rect.topLeft().x(), rect.topLeft().y() + i*_settings.gridSize));
-
-    // We're done if there are no points in the list
-    if (listSnapPoints.count() <= 0) {
-        return point;
-    }
-
-    // Loop through list, find shortest distance.
-    QPointF& nearestSnapPoint = listSnapPoints.first();
-    for (auto& snapPoint : listSnapPoints) {
-        QLineF currentDistanceLine(point.x(), point.y(), snapPoint.x(), snapPoint.y());
-        QLineF shortestDistanceLine(point.x(), point.y(), nearestSnapPoint.x(), nearestSnapPoint.y());
-        if (currentDistanceLine.length() < shortestDistanceLine.length()) {
-            nearestSnapPoint = snapPoint;
-        }
-    }
-
-    return nearestSnapPoint;
-}
-
-QPointF Connector::snapPointToPath(const QPointF& point, const QPainterPath& path) const
-{
-    Q_UNUSED(path);
-#warning ToDo: Implement me
-
-    return point;
 }
 
 void Connector::calculateSymbolRect()

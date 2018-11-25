@@ -1,7 +1,11 @@
 #pragma once
 
 #include <chrono>
-#include <QPointF>
+
+class QPoint;
+class QPointF;
+class QRectF;
+class QPainterPath;
 
 namespace QSchematic {
 
@@ -16,6 +20,9 @@ namespace QSchematic {
         QPoint snapToGridPoint(const QPointF& scenePoint) const;
 
         static QPoint centerPoint(const QPoint& p1, const QPoint& p2);
+        static QPointF clipPointToRect(QPointF point, const QRectF& rect);
+        static QPointF clipPointToRectOutline(QPointF point, const QRectF& rect);
+        static QPointF clipPointToPath(const QPointF& point, const QPainterPath& path);
 
         bool debug;
         int gridSize;

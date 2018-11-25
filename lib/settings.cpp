@@ -1,3 +1,6 @@
+#include <QPointF>
+#include <QRectF>
+#include <QPainterPath>
 #include "settings.h"
 
 using namespace QSchematic;
@@ -39,4 +42,36 @@ QPoint Settings::snapToGridPoint(const QPointF& scenePoint) const
 QPoint Settings::centerPoint(const QPoint& p1, const QPoint& p2)
 {
     return (p1 + p2) / 2;
+}
+
+QPointF Settings::clipPointToRect(QPointF point, const QRectF& rect)
+{
+    // Clip X
+    if (point.x() < rect.x()) {
+        point.rx() = rect.x();
+    } else if (point.x() > rect.width()) {
+        point.rx() = rect.width();
+    }
+
+    // Clip Y
+    if (point.y() < rect.y()) {
+        point.ry() = rect.y();
+    } else if (point.y() > rect.height()) {
+        point.ry() = rect.height();
+    }
+
+    return point;
+}
+
+QPointF Settings::clipPointToRectOutline(QPointF point, const QRectF& rect)
+{
+    return point;
+}
+
+QPointF Settings::clipPointToPath(const QPointF& point, const QPainterPath& path)
+{
+    Q_UNUSED(path);
+#warning ToDo: Implement me
+
+    return point;
 }
