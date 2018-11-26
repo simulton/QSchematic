@@ -18,12 +18,6 @@ namespace QSchematic {
         Q_OBJECT
 
     public:
-        enum WireType {
-            Normal,
-            Bus
-        };
-        Q_ENUM(WireType)
-
         Wire(QGraphicsItem* parent = nullptr);
         virtual ~Wire() override = default;
         virtual void update() override;
@@ -68,7 +62,6 @@ namespace QSchematic {
         QVector<QPoint> scenePointsAbsolute() const;
         void calculateBoundingRect();
 
-        Wire::WireType _type;
         QVector<WirePoint> _points; // Store grid coordinates, not scene coordinates, but RELATIVE to this object
         QRectF _rect;
         int _pointToMoveIndex;

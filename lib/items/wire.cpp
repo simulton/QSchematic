@@ -502,29 +502,14 @@ void Wire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     penLine.setStyle(Qt::SolidLine);
     penLine.setCapStyle(Qt::RoundCap);
     QColor penColor;
-    switch (_type) {
-    case Bus:
-        if (isSelected()) {
-            penColor = COLOR_BUS_SELECTED;
-        } else if (isHighlighted()) {
-            penColor = COLOR_BUS_HIGHLIGHTED;
-        } else {
-            penColor = COLOR_BUS;
-        }
-        penLine.setWidth(4);
-        break;
-
-    default:
-        if (isSelected()) {
-            penColor = COLOR_WIRE_SELECTED;
-        } else if (isHighlighted()) {
-            penColor = COLOR_WIRE_HIGHLIGHTED;
-        } else {
-            penColor = COLOR_WIRE;
-        }
-        penLine.setWidth(1);
-        break;
+    if (isSelected()) {
+        penColor = COLOR_WIRE_SELECTED;
+    } else if (isHighlighted()) {
+        penColor = COLOR_WIRE_HIGHLIGHTED;
+    } else {
+        penColor = COLOR_WIRE;
     }
+    penLine.setWidth(1);
     penLine.setColor(penColor);
 
     QBrush brushLine;
@@ -535,26 +520,7 @@ void Wire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
 
     QBrush brushJunction;
     brushJunction.setStyle(Qt::SolidPattern);
-    switch (_type) {
-    case Bus:
-        brushJunction.setColor(isHighlighted() ? COLOR_BUS_HIGHLIGHTED : COLOR_BUS);
-        break;
-
-    default:
-        brushJunction.setColor(isHighlighted() ? COLOR_WIRE_HIGHLIGHTED : COLOR_WIRE);
-        break;
-    }
-
-    int junctionRadius = 0;
-    switch (_type) {
-    case Bus:
-        junctionRadius = 6;
-        break;
-
-    default:
-        junctionRadius = 4;
-        break;
-    }
+    brushJunction.setColor(isHighlighted() ? COLOR_WIRE_HIGHLIGHTED : COLOR_WIRE);
 
     QPen penHandle;
     penHandle.setColor(Qt::black);
@@ -571,6 +537,7 @@ void Wire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     painter->drawPolyline(points.constData(), points.count());
 
     // Draw the junction poins
+    int junctionRadius = 4;
     for (const WirePoint& wirePoint : sceneWirePointsRelative()) {
         if (wirePoint.isJunction()) {
             painter->setPen(penJunction);
