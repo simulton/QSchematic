@@ -270,7 +270,7 @@ void Scene::wireNetHighlightChanged(bool highlighted)
     }
 }
 
-void Scene::pointMoved(Wire& wire, WirePoint& point)
+void Scene::wirePointMoved(Wire& wire, WirePoint& point)
 {
     Q_UNUSED(point)
 
@@ -313,7 +313,7 @@ void Scene::addWireNet(WireNet* wireNet)
         return;
     }
 
-    connect(wireNet, &WireNet::pointMoved, this, &Scene::pointMoved);
+    connect(wireNet, &WireNet::pointMoved, this, &Scene::wirePointMoved);
     connect(wireNet, &WireNet::highlightChanged, this, &Scene::wireNetHighlightChanged);
 
     _nets.append(wireNet);

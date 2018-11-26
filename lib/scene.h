@@ -72,7 +72,7 @@ namespace QSchematic {
 
     private slots:
         void wireNetHighlightChanged(bool highlighted);
-        void pointMoved(Wire& wire, WirePoint& point);
+        void wirePointMoved(Wire& wire, WirePoint& point);
         void showPopup(const Item& item);
     };
 
