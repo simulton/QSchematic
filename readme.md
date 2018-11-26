@@ -5,6 +5,9 @@ The library provides base classes for objects such as nodes and wires and implem
 
 The library is written in C++.
 
+# State
+This library is currently under heavy development.
+
 # Compatibility
 This library is known to work with Qt 5.
 
