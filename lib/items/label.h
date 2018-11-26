@@ -19,9 +19,9 @@ namespace QSchematic {
         void setFont(const QFont& font);
         QFont font() const;
         void setConnectionPoint(const QPointF& connectionPoint);    // Parent coordinates
+        QRectF textRect() const;
 
     protected:
-        QRectF textRect() const;
         void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
 
     private:
