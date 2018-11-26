@@ -48,6 +48,11 @@ QSize Node::size() const
     return _size;
 }
 
+QRect Node::sizeRect() const
+{
+    return QRect(0, 0, _size.width(), _size.height());
+}
+
 QMap<ResizeHandle, QRect> Node::resizeHandles() const
 {
     QMap<ResizeHandle, QRect> map;

@@ -24,6 +24,7 @@ namespace QSchematic {
         void setSize(const QSize& size);
         void setSize(int width, int height);
         QSize size() const;
+        QRect sizeRect() const;
 
         bool addConnector(const QPoint& point, const QString& text = QString());
         QList<QPoint> connectionPoints() const;
