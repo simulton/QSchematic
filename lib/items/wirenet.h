@@ -35,8 +35,6 @@ namespace QSchematic {
         QList<QPoint> points() const;
         WireNetLabel& label();  // Only use this to add the label to the scene!!!
 
-        void updateWireJunctions();
-
     signals:
         void pointMoved(Wire& wire, WirePoint& point);
         void highlightChanged(bool highlighted);
@@ -47,6 +45,8 @@ namespace QSchematic {
         void wireHighlightChanged(const Item& item, bool highlighted);
 
     private:
+        void updateWireJunctions();
+
         QList<Wire*> _wires;
         QString _name;
         WireNetLabel _label;
