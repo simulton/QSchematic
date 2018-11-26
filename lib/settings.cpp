@@ -13,6 +13,7 @@ Settings::Settings() :
     highlightRectPadding(10),
     resizeHandleSize(9),
     routeStraightAngles(true),
+    preserveStraightAngles(true),
     antialiasing(true),
     popupDelay(400)
 {

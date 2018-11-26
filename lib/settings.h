@@ -26,6 +26,7 @@ namespace QSchematic {
         int highlightRectPadding;
         int resizeHandleSize;
         bool routeStraightAngles;
+        bool preserveStraightAngles;
         bool antialiasing;
         std::chrono::milliseconds popupDelay;
     };

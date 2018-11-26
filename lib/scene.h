@@ -57,6 +57,7 @@ namespace QSchematic {
         virtual void drawBackground(QPainter* painter, const QRectF& rect) override;
 
     private:
+        void setupNewItem(Item* item);
         QList<QPoint> connectionPoints() const;
         void addWireNet(WireNet* wireNet);
         void updateWireJunctions();
@@ -71,8 +72,11 @@ namespace QSchematic {
         QScopedPointer<QGraphicsProxyWidget> _popupInfobox;
 
     private slots:
+        void itemMoved(const Item& item, const QVector2D& movedBy);
         void wireNetHighlightChanged(bool highlighted);
         void wirePointMoved(Wire& wire, WirePoint& point);
+        void wireMovePoint(const QPoint& point, Wire& wire, const QVector2D& movedBy) const;
+        QList<Wire*> wiresConnectedTo(const Node& node, const QVector2D& offset) const;
         void showPopup(const Item& item);
     };
 

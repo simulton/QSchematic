@@ -64,11 +64,7 @@ void Scene::toggleWirePosture()
 
 bool Scene::addItem(Item* item)
 {
-    // Set settings
-    item->setSettings(_settings);
-
-    // Connections
-    connect(item, &Item::showPopup, this, &Scene::showPopup);
+    setupNewItem(item);
 
     // Add to scene
     QGraphicsScene::addItem(item);
@@ -252,6 +248,50 @@ QList<WireNet*> Scene::netsAt(const QPoint& point)
     return list;
 }
 
+void Scene::itemMoved(const Item& item, const QVector2D& movedBy)
+{
+    // Nothing to do if the item didn't move at all
+    if (movedBy.isNull()) {
+        return;
+    }
+
+    // Figure out what to do
+    switch (item.type()) {
+
+        // For nodes: Adjust wires
+        case Item::NodeType:
+        {
+            const Node& node = static_cast<const Node&>(item);
+
+            // Create a list of all wires there were connected to the SchematicObject
+            QList<Wire*> wiresConnectedToMovingObjects = wiresConnectedTo(node, movedBy*(-1));
+
+            // Update wire positions
+            for (Wire* wire : wiresConnectedToMovingObjects) {
+                for (const QPoint& connectionPoint : node.connectionPoints()) {
+                    wireMovePoint(connectionPoint, *wire, movedBy);
+                }
+            }
+
+            // Clean up the wires
+            for (const Wire* wire : wiresConnectedToMovingObjects) {
+                WireNet* wireNet = net(*wire);
+                if (!wireNet) {
+                    continue;
+                }
+
+                wireNet->removeDuplicatePoints();
+                wireNet->removeObsoletePoints();
+            }
+
+            break;
+        }
+
+    default:
+        break;
+    }
+}
+
 void Scene::wireNetHighlightChanged(bool highlighted)
 {
     WireNet* wireNet = qobject_cast<WireNet*>(sender());
@@ -295,6 +335,125 @@ void Scene::wirePointMoved(Wire& wire, WirePoint& point)
 
     // If the point is on an existing wire net, add the wire to that net. Otherwise, create a new net
     addWire(&wire);
+}
+
+void Scene::wireMovePoint(const QPoint& point, Wire& wire, const QVector2D& movedBy) const
+{
+    // If there are only two points (one line segment) and we are supposed to preserve
+    // straight angles, we need to insert two additional points if we are not moving in
+    // the direction of the line.
+    if (wire.points().count() == 2 && _settings.preserveStraightAngles) {
+        const Line& line = wire.lineSegments().first();
+
+        // Only do this if we're not moving in the direction of the line. Because in that case
+        // this is unnecessary as we're just moving one of the two points.
+        if ((line.isHorizontal() && !qFuzzyIsNull(movedBy.y())) || (line.isVertical() && !qFuzzyIsNull(movedBy.x()))) {
+            qreal lineLength = line.lenght();
+            QPoint p;
+
+            // The line is horizontal
+            if (line.isHorizontal()) {
+                QPoint leftPoint = line.p1();
+                if (line.p2().x() < line.p1().x()) {
+                    leftPoint = line.p2();
+                }
+
+                p.rx() = leftPoint.x() + static_cast<int>(lineLength/2);
+                p.ry() = leftPoint.y();
+
+            // The line is vertical
+            } else {
+                QPoint upperPoint = line.p1();
+                if (line.p2().x() < line.p1().x()) {
+                    upperPoint = line.p2();
+                }
+
+                p.rx() = upperPoint.x();
+                p.ry() = upperPoint.y() + static_cast<int>(lineLength/2);
+            }
+
+            // Insert twice as these two points will form the new additional vertical or
+            // horizontal line segment that is required to preserver straight angles.
+            wire.insertPoint(1, p);
+            wire.insertPoint(1, p);
+        }
+    }
+
+    // Move the points
+    for (int i = 0; i < wire.points().count(); i++) {
+        QPoint currPoint = wire.points().at(i);
+        if (currPoint == point-movedBy.toPoint()) {
+
+            // Preserve straight angles (if supposed to)
+            if (_settings.preserveStraightAngles) {
+
+                // Move previous point
+                if (i >= 1) {
+                    QPoint prevPoint = wire.points().at(i-1);
+                    Line line(prevPoint, currPoint);
+
+                    // Make sure that two wire points never collide
+                    if (i >= 2 && Line(currPoint+movedBy.toPoint(), prevPoint).lenght() <= 2) {
+                        wire.moveLineSegmentBy(i-2, movedBy);
+                    }
+
+                    // The line is horizontal
+                    if (line.isHorizontal()) {
+                        wire.movePointBy(i-1, QVector2D(0, movedBy.y()));
+                    }
+
+                    // The line is vertical
+                    else if (line.isVertical()) {
+                        wire.movePointBy(i-1, QVector2D(movedBy.x(), 0));
+                    }
+                }
+
+                // Move next point
+                if (i < wire.points().count()-1) {
+                    QPoint nextPoint = wire.points().at(i+1);
+                    Line line(currPoint, nextPoint);
+
+                    // Make sure that two wire points never collide
+                    if (Line(currPoint+movedBy.toPoint(), nextPoint).lenght() <= 2) {
+                        wire.moveLineSegmentBy(i+1, movedBy);
+                    }
+
+                    // The line is horizontal
+                    if (line.isHorizontal()) {
+                        wire.movePointBy(i+1, QVector2D(0, movedBy.y()));
+                    }
+
+                    // The line is vertical
+                    else if (line.isVertical()) {
+                        wire.movePointBy(i+1, QVector2D(movedBy.x(), 0));
+                    }
+                }
+            }
+
+            // Move the actual point itself
+            wire.movePointBy(i, movedBy);
+
+            break;
+        }
+    }
+}
+
+QList<Wire*> Scene::wiresConnectedTo(const Node& node, const QVector2D& offset) const
+{
+    QList<Wire*> list;
+
+    for (Wire* wire : wires()) {
+        for (const WirePoint& wirePoint : wire->points()) {
+            for (const QPoint& connectionPoint : node.connectionPoints()) {
+                if (wirePoint.toPoint() == connectionPoint+offset.toPoint()) {
+                    list.append(wire);
+                    break;
+                }
+            }
+        }
+    }
+
+    return list;
 }
 
 void Scene::showPopup(const Item& item)
@@ -643,6 +802,16 @@ void Scene::drawBackground(QPainter* painter, const QRectF& rect)
         painter->setBrush(gridBrush);
         painter->drawPoints(points.data(), points.size());
     }
+}
+
+void Scene::setupNewItem(Item* item)
+{
+    // Set settings
+    item->setSettings(_settings);
+
+    // Connections
+    connect(item, &Item::moved, this, &Scene::itemMoved);
+    connect(item, &Item::showPopup, this, &Scene::showPopup);
 }
 
 QList<QPoint> Scene::connectionPoints() const
