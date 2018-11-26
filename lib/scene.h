@@ -60,7 +60,6 @@ namespace QSchematic {
         void setupNewItem(Item* item);
         QList<QPoint> connectionPoints() const;
         void addWireNet(WireNet* wireNet);
-        void updateWireJunctions();
 
         QList<WireNet*> _nets;
         Settings _settings;

@@ -478,13 +478,6 @@ void Scene::addWireNet(WireNet* wireNet)
     _nets.append(wireNet);
 }
 
-void Scene::updateWireJunctions()
-{
-    for (WireNet* net : _nets) {
-        net->updateWireJunctions();
-    }
-}
-
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     event->accept();
