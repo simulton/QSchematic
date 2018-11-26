@@ -35,10 +35,11 @@ QPointF Utils::clipPointToRectOutline(QPointF point, const QRectF& rect)
     edges << QLineF(rect.bottomLeft(), rect.topLeft());
 
     // Figure out to which edge we're closest to
-    const QLineF& nearestEdge = Utils::lineClosestToPoint(edges, point);
+    const auto& nearestEdge = Utils::lineClosestToPoint(edges, point);
+    Q_ASSERT(nearestEdge);
 
     // Snap to that edge
-    point = Utils::pointOnLineClosestToPoint(nearestEdge.p1(), nearestEdge.p2(), point);
+    point = Utils::pointOnLineClosestToPoint(nearestEdge->p1(), nearestEdge->p2(), point);
 
     return point;
 }
@@ -73,21 +74,21 @@ QPointF Utils::pointOnLineClosestToPoint(const QPointF& p1, const QPointF& p2, c
     return ( p1 + ( percAlongLine * ( p2 - p1 )));
 }
 
-QLineF Utils::lineClosestToPoint(const QVector<QLineF>& lines, const QPointF& point)
+QVector<QLineF>::const_iterator Utils::lineClosestToPoint(const QVector<QLineF>& lines, const QPointF& point)
 {
     // Sanity check
     if (lines.isEmpty()) {
         qFatal("Utils::lineClosestToPoint(): lines vector must not be empty");
-        return QLineF();
+        return nullptr;
     }
 
     // Figure out to which line we're closest to
-    QPair<QLineF, qreal> nearest(lines.first(), std::numeric_limits<qreal>::max());
-    for (const QLineF& edge : lines) {
-        QPointF pointOnEdge = Utils::pointOnLineClosestToPoint(edge.p1(), edge.p2(), point);
+    QPair<QVector<QLineF>::const_iterator, qreal> nearest(lines.constBegin(), std::numeric_limits<qreal>::max());
+    for (QVector<QLineF>::const_iterator it = lines.constBegin(); it != lines.constEnd(); it++) {
+        QPointF pointOnEdge = Utils::pointOnLineClosestToPoint(it->p1(), it->p2(), point);
         qreal distance = QLineF(pointOnEdge, point).length();
         if (distance < nearest.second) {
-            nearest = QPair<QLineF, qreal>(edge, distance);
+            nearest = QPair<QVector<QLineF>::const_iterator, qreal>(it, distance);
         }
     }
 
