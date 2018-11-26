@@ -64,14 +64,14 @@ QPointF Utils::pointOnLineClosestToPoint(const QPointF& p1, const QPointF& p2, c
     float percAlongLine = dotProduct / lineSegSqrLength;
 
     // Return the end points
-    if (percAlongLine <= 0.0) {
+    if (percAlongLine <= 0.0f) {
         return p1;
-    } else if (percAlongLine >= 1.0) {
+    } else if (percAlongLine >= 1.0f) {
         return p2;
     }
 
     // Return the point along the line
-    return ( p1 + ( percAlongLine * ( p2 - p1 )));
+    return ( p1 + ( static_cast<qreal>(percAlongLine) * ( p2 - p1 )));
 }
 
 QVector<QLineF>::const_iterator Utils::lineClosestToPoint(const QVector<QLineF>& lines, const QPointF& point)
