@@ -97,9 +97,19 @@ void Label::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWi
         painter->drawRect(_textRect);
     }
 
+    // Text pen
+    QPen textPen;
+    textPen.setStyle(Qt::SolidLine);
+    textPen.setColor(Qt::black);
+
+    // Text option
+    QTextOption textOption;
+    textOption.setWrapMode(QTextOption::NoWrap);
+    textOption.setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+
     // Draw the text
     painter->setPen(COLOR_LABEL);
     painter->setBrush(Qt::NoBrush);
     painter->setFont(_font);
-    painter->drawText(_textRect, Qt::AlignCenter, _text);
+    painter->drawText(_textRect, _text, textOption);
 }
