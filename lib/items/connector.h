@@ -39,7 +39,6 @@ namespace QSchematic {
         void calculateTextDirection();
 
         SnapPolicy _snapPolicy;
-        QString _text;
         QRectF _symbolRect;
         Direction _textDirection;
         Label* _label;
