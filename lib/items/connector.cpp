@@ -112,7 +112,6 @@ QVariant Connector::itemChange(QGraphicsItem::GraphicsItemChange change, const Q
             break;
 
         case NodeShape:
-#warning ToDo: Implement me
             proposedPos = Utils::clipPointToPath(proposedPos, QPainterPath());
             break;
         }
