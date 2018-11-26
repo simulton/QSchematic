@@ -386,7 +386,7 @@ void Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         painter->setBrush(highlightBrush);
         painter->setOpacity(0.5);
         int adj = _settings.highlightRectPadding;
-        painter->drawRoundRect(QRect(QPoint(0, 0), _size*_settings.gridSize).adjusted(-adj, -adj, adj, adj), _settings.gridSize/2, _settings.gridSize/2);
+        painter->drawRoundedRect(QRect(QPoint(0, 0), _size*_settings.gridSize).adjusted(-adj, -adj, adj, adj), _settings.gridSize/2, _settings.gridSize/2);
     }
 
     painter->setOpacity(1.0);
