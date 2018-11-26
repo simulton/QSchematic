@@ -29,10 +29,10 @@ QPointF Utils::clipPointToRectOutline(QPointF point, const QRectF& rect)
 {
     // Create list of edges
     QVector<QLineF> edges(4);
-    edges << QLineF(rect.topLeft(), rect.topRight());
-    edges << QLineF(rect.topRight(), rect.bottomRight());
-    edges << QLineF(rect.bottomRight(), rect.bottomLeft());
-    edges << QLineF(rect.bottomLeft(), rect.topLeft());
+    edges[0] = QLineF(rect.topLeft(), rect.topRight());
+    edges[1] = QLineF(rect.topRight(), rect.bottomRight());
+    edges[2] = QLineF(rect.bottomRight(), rect.bottomLeft());
+    edges[3] = QLineF(rect.bottomLeft(), rect.topLeft());
 
     // Figure out to which edge we're closest to
     const auto& nearestEdge = Utils::lineClosestToPoint(edges, point);
