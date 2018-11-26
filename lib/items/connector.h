@@ -4,6 +4,8 @@
 
 namespace QSchematic {
 
+    class Label;
+
     class Connector : public Item
     {
         Q_OBJECT
@@ -34,13 +36,13 @@ namespace QSchematic {
 
     private:
         void calculateSymbolRect();
-        void calculateTextRect();
+        void calculateTextDirection();
 
         SnapPolicy _snapPolicy;
         QString _text;
         QRectF _symbolRect;
-        QRectF _textRect;
         Direction _textDirection;
+        Label* _label;
     };
 
 }

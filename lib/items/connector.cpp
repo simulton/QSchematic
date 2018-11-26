@@ -1,15 +1,16 @@
 #include <QtMath>
 #include <QPainter>
-#include <QFontMetrics>
+#include <QTransform>
 #include "connector.h"
 #include "node.h"
+#include "label.h"
 #include "../utils.h"
 
 const qreal SIZE               = 1;
 const QColor COLOR_BODY_FILL   = QColor(Qt::green);
 const QColor COLOR_BODY_BORDER = QColor(Qt::black);
 const qreal PEN_WIDTH          = 1.5;
-const int TEXT_PADDING         = 10;
+const int TEXT_PADDING         = 8;
 
 using namespace QSchematic;
 
@@ -18,6 +19,9 @@ Connector::Connector(QGraphicsItem* parent) :
     _snapPolicy(NodeSizerectOutline),
     _textDirection(Direction::LeftToRight)
 {
+    // Label
+    _label = new Label(this);
+
     // Flags
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
 
@@ -27,11 +31,11 @@ Connector::Connector(QGraphicsItem* parent) :
     }
 
     // Connections
-    connect(this, &Connector::moved, [this]{ calculateTextRect(); });
+    connect(this, &Connector::moved, [this]{ calculateTextDirection(); });
 
     // Misc
     calculateSymbolRect();
-    calculateTextRect();
+    calculateTextDirection();
 }
 
 void Connector::setSnapPolicy(Connector::SnapPolicy policy)
@@ -46,21 +50,20 @@ Connector::SnapPolicy Connector::snapPolicy() const
 
 void Connector::setText(const QString& text)
 {
-    _text = text;
+    _label->setText(text);
 
-    calculateTextRect();
-    update();
+    calculateTextDirection();
 }
 
 QString Connector::text() const
 {
-    return _text;
+    return _label->text();
 }
 
 void Connector::update()
 {
     calculateSymbolRect();
-    calculateTextRect();
+    calculateTextDirection();
 
     Item::update();
 }
@@ -77,11 +80,7 @@ QRectF Connector::boundingRect() const
         adj += _settings.highlightRectPadding;
     }
 
-    QRectF rect;
-    rect = rect.united(_symbolRect);
-    rect = rect.united(_textRect);
-
-    return rect.adjusted(-adj, -adj, adj, adj);
+    return _symbolRect.adjusted(-adj, -adj, adj, adj);
 }
 
 QVariant Connector::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
@@ -162,39 +161,6 @@ void Connector::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
     painter->setPen(bodyPen);
     painter->setBrush(bodyBrush);
     painter->drawRoundedRect(_symbolRect, _settings.gridSize/4, _settings.gridSize/4);
-
-    // Text pen
-    QPen textPen;
-    textPen.setStyle(Qt::SolidLine);
-    textPen.setColor(Qt::black);
-
-    // Text option
-    QTextOption textOption;
-    textOption.setWrapMode(QTextOption::NoWrap);
-    textOption.setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-
-    // Draw text
-    painter->setPen(textPen);
-    painter->setFont(QFont());
-    QTransform t = painter->transform();
-    switch (_textDirection) {
-    case LeftToRight:
-    case RightToLeft:
-        t.rotate(0);
-        break;
-
-    case TopToBottom:
-        t.translate(_textRect.bottomLeft().x()-_textRect.width()/2, _textRect.bottomLeft().y());
-        t.rotate(-90);
-        break;
-
-    case BottomToTop:
-        t.translate(_textRect.topLeft().x()+_textRect.width()/2, _textRect.topLeft().y());
-        t.rotate(-90);
-        break;
-    }
-    painter->setTransform(t);
-    painter->drawText(_textRect, text(), textOption);
 }
 
 void Connector::calculateSymbolRect()
@@ -202,19 +168,13 @@ void Connector::calculateSymbolRect()
     _symbolRect = QRectF(-SIZE*_settings.gridSize/2.0, -SIZE*_settings.gridSize/2.0, SIZE*_settings.gridSize, SIZE*_settings.gridSize);
 }
 
-void Connector::calculateTextRect()
+void Connector::calculateTextDirection()
 {
     if (text().isEmpty()) {
 
-        _textRect = QRectF();
         _textDirection = LeftToRight;
 
     } else {
-
-        // Get text width
-        QFontMetrics fontMetrics((QFont()));
-        int textWidth = fontMetrics.width(text());
-        int textHeight = fontMetrics.height();
 
         // Figure out the text direction
         {
@@ -256,23 +216,40 @@ void Connector::calculateTextRect()
             }
         }
 
-        // Update the text rectangle
-        switch (_textDirection) {
-        case LeftToRight:
-            _textRect = QRectF(_symbolRect.topRight().x() + TEXT_PADDING, _symbolRect.topRight().y(), textWidth, textHeight);
-            break;
+        // Place the label accordingly
+        {
+            QPointF labelNewPos = _label->pos();
+            QTransform t;
+            const QRectF& textRect = _label->textRect();
 
-        case RightToLeft:
-            _textRect = QRectF(_symbolRect.topLeft().x() - textWidth - TEXT_PADDING, _symbolRect.topLeft().y(), textWidth, textHeight);
-            break;
+            switch (_textDirection) {
+            case LeftToRight:
+                labelNewPos.rx() = _symbolRect.x() + _symbolRect.width() + TEXT_PADDING;
+                labelNewPos.ry() = _symbolRect.height() - textRect.height() / 2;
+                t.rotate(0);
+                break;
 
-        case TopToBottom:
-            _textRect = QRectF(_symbolRect.bottomLeft().x(), _symbolRect.bottomRight().y() + TEXT_PADDING, textWidth, textHeight);
-            break;
+            case RightToLeft:
+                labelNewPos.rx() = _symbolRect.x() - TEXT_PADDING - textRect.width();
+                labelNewPos.ry() = _symbolRect.height() - textRect.height() / 2;
+                t.rotate(0);
+                break;
 
-        case BottomToTop:
-            _textRect = QRectF(_symbolRect.bottomLeft().x(), _symbolRect.bottomRight().y() - textWidth - TEXT_PADDING , textWidth, textHeight);
-            break;
+            case TopToBottom:
+                labelNewPos.rx() = _symbolRect.width() - textRect.width() / 2;
+                labelNewPos.ry() = _symbolRect.y() + _symbolRect.height() + TEXT_PADDING;
+                t.rotate(-90);
+                break;
+
+            case BottomToTop:
+                labelNewPos.rx() = _symbolRect.width() - textRect.width() / 2;
+                labelNewPos.ry() = _symbolRect.y() - TEXT_PADDING;
+                t.rotate(-90);
+                break;
+            }
+
+            _label->setPos(labelNewPos);
+            _label->setTransform(t);
         }
 
     }
