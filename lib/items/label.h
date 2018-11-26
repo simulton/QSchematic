@@ -15,12 +15,12 @@ namespace QSchematic {
         virtual QRectF boundingRect() const final;
 
         void setText(const QString& text);
+        QString text() const;
         void setFont(const QFont& font);
+        QFont font() const;
         void setConnectionPoint(const QPointF& connectionPoint);    // Parent coordinates
 
     protected:
-        QString text() const;
-        QFont font() const;
         QRectF textRect() const;
         void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
 
