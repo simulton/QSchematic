@@ -40,7 +40,7 @@ namespace QSchematic {
         QString _text;
         QRectF _symbolRect;
         QRectF _textRect;
-        Direction _textDiretion;
+        Direction _textDirection;
     };
 
 }

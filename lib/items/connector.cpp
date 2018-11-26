@@ -16,7 +16,7 @@ using namespace QSchematic;
 Connector::Connector(QGraphicsItem* parent) :
     Item(Item::ConnectorType, parent),
     _snapPolicy(NodeSizerectOutline),
-    _textDiretion(Direction::LeftToRight)
+    _textDirection(Direction::LeftToRight)
 {
     // Flags
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
@@ -177,7 +177,7 @@ void Connector::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
     painter->setPen(textPen);
     painter->setFont(QFont());
     QTransform t = painter->transform();
-    switch (_textDiretion) {
+    switch (_textDirection) {
     case LeftToRight:
     case RightToLeft:
         t.rotate(0);
@@ -207,7 +207,7 @@ void Connector::calculateTextRect()
     if (text().isEmpty()) {
 
         _textRect = QRectF();
-        _textDiretion = LeftToRight;
+        _textDirection = LeftToRight;
 
     } else {
 
@@ -218,50 +218,46 @@ void Connector::calculateTextRect()
 
         // Figure out the text direction
         {
-            _textDiretion = LeftToRight;
+            _textDirection = LeftToRight;
             const Node* parentNode = qgraphicsitem_cast<const Node*>(parentItem());
             if (parentNode) {
 
-                switch (_snapPolicy) {
+                // Create list of edges
+                QVector<QLineF> edges(4);
+                const QRect& rect = QRect(0, 0, parentNode->size().width()*_settings.gridSize, parentNode->size().height()*_settings.gridSize);
+                edges[0] = QLineF(rect.topLeft(), rect.topRight());
+                edges[1] = QLineF(rect.topRight(), rect.bottomRight());
+                edges[2] = QLineF(rect.bottomRight(), rect.bottomLeft());
+                edges[3] = QLineF(rect.bottomLeft(), rect.topLeft());
 
-                case Anywhere:
-    #warning ToDo: Implement this
+                // Figure out which edge we're closest to
+                auto closestEdgeIterator = Utils::lineClosestToPoint(edges, pos());
+                int edgeIndex = closestEdgeIterator - edges.constBegin();
+
+                // Set the correct text direction
+                switch (edgeIndex) {
+                case 0:
+                    _textDirection = TopToBottom;
                     break;
 
-                case NodeSizerect:
-    #warning ToDo: Implement this
+                case 1:
+                    _textDirection = RightToLeft;
                     break;
 
-                case NodeSizerectOutline:
-                {
-                    // Left
-                    if (gridPointX() == 0) {
-                        _textDiretion = LeftToRight;
+                case 2:
+                    _textDirection = BottomToTop;
+                    break;
 
-                    // Right
-                    } else if (gridPointX() == parentNode->size().width()) {
-                        _textDiretion = RightToLeft;
-
-                    // Top
-                    } else if (gridPointY() == 0) {
-                        _textDiretion = TopToBottom;
-
-                    // Bottom
-                    } else if (gridPointY() == parentNode->size().height()) {
-                        _textDiretion = BottomToTop;
-                    }
-                }
-
-                case NodeShape:
-    #warning ToDo: Implement this
+                case 3:
+                default:
+                    _textDirection = LeftToRight;
                     break;
                 }
-
             }
         }
 
         // Update the text rectangle
-        switch (_textDiretion) {
+        switch (_textDirection) {
         case LeftToRight:
             _textRect = QRectF(_symbolRect.topRight().x() + TEXT_PADDING, _symbolRect.topRight().y(), textWidth, textHeight);
             break;
