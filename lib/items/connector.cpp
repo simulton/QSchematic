@@ -218,10 +218,6 @@ void Connector::calculateTextRect()
 
         // Figure out the text direction
         {
-            QRectF fullRect;
-            fullRect = fullRect.united(_symbolRect);
-            fullRect = fullRect.united(_textRect);
-
             _textDiretion = LeftToRight;
             const Node* parentNode = qgraphicsitem_cast<const Node*>(parentItem());
             if (parentNode) {
