@@ -276,11 +276,12 @@ int Wire::removeObsoletePoints()
     return pointsToRemove.count();
 }
 
-void Wire::movePointBy(size_t index, const QVector2D& moveBy)
+void Wire::movePointBy(int index, const QVector2D& moveBy)
 {
-    if (index > static_cast<size_t>(_points.count()-1)) {
+    if (index < 0 or index > _points.count()-1) {
         return;
     }
+
     prepareGeometryChange();
     _points[index] = WirePoint(_points.at(index).toPoint() + moveBy.toPoint());
     calculateBoundingRect();
@@ -289,9 +290,9 @@ void Wire::movePointBy(size_t index, const QVector2D& moveBy)
     emit pointMoved(*this, _points[index]);
 }
 
-void Wire::movePointTo(size_t index, const QPoint& moveTo)
+void Wire::movePointTo(int index, const QPoint& moveTo)
 {
-    if (index > static_cast<size_t>(_points.count()-1)) {
+    if (index < 0 or index > _points.count()-1) {
         return;
     }
 
@@ -303,9 +304,9 @@ void Wire::movePointTo(size_t index, const QPoint& moveTo)
     emit pointMoved(*this, _points[index]);
 }
 
-void Wire::moveLineSegmentBy(size_t index, const QVector2D& moveBy)
+void Wire::moveLineSegmentBy(int index, const QVector2D& moveBy)
 {
-    if (index > static_cast<size_t>(_points.count()-1)) {
+    if (index < 0 or index > _points.count()-1) {
         return;
     }
 
@@ -314,9 +315,9 @@ void Wire::moveLineSegmentBy(size_t index, const QVector2D& moveBy)
     movePointBy(index+1, moveBy);
 }
 
-void Wire::setPointIsJunction(size_t index, bool isJunction)
+void Wire::setPointIsJunction(int index, bool isJunction)
 {
-    if (index > static_cast<size_t>(_points.count()-1)) {
+    if (index < 0 or index > _points.count()-1) {
         return;
     }
 

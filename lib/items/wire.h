@@ -39,10 +39,10 @@ namespace QSchematic {
         void removePoint(const QPoint& point);
         int removeDuplicatePoints();
         int removeObsoletePoints();
-        void movePointBy(size_t index, const QVector2D& moveBy);
-        void movePointTo(size_t index, const QPoint& moveTo);
-        void moveLineSegmentBy(size_t index, const QVector2D& moveBy);
-        void setPointIsJunction(size_t index, bool isJunction);
+        void movePointBy(int index, const QVector2D& moveBy);
+        void movePointTo(int index, const QPoint& moveTo);
+        void moveLineSegmentBy(int index, const QVector2D& moveBy);
+        void setPointIsJunction(int index, bool isJunction);
         bool pointIsOnWire(const QPoint& point) const;
 
         QVector<QPoint> points() const;
