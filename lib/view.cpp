@@ -113,6 +113,15 @@ void View::mouseReleaseEvent(QMouseEvent *event)
     }
 }
 
+void View::setScene(Scene* scene)
+{
+    if (scene) {
+        connect(scene, &Scene::modeChanged, this, &View::sceneModeChanged);
+    }
+
+    QGraphicsView::setScene(scene);
+}
+
 void View::setSettings(const Settings& settings)
 {
     _settings = settings;
@@ -121,11 +130,11 @@ void View::setSettings(const Settings& settings)
     setRenderHint(QPainter::Antialiasing, _settings.antialiasing);
 }
 
-void View::setMode(Scene::Mode mode)
+void View::sceneModeChanged(Scene::Mode newMode)
 {
 #warning ToDo: Remove this and exclusively use the Scene::proposedCursor() signal
     // Set the cursor shape
-    switch (mode) {
+    switch (newMode) {
     case Scene::NormalMode:
         viewport()->setCursor(Qt::ArrowCursor);
         break;
@@ -134,8 +143,6 @@ void View::setMode(Scene::Mode mode)
         viewport()->setCursor(Qt::CrossCursor);
         break;
     }
-
-    update();
 }
 
 void View::setZoomValue(qreal factor)

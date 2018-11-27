@@ -14,6 +14,7 @@ namespace QSchematic {
         explicit View(QWidget* parent = nullptr);
         virtual ~View() override = default;
 
+        void setScene(Scene* scene);
         void setSettings(const Settings& settings);
         qreal zoomValue() const;
 
@@ -21,8 +22,10 @@ namespace QSchematic {
         void zoomChanged(qreal factor);
 
     public slots:
-        void setMode(Scene::Mode mode);
         void setZoomValue(qreal factor);
+
+    private slots:
+        void sceneModeChanged(Scene::Mode newMode);
 
     protected:
         virtual void keyPressEvent(QKeyEvent* event) override;
@@ -39,5 +42,4 @@ namespace QSchematic {
         bool _pan;
         int _panStartX, _panStartY;
     };
-
 }
