@@ -20,7 +20,7 @@ Node::Node(QGraphicsItem* parent) :
     Item(ItemType::NodeType, parent),
     _mode(None),
     _size(DEFAULT_WIDTH, DEFAULT_HEIGHT),
-    _sizePolicy(static_cast<SizePolicy>(0)),
+    _mouseResizePolicy(static_cast<ResizePolicy>(0)),
     _allowMouseResize(true),
     _connectorsMovable(false),
     _connectorsSnapPolicy(Connector::NodeSizerectOutline),
@@ -57,14 +57,14 @@ QRect Node::sizeRect() const
     return QRect(0, 0, _size.width(), _size.height());
 }
 
-void Node::setSizePolicy(SizePolicy policy)
+void Node::setMouseResizePolicy(ResizePolicy policy)
 {
-    _sizePolicy = policy;
+    _mouseResizePolicy = policy;
 }
 
-Node::SizePolicy Node::sizePolicy() const
+Node::ResizePolicy Node::mouseResizePolicy() const
 {
-    return _sizePolicy;
+    return _mouseResizePolicy;
 }
 
 void Node::setAllowMouseResize(bool enabled)
@@ -278,6 +278,15 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             if (dx == 0 and dy == 0) {
                 break;
             }
+
+            // Honor mouse resize policy
+            if (_mouseResizePolicy != 0) {
+                if (qAbs(dx % 2) != 0 or qAbs(dy % 2) != 0) {
+                    break;
+                }
+            }
+
+            // Track this
             _lastMousePosWithGridMove = newMouseGridPos;
 
             // Perform resizing
@@ -329,6 +338,7 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                 break;
             }
 
+            // Set new size & position
             setSize(newWidth, newHeight);
             setGridPoint(newX, newY);
         }
