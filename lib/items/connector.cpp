@@ -67,6 +67,11 @@ void Connector::setLabelVisibility(bool enabled)
     _label->setVisible(enabled);
 }
 
+bool Connector::labelIsVisible() const
+{
+    return _label->isVisible();
+}
+
 void Connector::update()
 {
     calculateSymbolRect();

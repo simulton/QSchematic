@@ -28,6 +28,7 @@ namespace QSchematic {
         void setText(const QString& text);
         QString text() const;
         void setLabelVisibility(bool enabled);
+        bool labelIsVisible() const;
         virtual void update() override;
 
         QPoint connectionPoint() const;
