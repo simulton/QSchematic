@@ -26,10 +26,14 @@ CONFIG += c++11 silent
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    items/operation.cpp \
+    items/myconnector.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    items/operation.h \
+    items/myconnector.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -2,11 +2,12 @@
 #include <QSlider>
 #include <QLabel>
 #include <QAction>
-#include "mainwindow.h"
 #include "../../../lib/scene.h"
 #include "../../../lib/view.h"
 #include "../../../lib/settings.h"
 #include "../../../lib/items/node.h"
+#include "mainwindow.h"
+#include "items/operation.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -15,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Settings
     _settings.debug = false;
+    _settings.routeStraightAngles = false;
 
     // Scene
     _scene = new QSchematic::Scene;
@@ -106,15 +108,22 @@ void MainWindow::settingsChanged()
 
 void MainWindow::demo()
 {
+    _scene->setSceneRect(-300, -300, 5000, 5000);
+
     QSchematic::Node* n1 = new QSchematic::Node();
     n1->setGridPoint(-5, -2);
-    n1->addConnector(QPoint(0, 3), QStringLiteral("Foo"));
-    n1->addConnector(QPoint(0, 5), QStringLiteral("Bar"));
+    n1->addConnector(new QSchematic::Connector(QPoint(0, 3), QStringLiteral("Foo")));
+    n1->addConnector(new QSchematic::Connector(QPoint(0, 5), QStringLiteral("Bar")));
     n1->setConnectorsMovable(true);
     _scene->addItem(n1);
 
     QSchematic::Node* n2 = new QSchematic::Node();
-    n2->setGridPoint(6, 7);
-    n2->addConnector(QPoint(0, 2), QStringLiteral("Connector"));
+    n2->setGridPoint(6, 11);
+    n2->addConnector(new QSchematic::Connector(QPoint(0, 2), QStringLiteral("Connector")));
     _scene->addItem(n2);
+
+    Operation* o = new Operation;
+    o->setGridPoint(4, 15);
+    o->setConnectorsMovable(true);
+    _scene->addItem(o);
 }

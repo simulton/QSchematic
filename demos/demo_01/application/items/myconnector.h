@@ -1,11 +1,16 @@
-#ifndef CONNECTOR_H
-#define CONNECTOR_H
+#pragma once
 
+#include "../../../lib/items/connector.h"
 
-class Connector
+class MyConnector : public QSchematic::Connector
 {
-public:
-    Connector();
-};
+    Q_OBJECT
+    Q_DISABLE_COPY(MyConnector)
 
-#endif // CONNECTOR_H
+public:
+    MyConnector(const QPoint& gridPoint = QPoint(), QGraphicsItem* parent = nullptr);
+    virtual ~MyConnector() override = default;
+
+    virtual QRectF boundingRect() const override;
+    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
+};

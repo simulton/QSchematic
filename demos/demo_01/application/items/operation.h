@@ -1,11 +1,16 @@
-#ifndef OPERATION_H
-#define OPERATION_H
+#pragma once
+
+#include "../../../lib/items/node.h"
 
 
-class Operation
+class Operation : public QSchematic::Node
 {
-public:
-    Operation();
-};
+    Q_OBJECT
+    Q_DISABLE_COPY(Operation)
 
-#endif // OPERATION_H
+public:
+    explicit Operation(QGraphicsItem* parent = nullptr);
+    virtual ~Operation() override = default;
+
+    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
+};
