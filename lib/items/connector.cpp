@@ -62,6 +62,11 @@ QString Connector::text() const
     return _label->text();
 }
 
+void Connector::setLabelVisibility(bool enabled)
+{
+    _label->setVisible(enabled);
+}
+
 void Connector::update()
 {
     calculateSymbolRect();
