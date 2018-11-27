@@ -21,6 +21,14 @@ namespace QSchematic {
         void sizeChanged(const QSize& newSize);
 
     public:
+        enum SizePolicy {
+            VerticalOddOnly    = 0x01,
+            VerticalEvenOnly   = 0x02,
+            HorizontalOddOnly  = 0x04,
+            HorizontalEvenOnly = 0x08
+        };
+        Q_ENUM(SizePolicy)
+
         Node(QGraphicsItem* parent = nullptr);
         virtual ~Node() override = default;
 
@@ -28,6 +36,8 @@ namespace QSchematic {
         void setSize(int width, int height);
         QSize size() const;
         QRect sizeRect() const;
+        void setSizePolicy(SizePolicy policy);
+        SizePolicy sizePolicy() const;
         void setAllowMouseResize(bool enabled);
         bool allowMouseResize() const;
         bool addConnector(Connector* connector);
@@ -62,8 +72,10 @@ namespace QSchematic {
         };
 
         Mode _mode;
+        QPoint _lastMousePosWithGridMove;
         RectanglePoint _resizeHandle;
         QSize _size;
+        SizePolicy _sizePolicy;
         bool _allowMouseResize;
         bool _connectorsMovable;
         Connector::SnapPolicy _connectorsSnapPolicy;

@@ -20,6 +20,7 @@ Node::Node(QGraphicsItem* parent) :
     Item(ItemType::NodeType, parent),
     _mode(None),
     _size(DEFAULT_WIDTH, DEFAULT_HEIGHT),
+    _sizePolicy(static_cast<SizePolicy>(0)),
     _allowMouseResize(true),
     _connectorsMovable(false),
     _connectorsSnapPolicy(Connector::NodeSizerectOutline),
@@ -43,7 +44,7 @@ void Node::setSize(const QSize& size)
 
 void Node::setSize(int width, int height)
 {
-    setSize(QSize(width, height));
+    return setSize(QSize(width, height));
 }
 
 QSize Node::size() const
@@ -54,6 +55,16 @@ QSize Node::size() const
 QRect Node::sizeRect() const
 {
     return QRect(0, 0, _size.width(), _size.height());
+}
+
+void Node::setSizePolicy(SizePolicy policy)
+{
+    _sizePolicy = policy;
+}
+
+Node::SizePolicy Node::sizePolicy() const
+{
+    return _sizePolicy;
 }
 
 void Node::setAllowMouseResize(bool enabled)
@@ -215,6 +226,7 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent* event)
         while (it != handles.constEnd()) {
             if (it.value().contains(event->pos().toPoint())) {
                 _mode = Resize;
+                _lastMousePosWithGridMove = _settings.toGridPoint(event->scenePos());
                 _resizeHandle = it.key();
                 break;
             }
@@ -256,10 +268,9 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 
         // Left mouse button to move
         if (event->buttons() & Qt::LeftButton) {
-            static QPoint lastMousePosWithGridMove = newMouseGridPos;
 
             // Calculate mouse movement in grid units
-            QPoint d = newMouseGridPos - lastMousePosWithGridMove;
+            QPoint d = newMouseGridPos - _lastMousePosWithGridMove;
             int dx = d.x();
             int dy = d.y();
 
@@ -267,7 +278,7 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             if (dx == 0 and dy == 0) {
                 break;
             }
-            lastMousePosWithGridMove = newMouseGridPos;
+            _lastMousePosWithGridMove = newMouseGridPos;
 
             // Perform resizing
             int newX = gridPointX();
