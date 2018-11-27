@@ -27,6 +27,10 @@ namespace QSchematic {
         SnapPolicy snapPolicy() const;
         void setText(const QString& text);
         QString text() const;
+        void setForceTextDirection(bool enabled);
+        bool forceTextDirection() const;
+        void setForcedTextDirection(Direction direction);
+        Direction textDirection() const;
         void setLabelIsVisible(bool enabled);
         bool labelIsVisible() const;
         virtual void update() override;
@@ -42,6 +46,7 @@ namespace QSchematic {
 
         SnapPolicy _snapPolicy;
         QRectF _symbolRect;
+        bool _forceTextDirection;
         Direction _textDirection;
         Label* _label;
     };

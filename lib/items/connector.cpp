@@ -17,6 +17,7 @@ using namespace QSchematic;
 Connector::Connector(const QPoint& gridPoint, const QString& text, QGraphicsItem* parent) :
     Item(Item::ConnectorType, parent),
     _snapPolicy(NodeSizerectOutline),
+    _forceTextDirection(false),
     _textDirection(Direction::LeftToRight)
 {
     // Label
@@ -60,6 +61,28 @@ void Connector::setText(const QString& text)
 QString Connector::text() const
 {
     return _label->text();
+}
+
+void Connector::setForceTextDirection(bool enabled)
+{
+    _forceTextDirection = enabled;
+}
+
+bool Connector::forceTextDirection() const
+{
+    return _forceTextDirection;
+}
+
+void Connector::setForcedTextDirection(Direction direction)
+{
+    _textDirection = direction;
+
+    update();
+}
+
+Direction Connector::textDirection() const
+{
+    return _textDirection;
 }
 
 void Connector::setLabelIsVisible(bool enabled)
@@ -181,87 +204,90 @@ void Connector::calculateSymbolRect()
 
 void Connector::calculateTextDirection()
 {
+    // Honor forced override
+    if (_forceTextDirection) {
+        return;
+    }
+
+    // Nothing to do if there's no text
     if (text().isEmpty()) {
-
         _textDirection = LeftToRight;
+        return;
+    }
 
-    } else {
+    // Figure out the text direction
+    {
+        _textDirection = LeftToRight;
+        const Node* parentNode = qgraphicsitem_cast<const Node*>(parentItem());
+        if (parentNode) {
 
-        // Figure out the text direction
-        {
-            _textDirection = LeftToRight;
-            const Node* parentNode = qgraphicsitem_cast<const Node*>(parentItem());
-            if (parentNode) {
+            // Create list of edges
+            QVector<QLineF> edges(4);
+            const QRect& rect = QRect(0, 0, parentNode->size().width()*_settings.gridSize, parentNode->size().height()*_settings.gridSize);
+            edges[0] = QLineF(rect.topLeft(), rect.topRight());
+            edges[1] = QLineF(rect.topRight(), rect.bottomRight());
+            edges[2] = QLineF(rect.bottomRight(), rect.bottomLeft());
+            edges[3] = QLineF(rect.bottomLeft(), rect.topLeft());
 
-                // Create list of edges
-                QVector<QLineF> edges(4);
-                const QRect& rect = QRect(0, 0, parentNode->size().width()*_settings.gridSize, parentNode->size().height()*_settings.gridSize);
-                edges[0] = QLineF(rect.topLeft(), rect.topRight());
-                edges[1] = QLineF(rect.topRight(), rect.bottomRight());
-                edges[2] = QLineF(rect.bottomRight(), rect.bottomLeft());
-                edges[3] = QLineF(rect.bottomLeft(), rect.topLeft());
+            // Figure out which edge we're closest to
+            auto closestEdgeIterator = Utils::lineClosestToPoint(edges, pos());
+            int edgeIndex = closestEdgeIterator - edges.constBegin();
 
-                // Figure out which edge we're closest to
-                auto closestEdgeIterator = Utils::lineClosestToPoint(edges, pos());
-                int edgeIndex = closestEdgeIterator - edges.constBegin();
-
-                // Set the correct text direction
-                switch (edgeIndex) {
-                case 0:
-                    _textDirection = TopToBottom;
-                    break;
-
-                case 1:
-                    _textDirection = RightToLeft;
-                    break;
-
-                case 2:
-                    _textDirection = BottomToTop;
-                    break;
-
-                case 3:
-                default:
-                    _textDirection = LeftToRight;
-                    break;
-                }
-            }
-        }
-
-        // Place the label accordingly
-        {
-            QPointF labelNewPos = _label->pos();
-            QTransform t;
-            const QRectF& textRect = _label->textRect();
-
-            switch (_textDirection) {
-            case LeftToRight:
-                labelNewPos.rx() = _symbolRect.x() + _symbolRect.width() + TEXT_PADDING;
-                labelNewPos.ry() = _symbolRect.height() - textRect.height() / 2;
-                t.rotate(0);
+            // Set the correct text direction
+            switch (edgeIndex) {
+            case 0:
+                _textDirection = TopToBottom;
                 break;
 
-            case RightToLeft:
-                labelNewPos.rx() = _symbolRect.x() - TEXT_PADDING - textRect.width();
-                labelNewPos.ry() = _symbolRect.height() - textRect.height() / 2;
-                t.rotate(0);
+            case 1:
+                _textDirection = RightToLeft;
                 break;
 
-            case TopToBottom:
-                labelNewPos.rx() = _symbolRect.width() - textRect.width() / 2;
-                labelNewPos.ry() = _symbolRect.y() + _symbolRect.height() + TEXT_PADDING;
-                t.rotate(-90);
+            case 2:
+                _textDirection = BottomToTop;
                 break;
 
-            case BottomToTop:
-                labelNewPos.rx() = _symbolRect.width() - textRect.width() / 2;
-                labelNewPos.ry() = _symbolRect.y() - TEXT_PADDING;
-                t.rotate(-90);
+            case 3:
+            default:
+                _textDirection = LeftToRight;
                 break;
             }
+        }
+    }
 
-            _label->setPos(labelNewPos);
-            _label->setTransform(t);
+    // Place the label accordingly
+    {
+        QPointF labelNewPos = _label->pos();
+        QTransform t;
+        const QRectF& textRect = _label->textRect();
+
+        switch (_textDirection) {
+        case LeftToRight:
+            labelNewPos.rx() = _symbolRect.x() + _symbolRect.width() + TEXT_PADDING;
+            labelNewPos.ry() = _symbolRect.height() - textRect.height() / 2;
+            t.rotate(0);
+            break;
+
+        case RightToLeft:
+            labelNewPos.rx() = _symbolRect.x() - TEXT_PADDING - textRect.width();
+            labelNewPos.ry() = _symbolRect.height() - textRect.height() / 2;
+            t.rotate(0);
+            break;
+
+        case TopToBottom:
+            labelNewPos.rx() = _symbolRect.width() - textRect.width() / 2;
+            labelNewPos.ry() = _symbolRect.y() + _symbolRect.height() + TEXT_PADDING;
+            t.rotate(-90);
+            break;
+
+        case BottomToTop:
+            labelNewPos.rx() = _symbolRect.width() - textRect.width() / 2;
+            labelNewPos.ry() = _symbolRect.y() - TEXT_PADDING;
+            t.rotate(-90);
+            break;
         }
 
+        _label->setPos(labelNewPos);
+        _label->setTransform(t);
     }
 }
