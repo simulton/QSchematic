@@ -17,6 +17,9 @@ namespace QSchematic {
         Q_OBJECT
         Q_DISABLE_COPY(Node)
 
+    signals:
+        void sizeChanged(const QSize& newSize);
+
     public:
         Node(QGraphicsItem* parent = nullptr);
         virtual ~Node() override = default;
