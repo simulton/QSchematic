@@ -31,6 +31,9 @@ namespace QSchematic {
         void setAllowMouseResize(bool enabled);
         bool allowMouseResize() const;
         bool addConnector(Connector* connector);
+        bool removeConnector(const QPoint& point);
+        void clearConnectors();
+        QList<Connector*> connectors() const;
         QList<QPoint> connectionPoints() const;
         bool isConnectionPoint(const QPoint& gridPoint) const;
         void setConnectorsMovable(bool enabled);

@@ -37,6 +37,8 @@ void Node::setSize(const QSize& size)
     prepareGeometryChange();
 
     _size = size;
+
+    emit sizeChanged(_size);
 }
 
 void Node::setSize(int width, int height)
@@ -103,6 +105,33 @@ bool Node::addConnector(Connector* connector)
     _connectors << connector;
 
     return true;
+}
+
+bool Node::removeConnector(const QPoint& point)
+{
+    for (auto it = _connectors.begin(); it != _connectors.end(); it++) {
+        Q_ASSERT(*it);
+
+        if (mapFromItem(*it, (*it)->connectionPoint()) == point) {
+            _connectors.removeAll(*it);
+            delete *it;
+
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void Node::clearConnectors()
+{
+    qDeleteAll(_connectors);
+    _connectors.clear();
+}
+
+QList<Connector*> Node::connectors() const
+{
+    return _connectors;
 }
 
 QList<QPoint> Node::connectionPoints() const
