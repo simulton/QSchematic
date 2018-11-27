@@ -16,9 +16,7 @@ using namespace QSchematic;
 View::View(QWidget* parent) :
     QGraphicsView(parent),
     _scaleFactor(1.0),
-    _pan(false),
-    _panStartX(0),
-    _panStartY(0)
+    _mode(NormalMode)
 {
     // Scroll bars
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
@@ -77,11 +75,14 @@ void View::mouseMoveEvent(QMouseEvent *event)
 {
     QGraphicsView::mouseMoveEvent(event);
 
-    if (_pan) {
-        horizontalScrollBar()->setValue(horizontalScrollBar()->value() - (event->x() - _panStartX));
-        verticalScrollBar()->setValue(verticalScrollBar()->value() - (event->y() - _panStartY));
-        _panStartX = event->x();
-        _panStartY = event->y();
+    switch (_mode) {
+    case NormalMode:
+        break;
+
+    case PanMode:
+        horizontalScrollBar()->setValue(horizontalScrollBar()->value() - (event->x() - _panStart.x()));
+        verticalScrollBar()->setValue(verticalScrollBar()->value() - (event->y() - _panStart.y()));
+        _panStart = event->pos();
         event->accept();
         return;
     }
@@ -92,9 +93,8 @@ void View::mousePressEvent(QMouseEvent *event)
     QGraphicsView::mousePressEvent(event);
 
     if (event->button() == Qt::MiddleButton) {
-        _pan = true;
-        _panStartX = event->x();
-        _panStartY = event->y();
+        setMode(PanMode);
+        _panStart = event->pos();
         setCursor(Qt::ClosedHandCursor);
         event->accept();
         return;
@@ -106,7 +106,7 @@ void View::mouseReleaseEvent(QMouseEvent *event)
     QGraphicsView::mouseReleaseEvent(event);
 
     if (event->button() == Qt::MiddleButton) {
-        _pan = false;
+        setMode(NormalMode);
         setCursor(Qt::ArrowCursor);
         event->accept();
         return;
@@ -158,6 +158,13 @@ void View::updateScale()
     setTransform(QTransform::fromScale(_scaleFactor, _scaleFactor));
 
     emit zoomChanged(_scaleFactor);
+}
+
+void View::setMode(Mode newMode)
+{
+    _mode = newMode;
+
+    emit modeChanged(_mode);
 }
 
 qreal View::zoomValue() const

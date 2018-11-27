@@ -11,6 +11,11 @@ namespace QSchematic {
         Q_DISABLE_COPY(View)
 
     public:
+        enum Mode {
+            NormalMode,
+            PanMode
+        };
+
         explicit View(QWidget* parent = nullptr);
         virtual ~View() override = default;
 
@@ -20,6 +25,7 @@ namespace QSchematic {
 
     signals:
         void zoomChanged(qreal factor);
+        void modeChanged(Mode newMode);
 
     public slots:
         void setZoomValue(qreal factor);
@@ -36,10 +42,11 @@ namespace QSchematic {
 
     private:
         void updateScale();
+        void setMode(Mode newMode);
 
         Settings _settings;
         qreal _scaleFactor;
-        bool _pan;
-        int _panStartX, _panStartY;
+        Mode _mode;
+        QPoint _panStart;
     };
 }
