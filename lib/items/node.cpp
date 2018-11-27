@@ -57,6 +57,11 @@ QRect Node::sizeRect() const
     return QRect(0, 0, _size.width(), _size.height());
 }
 
+QRect Node::sizeSceneRect() const
+{
+    return QRect(0, 0, _size.width()*_settings.gridSize, _size.height()*_settings.gridSize);
+}
+
 void Node::setMouseResizePolicy(ResizePolicy policy)
 {
     _mouseResizePolicy = policy;

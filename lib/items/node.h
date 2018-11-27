@@ -36,6 +36,7 @@ namespace QSchematic {
         void setSize(int width, int height);
         QSize size() const;
         QRect sizeRect() const;
+        QRect sizeSceneRect() const;
         void setMouseResizePolicy(ResizePolicy policy);
         ResizePolicy mouseResizePolicy() const;
         void setAllowMouseResize(bool enabled);
