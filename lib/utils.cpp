@@ -16,6 +16,11 @@ QPoint Utils::centerPoint(const QPoint& p1, const QPoint& p2)
     return (p1 + p2) / 2;
 }
 
+QPointF Utils::centerPoint(const QPointF& p1, const QPointF& p2)
+{
+    return (p1 + p2) / 2;
+}
+
 QPointF Utils::clipPointToRect(QPointF point, const QRectF& rect)
 {
     // Clip
@@ -94,4 +99,29 @@ QVector<QLineF>::const_iterator Utils::lineClosestToPoint(const QVector<QLineF>&
 
     // Snap to that edge
     return nearest.first;
+}
+
+QVector<QPointF> Utils::rectanglePoints(const QRectF& rect, RectanglePointTypes pointTypes)
+{
+    QVector<QPointF> points;
+
+    // Add corners (if supposed to)
+    if (pointTypes & RectangleCornerPoints) {
+        points.reserve(4);
+        points.append(rect.topLeft());
+        points.append(rect.topRight());
+        points.append(rect.bottomLeft());
+        points.append(rect.bottomRight());
+    }
+
+    // Add edges center points (if supposed to)
+    if (pointTypes & RectangleEdgeCenterPoints) {
+        points.reserve(4);
+        points.append(Utils::centerPoint(rect.topLeft(), rect.topRight()));
+        points.append(Utils::centerPoint(rect.topRight(), rect.bottomRight()));
+        points.append(Utils::centerPoint(rect.bottomRight(), rect.bottomLeft()));
+        points.append(Utils::centerPoint(rect.bottomLeft(), rect.topLeft()));
+    }
+
+    return points;
 }
