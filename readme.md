@@ -22,6 +22,10 @@ The entire library is BSD 3-clause licensed.
 Special thank goes to Professor François Corthay (Switzerland) for privately funding this project.
 
 # Architecture
-Have some tasty class diagrams:
+Did someone say UML?!
+
+The class diagramm below shows the overall architecture of the system:
 ![System](https://github.com/simulton/QSchematic/blob/master/docs/uml/export/jpg/Model!SchematicEditor!System_2.jpg?raw=true)
-![Items](https://raw.githubusercontent.com/simulton/QSchematic/master/docs/uml/export/jpg/Model!SchematicEditor!Items_1.jpg)
+
+All items that are part of the `Scene` inherit from the `Item` class. There are built-in specialized classes for nodes, wires and so on:
+![Items](https://github.com/simulton/QSchematic/blob/master/docs/uml/export/jpg/Model!SchematicEditor!Items_1.jpg?raw=true)
