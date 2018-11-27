@@ -15,9 +15,13 @@ This library is known to work with Qt 5.
   - Qt 5
   - C++11 compatible compiler
 
-
 # Licensing
 The entire library is BSD 3-clause licensed.
 
 # Credits
 Special thank goes to Professor François Corthay (Switzerland) for privately funding this project.
+
+# Architecture
+Have some tasty class diagrams:
+![System](https://github.com/simulton/QSchematic/blob/master/docs/uml/export/jpg/Model!SchematicEditor!System_2.jpg?raw=true)
+![Items](https://raw.githubusercontent.com/simulton/QSchematic/master/docs/uml/export/jpg/Model!SchematicEditor!Items_1.jpg)
