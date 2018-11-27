@@ -14,13 +14,14 @@ const int TEXT_PADDING         = 8;
 
 using namespace QSchematic;
 
-Connector::Connector(QGraphicsItem* parent) :
+Connector::Connector(const QPoint& gridPoint, const QString& text, QGraphicsItem* parent) :
     Item(Item::ConnectorType, parent),
     _snapPolicy(NodeSizerectOutline),
     _textDirection(Direction::LeftToRight)
 {
     // Label
     _label = new Label(this);
+    _label->setText(text);
 
     // Flags
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
@@ -34,6 +35,7 @@ Connector::Connector(QGraphicsItem* parent) :
     connect(this, &Connector::moved, [this]{ calculateTextDirection(); });
 
     // Misc
+    setGridPoint(gridPoint);
     calculateSymbolRect();
     calculateTextDirection();
 }

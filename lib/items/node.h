@@ -27,7 +27,7 @@ namespace QSchematic {
         QRect sizeRect() const;
         void setAllowMouseResize(bool enabled);
         bool allowMouseResize() const;
-        bool addConnector(const QPoint& point, const QString& text = QString());
+        bool addConnector(Connector* connector);
         QList<QPoint> connectionPoints() const;
         bool isConnectionPoint(const QPoint& gridPoint) const;
         void setConnectorsMovable(bool enabled);

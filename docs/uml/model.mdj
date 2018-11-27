@@ -1261,9 +1261,9 @@
 											"_parent": {
 												"$ref": "AAAAAAFmsyN6THGNVUc="
 											},
-											"name": "point",
+											"name": "connector ",
 											"type": {
-												"$ref": "AAAAAAFmwhdOmGYvbWY="
+												"$ref": "AAAAAAFmsx1Vl2Wko8g="
 											}
 										},
 										{
@@ -1274,15 +1274,6 @@
 											},
 											"type": "bool",
 											"direction": "return"
-										},
-										{
-											"_type": "UMLParameter",
-											"_id": "AAAAAAFnUT6rlPUwfoU=",
-											"_parent": {
-												"$ref": "AAAAAAFmsyN6THGNVUc="
-											},
-											"name": "text",
-											"type": "QString"
 										}
 									]
 								},
@@ -2565,7 +2556,7 @@
 													"top": 807,
 													"width": 284.349609375,
 													"height": 13,
-													"text": "+addConnector(point: QPoint, text: QString): bool",
+													"text": "+addConnector(connector : Connector): bool",
 													"horizontalAlignment": 0
 												},
 												{

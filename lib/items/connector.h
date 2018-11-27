@@ -20,7 +20,7 @@ namespace QSchematic {
         };
         Q_ENUM(SnapPolicy)
 
-        Connector(QGraphicsItem* parent = nullptr);
+        Connector(const QPoint& gridPoint = QPoint(), const QString& text = QString(), QGraphicsItem* parent = nullptr);
         virtual ~Connector() override = default;
 
         void setSnapPolicy(SnapPolicy policy);

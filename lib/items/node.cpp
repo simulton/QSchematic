@@ -90,14 +90,16 @@ QMap<ResizeHandle, QRect> Node::resizeHandles() const
     return map;
 }
 
-bool Node::addConnector(const QPoint& point, const QString& text)
+bool Node::addConnector(Connector* connector)
 {
-    // Create connector
-    auto connector = new Connector(this);
-    connector->setGridPoint(point);
-    connector->setText(text);
+    if (!connector) {
+        return false;
+    }
+
+    connector->setParentItem(this);
     connector->setMovable(_connectorsMovable);
     connector->setSnapPolicy(_connectorsSnapPolicy);
+
     _connectors << connector;
 
     return true;
