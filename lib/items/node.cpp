@@ -23,7 +23,7 @@ Node::Node(QGraphicsItem* parent) :
     _allowMouseResize(true),
     _connectorsMovable(false),
     _connectorsSnapPolicy(Connector::NodeSizerectOutline),
-    _connectorsSnapToGrid(false)
+    _connectorsSnapToGrid(true)
 {
 }
 
