@@ -8,6 +8,7 @@
 #include "../../../lib/items/node.h"
 #include "mainwindow.h"
 #include "items/operation.h"
+#include "items/condition.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -126,4 +127,8 @@ void MainWindow::demo()
     o->setGridPoint(4, 15);
     o->setConnectorsMovable(true);
     _scene->addItem(o);
+
+    Condition* c = new Condition;
+    c->setGridPoint(14, 5);
+    _scene->addItem(c);
 }

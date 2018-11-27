@@ -3,14 +3,17 @@
 #include "../../../lib/items/node.h"
 
 
-class Operation : public QSchematic::Node
+class Condition : public QSchematic::Node
 {
     Q_OBJECT
-    Q_DISABLE_COPY(Operation)
+    Q_DISABLE_COPY(Condition)
 
 public:
-    explicit Operation(QGraphicsItem* parent = nullptr);
-    virtual ~Operation() override = default;
+    explicit Condition(QGraphicsItem* parent = nullptr);
+    virtual ~Condition() override = default;
 
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
+
+private slots:
+    void placeConnectors();
 };
