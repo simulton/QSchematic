@@ -374,7 +374,7 @@ QRectF Node::boundingRect() const
 
     return rect.adjusted(-adj, -adj, adj, adj);
 }
-#include <QtDebug>
+
 void Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     Q_UNUSED(option)
@@ -424,7 +424,6 @@ void Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     painter->setBrush(bodyBrush);
     painter->drawRoundedRect(QRect(QPoint(0, 0), _size*_settings.gridSize), _settings.gridSize/2, _settings.gridSize/2);
 
-    qDebug() << _allowMouseResize;
     // Resize handles
     if (isSelected() and _allowMouseResize) {
         for (const QRect& rect : resizeHandles()) {
