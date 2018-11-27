@@ -62,7 +62,7 @@ QString Connector::text() const
     return _label->text();
 }
 
-void Connector::setLabelVisibility(bool enabled)
+void Connector::setLabelIsVisible(bool enabled)
 {
     _label->setVisible(enabled);
 }

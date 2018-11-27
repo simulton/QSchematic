@@ -27,7 +27,7 @@ namespace QSchematic {
         SnapPolicy snapPolicy() const;
         void setText(const QString& text);
         QString text() const;
-        void setLabelVisibility(bool enabled);
+        void setLabelIsVisible(bool enabled);
         bool labelIsVisible() const;
         virtual void update() override;
 

@@ -2264,7 +2264,7 @@
 									"_parent": {
 										"$ref": "AAAAAAFmsx1Vl2Wko8g="
 									},
-									"name": "setLabelVisibility",
+									"name": "setLabelIsVisible",
 									"parameters": [
 										{
 											"_type": "UMLParameter",
@@ -5075,7 +5075,7 @@
 													"top": 777,
 													"width": 204.1279296875,
 													"height": 13,
-													"text": "+setLabelVisibility(enabled: bool)",
+													"text": "+setLabelIsVisible(enabled: bool)",
 													"horizontalAlignment": 0
 												},
 												{
@@ -12942,7 +12942,7 @@
 									"left": 680,
 									"top": 696,
 									"width": 294.349609375,
-									"height": 371,
+									"height": 386,
 									"nameCompartment": {
 										"$ref": "AAAAAAFmsthVIMNbSoA="
 									},
