@@ -25,7 +25,8 @@ namespace QSchematic {
         void setSize(int width, int height);
         QSize size() const;
         QRect sizeRect() const;
-
+        void setAllowMouseResize(bool enabled);
+        bool allowMouseResize() const;
         bool addConnector(const QPoint& point, const QString& text = QString());
         QList<QPoint> connectionPoints() const;
         bool isConnectionPoint(const QPoint& gridPoint) const;
@@ -57,6 +58,7 @@ namespace QSchematic {
         Mode _mode;
         ResizeHandle _resizeHandle;
         QSize _size;
+        bool _allowMouseResize;
         bool _connectorsMovable;
         Connector::SnapPolicy _connectorsSnapPolicy;
         bool _connectorsSnapToGrid;

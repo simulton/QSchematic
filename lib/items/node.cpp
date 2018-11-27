@@ -20,6 +20,7 @@ Node::Node(QGraphicsItem* parent) :
     Item(ItemType::NodeType, parent),
     _mode(None),
     _size(DEFAULT_WIDTH, DEFAULT_HEIGHT),
+    _allowMouseResize(true),
     _connectorsMovable(false),
     _connectorsSnapPolicy(Connector::NodeSizerectOutline),
     _connectorsSnapToGrid(false)
@@ -51,6 +52,16 @@ QSize Node::size() const
 QRect Node::sizeRect() const
 {
     return QRect(0, 0, _size.width(), _size.height());
+}
+
+void Node::setAllowMouseResize(bool enabled)
+{
+    _allowMouseResize = enabled;
+}
+
+bool Node::allowMouseResize() const
+{
+    return _allowMouseResize;
 }
 
 QMap<ResizeHandle, QRect> Node::resizeHandles() const
@@ -167,7 +178,7 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent* event)
     _mode = None;
 
     // Check if clicked on a resize handle
-    if (isSelected()) {
+    if (isSelected() && _allowMouseResize) {
         auto handles = resizeHandles();
         auto it = handles.constBegin();
         while (it != handles.constEnd()) {
@@ -206,6 +217,12 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 
     case Resize:
     {
+        // Sanity check
+        if (!_allowMouseResize) {
+            qFatal("Node::mouseMoveEvent(): _mode is 'Resize' although _allowMouseResize is false");
+            break;
+        }
+
         // Left mouse button to move
         if (event->buttons() & Qt::LeftButton) {
             static QPoint lastMousePosWithGridMove = newMouseGridPos;
@@ -300,7 +317,7 @@ void Node::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
         setCursor(Qt::ArrowCursor);
 
         // If selected, we should adjust the cursor for the resize handles
-        if (isSelected()) {
+        if (isSelected() and _allowMouseResize) {
             auto handles = resizeHandles();
             auto it = handles.constBegin();
             while (it != handles.constEnd()) {
@@ -346,7 +363,7 @@ QRectF Node::boundingRect() const
     adj = qMax(adj, PEN_WIDTH / 2.0);
 
     // Add resize handles
-    if (isSelected()) {
+    if (isSelected() and _allowMouseResize) {
         adj = qMax(adj, static_cast<qreal>(_settings.resizeHandleSize));
     }
 
@@ -357,7 +374,7 @@ QRectF Node::boundingRect() const
 
     return rect.adjusted(-adj, -adj, adj, adj);
 }
-
+#include <QtDebug>
 void Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     Q_UNUSED(option)
@@ -407,8 +424,9 @@ void Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     painter->setBrush(bodyBrush);
     painter->drawRoundedRect(QRect(QPoint(0, 0), _size*_settings.gridSize), _settings.gridSize/2, _settings.gridSize/2);
 
+    qDebug() << _allowMouseResize;
     // Resize handles
-    if (isSelected()) {
+    if (isSelected() and _allowMouseResize) {
         for (const QRect& rect : resizeHandles()) {
             // Handle pen
             QPen handlePen;
