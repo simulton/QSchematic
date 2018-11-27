@@ -47,7 +47,7 @@ namespace QSchematic {
         virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
     protected:
-        QMap<ResizeHandle, QRect> resizeHandles() const;
+        QMap<RectanglePoint, QRect> resizeHandles() const;
 
     private:
         enum Mode {
@@ -56,7 +56,7 @@ namespace QSchematic {
         };
 
         Mode _mode;
-        ResizeHandle _resizeHandle;
+        RectanglePoint _resizeHandle;
         QSize _size;
         bool _allowMouseResize;
         bool _connectorsMovable;

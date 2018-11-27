@@ -9,15 +9,15 @@ namespace QSchematic {
         BottomToTop
     };
 
-    enum ResizeHandle {
-        ResizeTopLeft = 0,
-        ResizeTop,
-        ResizeTopRight,
-        ResizeRight,
-        ResizeBottomRight,
-        ResizeBottom,
-        ResizeBottomLeft,
-        ResizeLeft
+    enum RectanglePoint {
+        RectanglePointTopLeft = 0,
+        RectanglePointTop,
+        RectanglePointTopRight,
+        RectanglePointRight,
+        RectanglePointBottomRight,
+        RectanglePointBottom,
+        RectanglePointBottomLeft,
+        RectanglePointLeft
     };
 
 }

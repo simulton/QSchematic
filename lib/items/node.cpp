@@ -64,27 +64,27 @@ bool Node::allowMouseResize() const
     return _allowMouseResize;
 }
 
-QMap<ResizeHandle, QRect> Node::resizeHandles() const
+QMap<RectanglePoint, QRect> Node::resizeHandles() const
 {
-    QMap<ResizeHandle, QRect> map;
+    QMap<RectanglePoint, QRect> map;
     const int& resizeHandleSize = _settings.resizeHandleSize;
 
     QRect r(QPoint(0, 0), _size*_settings.gridSize);
 
     // Corners
-    map.insert(ResizeBottomRight, QRect(r.bottomRight()+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
-    map.insert(ResizeBottomLeft, QRect(r.bottomLeft()+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
-    map.insert(ResizeTopRight, QRect(r.topRight()+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
-    map.insert(ResizeTopLeft, QRect(r.topLeft()+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+    map.insert(RectanglePointBottomRight, QRect(r.bottomRight()+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+    map.insert(RectanglePointBottomLeft, QRect(r.bottomLeft()+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+    map.insert(RectanglePointTopRight, QRect(r.topRight()+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+    map.insert(RectanglePointTopLeft, QRect(r.topLeft()+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
 
     // Sides
     if (r.topRight().x() - r.topLeft().x() > 7*resizeHandleSize) {
-        map.insert(ResizeTop, QRect(Utils::centerPoint(r.topRight(), r.topLeft())+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
-        map.insert(ResizeBottom, QRect(Utils::centerPoint(r.bottomRight(), r.bottomLeft())+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+        map.insert(RectanglePointTop, QRect(Utils::centerPoint(r.topRight(), r.topLeft())+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+        map.insert(RectanglePointBottom, QRect(Utils::centerPoint(r.bottomRight(), r.bottomLeft())+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
     }
     if (r.bottomLeft().y() - r.topLeft().y() > 7*resizeHandleSize) {
-        map.insert(ResizeRight, QRect(Utils::centerPoint(r.topRight(), r.bottomRight())+QPoint(1,0)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
-        map.insert(ResizeLeft, QRect(Utils::centerPoint(r.bottomLeft(), r.topLeft())+QPoint(1,0)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+        map.insert(RectanglePointRight, QRect(Utils::centerPoint(r.topRight(), r.bottomRight())+QPoint(1,0)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+        map.insert(RectanglePointLeft, QRect(Utils::centerPoint(r.bottomLeft(), r.topLeft())+QPoint(1,0)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
     }
 
     return map;
@@ -246,44 +246,44 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             int newWidth = _size.width();
             int newHeight = _size.height();
             switch (_resizeHandle) {
-            case ResizeTopLeft:
+            case RectanglePointTopLeft:
                 newX += dx;
                 newY += dy;
                 newWidth -= dx;
                 newHeight -= dy;
                 break;
 
-            case ResizeTop:
+            case RectanglePointTop:
                 newY += dy;
                 newHeight -= dy;
                 break;
 
-            case ResizeTopRight:
+            case RectanglePointTopRight:
                 newY += dy;
                 newWidth += dx;
                 newHeight -= dy;
                 break;
 
-            case ResizeRight:
+            case RectanglePointRight:
                 newWidth += dx;
                 break;
 
-            case ResizeBottomRight:
+            case RectanglePointBottomRight:
                 newWidth += dx;
                 newHeight += dy;
                 break;
 
-            case ResizeBottom:
+            case RectanglePointBottom:
                 newHeight += dy;
                 break;
 
-            case ResizeBottomLeft:
+            case RectanglePointBottomLeft:
                 newX += dx;
                 newWidth -= dx;
                 newHeight += dy;
                 break;
 
-            case ResizeLeft:
+            case RectanglePointLeft:
                 newX += dx;
                 newWidth -= dx;
                 break;
@@ -325,23 +325,23 @@ void Node::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
             while (it != handles.constEnd()) {
                 if (it.value().contains(event->pos().toPoint())) {
                     switch (it.key()) {
-                    case ResizeTopLeft:
-                    case ResizeBottomRight:
+                    case RectanglePointTopLeft:
+                    case RectanglePointBottomRight:
                         setCursor(Qt::SizeFDiagCursor);
                         break;
 
-                    case ResizeBottom:
-                    case ResizeTop:
+                    case RectanglePointBottom:
+                    case RectanglePointTop:
                         setCursor(Qt::SizeVerCursor);
                         break;
 
-                    case ResizeBottomLeft:
-                    case ResizeTopRight:
+                    case RectanglePointBottomLeft:
+                    case RectanglePointTopRight:
                         setCursor(Qt::SizeBDiagCursor);
                         break;
 
-                    case ResizeRight:
-                    case ResizeLeft:
+                    case RectanglePointRight:
+                    case RectanglePointLeft:
                         setCursor(Qt::SizeHorCursor);
                         break;
                     }
