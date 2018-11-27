@@ -45,13 +45,14 @@ namespace QSchematic {
         virtual QRectF boundingRect() const override;
         virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
+    protected:
+        QMap<ResizeHandle, QRect> resizeHandles() const;
+
     private:
         enum Mode {
             None,
             Resize
         };
-
-        QMap<ResizeHandle, QRect> resizeHandles() const;
 
         Mode _mode;
         ResizeHandle _resizeHandle;
