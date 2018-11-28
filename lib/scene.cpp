@@ -341,40 +341,29 @@ void Scene::itemMoved(const Item& item, const QVector2D& movedBy)
         return;
     }
 
-    // Figure out what to do
-    switch (item.type()) {
+    // If this is a Node class, move wires with it
+    const Node* node = dynamic_cast<const Node*>(&item);
+    if (node) {
+        // Create a list of all wires there were connected to the SchematicObject
+        QList<Wire*> wiresConnectedToMovingObjects = wiresConnectedTo(*node, movedBy*(-1));
 
-        // For nodes: Adjust wires
-        case Item::NodeType:
-        {
-            const Node& node = static_cast<const Node&>(item);
-
-            // Create a list of all wires there were connected to the SchematicObject
-            QList<Wire*> wiresConnectedToMovingObjects = wiresConnectedTo(node, movedBy*(-1));
-
-            // Update wire positions
-            for (Wire* wire : wiresConnectedToMovingObjects) {
-                for (const QPoint& connectionPoint : node.connectionPoints()) {
-                    wireMovePoint(connectionPoint, *wire, movedBy);
-                }
+        // Update wire positions
+        for (Wire* wire : wiresConnectedToMovingObjects) {
+            for (const QPoint& connectionPoint : node->connectionPoints()) {
+                wireMovePoint(connectionPoint, *wire, movedBy);
             }
-
-            // Clean up the wires
-            for (const Wire* wire : wiresConnectedToMovingObjects) {
-                WireNet* wireNet = net(*wire);
-                if (!wireNet) {
-                    continue;
-                }
-
-                wireNet->removeDuplicatePoints();
-                wireNet->removeObsoletePoints();
-            }
-
-            break;
         }
 
-    default:
-        break;
+        // Clean up the wires
+        for (const Wire* wire : wiresConnectedToMovingObjects) {
+            WireNet* wireNet = net(*wire);
+            if (!wireNet) {
+                continue;
+            }
+
+            wireNet->removeDuplicatePoints();
+            wireNet->removeObsoletePoints();
+        }
     }
 }
 
