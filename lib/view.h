@@ -30,9 +30,6 @@ namespace QSchematic {
     public slots:
         void setZoomValue(qreal factor);
 
-    private slots:
-        void sceneModeChanged(Scene::Mode newMode);
-
     protected:
         virtual void keyPressEvent(QKeyEvent* event) override;
         virtual void wheelEvent(QWheelEvent* event) override;
