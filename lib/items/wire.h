@@ -18,7 +18,7 @@ namespace QSchematic {
         Q_OBJECT
 
     public:
-        Wire(QGraphicsItem* parent = nullptr);
+        Wire(int type = Item::WireType, QGraphicsItem* parent = nullptr);
         virtual ~Wire() override = default;
         virtual void update() override;
 
@@ -48,6 +48,11 @@ namespace QSchematic {
         void pointMoved(Wire& wire, WirePoint& point);
 
     protected:
+        QVector<WirePoint> sceneWirePointsRelative() const;
+        QVector<QPoint> scenePointsRelative() const;
+        QVector<QPoint> scenePointsAbsolute() const;
+        void calculateBoundingRect();
+
         virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
         virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
         virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
@@ -58,11 +63,6 @@ namespace QSchematic {
 
     private:
         Q_DISABLE_COPY(Wire)
-
-        QVector<WirePoint> sceneWirePointsRelative() const;
-        QVector<QPoint> scenePointsRelative() const;
-        QVector<QPoint> scenePointsAbsolute() const;
-        void calculateBoundingRect();
 
         QVector<WirePoint> _points; // Store grid coordinates, not scene coordinates, but RELATIVE to this object
         QRectF _rect;

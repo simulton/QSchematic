@@ -13,12 +13,9 @@
 const qreal BOUNDING_RECT_PADDING = 6.0;
 const qreal HANDLE_SIZE = 3.0;
 const qreal WIRE_SHAPE_PADDING = 10;
-const QColor COLOR_WIRE                     = QColor("#000000");
-const QColor COLOR_WIRE_HIGHLIGHTED         = QColor("#dc2479");
-const QColor COLOR_WIRE_SELECTED            = QColor("#0f16af");
-const QColor COLOR_BUS                      = QColor("#0f16af");
-const QColor COLOR_BUS_HIGHLIGHTED          = QColor("#dc2479");
-const QColor COLOR_BUS_SELECTED             = QColor("#1ca949");
+const QColor COLOR                     = QColor("#000000");
+const QColor COLOR_HIGHLIGHTED         = QColor("#dc2479");
+const QColor COLOR_SELECTED            = QColor("#0f16af");
 
 using namespace QSchematic;
 
@@ -33,8 +30,8 @@ public:
     }
 };
 
-Wire::Wire(QGraphicsItem* parent) :
-    Item(Item::WireType, parent)
+Wire::Wire(int type, QGraphicsItem* parent) :
+    Item(type, parent)
 {
     _pointToMoveIndex = -1;
     _lineSegmentToMoveIndex = -1;
@@ -555,11 +552,11 @@ void Wire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     penLine.setCapStyle(Qt::RoundCap);
     QColor penColor;
     if (isSelected()) {
-        penColor = COLOR_WIRE_SELECTED;
+        penColor = COLOR_SELECTED;
     } else if (isHighlighted()) {
-        penColor = COLOR_WIRE_HIGHLIGHTED;
+        penColor = COLOR_HIGHLIGHTED;
     } else {
-        penColor = COLOR_WIRE;
+        penColor = COLOR;
     }
     penLine.setWidth(1);
     penLine.setColor(penColor);
@@ -572,7 +569,7 @@ void Wire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
 
     QBrush brushJunction;
     brushJunction.setStyle(Qt::SolidPattern);
-    brushJunction.setColor(isHighlighted() ? COLOR_WIRE_HIGHLIGHTED : COLOR_WIRE);
+    brushJunction.setColor(isHighlighted() ? COLOR_HIGHLIGHTED : COLOR);
 
     QPen penHandle;
     penHandle.setColor(Qt::black);
