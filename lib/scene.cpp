@@ -46,12 +46,7 @@ bool Scene::fromJson(const QJsonObject& object)
         for (const QJsonValue& value : array) {
             QJsonObject object = value.toObject();
             if (!object.isEmpty()) {
-                std::unique_ptr<Node> node(new Node);
-                if (!node->fromJson(object)) {
-                    qInfo("Scene::fromJson(): Couldn't restore node");
-                    continue;
-                }
-
+                std::unique_ptr<Item> node = ItemFactory::instance().fromJson(object);
                 addItem(node.release());
             }
         }
@@ -151,7 +146,7 @@ QList<Node*> Scene::nodes() const
 
     for (QGraphicsItem* i : QGraphicsScene::items()) {
         Node* node = dynamic_cast<Node*>(i);
-        if (!node or node->type() != Item::NodeType) {
+        if (!node) {
             continue;
         }
 

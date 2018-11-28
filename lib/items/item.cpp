@@ -9,7 +9,7 @@
 
 using namespace QSchematic;
 
-Item::Item(ItemType type, QGraphicsItem* parent) :
+Item::Item(int type, QGraphicsItem* parent) :
     QGraphicsObject(parent),
     _type(type),
     _snapToGrid(true),
@@ -34,7 +34,6 @@ QJsonObject Item::toJson() const
 {
     QJsonObject object;
 
-    object.insert("type", type());
     object.insert("grid point x", gridPointX());
     object.insert("grid point y", gridPointY());
     object.insert("movable", isMovable());
@@ -53,6 +52,11 @@ bool Item::fromJson(const QJsonObject& object)
     setHighlightEnabled(object["highlight enabled"].toBool());
 
     return true;
+}
+
+void Item::addTypeIdentifierToJson(QJsonObject& object) const
+{
+    object.insert(JSON_ID_STRING, type());
 }
 
 int Item::type() const

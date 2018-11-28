@@ -52,6 +52,7 @@ QJsonObject Connector::toJson() const
     object.insert("label", _label->toJson());
 
     object.insert("item", Item::toJson());
+    addTypeIdentifierToJson(object);
 
     return object;
 }

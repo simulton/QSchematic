@@ -29,7 +29,7 @@ namespace QSchematic {
         };
         Q_ENUM(ResizePolicy)
 
-        Node(QGraphicsItem* parent = nullptr);
+        Node(int type = Item::NodeType, QGraphicsItem* parent = nullptr);
         virtual ~Node() override = default;
 
         virtual QJsonObject toJson() const override;

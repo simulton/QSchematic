@@ -2104,6 +2104,26 @@
 											"direction": "return"
 										}
 									]
+								},
+								{
+									"_type": "UMLOperation",
+									"_id": "AAAAAAFnWnJLH/k+uOI=",
+									"_parent": {
+										"$ref": "AAAAAAFmuktEzYpHKLc="
+									},
+									"name": "addTypeIdentifierToJson",
+									"visibility": "protected",
+									"parameters": [
+										{
+											"_type": "UMLParameter",
+											"_id": "AAAAAAFnWnKeR/nothI=",
+											"_parent": {
+												"$ref": "AAAAAAFnWnJLH/k+uOI="
+											},
+											"name": "object",
+											"type": "QJsonObject"
+										}
+									]
 								}
 							],
 							"isAbstract": true
@@ -3309,7 +3329,7 @@
 													"font": "Arial;13;3",
 													"left": 493,
 													"top": 119,
-													"width": 247.47607421875,
+													"width": 273.86962890625,
 													"height": 13,
 													"text": "Item"
 												},
@@ -3344,7 +3364,7 @@
 											"font": "Arial;13;0",
 											"left": 488,
 											"top": 112,
-											"width": 257.47607421875,
+											"width": 283.86962890625,
 											"height": 25,
 											"stereotypeLabel": {
 												"$ref": "AAAAAAFmuktEzYpLKJg="
@@ -3381,7 +3401,7 @@
 													"font": "Arial;13;0",
 													"left": 493,
 													"top": 142,
-													"width": 247.47607421875,
+													"width": 273.86962890625,
 													"height": 13,
 													"text": "-snapToGrid: bool",
 													"horizontalAlignment": 0
@@ -3398,7 +3418,7 @@
 													"font": "Arial;13;0",
 													"left": 493,
 													"top": 157,
-													"width": 247.47607421875,
+													"width": 273.86962890625,
 													"height": 13,
 													"text": "-highlightEnabled: bool",
 													"horizontalAlignment": 0
@@ -3415,7 +3435,7 @@
 													"font": "Arial;13;0",
 													"left": 493,
 													"top": 172,
-													"width": 247.47607421875,
+													"width": 273.86962890625,
 													"height": 13,
 													"text": "-highlighted: bool",
 													"horizontalAlignment": 0
@@ -3432,7 +3452,7 @@
 													"font": "Arial;13;0",
 													"left": 493,
 													"top": 187,
-													"width": 247.47607421875,
+													"width": 273.86962890625,
 													"height": 13,
 													"text": "-oldGridPoint: QPoint",
 													"horizontalAlignment": 0
@@ -3441,7 +3461,7 @@
 											"font": "Arial;13;0",
 											"left": 488,
 											"top": 137,
-											"width": 257.47607421875,
+											"width": 283.86962890625,
 											"height": 68
 										},
 										{
@@ -3466,7 +3486,7 @@
 													"font": "Arial;13;0",
 													"left": 493,
 													"top": 210,
-													"width": 247.47607421875,
+													"width": 273.86962890625,
 													"height": 13,
 													"text": "+type(): ItemType",
 													"horizontalAlignment": 0
@@ -3483,7 +3503,7 @@
 													"font": "Arial;13;0",
 													"left": 493,
 													"top": 225,
-													"width": 247.47607421875,
+													"width": 273.86962890625,
 													"height": 13,
 													"text": "+setGridPoint(point: QPoint)",
 													"horizontalAlignment": 0
@@ -3500,7 +3520,7 @@
 													"font": "Arial;13;0",
 													"left": 493,
 													"top": 240,
-													"width": 247.47607421875,
+													"width": 273.86962890625,
 													"height": 13,
 													"text": "+setGridPoint(x: int, y: int)",
 													"horizontalAlignment": 0
@@ -3517,7 +3537,7 @@
 													"font": "Arial;13;0",
 													"left": 493,
 													"top": 255,
-													"width": 247.47607421875,
+													"width": 273.86962890625,
 													"height": 13,
 													"text": "+setGridPointX(x: int)",
 													"horizontalAlignment": 0
@@ -3534,7 +3554,7 @@
 													"font": "Arial;13;0",
 													"left": 493,
 													"top": 270,
-													"width": 247.47607421875,
+													"width": 273.86962890625,
 													"height": 13,
 													"text": "+setGridPointY(y: int)",
 													"horizontalAlignment": 0
@@ -3551,7 +3571,7 @@
 													"font": "Arial;13;0",
 													"left": 493,
 													"top": 285,
-													"width": 247.47607421875,
+													"width": 273.86962890625,
 													"height": 13,
 													"text": "+gridPoint(): QPoint",
 													"horizontalAlignment": 0
@@ -3568,7 +3588,7 @@
 													"font": "Arial;13;0",
 													"left": 493,
 													"top": 300,
-													"width": 247.47607421875,
+													"width": 273.86962890625,
 													"height": 13,
 													"text": "+gridPointX(): int",
 													"horizontalAlignment": 0
@@ -3585,7 +3605,7 @@
 													"font": "Arial;13;0",
 													"left": 493,
 													"top": 315,
-													"width": 247.47607421875,
+													"width": 273.86962890625,
 													"height": 13,
 													"text": "+gridPointY(): int",
 													"horizontalAlignment": 0
@@ -3602,7 +3622,7 @@
 													"font": "Arial;13;0",
 													"left": 493,
 													"top": 330,
-													"width": 247.47607421875,
+													"width": 273.86962890625,
 													"height": 13,
 													"text": "+scenePoint(): QPointF",
 													"horizontalAlignment": 0
@@ -3619,7 +3639,7 @@
 													"font": "Arial;13;0",
 													"left": 493,
 													"top": 345,
-													"width": 247.47607421875,
+													"width": 273.86962890625,
 													"height": 13,
 													"text": "+scenePointX(): qreal",
 													"horizontalAlignment": 0
@@ -3636,7 +3656,7 @@
 													"font": "Arial;13;0",
 													"left": 493,
 													"top": 360,
-													"width": 247.47607421875,
+													"width": 273.86962890625,
 													"height": 13,
 													"text": "+scenePointY(): QPointF",
 													"horizontalAlignment": 0
@@ -3653,7 +3673,7 @@
 													"font": "Arial;13;0",
 													"left": 493,
 													"top": 375,
-													"width": 247.47607421875,
+													"width": 273.86962890625,
 													"height": 13,
 													"text": "+setSettings(settings: Settings)",
 													"horizontalAlignment": 0
@@ -3670,7 +3690,7 @@
 													"font": "Arial;13;0",
 													"left": 493,
 													"top": 390,
-													"width": 247.47607421875,
+													"width": 273.86962890625,
 													"height": 13,
 													"text": "+settings(): Settings",
 													"horizontalAlignment": 0
@@ -3687,7 +3707,7 @@
 													"font": "Arial;13;0",
 													"left": 493,
 													"top": 405,
-													"width": 247.47607421875,
+													"width": 273.86962890625,
 													"height": 13,
 													"text": "+setMovable(enabled: bool)",
 													"horizontalAlignment": 0
@@ -3704,7 +3724,7 @@
 													"font": "Arial;13;0",
 													"left": 493,
 													"top": 420,
-													"width": 247.47607421875,
+													"width": 273.86962890625,
 													"height": 13,
 													"text": "+isMovable(): bool",
 													"horizontalAlignment": 0
@@ -3721,7 +3741,7 @@
 													"font": "Arial;13;0",
 													"left": 493,
 													"top": 435,
-													"width": 247.47607421875,
+													"width": 273.86962890625,
 													"height": 13,
 													"text": "+setSnapToGrid(enabled: bool)",
 													"horizontalAlignment": 0
@@ -3738,7 +3758,7 @@
 													"font": "Arial;13;0",
 													"left": 493,
 													"top": 450,
-													"width": 247.47607421875,
+													"width": 273.86962890625,
 													"height": 13,
 													"text": "+snapToGrid(): bool",
 													"horizontalAlignment": 0
@@ -3755,7 +3775,7 @@
 													"font": "Arial;13;0",
 													"left": 493,
 													"top": 465,
-													"width": 247.47607421875,
+													"width": 273.86962890625,
 													"height": 13,
 													"text": "+setHighlighted(enabled: bool)",
 													"horizontalAlignment": 0
@@ -3772,7 +3792,7 @@
 													"font": "Arial;13;0",
 													"left": 493,
 													"top": 480,
-													"width": 247.47607421875,
+													"width": 273.86962890625,
 													"height": 13,
 													"text": "+setHighlightEnabled(enabled: bool)",
 													"horizontalAlignment": 0
@@ -3789,7 +3809,7 @@
 													"font": "Arial;13;0",
 													"left": 493,
 													"top": 495,
-													"width": 247.47607421875,
+													"width": 273.86962890625,
 													"height": 13,
 													"text": "+toPixmap(scale: qreal): QPixmap",
 													"horizontalAlignment": 0
@@ -3806,17 +3826,34 @@
 													"font": "Arial;13;0",
 													"left": 493,
 													"top": 510,
-													"width": 247.47607421875,
+													"width": 273.86962890625,
 													"height": 13,
 													"text": "#isHighlighted(): bool",
+													"horizontalAlignment": 0
+												},
+												{
+													"_type": "UMLOperationView",
+													"_id": "AAAAAAFnWnJLTvlBUDY=",
+													"_parent": {
+														"$ref": "AAAAAAFmuktEzYpQyW4="
+													},
+													"model": {
+														"$ref": "AAAAAAFnWnJLH/k+uOI="
+													},
+													"font": "Arial;13;0",
+													"left": 493,
+													"top": 525,
+													"width": 273.86962890625,
+													"height": 13,
+													"text": "#addTypeIdentifierToJson(object: QJsonObject)",
 													"horizontalAlignment": 0
 												}
 											],
 											"font": "Arial;13;0",
 											"left": 488,
 											"top": 205,
-											"width": 257.47607421875,
-											"height": 323
+											"width": 283.86962890625,
+											"height": 338
 										},
 										{
 											"_type": "UMLReceptionCompartmentView",
@@ -3855,7 +3892,7 @@
 									"containerChangeable": true,
 									"left": 488,
 									"top": 112,
-									"width": 257.47607421875,
+									"width": 283.86962890625,
 									"height": 431,
 									"nameCompartment": {
 										"$ref": "AAAAAAFmuktEzYpKWAw="
@@ -5854,7 +5891,7 @@
 											},
 											"visible": false,
 											"font": "Arial;13;0",
-											"left": 816,
+											"left": 829,
 											"top": 299,
 											"height": 13,
 											"alpha": 1.5707963267948966,
@@ -5875,7 +5912,7 @@
 											},
 											"visible": null,
 											"font": "Arial;13;0",
-											"left": 816,
+											"left": 829,
 											"top": 284,
 											"height": 13,
 											"alpha": 1.5707963267948966,
@@ -5896,7 +5933,7 @@
 											},
 											"visible": false,
 											"font": "Arial;13;0",
-											"left": 816,
+											"left": 829,
 											"top": 329,
 											"height": 13,
 											"alpha": -1.5707963267948966,
@@ -5914,7 +5951,7 @@
 									"tail": {
 										"$ref": "AAAAAAFmuktEzYpJYac="
 									},
-									"points": "744:320;888:320",
+									"points": "771:320;888:320",
 									"showVisibility": true,
 									"nameLabel": {
 										"$ref": "AAAAAAFm5eI1/SKs4U8="

@@ -16,14 +16,18 @@ namespace QSchematic {
 
     public:
         enum ItemType {
-            NodeType      = UserType + 1,
+            NodeType      = QGraphicsItem::UserType + 1,
             WireType,
             ConnectorType,
             LabelType,
+
+            QSchematicItemUserType = QGraphicsItem::UserType + 100
         };
         Q_ENUM(ItemType)
 
-        Item(ItemType type, QGraphicsItem* parent = nullptr);
+        const QString JSON_ID_STRING = QStringLiteral("item type id");
+
+        Item(int type, QGraphicsItem* parent = nullptr);
         virtual ~Item() override = default;
 
         virtual QJsonObject toJson() const override;
@@ -61,6 +65,8 @@ namespace QSchematic {
     protected:
         Settings _settings;
 
+        void addTypeIdentifierToJson(QJsonObject& object) const;
+
         bool isHighlighted() const;
         virtual void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
         virtual void hoverMoveEvent(QGraphicsSceneHoverEvent* event) override;
@@ -72,7 +78,7 @@ namespace QSchematic {
         void posChanged();
 
     private:
-        ItemType _type;
+        int _type;
         bool _snapToGrid;
         bool _highlightEnabled;
         bool _highlighted;
