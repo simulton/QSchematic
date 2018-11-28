@@ -118,27 +118,27 @@ void View::mouseMoveEvent(QMouseEvent *event)
 
 void View::mousePressEvent(QMouseEvent *event)
 {
-    QGraphicsView::mousePressEvent(event);
-
     if (event->button() == Qt::MiddleButton) {
         setMode(PanMode);
         _panStart = event->pos();
-        setCursor(Qt::ClosedHandCursor);
+        viewport()->setCursor(Qt::ClosedHandCursor);
         event->accept();
         return;
     }
+
+    QGraphicsView::mousePressEvent(event);
 }
 
 void View::mouseReleaseEvent(QMouseEvent *event)
 {
-    QGraphicsView::mouseReleaseEvent(event);
-
     if (event->button() == Qt::MiddleButton) {
         setMode(NormalMode);
-        setCursor(Qt::ArrowCursor);
+        viewport()->setCursor(Qt::ArrowCursor);
         event->accept();
         return;
     }
+
+    QGraphicsView::mouseReleaseEvent(event);
 }
 
 void View::setScene(Scene* scene)
