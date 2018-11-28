@@ -41,29 +41,29 @@ void View::keyPressEvent(QKeyEvent* event)
         case Qt::Key_Plus:
             _scaleFactor += ZOOM_FACTOR_STEPS;
             updateScale();
-            break;
+            return;
 
         case Qt::Key_Minus:
             _scaleFactor -= ZOOM_FACTOR_STEPS;
             updateScale();
-            break;
+            return;
 
         case Qt::Key_0:
             _scaleFactor = 1.0;
             updateScale();
-            break;
+            return;
 
         case Qt::Key_W:
             if (_scene) {
                 _scene->setMode(Scene::WireMode);
             }
-            break;
+            return;
 
         case Qt::Key_Space:
             if (_scene) {
                 _scene->toggleWirePosture();
             }
-            break;
+            return;
 
         default:
             break;
@@ -76,11 +76,14 @@ void View::keyPressEvent(QKeyEvent* event)
         if (_scene) {
             _scene->setMode(Scene::NormalMode);
         }
-        break;
+        return;
 
     default:
         break;
     }
+
+    // Fall back
+    QGraphicsView::keyPressEvent(event);
 }
 
 void View::wheelEvent(QWheelEvent* event)
