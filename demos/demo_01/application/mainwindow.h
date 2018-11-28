@@ -18,6 +18,8 @@ public:
     MainWindow(QWidget* parent = nullptr);
     ~MainWindow() override = default;
 
+    bool save() const;
+    bool load();
     void createActions();
     void demo();
 
@@ -28,8 +30,12 @@ private:
     QSchematic::Scene* _scene;
     QSchematic::View* _view;
     QSchematic::Settings _settings;
+    QAction* _actionOpen;
+    QAction* _actionSave;
     QAction* _actionModeNormal;
     QAction* _actionModeWire;
-    QAction* _routeStraightAngles;
+    QAction* _actionShowGrid;
+    QAction* _actionRouteStraightAngles;
+    QAction* _actionPreserveStraightAngles;
     QAction* _actionDebugMode;
 };

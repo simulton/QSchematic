@@ -1,29 +1,19 @@
-#ifndef RESOURCES_H
-#define RESOURCES_H
+#pragma once
 
-#include <QAbstractItemModel>
+class QIcon;
 
-class Resources : public QAbstractItemModel
+class Resources
 {
-    Q_OBJECT
-
 public:
-    explicit Resources(QObject *parent = nullptr);
+    enum IconType {
+        ToggleGridIcon
+    };
 
-    // Header:
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
-
-    // Basic functionality:
-    QModelIndex index(int row, int column,
-                      const QModelIndex &parent = QModelIndex()) const override;
-    QModelIndex parent(const QModelIndex &index) const override;
-
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
-
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    static QIcon icon(IconType type);
 
 private:
+    Resources() = default;
+    Resources(const Resources& other) = default;
+    Resources(Resources&& other) = default;
+    virtual ~Resources() = default;
 };
-
-#endif // RESOURCES_H

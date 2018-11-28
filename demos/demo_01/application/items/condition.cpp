@@ -1,6 +1,8 @@
 #include <QPainter>
+#include <QJsonObject>
 #include "condition.h"
 #include "myconnector.h"
+#include "itemtypes.h"
 #include "../../../lib/utils.h"
 
 const QColor COLOR_HIGHLIGHTED = QColor(Qt::blue).lighter();
@@ -9,7 +11,7 @@ const QColor COLOR_BODY_BORDER = QColor(Qt::black);
 const qreal PEN_WIDTH          = 1.5;
 
 Condition::Condition(QGraphicsItem* parent) :
-    QSchematic::Node(parent)
+    QSchematic::Node(::ItemType::ConditionType, parent)
 {
     setSize(10, 6);
     setMouseResizePolicy(static_cast<ResizePolicy>(QSchematic::Node::HorizontalEvenOnly | QSchematic::Node::VerticalEvenOnly));
@@ -25,6 +27,23 @@ Condition::Condition(QGraphicsItem* parent) :
     placeConnectors();
 }
 
+QJsonObject Condition::toJson() const
+{
+    QJsonObject object;
+
+    object.insert("item", Item::toJson());
+    addTypeIdentifierToJson(object);
+
+    return object;
+}
+
+bool Condition::fromJson(const QJsonObject& object)
+{
+    Item::fromJson(object["item"].toObject());
+
+    return true;
+}
+
 void Condition::placeConnectors()
 {
     // Get rid of current connectors
@@ -33,7 +52,7 @@ void Condition::placeConnectors()
     // Add new connectors
     auto points = QSchematic::Utils::rectanglePoints(sizeRect(), QSchematic::Utils::RectangleEdgeCenterPoints);
     for (const auto& point : points) {
-        addConnector(new MyConnector(point.toPoint()));
+        addConnector(new MyConnector(point.toPoint(), QStringLiteral("[case]")));
     }
 }
 

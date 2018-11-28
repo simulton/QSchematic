@@ -1,4 +1,6 @@
 #include <QPainter>
+#include <QJsonObject>
+#include "itemtypes.h"
 #include "operation.h"
 #include "myconnector.h"
 
@@ -8,7 +10,7 @@ const QColor COLOR_BODY_BORDER = QColor(Qt::black);
 const qreal PEN_WIDTH          = 1.5;
 
 Operation::Operation(QGraphicsItem* parent) :
-    QSchematic::Node(parent)
+    QSchematic::Node(::ItemType::OperationType, parent)
 {
     setSize(10, 5);
     setAllowMouseResize(false);
@@ -19,6 +21,23 @@ Operation::Operation(QGraphicsItem* parent) :
     // Add connectors
     addConnector(new MyConnector(QPoint(0, 3)));
     addConnector(new MyConnector(QPoint(10, 3)));
+}
+
+QJsonObject Operation::toJson() const
+{
+    QJsonObject object;
+
+    object.insert("item", Item::toJson());
+    addTypeIdentifierToJson(object);
+
+    return object;
+}
+
+bool Operation::fromJson(const QJsonObject& object)
+{
+    Item::fromJson(object["item"].toObject());
+
+    return true;
 }
 
 void Operation::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)

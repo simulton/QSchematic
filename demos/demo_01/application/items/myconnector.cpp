@@ -1,5 +1,9 @@
 #include <QPainter>
 #include <QRectF>
+#include <QGraphicsSceneContextMenuEvent>
+#include <QMenu>
+#include <QAction>
+#include <QJsonObject>
 #include "myconnector.h"
 
 #define SIZE (_settings.gridSize/4)
@@ -9,10 +13,29 @@ const QColor COLOR_BODY_FILL   = QColor(Qt::black);
 const QColor COLOR_BODY_BORDER = QColor(Qt::black);
 const qreal PEN_WIDTH          = 1.5;
 
-MyConnector::MyConnector(const QPoint& gridPoint, QGraphicsItem* parent) :
-    QSchematic::Connector(gridPoint, QString(), parent)
+MyConnector::MyConnector(const QPoint& gridPoint, const QString& text, QGraphicsItem* parent) :
+    QSchematic::Connector(gridPoint, text, parent)
 {
-    setLabelVisibility(false);
+    setLabelIsVisible(false);
+    setForceTextDirection(true);
+    setForcedTextDirection(QSchematic::LeftToRight);
+}
+
+QJsonObject MyConnector::toJson() const
+{
+    QJsonObject object;
+
+    object.insert("item", Item::toJson());
+    addTypeIdentifierToJson(object);
+
+    return object;
+}
+
+bool MyConnector::fromJson(const QJsonObject& object)
+{
+    Item::fromJson(object["item"].toObject());
+
+    return true;
 }
 
 QRectF MyConnector::boundingRect() const
@@ -40,4 +63,26 @@ void MyConnector::paint(QPainter* painter, const QStyleOptionGraphicsItem* optio
     painter->setPen(bodyPen);
     painter->setBrush(bodyBrush);
     painter->drawRoundedRect(RECT, _settings.gridSize/6, _settings.gridSize/6);
+}
+
+void MyConnector::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
+{
+    // Create the menu
+    QMenu menu;
+    {
+        // Label visibility
+        QAction* _labelVisibility = new QAction;
+        _labelVisibility->setCheckable(true);
+        _labelVisibility->setChecked(labelIsVisible());
+        _labelVisibility->setText("Label visible");
+        connect(_labelVisibility, &QAction::toggled, [this](bool enabled) {
+            setLabelIsVisible(enabled);
+        });
+
+        // Assemble
+        menu.addAction(_labelVisibility);
+    }
+
+    // Sow the menu
+    menu.exec(event->screenPos());
 }

@@ -12,6 +12,8 @@ public:
     explicit Condition(QGraphicsItem* parent = nullptr);
     virtual ~Condition() override = default;
 
+    virtual QJsonObject toJson() const override;
+    virtual bool fromJson(const QJsonObject& object) override;
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
 private slots:

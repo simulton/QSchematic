@@ -12,5 +12,7 @@ public:
     explicit Operation(QGraphicsItem* parent = nullptr);
     virtual ~Operation() override = default;
 
+    virtual QJsonObject toJson() const override;
+    virtual bool fromJson(const QJsonObject& object) override;
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 };

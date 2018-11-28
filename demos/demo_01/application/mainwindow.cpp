@@ -2,31 +2,69 @@
 #include <QSlider>
 #include <QLabel>
 #include <QAction>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QFile>
+#include <QDir>
+#include <QMenuBar>
+#include <QMenu>
 #include "../../../lib/scene.h"
 #include "../../../lib/view.h"
 #include "../../../lib/settings.h"
 #include "../../../lib/items/node.h"
+#include "../../../lib/items/itemfactory.h"
 #include "mainwindow.h"
+#include "resources.h"
+#include "items/customitemfactory.h"
 #include "items/operation.h"
 #include "items/condition.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
+    // Create actions
     createActions();
+
+    // Setup the custom item factory
+    auto func = std::bind(&CustomItemFactory::fromJson, std::placeholders::_1);
+    QSchematic::ItemFactory::instance().setCustomItemsFactory(func);
 
     // Settings
     _settings.debug = false;
-    _settings.routeStraightAngles = false;
+    _settings.routeStraightAngles = true;
 
     // Scene
     _scene = new QSchematic::Scene;
     _scene->setSettings(_settings);
+    connect(_scene, &QSchematic::Scene::modeChanged, [this](QSchematic::Scene::Mode mode){
+        switch (mode) {
+        case QSchematic::Scene::NormalMode:
+            _actionModeNormal->setChecked(true);
+            break;
+
+        case QSchematic::Scene::WireMode:
+            _actionModeWire->setChecked(true);
+            break;
+        }
+    });
 
     // View
     _view = new QSchematic::View;
     _view->setSettings(_settings);
     _view->setScene(_scene);
+
+    // Menus
+    {
+        // File menu
+        QMenu* fileMenu = new QMenu(QStringLiteral("&File"));
+        fileMenu->addAction(_actionOpen);
+        fileMenu->addAction(_actionSave);
+
+        // Menubar
+        QMenuBar* menuBar = new QMenuBar;
+        menuBar->addMenu(fileMenu);
+        setMenuBar(menuBar);
+    }
 
     // Grid size slider
     QSlider* gridSize = new QSlider(Qt::Horizontal);
@@ -38,19 +76,25 @@ MainWindow::MainWindow(QWidget *parent)
     });
 
     // Toolbar
-    QToolBar* toolBar = new QToolBar;
-    toolBar->addWidget(new QLabel("Grid size:"));
-    toolBar->addWidget(gridSize);
-    toolBar->addSeparator();
-    toolBar->addAction(_actionModeNormal);
-    toolBar->addAction(_actionModeWire);
-    toolBar->addAction(_routeStraightAngles);
-    addToolBar(toolBar);
+    QToolBar* editorToolbar = new QToolBar;
+    editorToolbar->addAction(_actionModeNormal);
+    editorToolbar->addAction(_actionModeWire);
+    editorToolbar->addSeparator();
+    editorToolbar->addAction(_actionRouteStraightAngles);
+    editorToolbar->addAction(_actionPreserveStraightAngles);
+    addToolBar(editorToolbar);
 
-    // Misc toolbar
-    QToolBar* miscToolbar = new QToolBar;
-    miscToolbar->addAction(_actionDebugMode);
-    addToolBar(miscToolbar);
+    // View toolbar
+    QToolBar* viewToolbar = new QToolBar;
+    viewToolbar->addWidget(new QLabel("Grid size:"));
+    viewToolbar->addWidget(gridSize);
+    viewToolbar->addAction(_actionShowGrid);
+    addToolBar(viewToolbar);
+
+    // Debug toolbar
+    QToolBar* debugToolbar = new QToolBar;
+    debugToolbar->addAction(_actionDebugMode);
+    addToolBar(debugToolbar);
 
     // Central widget
     setCentralWidget(_view);
@@ -62,8 +106,52 @@ MainWindow::MainWindow(QWidget *parent)
     demo();
 }
 
+bool MainWindow::save() const
+{
+    QJsonDocument document(_scene->toJson());
+
+    QFile file(QDir::homePath() + "/Documents/junk/qschematic.json");
+    file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate);
+    if (!file.isOpen()) {
+        return false;
+    }
+    file.write(document.toJson());
+
+    return true;
+}
+
+bool MainWindow::load()
+{
+    QFile file(QDir::homePath() + "/Documents/junk/qschematic.json");
+    file.open(QFile::ReadOnly);
+    if (!file.isOpen()) {
+        return false;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(file.readAll());
+    _scene->fromJson(document.object());
+
+    return true;
+}
+
 void MainWindow::createActions()
 {
+    // Open
+    _actionOpen = new QAction;
+    _actionOpen->setText("Open");
+    _actionOpen->setToolTip("Open a file");
+    connect(_actionOpen, &QAction::triggered, [this]{
+        load();
+    });
+
+    // Save
+    _actionSave = new QAction;
+    _actionSave->setText("Save");
+    _actionSave->setToolTip("Save to a file");
+    connect(_actionSave, &QAction::triggered, [this]{
+        save();
+    });
+
     // Mode: Normal
     _actionModeNormal = new QAction("Normal Mode", this);
     _actionModeNormal->setToolTip("Change to the normal mode (allows to move components).");
@@ -82,12 +170,32 @@ void MainWindow::createActions()
     actionGroupMode->addAction(_actionModeNormal);
     actionGroupMode->addAction(_actionModeWire);
 
+    // Show grid
+    _actionShowGrid = new QAction;
+    _actionShowGrid->setCheckable(true);
+    _actionShowGrid->setChecked(_settings.showGrid);
+    _actionShowGrid->setToolTip("Toggle grid visibility");
+    _actionShowGrid->setIcon(Resources::icon(Resources::ToggleGridIcon));
+    connect(_actionShowGrid, &QAction::toggled, [this](bool checked){
+        _settings.showGrid = checked;
+        settingsChanged();
+    });
+
     // Route straight angles
-    _routeStraightAngles = new QAction("Wire angles");
-    _routeStraightAngles->setCheckable(true);
-    _routeStraightAngles->setChecked(_settings.routeStraightAngles);
-    connect(_routeStraightAngles, &QAction::toggled, [this](bool checked){
+    _actionRouteStraightAngles = new QAction("Wire angles");
+    _actionRouteStraightAngles->setCheckable(true);
+    _actionRouteStraightAngles->setChecked(_settings.routeStraightAngles);
+    connect(_actionRouteStraightAngles, &QAction::toggled, [this](bool checked){
         _settings.routeStraightAngles = checked;
+        settingsChanged();
+    });
+
+    // Preserve straight angles
+    _actionPreserveStraightAngles = new QAction("Preserve angles");
+    _actionPreserveStraightAngles->setCheckable(true);
+    _actionPreserveStraightAngles->setChecked(_settings.preserveStraightAngles);
+    connect(_actionPreserveStraightAngles, &QAction::toggled, [this](bool checked){
+        _settings.preserveStraightAngles = checked;
         settingsChanged();
     });
 

@@ -29,15 +29,23 @@ SOURCES += \
         mainwindow.cpp \
     items/operation.cpp \
     items/myconnector.cpp \
-    items/condition.cpp
+    items/condition.cpp \
+    resources.cpp \
+    items/customitemfactory.cpp
 
 HEADERS += \
         mainwindow.h \
     items/operation.h \
     items/myconnector.h \
-    items/condition.h
+    items/condition.h \
+    resources.h \
+    items/customitemfactory.h \
+    items/itemtypes.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    resources/resources.qrc
