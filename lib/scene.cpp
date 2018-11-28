@@ -706,32 +706,6 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
     switch (_mode) {
     case NormalMode:
     {
-        // Open the corresponding item editor
-        QGraphicsItem* itemUnderCursor = itemAt(event->scenePos(), QTransform());
-        if (!itemUnderCursor) {
-            break;
-        }
-        switch (itemUnderCursor->type()) {
-
-        // Component Instance
-        case Item::NodeType:
-        {
-            qDebug("Scene::mouseDoubleClickEvent(): NodeType");
-            break;
-        }
-
-        // Wire
-        case Item::WireType:
-        {
-            qDebug("Scene::mouseDoubleClickEvent(): WireType");
-            break;
-        }
-
-        default:
-            break;
-
-        }
-
         return;
     }
 
