@@ -2,6 +2,7 @@
 #include <QPainter>
 #include <QPen>
 #include <QBrush>
+#include <QJsonObject>
 #include "label.h"
 
 const QColor COLOR_LABEL             = QColor("#000000");
@@ -16,6 +17,31 @@ Label::Label(QGraphicsItem* parent) :
     setSnapToGrid(false);
 }
 
+QJsonObject Label::toJson() const
+{
+    QJsonObject object;
+
+#warning ToDo: Add font
+    object.insert("text", text());
+    object.insert("connction point x", _connectionPoint.x());
+    object.insert("connction point y", _connectionPoint.y());
+
+    object.insert("item", Item::toJson());
+
+    return object;
+}
+
+bool Label::fromJson(const QJsonObject& object)
+{
+
+    Item::fromJson(object["item"].toObject());
+
+    setText(object["text"].toString());
+    _connectionPoint.rx() = object["connection point x"].toInt();
+    _connectionPoint.ry() = object["connection point y"].toInt();
+
+    return true;
+}
 
 QRectF Label::boundingRect() const
 {

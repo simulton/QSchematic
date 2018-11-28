@@ -3,15 +3,20 @@
 #include <QFont>
 
 #include "item.h"
+#include "../interfaces/json.h"
 
 namespace QSchematic {
 
-    class Label : public Item
+    class Label : public Item, public Json
     {
     public:
         Label(QGraphicsItem* parent = nullptr);
         Label(const Label& other) = delete;
         virtual ~Label() override = default;
+
+        virtual QJsonObject toJson() const override;
+        virtual bool fromJson(const QJsonObject& object) override;
+
         virtual QRectF boundingRect() const final;
 
         void setText(const QString& text);

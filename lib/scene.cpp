@@ -1,8 +1,11 @@
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
 #include <QMessageBox>
+#include <QJsonObject>
+#include <QJsonArray>
 #include "scene.h"
 #include "settings.h"
+#include "items/itemfactory.h"
 #include "items/item.h"
 #include "items/node.h"
 #include "items/connector.h"
@@ -17,6 +20,44 @@ Scene::Scene(QObject* parent) :
     _newWireSegment(false),
     _invertWirePosture(false)
 {
+}
+
+QJsonObject Scene::toJson() const
+{
+    QJsonObject object;
+
+    // Nodes
+    QJsonArray itemsArray;
+    for (const Node* node : nodes()) {
+        itemsArray.append(node->toJson());
+    }
+    object.insert("nodes", itemsArray);
+
+    return object;
+}
+
+bool Scene::fromJson(const QJsonObject& object)
+{
+    Q_UNUSED(object)
+
+    // Nodes
+    {
+        QJsonArray array = object["nodes"].toArray();
+        for (const QJsonValue& value : array) {
+            QJsonObject object = value.toObject();
+            if (!object.isEmpty()) {
+                std::unique_ptr<Node> node(new Node);
+                if (!node->fromJson(object)) {
+                    qInfo("Scene::fromJson(): Couldn't restore node");
+                    continue;
+                }
+
+                addItem(node.release());
+            }
+        }
+    }
+
+    return true;
 }
 
 void Scene::setSettings(const Settings& settings)

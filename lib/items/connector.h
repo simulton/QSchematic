@@ -23,6 +23,9 @@ namespace QSchematic {
         Connector(const QPoint& gridPoint = QPoint(), const QString& text = QString(), QGraphicsItem* parent = nullptr);
         virtual ~Connector() override = default;
 
+        virtual QJsonObject toJson() const override;
+        virtual bool fromJson(const QJsonObject& object) override;
+
         void setSnapPolicy(SnapPolicy policy);
         SnapPolicy snapPolicy() const;
         void setText(const QString& text);

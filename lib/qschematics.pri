@@ -12,7 +12,9 @@ HEADERS += \
     $$PWD/settings.h \
     $$PWD/types.h \
     $$PWD/view.h \
-    $$PWD/utils.h
+    $$PWD/utils.h \
+    $$PWD/interfaces/json.h \
+    $$PWD/items/itemfactory.h
 
 SOURCES += \
     $$PWD/items/connector.cpp \
@@ -27,4 +29,5 @@ SOURCES += \
     $$PWD/scene.cpp \
     $$PWD/settings.cpp \
     $$PWD/view.cpp \
-    $$PWD/utils.cpp
+    $$PWD/utils.cpp \
+    $$PWD/items/itemfactory.cpp

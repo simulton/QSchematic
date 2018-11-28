@@ -3,6 +3,7 @@
 #include <QGraphicsScene>
 #include <QScopedPointer>
 #include <QGraphicsProxyWidget>
+#include "interfaces/json.h"
 #include "settings.h"
 #include "items/item.h"
 #include "items/wire.h"
@@ -13,7 +14,7 @@ namespace QSchematic {
     class Connector;
     class WireNet;
 
-    class Scene : public QGraphicsScene
+    class Scene : public QGraphicsScene, public Json
     {
         Q_OBJECT
         Q_DISABLE_COPY(Scene)
@@ -27,6 +28,9 @@ namespace QSchematic {
 
         explicit Scene(QObject* parent = nullptr);
         virtual ~Scene() override = default;
+
+        virtual QJsonObject toJson() const override;
+        virtual bool fromJson(const QJsonObject& object) override;
 
         void setSettings(const Settings& settings);
         void setMode(Mode mode);

@@ -3,6 +3,7 @@
 #include <QVector2D>
 #include <QGraphicsSceneHoverEvent>
 #include <QTimer>
+#include <QJsonObject>
 #include "item.h"
 #include "../scene.h"
 
@@ -27,6 +28,31 @@ Item::Item(ItemType type, QGraphicsItem* parent) :
     setFlag(QGraphicsItem::ItemIsMovable, true);
     connect(this, &Item::xChanged, this, &Item::posChanged);
     connect(this, &Item::yChanged, this, &Item::posChanged);
+}
+
+QJsonObject Item::toJson() const
+{
+    QJsonObject object;
+
+    object.insert("type", type());
+    object.insert("grid point x", gridPointX());
+    object.insert("grid point y", gridPointY());
+    object.insert("movable", isMovable());
+    object.insert("snap to grid", snapToGrid());
+    object.insert("highlight enabled", highlightEnabled());
+
+    return object;
+}
+
+bool Item::fromJson(const QJsonObject& object)
+{
+    setGridPointX(object["grid point x"].toInt());
+    setGridPointY(object["grid point y"].toInt());
+    setMovable(object["movable"].toBool());
+    setSnapToGrid(object["snap to grid"].toBool());
+    setHighlightEnabled(object["highlight enabled"].toBool());
+
+    return true;
 }
 
 int Item::type() const
@@ -142,6 +168,11 @@ void Item::setHighlighted(bool highlighted)
 void Item::setHighlightEnabled(bool enabled)
 {
     _highlightEnabled = enabled;
+}
+
+bool Item::highlightEnabled() const
+{
+    return _highlightEnabled;
 }
 
 QPixmap Item::toPixmap(qreal scale)

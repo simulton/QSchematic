@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QGraphicsObject>
+#include "../interfaces/json.h"
 #include "../types.h"
 #include "../settings.h"
 
@@ -8,21 +9,25 @@ namespace QSchematic {
 
     class Scene;
 
-    class Item : public QGraphicsObject
+    class Item : public QGraphicsObject, public Json
     {
         Q_OBJECT
         Q_DISABLE_COPY(Item)
 
     public:
         enum ItemType {
-            NodeType      = QGraphicsItem::UserType + 1,
+            NodeType      = UserType + 1,
             WireType,
             ConnectorType,
             LabelType,
         };
+        Q_ENUM(ItemType)
 
         Item(ItemType type, QGraphicsItem* parent = nullptr);
         virtual ~Item() override = default;
+
+        virtual QJsonObject toJson() const override;
+        virtual bool fromJson(const QJsonObject& object) override;
 
         int type() const final;
         void setGridPoint(const QPoint& newGridPoint);
@@ -43,6 +48,7 @@ namespace QSchematic {
         bool snapToGrid() const;
         void setHighlighted(bool isHighlighted);
         void setHighlightEnabled(bool enabled);
+        bool highlightEnabled() const;
         QPixmap toPixmap(qreal scale = 1.0);
         virtual void update();
         virtual QWidget* popupInfobox() const;

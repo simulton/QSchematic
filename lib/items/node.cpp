@@ -2,6 +2,8 @@
 #include <QPainter>
 #include <QCursor>
 #include <QtMath>
+#include <QJsonObject>
+#include <QJsonArray>
 #include "node.h"
 #include "../utils.h"
 #include "../scene.h"
@@ -26,6 +28,52 @@ Node::Node(QGraphicsItem* parent) :
     _connectorsSnapPolicy(Connector::NodeSizerectOutline),
     _connectorsSnapToGrid(true)
 {
+}
+
+QJsonObject Node::toJson() const
+{
+    QJsonObject object;
+
+    object.insert("size width", size().width());
+    object.insert("size height", size().height());
+    object.insert("mouse resize policy", mouseResizePolicy());
+    object.insert("allow mouse resize", allowMouseResize());
+    object.insert("connectors movable", connectorsMovable());
+    object.insert("connectors snap policy", connectorsSnapPolicy());
+    object.insert("connectors snap to grid", connectorsSnapToGrid());
+
+    QJsonArray connectorsArray;
+    for (const Connector* connector : connectors()) {
+        connectorsArray << connector->toJson();
+    }
+    object.insert("connectors", connectorsArray);
+
+    object.insert("item", Item::toJson());
+
+    return object;
+}
+
+bool Node::fromJson(const QJsonObject& object)
+{
+    Item::fromJson(object["item"].toObject());
+
+    setSize(object["size width"].toInt(), object["size height"].toInt());
+    setMouseResizePolicy(static_cast<ResizePolicy>(object["mouse resize policy"].toInt()));
+    setAllowMouseResize(object["allow mouse resize"].toBool());
+    setConnectorsMovable(object["connectors movable"].toBool());
+    setConnectorsSnapPolicy(static_cast<Connector::SnapPolicy>(object["connectors snap policy"].toInt()));
+    setConnectorsSnapToGrid(object["connectors snap to grid"].toBool());
+
+    for (const QJsonValue& value : object["connectors"].toArray()) {
+        QJsonObject object = value.toObject();
+        if (!object.isEmpty()) {
+            Connector* connector = new Connector;
+            connector->fromJson(object);
+            addConnector(connector);
+        }
+    }
+
+    return true;
 }
 
 void Node::setSize(const QSize& size)

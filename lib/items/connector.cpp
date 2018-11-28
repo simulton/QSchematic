@@ -1,6 +1,7 @@
 #include <QtMath>
 #include <QPainter>
 #include <QTransform>
+#include <QJsonObject>
 #include "connector.h"
 #include "node.h"
 #include "label.h"
@@ -39,6 +40,32 @@ Connector::Connector(const QPoint& gridPoint, const QString& text, QGraphicsItem
     setGridPoint(gridPoint);
     calculateSymbolRect();
     calculateTextDirection();
+}
+
+QJsonObject Connector::toJson() const
+{
+    QJsonObject object;
+
+    object.insert("snap policy", snapPolicy());
+    object.insert("force text direction", forceTextDirection());
+    object.insert("text direction", textDirection());
+    object.insert("label", _label->toJson());
+
+    object.insert("item", Item::toJson());
+
+    return object;
+}
+
+bool Connector::fromJson(const QJsonObject& object)
+{
+    Item::fromJson(object["item"].toObject());
+
+    setSnapPolicy(static_cast<SnapPolicy>(object["snap policy"].toInt()));
+    setForceTextDirection(object["force text direction"].toBool());
+    _textDirection = static_cast<Direction>(object["text direction"].toInt());
+    _label->fromJson(object["label"].toObject());
+
+    return true;
 }
 
 void Connector::setSnapPolicy(Connector::SnapPolicy policy)
