@@ -876,11 +876,8 @@ QList<QPoint> Scene::connectionPoints() const
 {
     QList<QPoint> list;
 
-    for (const QGraphicsItem* graphicsItem : items()) {
-        const Node* node = qgraphicsitem_cast<const Node*>(graphicsItem);
-        if (node) {
-            list << node->connectionPoints();
-        }
+    for (const Node* node : nodes()) {
+        list << node->connectionPoints();
     }
 
     return list;
