@@ -26,6 +26,18 @@ QJsonObject Scene::toJson() const
 {
     QJsonObject object;
 
+    // Scene rect
+    {
+        QJsonObject rectObject;
+        const QRect& rect = sceneRect().toRect();
+        rectObject.insert("x", rect.x());
+        rectObject.insert("y", rect.y());
+        rectObject.insert("width", rect.width());
+        rectObject.insert("height", rect.height());
+
+        object.insert("scene rect", rectObject);
+    }
+
     // Nodes
     QJsonArray itemsArray;
     for (const Node* node : nodes()) {
@@ -46,6 +58,18 @@ QJsonObject Scene::toJson() const
 bool Scene::fromJson(const QJsonObject& object)
 {
     Q_UNUSED(object)
+
+    // Scene rect
+    {
+        const QJsonObject& rectObject = object["scene rect"].toObject();
+
+        QRect sceneRect;
+        sceneRect.setX(rectObject["x"].toInt());
+        sceneRect.setY(rectObject["y"].toInt());
+        sceneRect.setWidth(rectObject["width"].toInt());
+        sceneRect.setHeight(rectObject["height"].toInt());
+        setSceneRect(sceneRect);
+    }
 
     // Nodes
     {
