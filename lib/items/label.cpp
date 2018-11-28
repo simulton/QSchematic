@@ -27,6 +27,7 @@ QJsonObject Label::toJson() const
     object.insert("connction point y", _connectionPoint.y());
 
     object.insert("item", Item::toJson());
+    addTypeIdentifierToJson(object);
 
     return object;
 }

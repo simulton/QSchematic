@@ -18,8 +18,8 @@ using namespace QSchematic;
 const int DEFAULT_WIDTH     = 8;
 const int DEFAULT_HEIGHT    = 12;
 
-Node::Node(QGraphicsItem* parent) :
-    Item(ItemType::NodeType, parent),
+Node::Node(int type, QGraphicsItem* parent) :
+    Item(type, parent),
     _mode(None),
     _size(DEFAULT_WIDTH, DEFAULT_HEIGHT),
     _mouseResizePolicy(static_cast<ResizePolicy>(0)),
@@ -49,6 +49,7 @@ QJsonObject Node::toJson() const
     object.insert("connectors", connectorsArray);
 
     object.insert("item", Item::toJson());
+    addTypeIdentifierToJson(object);
 
     return object;
 }
