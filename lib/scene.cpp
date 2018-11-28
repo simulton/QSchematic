@@ -853,11 +853,9 @@ QList<QPoint> Scene::connectionPoints() const
     QList<QPoint> list;
 
     for (const QGraphicsItem* graphicsItem : items()) {
-        if (graphicsItem->type() == Item::NodeType) {
-            const auto node = qgraphicsitem_cast<const Node*>(graphicsItem);
-            if (node) {
-               list << node->connectionPoints();
-            }
+        const Node* node = qgraphicsitem_cast<const Node*>(graphicsItem);
+        if (node) {
+            list << node->connectionPoints();
         }
     }
 
