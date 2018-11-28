@@ -3,11 +3,10 @@
 #include <QFont>
 
 #include "item.h"
-#include "../interfaces/json.h"
 
 namespace QSchematic {
 
-    class Label : public Item, public Json
+    class Label : public Item
     {
     public:
         Label(QGraphicsItem* parent = nullptr);
