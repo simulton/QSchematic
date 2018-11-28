@@ -790,31 +790,6 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
     }
 }
 
-void Scene::keyPressEvent(QKeyEvent* event)
-{
-    Q_UNUSED(event)
-}
-
-void Scene::keyReleaseEvent(QKeyEvent* event)
-{
-    switch (event->key()) {
-
-    // Toggle wire posture
-    case Qt::Key_Space:
-    {
-        if (event->modifiers() & Qt::ControlModifier) {
-            toggleWirePosture();
-        }
-    }
-
-    // Change back to normal mode
-    case Qt::Key_Escape:
-    {
-        setMode(NormalMode);
-    }
-    }
-}
-
 void Scene::drawBackground(QPainter* painter, const QRectF& rect)
 {
     // Background pen
