@@ -1,6 +1,7 @@
 #include <QPen>
 #include <QBrush>
 #include <QPainter>
+#include <QJsonObject>
 #include <QJsonArray>
 #include <QMap>
 #include <QGraphicsSceneHoverEvent>
@@ -43,6 +44,57 @@ Wire::Wire(QGraphicsItem* parent) :
 
     // ALWAYS snap to grid
     setSnapToGrid(true);
+}
+
+QJsonObject Wire::toJson() const
+{
+    QJsonObject object;
+
+    // Points
+    QJsonArray pointsArray;
+    for (int i = 0; i < _points.count(); i++) {
+        QJsonObject pointObject;
+        pointObject.insert("index", i);
+        pointObject.insert("x", _points.at(i).x());
+        pointObject.insert("y", _points.at(i).y());
+
+        pointsArray.append(pointObject);
+    }
+    object.insert("points", pointsArray);
+
+    // Base class
+    object.insert("item", Item::toJson());
+    addTypeIdentifierToJson(object);
+
+    return object;
+}
+
+bool Wire::fromJson(const QJsonObject& object)
+{
+    Item::fromJson(object["item"].toObject());
+
+    // Points array
+    QList<PointWithIndex> pointsUnsorted;
+    QJsonArray pointsArray = object["points"].toArray();
+    if (!pointsArray.isEmpty()) {
+        for (QJsonValue pointsValue : pointsArray) {
+            QJsonObject pointsObject = pointsValue.toObject();
+            if (pointsObject.isEmpty()) {
+                continue;
+            }
+
+            pointsUnsorted.append(PointWithIndex(pointsObject["index"].toInt(), QPoint(pointsObject["x"].toInt(), pointsObject["y"].toInt())));
+        }
+    }
+    std::sort(pointsUnsorted.begin(), pointsUnsorted.end());
+    for (const PointWithIndex& pointWithIndex : pointsUnsorted) {
+        _points.append(pointWithIndex.point);
+    }
+
+    // Update stuff
+    update();
+
+    return true;
 }
 
 void Wire::update()

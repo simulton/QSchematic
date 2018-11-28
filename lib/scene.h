@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <QGraphicsScene>
 #include <QScopedPointer>
 #include <QGraphicsProxyWidget>
@@ -63,7 +64,7 @@ namespace QSchematic {
     private:
         void setupNewItem(Item* item);
         QList<QPoint> connectionPoints() const;
-        void addWireNet(WireNet* wireNet);
+        void addWireNet(std::unique_ptr<WireNet> wireNet);
 
         QList<WireNet*> _nets;
         Settings _settings;

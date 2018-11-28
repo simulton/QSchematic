@@ -33,6 +33,13 @@ QJsonObject Scene::toJson() const
     }
     object.insert("nodes", itemsArray);
 
+    // WireNets
+    QJsonArray netsArray;
+    for (const WireNet* net : nets()) {
+        netsArray.append(net->toJson());
+    }
+    object.insert("nets", netsArray);
+
     return object;
 }
 
@@ -48,6 +55,24 @@ bool Scene::fromJson(const QJsonObject& object)
             if (!object.isEmpty()) {
                 std::unique_ptr<Item> node = ItemFactory::instance().fromJson(object);
                 addItem(node.release());
+            }
+        }
+    }
+
+    // WireNets
+    {
+        QJsonArray array = object["nets"].toArray();
+        for (const QJsonValue& value : array) {
+            QJsonObject object = value.toObject();
+            if (!object.isEmpty()) {
+                std::unique_ptr<WireNet> net(new WireNet);
+                net->fromJson(object);
+
+                for (Wire* wire : net->wires()) {
+                    addItem(wire);
+                }
+
+                addWireNet(std::move(net));
             }
         }
     }
@@ -190,9 +215,9 @@ bool Scene::addWire(Wire* wire)
     }
 
     // No point of the new wire lies on an existing line segment - create a new wire net
-    WireNet* newNet = new WireNet;
-    addWireNet(newNet);
+    std::unique_ptr<WireNet> newNet(new WireNet);
     newNet->addWire(*wire);
+    addWireNet(std::move(newNet));
 
     return true;
 }
@@ -245,8 +270,9 @@ QList<WireNet*> Scene::nets(const WireNet& wireNet) const
             continue;
         }
 
-        if (net->name().isEmpty())
+        if (net->name().isEmpty()) {
             continue;
+        }
 
         if (QString::compare(net->name(), wireNet.name(), Qt::CaseInsensitive) == 0) {
             list.append(net);
@@ -502,16 +528,21 @@ void Scene::showPopup(const Item& item)
     }
 }
 
-void Scene::addWireNet(WireNet* wireNet)
+void Scene::addWireNet(std::unique_ptr<WireNet> wireNet)
 {
     if (!wireNet) {
         return;
     }
 
-    connect(wireNet, &WireNet::pointMoved, this, &Scene::wirePointMoved);
-    connect(wireNet, &WireNet::highlightChanged, this, &Scene::wireNetHighlightChanged);
+    // Take ownership
+    WireNet* net = wireNet.release();
 
-    _nets.append(wireNet);
+    connect(net, &WireNet::pointMoved, this, &Scene::wirePointMoved);
+    connect(net, &WireNet::highlightChanged, this, &Scene::wireNetHighlightChanged);
+
+    _nets.append(net);
+
+    update();
 }
 
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)

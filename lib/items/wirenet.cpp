@@ -20,6 +20,42 @@ WireNet::~WireNet()
     qDeleteAll(_wires);
 }
 
+QJsonObject WireNet::toJson() const
+{
+    QJsonObject object;
+
+    object.insert("name", name());
+
+    QJsonArray wiresArray;
+    for (const Wire* wire : _wires) {
+        wiresArray.append(wire->toJson());
+    }
+    object.insert("wires", wiresArray);
+
+    return object;
+}
+
+bool WireNet::fromJson(const QJsonObject& object)
+{
+    setName(object["name"].toString());
+
+    QJsonArray wiresArray = object["wires"].toArray();
+    for (const QJsonValue& wireValue : wiresArray) {
+        QJsonObject wireObject = wireValue.toObject();
+        if (wireObject.isEmpty())
+            continue;
+        Wire* newWire = new Wire;
+        newWire->fromJson(wireObject);
+        if (!newWire)
+            continue;
+        addWire(*newWire);
+    }
+
+    connect(&_label, &WireNetLabel::highlightChanged, this, &WireNet::labelHighlightChanged);
+
+    return true;
+}
+
 bool WireNet::addWire(Wire& wire)
 {
     // Update the junctions

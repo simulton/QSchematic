@@ -4,6 +4,7 @@
 #include <QList>
 #include <QSharedPointer>
 #include <memory>
+#include "../interfaces/json.h"
 #include "line.h"
 #include "wirenetlabel.h"
 
@@ -12,7 +13,7 @@ namespace QSchematic {
     class Wire;
     class WirePoint;
 
-    class WireNet : public QObject
+    class WireNet : public QObject, public Json
     {
         Q_OBJECT
         Q_DISABLE_COPY(WireNet)
@@ -20,6 +21,9 @@ namespace QSchematic {
     public:
         WireNet(QObject* parent = nullptr);
         virtual ~WireNet() override;
+
+        virtual QJsonObject toJson() const override;
+        virtual bool fromJson(const QJsonObject& object) override;
 
         bool addWire(Wire& wire);
         bool removeWire(Wire& wire);
