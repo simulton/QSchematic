@@ -44,6 +44,7 @@ namespace QSchematic {
         void updateScale();
         void setMode(Mode newMode);
 
+        Scene* _scene;
         Settings _settings;
         qreal _scaleFactor;
         Mode _mode;

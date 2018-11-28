@@ -15,6 +15,7 @@ using namespace QSchematic;
 
 View::View(QWidget* parent) :
     QGraphicsView(parent),
+    _scene(nullptr),
     _scaleFactor(1.0),
     _mode(NormalMode)
 {
@@ -33,28 +34,46 @@ View::View(QWidget* parent) :
 
 void View::keyPressEvent(QKeyEvent* event)
 {
-    // Zoom
+    // Something with CTRL held down?
     if (event->modifiers() & Qt::ControlModifier) {
 
-        // Zoom in
-        if (event->key() == Qt::Key_Plus) {
+        switch (event->key()) {
+        case Qt::Key_Plus:
             _scaleFactor += ZOOM_FACTOR_STEPS;
             updateScale();
-        }
+            break;
 
-        // Zoom out
-        if (event->key() == Qt::Key_Minus) {
+        case Qt::Key_Minus:
             _scaleFactor -= ZOOM_FACTOR_STEPS;
             updateScale();
-        }
+            break;
 
-        // Reset zoom
-        if (event->key() == Qt::Key_0) {
+        case Qt::Key_0:
             _scaleFactor = 1.0;
             updateScale();
+            break;
+
+        case Qt::Key_W:
+            if (_scene) {
+                _scene->setMode(Scene::WireMode);
+            }
+            break;
+
+        default:
+            break;
         }
-    } else {
-        QGraphicsView::keyPressEvent(event);
+    }
+
+    // Just a key alone?
+    switch (event->key()) {
+    case Qt::Key_Escape:
+        if (_scene) {
+            _scene->setMode(Scene::NormalMode);
+        }
+        break;
+
+    default:
+        break;
     }
 }
 
@@ -120,6 +139,8 @@ void View::setScene(Scene* scene)
     }
 
     QGraphicsView::setScene(scene);
+
+    _scene = scene;
 }
 
 void View::setSettings(const Settings& settings)
