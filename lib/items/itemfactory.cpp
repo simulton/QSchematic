@@ -61,9 +61,6 @@ std::unique_ptr<Item> ItemFactory::fromJson(const QJsonObject& object) const
         return nullptr;
     }
 
-    // Load
-    item->fromJson(object);
-
     return item;
 }
 

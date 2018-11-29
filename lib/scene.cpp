@@ -78,6 +78,7 @@ bool Scene::fromJson(const QJsonObject& object)
             QJsonObject object = value.toObject();
             if (!object.isEmpty()) {
                 std::unique_ptr<Item> node = ItemFactory::instance().fromJson(object);
+                node->fromJson(object);
                 addItem(node.release());
             }
         }
