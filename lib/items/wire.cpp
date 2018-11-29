@@ -186,8 +186,6 @@ void Wire::prependPoint(const QPoint& point)
     _points.prepend(WirePoint(point - gridPoint()));
     calculateBoundingRect();
 
-    update();
-
     emit pointMoved(*this, _points.first());
 }
 
@@ -196,8 +194,6 @@ void Wire::appendPoint(const QPoint& point)
     prepareGeometryChange();
     _points.append(WirePoint(point - gridPoint()));
     calculateBoundingRect();
-
-    update();
 
     emit pointMoved(*this, _points.last());
 }
@@ -213,8 +209,6 @@ void Wire::insertPoint(int index, const QPoint& point)
     _points.insert(index, WirePoint(point - gridPoint()));
     calculateBoundingRect();
 
-    update();
-
     emit pointMoved(*this, _points[index]);
 }
 
@@ -226,8 +220,6 @@ void Wire::removeFirstPoint()
     prepareGeometryChange();
     _points.removeFirst();
     calculateBoundingRect();
-
-    update();
 }
 
 void Wire::removeLastPoint()
@@ -239,8 +231,6 @@ void Wire::removeLastPoint()
     prepareGeometryChange();
     _points.removeLast();
     calculateBoundingRect();
-
-    update();
 }
 
 void Wire::removePoint(const QPoint& point)
@@ -248,8 +238,6 @@ void Wire::removePoint(const QPoint& point)
     prepareGeometryChange();
     _points.removeAll(WirePoint(point - gridPoint()));
     calculateBoundingRect();
-
-    update();
 }
 
 int Wire::removeDuplicatePoints()
