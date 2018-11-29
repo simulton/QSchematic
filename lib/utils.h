@@ -28,6 +28,8 @@ namespace QSchematic
         static QPointF pointOnLineClosestToPoint(const QPointF& p1, const QPointF& p2, const QPointF& point);
         static QVector<QLineF>::const_iterator lineClosestToPoint(const QVector<QLineF>& lines, const QPointF& point);
         static QVector<QPointF> rectanglePoints(const QRectF& rect, RectanglePointTypes pointTypes);
+        static bool lineIsHorizontal(const QPointF& p1, const QPointF& p2);
+        static bool lineIsVertical(const QPointF& p1, const QPointF& p2);
 
     private:
         Utils() = default;

@@ -126,12 +126,12 @@ QVector<QPointF> Utils::rectanglePoints(const QRectF& rect, RectanglePointTypes 
     return points;
 }
 
-bool Utils::lineSegmentIsHorizontal(const QPointF& p1, const QPointF& p2)
+bool Utils::lineIsHorizontal(const QPointF& p1, const QPointF& p2)
 {
     return qFuzzyCompare(p1.y(), p2.y());
 }
 
-bool Utils::lineSegmentIsVertical(const QPointF& p1, const QPointF& p2)
+bool Utils::lineIsVertical(const QPointF& p1, const QPointF& p2)
 {
     return qFuzzyCompare(p1.x(), p2.x());
 }
