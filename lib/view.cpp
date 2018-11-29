@@ -7,8 +7,8 @@
 #include "scene.h"
 #include "settings.h"
 
-const qreal ZOOM_FACTOR_MIN  = 0.25;
-const qreal ZOOM_FACTOR_MAX   = 2.00;
+const qreal ZOOM_FACTOR_MIN   = 0.25;
+const qreal ZOOM_FACTOR_MAX   = 10.00;
 const qreal ZOOM_FACTOR_STEPS = 0.10;
 
 using namespace QSchematic;
