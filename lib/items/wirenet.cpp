@@ -3,6 +3,7 @@
 #include <QJsonValue>
 #include "wirenet.h"
 #include "wire.h"
+#include "itemfactory.h"
 
 using namespace QSchematic;
 
@@ -44,10 +45,10 @@ bool WireNet::fromJson(const QJsonObject& object)
         QJsonObject wireObject = wireValue.toObject();
         if (wireObject.isEmpty())
             continue;
-        Wire* newWire = new Wire;
-        newWire->fromJson(wireObject);
+        Wire* newWire = dynamic_cast<Wire*>(ItemFactory::instance().fromJson(wireObject).release());
         if (!newWire)
             continue;
+        newWire->fromJson(wireObject);
         addWire(*newWire);
     }
 

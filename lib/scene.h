@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <functional>
 #include <QGraphicsScene>
 #include <QScopedPointer>
 #include <QGraphicsProxyWidget>
@@ -34,6 +35,7 @@ namespace QSchematic {
         virtual bool fromJson(const QJsonObject& object) override;
 
         void setSettings(const Settings& settings);
+        void setWireFactory(const std::function<std::unique_ptr<Wire>()>& factory);
         void setMode(Mode mode);
         void toggleWirePosture();
 
@@ -66,6 +68,7 @@ namespace QSchematic {
 
         QList<WireNet*> _nets;
         Settings _settings;
+        std::function<std::unique_ptr<Wire>()> _wireFactory;
         Mode _mode;
         QScopedPointer<Wire> _newWire;
         bool _newWireSegment;

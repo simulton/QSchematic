@@ -118,6 +118,11 @@ void Scene::setSettings(const Settings& settings)
     update();
 }
 
+void Scene::setWireFactory(const std::function<std::unique_ptr<Wire>()>& factory)
+{
+    _wireFactory = factory;
+}
+
 void Scene::setMode(Scene::Mode mode)
 {
     // Check what the previous mode was
@@ -582,9 +587,13 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 
             QPoint mousetoGridPoint = _settings.toGridPoint(event->scenePos());
 
-            // Start a new line if there isn't already one. Else continue the current one.
+            // Start a new wire if there isn't already one. Else continue the current one.
             if (!_newWire) {
-                _newWire.reset(new Wire);
+                if (_wireFactory) {
+                    _newWire.reset(_wireFactory().release());
+                } else {
+                    _newWire.reset(new Wire);
+                }
                 _newWire->setAcceptHoverEvents(false);
                 addItem(_newWire.data());
             }

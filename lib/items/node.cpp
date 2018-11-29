@@ -5,6 +5,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include "node.h"
+#include "itemfactory.h"
 #include "../utils.h"
 #include "../scene.h"
 
@@ -68,7 +69,10 @@ bool Node::fromJson(const QJsonObject& object)
     for (const QJsonValue& value : object["connectors"].toArray()) {
         QJsonObject object = value.toObject();
         if (!object.isEmpty()) {
-            Connector* connector = new Connector;
+            Connector* connector = dynamic_cast<Connector*>(ItemFactory::instance().fromJson(object).release());
+            if (!connector) {
+                continue;
+            }
             connector->fromJson(object);
             addConnector(connector);
         }
