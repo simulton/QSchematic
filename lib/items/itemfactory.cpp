@@ -56,11 +56,6 @@ std::unique_ptr<Item> ItemFactory::fromJson(const QJsonObject& object) const
         }
     }
 
-    // Sanity check
-    if (!item) {
-        return nullptr;
-    }
-
     return item;
 }
 
