@@ -33,8 +33,7 @@ namespace QSchematic {
         void removeFirstPoint();
         void removeLastPoint();
         void removePoint(const QPoint& point);
-        int removeDuplicatePoints();
-        int removeObsoletePoints();
+        void simplify();
         void movePointBy(int index, const QVector2D& moveBy);
         void movePointTo(int index, const QPoint& moveTo);
         void moveLineSegmentBy(int index, const QVector2D& moveBy);
@@ -63,6 +62,9 @@ namespace QSchematic {
 
     private:
         Q_DISABLE_COPY(Wire)
+
+        int removeDuplicatePoints();
+        int removeObsoletePoints();
 
         QVector<WirePoint> _points; // Store grid coordinates, not scene coordinates, but RELATIVE to this object
         QRectF _rect;

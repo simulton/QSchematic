@@ -367,8 +367,7 @@ void Scene::itemMoved(const Item& item, const QVector2D& movedBy)
                 continue;
             }
 
-            wireNet->removeDuplicatePoints();
-            wireNet->removeObsoletePoints();
+            wireNet->simplify();
         }
     }
 }
@@ -628,6 +627,8 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
     {
         // Right mouse button
         if (event->button() == Qt::RightButton) {
+            // Clean up the new wire (users do messy stuff, you know?)
+            _newWire->simplify();
 
             // Change the mode back to NormalMode if nothing below cursor
             if (QGraphicsScene::items(event->scenePos()).isEmpty()) {
@@ -692,16 +693,27 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                 _newWireSegment = false;
             } else {
                 // Create the intermediate point that creates the straight angle
-                WirePoint prevNode(_newWire->points().at(_newWire->points().count()-3));
-                QPoint corner(prevNode.x(), mouseGridPos.y());
+                WirePoint p1(_newWire->points().at(_newWire->points().count()-3));
+                QPoint p2(p1.x(), mouseGridPos.y());
+                QPoint p3(mouseGridPos);
                 if (_invertWirePosture) {
-                    corner.setX(mouseGridPos.x());
-                    corner.setY(prevNode.y());
+                    p2.setX(p3.x());
+                    p2.setY(p1.y());
                 }
 
-                // Modify the actual wire
-                _newWire->movePointTo(_newWire->points().count()-2, corner);
-                _newWire->movePointTo(_newWire->points().count()-1, mouseGridPos);
+                // Check whether we moved along the axis of the previous line segment
+                if (p2 == p3) {
+                    _newWire->movePointTo(_newWire->points().count()-2, p2);
+                    _newWire->movePointTo(_newWire->points().count()-1, p3);
+                    qDebug("AA");
+
+                } else {
+                    qDebug("BB");
+
+                    // Modify the actual wire
+                    _newWire->movePointTo(_newWire->points().count()-2, p2);
+                    _newWire->movePointTo(_newWire->points().count()-1, p3);
+                }
             }
         } else {
             // Don't care about angles and stuff. Fuck geometry, right?
@@ -776,7 +788,7 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
             // Finish the current wire
             _newWire->setAcceptHoverEvents(true);
             _newWire->setFlag(QGraphicsItem::ItemIsSelectable, true);
-            _newWire->removeDuplicatePoints();
+            _newWire->simplify();
             connect(_newWire.data(), &Wire::showPopup, this, &Scene::showPopup);
             addWire(_newWire.take());
 

@@ -240,6 +240,12 @@ void Wire::removePoint(const QPoint& point)
     calculateBoundingRect();
 }
 
+void Wire::simplify()
+{
+    removeDuplicatePoints();
+    removeObsoletePoints();
+}
+
 int Wire::removeDuplicatePoints()
 {
     int removedCount = 0;
@@ -283,7 +289,7 @@ int Wire::removeObsoletePoints()
     * the first and third point) and continue on with the next one.
     */
 
-    // Don't do anything if there is not at least one line segment
+    // Don't do anything if there are not at least three line segments
     if (_points.count() < 3) {
         return 0;
     }
@@ -299,7 +305,7 @@ int Wire::removeObsoletePoints()
         QVector2D v2(p3 - p2);
 
         float dotProduct = QVector2D::dotProduct(v1, v2);
-        float absProduct =  v1.length() * v2.length();
+        float absProduct =  v1.lengthSquared();
 
         if (qFuzzyCompare(dotProduct, absProduct)) {
             pointsToRemove.append(_points[i-1]);
@@ -585,6 +591,7 @@ void Wire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
 
     // Draw the handles (if selected)
     if (isSelected()) {
+        painter->setOpacity(0.5);
         painter->setPen(penHandle);
         painter->setBrush(brushHandle);
         for (const QPoint& point : points) {

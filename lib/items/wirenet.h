@@ -28,8 +28,7 @@ namespace QSchematic {
         bool addWire(Wire& wire);
         bool removeWire(Wire& wire);
         bool contains(const Wire& wire) const;
-        int removeDuplicatePoints();
-        int removeObsoletePoints();
+        void simplify();
         void setName(const QString& name);
         void setHighlighted(bool highlighted);
 

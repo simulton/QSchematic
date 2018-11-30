@@ -102,26 +102,11 @@ bool WireNet::contains(const Wire& wire) const
     return false;
 }
 
-int WireNet::removeDuplicatePoints()
+void WireNet::simplify()
 {
-    int removedPointsCount = 0;
-
     for (Wire* wire : _wires) {
-        removedPointsCount += wire->removeDuplicatePoints();
+        wire->simplify();
     }
-
-    return removedPointsCount;
-}
-
-int WireNet::removeObsoletePoints()
-{
-    int removedPointsCount = 0;
-
-    for (Wire* wire : _wires) {
-        removedPointsCount += wire->removeObsoletePoints();
-    }
-
-    return removedPointsCount;
 }
 
 void WireNet::setName(const QString& name)
