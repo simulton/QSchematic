@@ -9,6 +9,7 @@
 #include <QMetaEnum>
 #include <QVector2D>
 #include "wire.h"
+#include "../utils.h"
 
 const qreal BOUNDING_RECT_PADDING = 6.0;
 const qreal HANDLE_SIZE = 3.0;
@@ -261,39 +262,25 @@ void Wire::removeDuplicatePoints()
 
 void Wire::removeObsoletePoints()
 {
-   /*
-    * convert any 2 neighbouring points to a translation vector (i.e. subtract the second from the first)
-    * then for each 2 consecutive translations take the scalar product.
-    * if the scalar product is 0 then they're orthogonal.
-    * if they're on exactly the same line p.q = |p|*|q|
-    * this way we can easily deduce if a given point should be dropped.
-    * if we drop it, the recreate the current translation vector (i.e. merge the two segments by choosing
-    * the first and third point) and continue on with the next one.
-    */
-
     // Don't do anything if there are not at least three line segments
     if (_points.count() < 3) {
         return;
     }
 
+    // Compile a list of obsolete points
     QList<WirePoint> pointsToRemove;
-
     for (int i = 2; i < _points.count(); i++) {
         QPoint p1 = _points.at(i - 2).toPoint();
         QPoint p2 = _points.at(i - 1).toPoint();
         QPoint p3 = _points.at(i).toPoint();
 
-        QVector2D v1(p2 - p1);
-        QVector2D v2(p3 - p2);
-
-        float dotProduct = QVector2D::dotProduct(v1, v2);
-        float absProduct =  v1.length() * v2.length();
-
-        if (qFuzzyCompare(dotProduct, absProduct)) {
+        // Check if p2 is on the line created by p1 and p3
+        if (Utils::pointIsOnLine(QLineF(p1, p2), p3)) {
             pointsToRemove.append(_points[i-1]);
         }
     }
 
+    // Get rid of them
     for (const WirePoint& point : pointsToRemove) {
         removePoint(point.toPoint());
     }

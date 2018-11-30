@@ -135,3 +135,21 @@ bool Utils::lineIsVertical(const QPointF& p1, const QPointF& p2)
 {
     return qFuzzyCompare(p1.x(), p2.x());
 }
+
+bool Utils::pointIsOnLine(const QLineF& line, const QPointF& point)
+{
+    /*
+     * Convert both two neighbouring points to a translation vector (i.e. substract the second from the first)
+     * and calculate their dot product. If the dot product is 0 they're orthogonal.
+     * if they're on exactly the same line p.q = |p|*|q|
+     */
+
+    QVector2D v1(line.p2() - line.p1());
+    QVector2D v2(point - line.p2());
+
+    float dotProduct = QVector2D::dotProduct(v1, v2);
+    float absProduct =  v1.length() * v2.length();
+
+    return qFuzzyCompare(dotProduct, absProduct);
+}
+

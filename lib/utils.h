@@ -30,6 +30,7 @@ namespace QSchematic
         static QVector<QPointF> rectanglePoints(const QRectF& rect, RectanglePointTypes pointTypes);
         static bool lineIsHorizontal(const QPointF& p1, const QPointF& p2);
         static bool lineIsVertical(const QPointF& p1, const QPointF& p2);
+        static bool pointIsOnLine(const QLineF& line, const QPointF& point);
 
     private:
         Utils() = default;
