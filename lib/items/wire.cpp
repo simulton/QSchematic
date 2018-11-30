@@ -276,6 +276,7 @@ void Wire::removeObsoletePoints()
         return;
     }
 
+
     QList<WirePoint> pointsToRemove;
 
     for (int i = 2; i < _points.count(); i++) {
