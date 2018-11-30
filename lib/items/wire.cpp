@@ -276,6 +276,7 @@ void Wire::removeObsoletePoints()
         return;
     }
 
+
     QList<WirePoint> pointsToRemove;
 
     for (int i = 2; i < _points.count(); i++) {
@@ -287,7 +288,7 @@ void Wire::removeObsoletePoints()
         QVector2D v2(p3 - p2);
 
         float dotProduct = QVector2D::dotProduct(v1, v2);
-        float absProduct =  v1.lengthSquared();
+        float absProduct =  v1.length() * v2.length();
 
         if (qFuzzyCompare(dotProduct, absProduct)) {
             pointsToRemove.append(_points[i-1]);
