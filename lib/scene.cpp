@@ -625,10 +625,8 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 
     case WireMode:
     {
-        // Right mouse button
+        // Right mouse button: Abort wire mode
         if (event->button() == Qt::RightButton) {
-            // Clean up the new wire (users do messy stuff, you know?)
-            _newWire->simplify();
 
             // Change the mode back to NormalMode if nothing below cursor
             if (QGraphicsScene::items(event->scenePos()).isEmpty()) {
@@ -701,19 +699,9 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                     p2.setY(p1.y());
                 }
 
-                // Check whether we moved along the axis of the previous line segment
-                if (p2 == p3) {
-                    _newWire->movePointTo(_newWire->points().count()-2, p2);
-                    _newWire->movePointTo(_newWire->points().count()-1, p3);
-                    qDebug("AA");
-
-                } else {
-                    qDebug("BB");
-
-                    // Modify the actual wire
-                    _newWire->movePointTo(_newWire->points().count()-2, p2);
-                    _newWire->movePointTo(_newWire->points().count()-1, p3);
-                }
+                // Modify the actual wire
+                _newWire->movePointTo(_newWire->points().count()-2, p2);
+                _newWire->movePointTo(_newWire->points().count()-1, p3);
             }
         } else {
             // Don't care about angles and stuff. Fuck geometry, right?
