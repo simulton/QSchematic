@@ -246,38 +246,20 @@ void Wire::simplify()
     removeObsoletePoints();
 }
 
-int Wire::removeDuplicatePoints()
+void Wire::removeDuplicatePoints()
 {
-    int removedCount = 0;
-    bool allUnique = false;
+    QVector<WirePoint> newList;
 
-    do {
-        // Go through all points and remove duplicates
-        for (const WirePoint& point : _points) {
-            int count = _points.count(point);
-            if (count > 1) {
-                for (int i = 0; i < count-1; i++) {
-                    _points.removeOne(point);
-                    removedCount++;
-                }
-            }
+    for (auto it = _points.begin(); it != _points.constEnd(); it++) {
+        if (!newList.contains(*it)) {
+            newList << *it;
         }
+    }
 
-        // Check if uniques only now. Otherwise keep going.
-        allUnique = true;
-        for (const WirePoint& point  : _points) {
-            if (_points.count(point) > 1) {
-                allUnique = false;
-            }
-        }
-
-
-    } while (!allUnique);
-
-    return removedCount;
+    _points = newList;
 }
 
-int Wire::removeObsoletePoints()
+void Wire::removeObsoletePoints()
 {
    /*
     * convert any 2 neighbouring points to a translation vector (i.e. subtract the second from the first)
@@ -291,7 +273,7 @@ int Wire::removeObsoletePoints()
 
     // Don't do anything if there are not at least three line segments
     if (_points.count() < 3) {
-        return 0;
+        return;
     }
 
     QList<WirePoint> pointsToRemove;
@@ -315,8 +297,6 @@ int Wire::removeObsoletePoints()
     for (const WirePoint& point : pointsToRemove) {
         removePoint(point.toPoint());
     }
-
-    return pointsToRemove.count();
 }
 
 void Wire::movePointBy(int index, const QVector2D& moveBy)
