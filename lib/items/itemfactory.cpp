@@ -2,6 +2,7 @@
 #include "itemfactory.h"
 #include "node.h"
 #include "wire.h"
+#include "wireroundedcorners.h"
 #include "connector.h"
 #include "label.h"
 
@@ -41,6 +42,10 @@ std::unique_ptr<Item> ItemFactory::fromJson(const QJsonObject& object) const
 
         case Item::WireType:
             item.reset(new Wire);
+            break;
+
+        case Item::WireRoundedCornersType:
+            item.reset(new WireRoundedCorners);
             break;
 
         case Item::ConnectorType:

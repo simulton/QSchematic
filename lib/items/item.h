@@ -16,8 +16,9 @@ namespace QSchematic {
 
     public:
         enum ItemType {
-            NodeType      = QGraphicsItem::UserType + 1,
+            NodeType               = QGraphicsItem::UserType + 1,
             WireType,
+            WireRoundedCornersType,
             ConnectorType,
             LabelType,
 
