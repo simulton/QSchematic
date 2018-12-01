@@ -37,6 +37,7 @@ QJsonObject Item::toJson() const
     object.insert("grid point x", gridPointX());
     object.insert("grid point y", gridPointY());
     object.insert("movable", isMovable());
+    object.insert("visible", isVisible());
     object.insert("snap to grid", snapToGrid());
     object.insert("highlight enabled", highlightEnabled());
 
@@ -48,6 +49,7 @@ bool Item::fromJson(const QJsonObject& object)
     setGridPointX(object["grid point x"].toInt());
     setGridPointY(object["grid point y"].toInt());
     setMovable(object["movable"].toBool());
+    setVisible(object["visible"].toBool());
     setSnapToGrid(object["snap to grid"].toBool());
     setHighlightEnabled(object["highlight enabled"].toBool());
 
