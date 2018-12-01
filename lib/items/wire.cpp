@@ -243,46 +243,50 @@ void Wire::removePoint(const QPoint& point)
 
 void Wire::simplify()
 {
-    removeDuplicatePoints();
-    removeObsoletePoints();
+    prepareGeometryChange();
+    simplify(_points);
+    calculateBoundingRect();
 }
 
-void Wire::removeDuplicatePoints()
+void Wire::simplify(QVector<WirePoint>& points)
+{
+    removeDuplicatePoints(points);
+    removeObsoletePoints(points);
+}
+
+void Wire::removeDuplicatePoints(QVector<WirePoint>& points)
 {
     QVector<WirePoint> newList;
 
-    for (auto it = _points.begin(); it != _points.constEnd(); it++) {
+    for (auto it = points.begin(); it != points.end(); it++) {
         if (!newList.contains(*it)) {
             newList << *it;
         }
     }
 
-    _points = newList;
+    points = std::move(newList);
 }
 
-void Wire::removeObsoletePoints()
+void Wire::removeObsoletePoints(QVector<WirePoint>& points)
 {
     // Don't do anything if there are not at least three line segments
-    if (_points.count() < 3) {
+    if (points.count() < 3) {
         return;
     }
 
     // Compile a list of obsolete points
-    QList<WirePoint> pointsToRemove;
-    for (int i = 2; i < _points.count(); i++) {
-        QPoint p1 = _points.at(i - 2).toPoint();
-        QPoint p2 = _points.at(i - 1).toPoint();
-        QPoint p3 = _points.at(i).toPoint();
+    auto it = points.begin()+2;
+    while (it != points.end()) {
+        QPoint p1 = (*(it - 2)).toPoint();
+        QPoint p2 = (*(it - 1)).toPoint();
+        QPoint p3 = (*it).toPoint();
 
         // Check if p2 is on the line created by p1 and p3
         if (Utils::pointIsOnLine(QLineF(p1, p2), p3)) {
-            pointsToRemove.append(_points[i-1]);
+            it = points.erase(it-1);
+        } else {
+            it++;
         }
-    }
-
-    // Get rid of them
-    for (const WirePoint& point : pointsToRemove) {
-        removePoint(point.toPoint());
     }
 }
 
