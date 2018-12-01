@@ -68,6 +68,7 @@ namespace QSchematic {
 
     protected:
         QMap<RectanglePoint, QRect> resizeHandles() const;
+        void paintResizeHandles(QPainter& painter);
 
     private:
         enum Mode {

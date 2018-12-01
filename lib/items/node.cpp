@@ -535,28 +535,33 @@ void Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     painter->drawRoundedRect(QRect(QPoint(0, 0), _size*_settings.gridSize), _settings.gridSize/2, _settings.gridSize/2);
 
     // Resize handles
-    if (isSelected() and _allowMouseResize) {
-        for (const QRect& rect : resizeHandles()) {
-            // Handle pen
-            QPen handlePen;
-            handlePen.setStyle(Qt::NoPen);
-            painter->setPen(handlePen);
+    if (isSelected() and allowMouseResize()) {
+        paintResizeHandles(*painter);
+    }
+}
 
-            // Handle Brush
-            QBrush handleBrush;
-            handleBrush.setStyle(Qt::SolidPattern);
-            painter->setBrush(handleBrush);
+void Node::paintResizeHandles(QPainter& painter)
+{
+    for (const QRect& rect : resizeHandles()) {
+        // Handle pen
+        QPen handlePen;
+        handlePen.setStyle(Qt::NoPen);
+        painter.setPen(handlePen);
 
-            // Draw the outer handle
-            handleBrush.setColor("#3fa9f5");
-            painter->setBrush(handleBrush);
-            painter->drawRect(rect.adjusted(-handlePen.width(), -handlePen.width(), handlePen.width()/2, handlePen.width()/2));
+        // Handle Brush
+        QBrush handleBrush;
+        handleBrush.setStyle(Qt::SolidPattern);
+        painter.setBrush(handleBrush);
 
-            // Draw the inner handle
-            int adj = _settings.resizeHandleSize/2;
-            handleBrush.setColor(Qt::white);
-            painter->setBrush(handleBrush);
-            painter->drawRect(rect.adjusted(-handlePen.width()+adj, -handlePen.width()+adj, (handlePen.width()/2)-adj, (handlePen.width()/2)-adj));
-        }
+        // Draw the outer handle
+        handleBrush.setColor("#3fa9f5");
+        painter.setBrush(handleBrush);
+        painter.drawRect(rect.adjusted(-handlePen.width(), -handlePen.width(), handlePen.width()/2, handlePen.width()/2));
+
+        // Draw the inner handle
+        int adj = _settings.resizeHandleSize/2;
+        handleBrush.setColor(Qt::white);
+        painter.setBrush(handleBrush);
+        painter.drawRect(rect.adjusted(-handlePen.width()+adj, -handlePen.width()+adj, (handlePen.width()/2)-adj, (handlePen.width()/2)-adj));
     }
 }
