@@ -34,8 +34,8 @@ QJsonObject Item::toJson() const
 {
     QJsonObject object;
 
-    object.insert("grid point x", gridPointX());
-    object.insert("grid point y", gridPointY());
+    object.insert("pos x", posX());
+    object.insert("pos y", posY());
     object.insert("movable", isMovable());
     object.insert("visible", isVisible());
     object.insert("snap to grid", snapToGrid());
@@ -46,8 +46,8 @@ QJsonObject Item::toJson() const
 
 bool Item::fromJson(const QJsonObject& object)
 {
-    setGridPointX(object["grid point x"].toInt());
-    setGridPointY(object["grid point y"].toInt());
+    setPosX(object["pos x"].toDouble());
+    setPosY(object["pos y"].toDouble());
     setMovable(object["movable"].toBool());
     setVisible(object["visible"].toBool());
     setSnapToGrid(object["snap to grid"].toBool());
@@ -66,54 +66,109 @@ int Item::type() const
     return _type;
 }
 
-void Item::setGridPoint(const QPoint& newGridPoint)
+void Item::setGridPos(const QPoint& gridPos)
 {
-    setPos(_settings.toScenePoint(newGridPoint));
+    setPos(_settings.toScenePoint(gridPos));
 }
 
-void Item::setGridPoint(int x, int y)
+void Item::setGridPos(int x, int y)
 {
-    setGridPoint(QPoint(x, y));
+    setGridPos(QPoint(x, y));
 }
 
-void Item::setGridPointX(int x)
+void Item::setGridPosX(int x)
 {
-    setGridPoint(x, gridPointY());
+    setGridPos(x, gridPosY());
 }
 
-void Item::setGridPointY(int y)
+void Item::setGridPosY(int y)
 {
-    setGridPoint(gridPointX(), y);
+    setGridPos(gridPosX(), y);
 }
 
-QPoint Item::gridPoint() const
+QPoint Item::gridPos() const
 {
     return _settings.toGridPoint(pos().toPoint());
 }
 
-int Item::gridPointX() const
+int Item::gridPosX() const
 {
-    return gridPoint().x();
+    return gridPos().x();
 }
 
-int Item::gridPointY() const
+int Item::gridPosY() const
 {
-    return gridPoint().y();
+    return gridPos().y();
 }
 
-QPointF Item::scenePoint() const
+void Item::setPos(const QPointF& pos)
 {
-    return scenePos();
+    QGraphicsObject::setPos(pos);
 }
 
-qreal Item::scenePointX() const
+void Item::setPos(qreal x, qreal y)
 {
-    return scenePoint().x();
+    QGraphicsObject::setPos(x, y);
 }
 
-qreal Item::scenePointY() const
+void Item::setPosX(qreal x)
 {
-    return scenePoint().y();
+    setPos(x, posY());
+}
+
+void Item::setPosY(qreal y)
+{
+    setPos(posX(), y);
+}
+
+QPointF Item::pos() const
+{
+    return QGraphicsObject::pos();
+}
+
+qreal Item::posX() const
+{
+    return pos().x();
+}
+
+qreal Item::posY() const
+{
+    return pos().y();
+}
+
+void Item::setScenePos(const QPointF& point)
+{
+    QGraphicsObject::setPos(mapToScene(point));
+}
+
+void Item::setScenePos(qreal x, qreal y)
+{
+    setScenePos(QPointF(x, y));
+}
+
+void Item::setScenePosX(qreal x)
+{
+    setScenePos(x, scenePosY());
+}
+
+void Item::setScenePosY(qreal y)
+{
+    setScenePos(scenePosX(), y);
+}
+
+QPointF Item::scenePos() const
+{
+    return QGraphicsObject::scenePos();
+}
+
+qreal Item::scenePosX() const
+{
+    return scenePos().x();
+}
+
+qreal Item::scenePosY() const
+{
+    return scenePos().y();
 }
 
 void Item::setSettings(const Settings& settings)
@@ -264,7 +319,7 @@ void Item::timerTimeout()
 
 void Item::posChanged()
 {
-    QPoint newGridPoint = gridPoint();
+    QPoint newGridPoint = gridPos();
     QVector2D movedBy(newGridPoint - _oldGridPoint);
     if (!movedBy.isNull()) {
         emit moved(*this, movedBy);

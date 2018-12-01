@@ -49,7 +49,7 @@ namespace QSchematic {
         void clearConnectors();
         QList<Connector*> connectors() const;
         QList<QPoint> connectionPoints() const;
-        bool isConnectionPoint(const QPoint& gridPoint) const;
+        bool isConnectionPoint(const QPoint& gridPos) const;
         void setConnectorsMovable(bool enabled);
         bool connectorsMovable() const;
         void setConnectorsSnapPolicy(Connector::SnapPolicy policy);

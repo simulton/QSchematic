@@ -348,8 +348,8 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             _lastMousePosWithGridMove = newMouseGridPos;
 
             // Perform resizing
-            int newX = gridPointX();
-            int newY = gridPointY();
+            int newX = gridPosX();
+            int newY = gridPosY();
             int newWidth = _size.width();
             int newHeight = _size.height();
             switch (_resizeHandle) {
@@ -398,7 +398,7 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 
             // Set new size & position
             setSize(newWidth, newHeight);
-            setGridPoint(newX, newY);
+            setGridPos(newX, newY);
         }
 
         break;

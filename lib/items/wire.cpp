@@ -151,7 +151,7 @@ QVector<QPoint> Wire::scenePointsAbsolute() const
     QVector<QPoint> points;
 
     for (const WirePoint& point : _points) {
-        points << _settings.toScenePoint(point.toPoint() + gridPoint());
+        points << _settings.toScenePoint(point.toPoint() + gridPos());
     }
 
     return points;
@@ -184,7 +184,7 @@ void Wire::calculateBoundingRect()
 void Wire::prependPoint(const QPoint& point)
 {
     prepareGeometryChange();
-    _points.prepend(WirePoint(point - gridPoint()));
+    _points.prepend(WirePoint(point - gridPos()));
     calculateBoundingRect();
 
     emit pointMoved(*this, _points.first());
@@ -193,7 +193,7 @@ void Wire::prependPoint(const QPoint& point)
 void Wire::appendPoint(const QPoint& point)
 {
     prepareGeometryChange();
-    _points.append(WirePoint(point - gridPoint()));
+    _points.append(WirePoint(point - gridPos()));
     calculateBoundingRect();
 
     emit pointMoved(*this, _points.last());
@@ -207,7 +207,7 @@ void Wire::insertPoint(int index, const QPoint& point)
     }
 
     prepareGeometryChange();
-    _points.insert(index, WirePoint(point - gridPoint()));
+    _points.insert(index, WirePoint(point - gridPos()));
     calculateBoundingRect();
 
     emit pointMoved(*this, _points[index]);
@@ -237,7 +237,7 @@ void Wire::removeLastPoint()
 void Wire::removePoint(const QPoint& point)
 {
     prepareGeometryChange();
-    _points.removeAll(WirePoint(point - gridPoint()));
+    _points.removeAll(WirePoint(point - gridPos()));
     calculateBoundingRect();
 }
 
@@ -311,7 +311,7 @@ void Wire::movePointTo(int index, const QPoint& moveTo)
     }
 
     prepareGeometryChange();
-    _points[index] = WirePoint(moveTo - gridPoint());
+    _points[index] = WirePoint(moveTo - gridPos());
     calculateBoundingRect();    
     update();
 
@@ -356,7 +356,7 @@ QVector<QPoint> Wire::points() const
     QVector<QPoint> list;
 
     for (const WirePoint& wirePoint : _points) {
-        list << gridPoint() + wirePoint.toPoint();
+        list << gridPos() + wirePoint.toPoint();
     }
 
     return list;
@@ -371,7 +371,7 @@ QList<Line> Wire::lineSegments() const
 
     QList<Line> ret;
     for (int i = 0; i < _points.count()-1; i++) {
-        ret.append(Line(gridPoint() + _points.at(i).toPoint(), gridPoint() + _points.at(i+1).toPoint()));
+        ret.append(Line(gridPos() + _points.at(i).toPoint(), gridPos() + _points.at(i+1).toPoint()));
     }
 
     return ret;

@@ -37,7 +37,7 @@ Connector::Connector(int type, const QPoint& gridPoint, const QString& text, QGr
     connect(this, &Connector::moved, [this]{ calculateTextDirection(); });
 
     // Misc
-    setGridPoint(gridPoint);
+    setGridPos(gridPoint);
     calculateSymbolRect();
     calculateTextDirection();
 }
