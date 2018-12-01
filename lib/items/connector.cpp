@@ -15,8 +15,8 @@ const int TEXT_PADDING         = 8;
 
 using namespace QSchematic;
 
-Connector::Connector(const QPoint& gridPoint, const QString& text, QGraphicsItem* parent) :
-    Item(Item::ConnectorType, parent),
+Connector::Connector(int type, const QPoint& gridPoint, const QString& text, QGraphicsItem* parent) :
+    Item(type, parent),
     _snapPolicy(NodeSizerectOutline),
     _forceTextDirection(false),
     _textDirection(Direction::LeftToRight)

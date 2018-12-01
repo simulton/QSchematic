@@ -20,7 +20,7 @@ namespace QSchematic {
         };
         Q_ENUM(SnapPolicy)
 
-        Connector(const QPoint& gridPoint = QPoint(), const QString& text = QString(), QGraphicsItem* parent = nullptr);
+        Connector(int type = Item::ConnectorType, const QPoint& gridPoint = QPoint(), const QString& text = QString(), QGraphicsItem* parent = nullptr);
         virtual ~Connector() override = default;
 
         virtual QJsonObject toJson() const override;
