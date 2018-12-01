@@ -3,6 +3,8 @@
 #include "../../../lib/items/item.h"
 
 enum ItemType {
-    ConditionType = QSchematic::Item::QSchematicItemUserType + 1,
-    OperationType
+    OperationType = QSchematic::Item::QSchematicItemUserType + 1,
+    OperationConnectorType,
+    ConditionType,
+    ConditionConnectorType,
 };

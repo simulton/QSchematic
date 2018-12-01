@@ -1,13 +1,14 @@
 #include <QPainter>
 #include <QJsonObject>
 #include "condition.h"
-#include "myconnector.h"
+#include "conditionconnector.h"
 #include "itemtypes.h"
 #include "../../../lib/utils.h"
 
 const QColor COLOR_HIGHLIGHTED = QColor(Qt::blue).lighter();
 const QColor COLOR_BODY_FILL   = QColor(Qt::gray).lighter(140);
 const QColor COLOR_BODY_BORDER = QColor(Qt::black);
+const qreal SHAPE_PADDING      = 10;
 const qreal PEN_WIDTH          = 1.5;
 
 Condition::Condition(QGraphicsItem* parent) :
@@ -24,6 +25,7 @@ Condition::Condition(QGraphicsItem* parent) :
     connect(this, &QSchematic::Node::sizeChanged, this, &Condition::placeConnectors);
 
     // Misc
+    calculatePolygon();
     placeConnectors();
 }
 
@@ -31,7 +33,7 @@ QJsonObject Condition::toJson() const
 {
     QJsonObject object;
 
-    object.insert("item", Item::toJson());
+    object.insert("node", QSchematic::Node::toJson());
     addTypeIdentifierToJson(object);
 
     return object;
@@ -39,9 +41,28 @@ QJsonObject Condition::toJson() const
 
 bool Condition::fromJson(const QJsonObject& object)
 {
-    Item::fromJson(object["item"].toObject());
+    QSchematic::Node::fromJson(object["node"].toObject());
+
+    // Clear connectors as we have fixed ones in this class
+    update();
 
     return true;
+}
+
+QPainterPath Condition::shape() const
+{
+    QPainterPath basePath;
+    basePath.addPolygon(_polygon);
+
+    return basePath;
+}
+
+void Condition::update()
+{
+    calculatePolygon();
+    placeConnectors();
+
+    Node::update();
 }
 
 void Condition::placeConnectors()
@@ -52,8 +73,19 @@ void Condition::placeConnectors()
     // Add new connectors
     auto points = QSchematic::Utils::rectanglePoints(sizeRect(), QSchematic::Utils::RectangleEdgeCenterPoints);
     for (const auto& point : points) {
-        addConnector(new MyConnector(point.toPoint(), QStringLiteral("[case]")));
+        addConnector(new ConditionConnector(point.toPoint(), QStringLiteral("[case]")));
     }
+}
+
+void Condition::calculatePolygon()
+{
+    auto points = QSchematic::Utils::rectanglePoints(sizeRect(), QSchematic::Utils::RectangleEdgeCenterPoints);
+    auto scaledPoints(points);
+    for (auto it = scaledPoints.begin() ; it != scaledPoints.end(); it++) {
+        *it = *it * _settings.gridSize;
+    }
+
+    _polygon = QPolygonF(scaledPoints);
 }
 
 void Condition::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
@@ -83,8 +115,7 @@ void Condition::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
         painter->setPen(highlightPen);
         painter->setBrush(highlightBrush);
         painter->setOpacity(0.5);
-        int adj = _settings.highlightRectPadding;
-        painter->drawRoundedRect(QRect(QPoint(0, 0), size()*_settings.gridSize).adjusted(-adj, -adj, adj, adj), _settings.gridSize/2, _settings.gridSize/2);
+        painter->drawPath(shape());
     }
 
     painter->setOpacity(1.0);
@@ -100,44 +131,13 @@ void Condition::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
     bodyBrush.setStyle(Qt::SolidPattern);
     bodyBrush.setColor(COLOR_BODY_FILL);
 
-    // Draw the component body
-    {
-        // Create polygon
-        auto points = QSchematic::Utils::rectanglePoints(sizeRect(), QSchematic::Utils::RectangleEdgeCenterPoints);
-        auto scaledPoints(points);
-        for (auto it = scaledPoints.begin() ; it != scaledPoints.end(); it++) {
-            *it = *it * _settings.gridSize;
-        }
-
-        // Draw
-        painter->setPen(bodyPen);
-        painter->setBrush(bodyBrush);
-        painter->drawPolygon(scaledPoints.constData(), scaledPoints.count());
-    }
+    // Draw body
+    painter->setPen(bodyPen);
+    painter->setBrush(bodyBrush);
+    painter->drawPolygon(_polygon);
 
     // Resize handles
     if (isSelected() and allowMouseResize()) {
-        for (const QRect& rect : resizeHandles()) {
-            // Handle pen
-            QPen handlePen;
-            handlePen.setStyle(Qt::NoPen);
-            painter->setPen(handlePen);
-
-            // Handle Brush
-            QBrush handleBrush;
-            handleBrush.setStyle(Qt::SolidPattern);
-            painter->setBrush(handleBrush);
-
-            // Draw the outer handle
-            handleBrush.setColor("#3fa9f5");
-            painter->setBrush(handleBrush);
-            painter->drawRect(rect.adjusted(-handlePen.width(), -handlePen.width(), handlePen.width()/2, handlePen.width()/2));
-
-            // Draw the inner handle
-            int adj = _settings.resizeHandleSize/2;
-            handleBrush.setColor(Qt::white);
-            painter->setBrush(handleBrush);
-            painter->drawRect(rect.adjusted(-handlePen.width()+adj, -handlePen.width()+adj, (handlePen.width()/2)-adj, (handlePen.width()/2)-adj));
-        }
+        paintResizeHandles(*painter);
     }
 }

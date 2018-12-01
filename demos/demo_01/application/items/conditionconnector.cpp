@@ -4,7 +4,8 @@
 #include <QMenu>
 #include <QAction>
 #include <QJsonObject>
-#include "myconnector.h"
+#include "conditionconnector.h"
+#include "itemtypes.h"
 
 #define SIZE (_settings.gridSize/4)
 #define RECT (QRectF(-SIZE, -SIZE, 2*SIZE, 2*SIZE))
@@ -13,37 +14,37 @@ const QColor COLOR_BODY_FILL   = QColor(Qt::black);
 const QColor COLOR_BODY_BORDER = QColor(Qt::black);
 const qreal PEN_WIDTH          = 1.5;
 
-MyConnector::MyConnector(const QPoint& gridPoint, const QString& text, QGraphicsItem* parent) :
-    QSchematic::Connector(gridPoint, text, parent)
+ConditionConnector::ConditionConnector(const QPoint& gridPoint, const QString& text, QGraphicsItem* parent) :
+    QSchematic::Connector(::ItemType::ConditionConnectorType, gridPoint, text, parent)
 {
     setLabelIsVisible(false);
     setForceTextDirection(true);
     setForcedTextDirection(QSchematic::LeftToRight);
 }
 
-QJsonObject MyConnector::toJson() const
+QJsonObject ConditionConnector::toJson() const
 {
     QJsonObject object;
 
-    object.insert("item", Item::toJson());
+    object.insert("connector", QSchematic::Connector::toJson());
     addTypeIdentifierToJson(object);
 
     return object;
 }
 
-bool MyConnector::fromJson(const QJsonObject& object)
+bool ConditionConnector::fromJson(const QJsonObject& object)
 {
-    Item::fromJson(object["item"].toObject());
+    QSchematic::Connector::fromJson(object["connector"].toObject());
 
     return true;
 }
 
-QRectF MyConnector::boundingRect() const
+QRectF ConditionConnector::boundingRect() const
 {
     return RECT;
 }
 
-void MyConnector::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
+void ConditionConnector::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     Q_UNUSED(option)
     Q_UNUSED(widget)
@@ -65,7 +66,7 @@ void MyConnector::paint(QPainter* painter, const QStyleOptionGraphicsItem* optio
     painter->drawRoundedRect(RECT, _settings.gridSize/6, _settings.gridSize/6);
 }
 
-void MyConnector::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
+void ConditionConnector::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 {
     // Create the menu
     QMenu menu;

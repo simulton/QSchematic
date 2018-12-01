@@ -1,33 +1,31 @@
 #include <QPainter>
 #include <QJsonObject>
+#include <QRadialGradient>
 #include "itemtypes.h"
 #include "operation.h"
-#include "myconnector.h"
+#include "conditionconnector.h"
 
 const QColor COLOR_HIGHLIGHTED = QColor(Qt::blue).lighter();
 const QColor COLOR_BODY_FILL   = QColor(Qt::gray).lighter(140);
 const QColor COLOR_BODY_BORDER = QColor(Qt::black);
 const qreal PEN_WIDTH          = 1.5;
+const int SHADOW_THICKNESS     = 10;
 
 Operation::Operation(QGraphicsItem* parent) :
     QSchematic::Node(::ItemType::OperationType, parent)
 {
     setSize(10, 5);
-    setAllowMouseResize(false);
+    setAllowMouseResize(true);
     setConnectorsMovable(false);
-    setConnectorsSnapPolicy(QSchematic::Connector::Anywhere);
+    setConnectorsSnapPolicy(QSchematic::Connector::NodeSizerectOutline);
     setConnectorsSnapToGrid(true);
-
-    // Add connectors
-    addConnector(new MyConnector(QPoint(0, 3)));
-    addConnector(new MyConnector(QPoint(10, 3)));
 }
 
 QJsonObject Operation::toJson() const
 {
     QJsonObject object;
 
-    object.insert("item", Item::toJson());
+    object.insert("node", QSchematic::Node::toJson());
     addTypeIdentifierToJson(object);
 
     return object;
@@ -35,7 +33,7 @@ QJsonObject Operation::toJson() const
 
 bool Operation::fromJson(const QJsonObject& object)
 {
-    Item::fromJson(object["item"].toObject());
+    QSchematic::Node::fromJson(object["node"].toObject());
 
     return true;
 }
@@ -69,49 +67,61 @@ void Operation::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
         painter->setOpacity(0.5);
         int adj = _settings.highlightRectPadding;
         painter->drawRoundedRect(QRect(QPoint(0, 0), size()*_settings.gridSize).adjusted(-adj, -adj, adj, adj), _settings.gridSize/2, _settings.gridSize/2);
+        painter->setOpacity(1.0);
     }
 
-    painter->setOpacity(1.0);
+    // Body
+    {
+        // Common stuff
+        QRect bodyRect(0, 0, size().width()*_settings.gridSize, size().height()*_settings.gridSize);
+        QRect shadowRect(SHADOW_THICKNESS, SHADOW_THICKNESS, bodyRect.width(), bodyRect.height());
+        qreal radius = _settings.gridSize/2;
 
-    // Body pen
-    QPen bodyPen;
-    bodyPen.setWidthF(PEN_WIDTH);
-    bodyPen.setStyle(Qt::SolidLine);
-    bodyPen.setColor(COLOR_BODY_BORDER);
+        // Shadow stuff
+        {
+            // Gradient
+            QLinearGradient gradient;
+            gradient.setStart(0, 0);
+            gradient.setFinalStop(bodyRect.width(), 0);
+            QColor grey1(150, 150, 150, 125);
+            QColor grey2(225, 225, 225, 125);
+            gradient.setColorAt(0, grey1);
+            gradient.setColorAt(1, grey2);
 
-    // Body brush
-    QBrush bodyBrush;
-    bodyBrush.setStyle(Qt::SolidPattern);
-    bodyBrush.setColor(COLOR_BODY_FILL);
+            // Pen
+            QPen pen(Qt::NoPen);
 
-    // Draw the component body
-    painter->setPen(bodyPen);
-    painter->setBrush(bodyBrush);
-    painter->drawRoundedRect(QRect(QPoint(0, 0), size()*_settings.gridSize), _settings.gridSize/2, _settings.gridSize/2);
+            // Brush
+            QBrush brush(gradient);
+
+            // Render
+            painter->setPen(pen);
+            painter->setBrush(brush);
+            painter->drawRoundedRect(shadowRect, radius, radius);
+        }
+
+        // Body
+        {
+            // Pen
+            QPen pen;
+            pen.setWidthF(PEN_WIDTH);
+            pen.setStyle(Qt::SolidLine);
+            pen.setColor(COLOR_BODY_BORDER);
+
+            // Brush
+            QBrush brush;
+            brush.setStyle(Qt::SolidPattern);
+            brush.setColor(COLOR_BODY_FILL);
+
+            // Draw the component body
+            painter->setPen(pen);
+            painter->setBrush(brush);
+            painter->drawRoundedRect(bodyRect, radius, radius);
+        }
+    }
 
     // Resize handles
     if (isSelected() and allowMouseResize()) {
-        for (const QRect& rect : resizeHandles()) {
-            // Handle pen
-            QPen handlePen;
-            handlePen.setStyle(Qt::NoPen);
-            painter->setPen(handlePen);
-
-            // Handle Brush
-            QBrush handleBrush;
-            handleBrush.setStyle(Qt::SolidPattern);
-            painter->setBrush(handleBrush);
-
-            // Draw the outer handle
-            handleBrush.setColor("#3fa9f5");
-            painter->setBrush(handleBrush);
-            painter->drawRect(rect.adjusted(-handlePen.width(), -handlePen.width(), handlePen.width()/2, handlePen.width()/2));
-
-            // Draw the inner handle
-            int adj = _settings.resizeHandleSize/2;
-            handleBrush.setColor(Qt::white);
-            painter->setBrush(handleBrush);
-            painter->drawRect(rect.adjusted(-handlePen.width()+adj, -handlePen.width()+adj, (handlePen.width()/2)-adj, (handlePen.width()/2)-adj));
-        }
+        paintResizeHandles(*painter);
     }
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <QMainWindow>
 #include "../../../lib/settings.h"
 
@@ -7,6 +8,7 @@ namespace QSchematic {
     class Editor;
     class Scene;
     class View;
+    class Wire;
 }
 
 class MainWindow : public QMainWindow
@@ -25,6 +27,7 @@ public:
 
 private:
     void settingsChanged();
+    std::unique_ptr<QSchematic::Wire> wireFactory() const;
 
     QSchematic::Editor* _schematicEditor;
     QSchematic::Scene* _scene;

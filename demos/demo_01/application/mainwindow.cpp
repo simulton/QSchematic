@@ -1,3 +1,4 @@
+#include <functional>
 #include <QToolBar>
 #include <QSlider>
 #include <QLabel>
@@ -12,30 +13,35 @@
 #include "../../../lib/view.h"
 #include "../../../lib/settings.h"
 #include "../../../lib/items/node.h"
+#include "../../../lib/items/wireroundedcorners.h"
 #include "../../../lib/items/itemfactory.h"
 #include "mainwindow.h"
 #include "resources.h"
 #include "items/customitemfactory.h"
 #include "items/operation.h"
+#include "items/operationconnector.h"
 #include "items/condition.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    // Create actions
-    createActions();
-
     // Setup the custom item factory
     auto func = std::bind(&CustomItemFactory::fromJson, std::placeholders::_1);
     QSchematic::ItemFactory::instance().setCustomItemsFactory(func);
 
     // Settings
     _settings.debug = false;
+    _settings.showGrid = false;
     _settings.routeStraightAngles = true;
+
+    // Create actions
+    createActions();
 
     // Scene
     _scene = new QSchematic::Scene;
     _scene->setSettings(_settings);
+    auto wireFactory = std::bind(&MainWindow::wireFactory, this);
+    _scene->setWireFactory(wireFactory);
     connect(_scene, &QSchematic::Scene::modeChanged, [this](QSchematic::Scene::Mode mode){
         switch (mode) {
         case QSchematic::Scene::NormalMode:
@@ -101,9 +107,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Misc
     setWindowTitle("Schematic Editor");
-    resize(1920, 1080);
+    resize(2800, 1500);
+    _view->setZoomValue(1.5);
 
-    demo();
+    //demo();
 }
 
 bool MainWindow::save() const
@@ -215,28 +222,23 @@ void MainWindow::settingsChanged()
     _scene->setSettings(_settings);
 }
 
+std::unique_ptr<QSchematic::Wire> MainWindow::wireFactory() const
+{
+    return std::unique_ptr<QSchematic::Wire>(new QSchematic::WireRoundedCorners);
+}
+
 void MainWindow::demo()
 {
-    _scene->setSceneRect(-300, -300, 5000, 5000);
-
-    QSchematic::Node* n1 = new QSchematic::Node();
-    n1->setGridPoint(-5, -2);
-    n1->addConnector(new QSchematic::Connector(QPoint(0, 3), QStringLiteral("Foo")));
-    n1->addConnector(new QSchematic::Connector(QPoint(0, 5), QStringLiteral("Bar")));
-    n1->setConnectorsMovable(true);
-    _scene->addItem(n1);
-
-    QSchematic::Node* n2 = new QSchematic::Node();
-    n2->setGridPoint(6, 11);
-    n2->addConnector(new QSchematic::Connector(QPoint(0, 2), QStringLiteral("Connector")));
-    _scene->addItem(n2);
+    _scene->setSceneRect(-1000, -1000, 4000, 4000);
 
     Operation* o = new Operation;
-    o->setGridPoint(4, 15);
+    o->addConnector(new OperationConnector(QPoint(0, 3), QStringLiteral("in")));
+    o->addConnector(new OperationConnector(QPoint(5, 3), QStringLiteral("out")));
+    o->setGridPos(4, 15);
     o->setConnectorsMovable(true);
     _scene->addItem(o);
 
     Condition* c = new Condition;
-    c->setGridPoint(14, 5);
+    c->setGridPos(14, 5);
     _scene->addItem(c);
 }

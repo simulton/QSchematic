@@ -2,14 +2,14 @@
 
 #include "../../../lib/items/connector.h"
 
-class MyConnector : public QSchematic::Connector
+class ConditionConnector : public QSchematic::Connector
 {
     Q_OBJECT
-    Q_DISABLE_COPY(MyConnector)
+    Q_DISABLE_COPY(ConditionConnector)
 
 public:
-    MyConnector(const QPoint& gridPoint = QPoint(), const QString& text = QString(), QGraphicsItem* parent = nullptr);
-    virtual ~MyConnector() override = default;
+    ConditionConnector(const QPoint& gridPos = QPoint(), const QString& text = QString(), QGraphicsItem* parent = nullptr);
+    virtual ~ConditionConnector() override = default;
 
     virtual QJsonObject toJson() const override;
     virtual bool fromJson(const QJsonObject& object) override;

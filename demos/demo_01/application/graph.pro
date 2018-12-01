@@ -28,19 +28,21 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     items/operation.cpp \
-    items/myconnector.cpp \
     items/condition.cpp \
     resources.cpp \
-    items/customitemfactory.cpp
+    items/customitemfactory.cpp \
+    items/operationconnector.cpp \
+    items/conditionconnector.cpp
 
 HEADERS += \
         mainwindow.h \
     items/operation.h \
-    items/myconnector.h \
     items/condition.h \
     resources.h \
     items/customitemfactory.h \
-    items/itemtypes.h
+    items/itemtypes.h \
+    items/operationconnector.h \
+    items/conditionconnector.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

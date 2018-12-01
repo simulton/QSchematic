@@ -4,7 +4,9 @@
 #include "../../../lib/items/itemfactory.h"
 #include "itemtypes.h"
 #include "condition.h"
+#include "conditionconnector.h"
 #include "operation.h"
+#include "operationconnector.h"
 #include "customitemfactory.h"
 
 std::unique_ptr<QSchematic::Item> CustomItemFactory::fromJson(const QJsonObject& object)
@@ -19,18 +21,18 @@ std::unique_ptr<QSchematic::Item> CustomItemFactory::fromJson(const QJsonObject&
         item.reset(new Condition);
         break;
 
+    case ItemType::ConditionConnectorType:
+        item.reset(new ConditionConnector);
+        break;
+
     case ItemType::OperationType:
         item.reset(new Operation);
         break;
-    }
 
-    // Sanity check
-    if (!item) {
-        return nullptr;
+    case ItemType::OperationConnectorType:
+        item.reset(new OperationConnector);
+        break;
     }
-
-    // Load
-    item->fromJson(object);
 
     return item;
 }
