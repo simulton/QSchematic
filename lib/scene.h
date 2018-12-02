@@ -5,6 +5,7 @@
 #include <QGraphicsScene>
 #include <QScopedPointer>
 #include <QGraphicsProxyWidget>
+#include <QUndoStack>
 #include "interfaces/json.h"
 #include "settings.h"
 #include "items/item.h"
@@ -51,6 +52,10 @@ namespace QSchematic {
         WireNet* net(const Wire& wire) const;
         QList<WireNet*> netsAt(const QPoint& point);
 
+        void undo();
+        void redo();
+        QUndoStack* undoStack() const;
+
     signals:
         void modeChanged(Mode newMode);
 
@@ -65,6 +70,7 @@ namespace QSchematic {
         void setupNewItem(Item* item);
         QList<QPoint> connectionPoints() const;
         void addWireNet(std::unique_ptr<WireNet> wireNet);
+        QList<Item*> itemsAt(const QPointF& scenePos, Qt::SortOrder order = Qt::DescendingOrder) const;
 
         QList<WireNet*> _nets;
         Settings _settings;
@@ -74,7 +80,9 @@ namespace QSchematic {
         bool _newWireSegment;
         bool _invertWirePosture;
         QPointF _lastMousePos;
+        QList<Item*> _selectedItems;
         QScopedPointer<QGraphicsProxyWidget> _popupInfobox;
+        QUndoStack* _undoStack;
 
     private slots:
         void itemMoved(const Item& item, const QVector2D& movedBy);

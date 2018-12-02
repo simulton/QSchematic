@@ -6,6 +6,7 @@
 #include <QJsonObject>
 #include "item.h"
 #include "../scene.h"
+#include "../commands/commanditemmove.h"
 
 using namespace QSchematic;
 
@@ -138,7 +139,7 @@ qreal Item::posY() const
 
 void Item::setScenePos(const QPointF& point)
 {
-    QGraphicsObject::setPos(mapToScene(point));
+    QGraphicsObject::setPos(mapToParent(mapFromScene(point)));
 }
 
 void Item::setScenePos(qreal x, qreal y)
@@ -176,15 +177,10 @@ void Item::moveBy(const QVector2D& moveBy)
     setPos(pos() + moveBy.toPointF());
 }
 
-void Item::moveByGrid(const QVector2D& vector)
-{
-    moveBy(QVector2D(_settings.toScenePoint(vector.toPoint())));
-}
-
 void Item::setSettings(const Settings& settings)
 {
-    // Update grid size
-    setPos((pos() / _settings.gridSize) * settings.gridSize);
+    // Resnap to grid
+    setPos(_settings.snapToGridPoint(pos()));
 
     // Store the new settings
     _settings = settings;
@@ -307,19 +303,20 @@ void Item::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
 
 QVariant Item::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
 {
-    switch (change) {
+    switch (change)
+    {
     case QGraphicsItem::ItemPositionChange:
+    {
+        QPointF newPos = value.toPointF();
         if (snapToGrid()) {
-            QPoint newPos = _settings.snapToGridPoint(value.toPointF());
-            return newPos;
+            newPos =_settings.snapToGridPoint(newPos);
         }
-        return value;
-
-    default:
-        break;
+        return newPos;
     }
 
-    return QGraphicsItem::itemChange(change, value);
+    default:
+        return QGraphicsItem::itemChange(change, value);
+    }
 }
 
 void Item::timerTimeout()

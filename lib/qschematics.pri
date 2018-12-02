@@ -15,7 +15,8 @@ HEADERS += \
     $$PWD/utils.h \
     $$PWD/interfaces/json.h \
     $$PWD/items/itemfactory.h \
-    $$PWD/items/wireroundedcorners.h
+    $$PWD/items/wireroundedcorners.h \
+    $$PWD/commands/commanditemmove.h
 
 SOURCES += \
     $$PWD/items/connector.cpp \
@@ -32,4 +33,5 @@ SOURCES += \
     $$PWD/view.cpp \
     $$PWD/utils.cpp \
     $$PWD/items/itemfactory.cpp \
-    $$PWD/items/wireroundedcorners.cpp
+    $$PWD/items/wireroundedcorners.cpp \
+    $$PWD/commands/commanditemmove.cpp

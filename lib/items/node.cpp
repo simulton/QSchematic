@@ -170,6 +170,7 @@ bool Node::addConnector(Connector* connector)
     connector->setParentItem(this);
     connector->setMovable(_connectorsMovable);
     connector->setSnapPolicy(_connectorsSnapPolicy);
+    connector->setSnapToGrid(_connectorsSnapToGrid);
 
     _connectors << connector;
 

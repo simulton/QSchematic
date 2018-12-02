@@ -179,14 +179,12 @@ QVariant Connector::itemChange(QGraphicsItem::GraphicsItemChange change, const Q
             break;
         }
 
-        // Snap to grid if supposed to
+        // Honor snap-to-grid
         if (snapToGrid()) {
-            return _settings.snapToGridPoint(proposedPos);
-        } else {
-            return proposedPos;
+            proposedPos = _settings.snapToGridPoint(proposedPos);
         }
 
-        break;
+        return proposedPos;
     }
 
     default:
