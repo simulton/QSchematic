@@ -3,8 +3,10 @@
 #include <QMessageBox>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QUndoStack>
 #include "scene.h"
 #include "settings.h"
+#include "commands/commanditemmove.h"
 #include "items/itemfactory.h"
 #include "items/item.h"
 #include "items/node.h"
@@ -20,6 +22,8 @@ Scene::Scene(QObject* parent) :
     _newWireSegment(false),
     _invertWirePosture(false)
 {
+    // Undo stack
+    _undoStack = new QUndoStack;
 }
 
 QJsonObject Scene::toJson() const
@@ -126,6 +130,11 @@ void Scene::setWireFactory(const std::function<std::unique_ptr<Wire>()>& factory
 
 void Scene::setMode(Scene::Mode mode)
 {
+    // Dont do anything unnecessary
+    if (mode == _mode) {
+        return;
+    }
+
     // Check what the previous mode was
     switch (_mode) {
 
@@ -338,6 +347,21 @@ QList<WireNet*> Scene::netsAt(const QPoint& point)
     }
 
     return list;
+}
+
+void Scene::undo()
+{
+    _undoStack->undo();
+}
+
+void Scene::redo()
+{
+    _undoStack->redo();
+}
+
+QUndoStack* Scene::undoStack() const
+{
+    return _undoStack;
 }
 
 void Scene::itemMoved(const Item& item, const QVector2D& movedBy)
@@ -563,6 +587,20 @@ void Scene::addWireNet(std::unique_ptr<WireNet> wireNet)
     update();
 }
 
+QList<Item*> Scene::itemsAt(const QPointF& scenePos, Qt::SortOrder order) const
+{
+    QList<Item*> list;
+
+    for (auto& graphicsItem : QGraphicsScene::items(scenePos, Qt::IntersectsItemShape, order)) {
+        Item* item = qgraphicsitem_cast<Item*>(graphicsItem);
+        if (item) {
+            list << item;
+        }
+    }
+
+    return list;
+}
+
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     event->accept();
@@ -573,10 +611,10 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
         // Reset stuff
         _newWire.reset();
 
-        // Handle selection stuff internally (do not remove this!)
+        // Handle selections
         QGraphicsScene::mousePressEvent(event);
 
-        return;
+        break;
     }
 
     case WireMode:
@@ -599,15 +637,13 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             }
             _newWire->appendPoint(mousetoGridPoint);
             _newWireSegment = true;
-
-            return;
-
         }
 
-        return;
+        break;
+    }
     }
 
-    }
+    _lastMousePos = event->scenePos();
 }
 
 void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
@@ -617,9 +653,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
     switch (_mode) {
     case NormalMode:
     {
-        // Handle stuff like mouse movement (do not remove this!)
         QGraphicsScene::mouseReleaseEvent(event);
-
         break;
     }
 
@@ -640,23 +674,28 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
         break;
     }
     }
+
+    _lastMousePos = event->lastScenePos();
 }
 
 void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
+    //event->accept();
+
     // Get rid of any popup infobox
     _popupInfobox.reset();
 
     // Retrieve the new mouse position
     QPointF newMousePos = event->scenePos();
+    QVector2D movedBy(event->scenePos() - event->lastScenePos());
 
     switch (_mode) {
+
     case NormalMode:
-
-        // Perform the move
+    {
         QGraphicsScene::mouseMoveEvent(event);
-
         break;
+    }
 
     case WireMode:
     {
@@ -729,6 +768,7 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
     switch (_mode) {
     case NormalMode:
     {
+        QGraphicsScene::mouseDoubleClickEvent(event);
         return;
     }
 

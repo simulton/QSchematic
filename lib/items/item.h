@@ -57,7 +57,6 @@ namespace QSchematic {
         qreal scenePosX() const;
         qreal scenePosY() const;
         void moveBy(const QVector2D& moveBy);
-        void moveByGrid(const QVector2D& moveBy);
         void setSettings(const Settings& settings);
         const Settings& settings() const;
         void setMovable(bool enabled);
