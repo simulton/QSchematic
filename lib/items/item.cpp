@@ -173,12 +173,12 @@ qreal Item::scenePosY() const
 
 void Item::moveBy(const QVector2D& moveBy)
 {
-    setPos(pos() + moveBy.toPoint());
+    setPos(pos() + moveBy.toPointF());
 }
 
-void Item::moveByGrid(const QVector2D& moveBy)
+void Item::moveByGrid(const QVector2D& vector)
 {
-    setGridPos(gridPos() + moveBy.toPoint());
+    moveBy(QVector2D(_settings.toScenePoint(vector.toPoint())));
 }
 
 void Item::setSettings(const Settings& settings)
