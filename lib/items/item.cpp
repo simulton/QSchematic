@@ -171,6 +171,16 @@ qreal Item::scenePosY() const
     return scenePos().y();
 }
 
+void Item::moveBy(const QVector2D& moveBy)
+{
+    setPos(pos() + moveBy.toPoint());
+}
+
+void Item::moveByGrid(const QVector2D& moveBy)
+{
+    setGridPos(gridPos() + moveBy.toPoint());
+}
+
 void Item::setSettings(const Settings& settings)
 {
     // Update grid size
