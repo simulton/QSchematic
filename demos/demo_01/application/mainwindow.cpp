@@ -9,6 +9,8 @@
 #include <QDir>
 #include <QMenuBar>
 #include <QMenu>
+#include <QUndoView>
+#include <QDockWidget>
 #include "../../../lib/scene.h"
 #include "../../../lib/view.h"
 #include "../../../lib/settings.h"
@@ -34,11 +36,13 @@ MainWindow::MainWindow(QWidget *parent)
     _settings.showGrid = false;
     _settings.routeStraightAngles = true;
 
+    // Scene (object needed in createActions())
+    _scene = new QSchematic::Scene;
+
     // Create actions
     createActions();
 
     // Scene
-    _scene = new QSchematic::Scene;
     _scene->setSettings(_settings);
     auto wireFactory = std::bind(&MainWindow::wireFactory, this);
     _scene->setWireFactory(wireFactory);
@@ -58,6 +62,12 @@ MainWindow::MainWindow(QWidget *parent)
     _view = new QSchematic::View;
     _view->setSettings(_settings);
     _view->setScene(_scene);
+
+    // Undo view
+    _undoView = new QUndoView(_scene->undoStack());
+    QDockWidget* undoDockWiget = new QDockWidget;
+    undoDockWiget->setWidget(_undoView);
+    addDockWidget(Qt::LeftDockWidgetArea, undoDockWiget);
 
     // Menus
     {
@@ -83,6 +93,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Toolbar
     QToolBar* editorToolbar = new QToolBar;
+    editorToolbar->addAction(_actionUndo);
+    editorToolbar->addAction(_actionRedo);
     editorToolbar->addAction(_actionModeNormal);
     editorToolbar->addAction(_actionModeWire);
     editorToolbar->addSeparator();
@@ -110,7 +122,7 @@ MainWindow::MainWindow(QWidget *parent)
     resize(2800, 1500);
     _view->setZoomValue(1.5);
 
-    //demo();
+    demo();
 }
 
 bool MainWindow::save() const
@@ -157,6 +169,23 @@ void MainWindow::createActions()
     _actionSave->setToolTip("Save to a file");
     connect(_actionSave, &QAction::triggered, [this]{
         save();
+    });
+
+    // Undo
+    _actionUndo = _scene->undoStack()->createUndoAction(this, QStringLiteral("Undo"));
+    _actionUndo->setText("Undo");
+    _actionUndo->setShortcut(QKeySequence::Undo);
+    connect(_actionUndo, &QAction::triggered, [this]{
+        _scene->undo();
+    });
+    addAction(_actionUndo);
+
+    // Redo
+    _actionRedo = _scene->undoStack()->createRedoAction(this, QStringLiteral("Redo"));
+    _actionRedo->setText("Redo");
+    _actionRedo->setShortcut(QKeySequence::Redo);
+    connect(_actionRedo, &QAction::triggered, [this]{
+        _scene->redo();
     });
 
     // Mode: Normal
@@ -229,7 +258,7 @@ std::unique_ptr<QSchematic::Wire> MainWindow::wireFactory() const
 
 void MainWindow::demo()
 {
-    _scene->setSceneRect(-1000, -1000, 4000, 4000);
+    _scene->setSceneRect(-500, -500, 3000, 3000);
 
     Operation* o = new Operation;
     o->addConnector(new OperationConnector(QPoint(0, 3), QStringLiteral("in")));

@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include "../../../lib/settings.h"
 
+class QUndoView;
+
 namespace QSchematic {
     class Editor;
     class Scene;
@@ -33,8 +35,11 @@ private:
     QSchematic::Scene* _scene;
     QSchematic::View* _view;
     QSchematic::Settings _settings;
+    QUndoView* _undoView;
     QAction* _actionOpen;
     QAction* _actionSave;
+    QAction* _actionUndo;
+    QAction* _actionRedo;
     QAction* _actionModeNormal;
     QAction* _actionModeWire;
     QAction* _actionShowGrid;
