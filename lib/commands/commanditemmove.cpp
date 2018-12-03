@@ -5,9 +5,9 @@
 
 using namespace QSchematic;
 
-CommandItemMove::CommandItemMove(QPointer<Item> item, const QVector2D& moveBy, QUndoCommand* parent) :
+CommandItemMove::CommandItemMove(const QVector<QPointer<Item>>& items, const QVector2D& moveBy, QUndoCommand* parent) :
     QUndoCommand(parent),
-    _item(item),
+    _items(items),
     _moveBy(moveBy)
 {
     updateText();
@@ -25,10 +25,15 @@ bool CommandItemMove::mergeWith(const QUndoCommand* command)
         return false;
     }
 
-    // Check item
+    // Check items
     const CommandItemMove* myCommand = static_cast<const CommandItemMove*>(command);
-    if (_item != myCommand->_item) {
+    if (_items.count() != myCommand->_items.count()) {
         return false;
+    }
+    for (int i = 0; i < _items.count(); i++) {
+        if (_items.at(i) != myCommand->_items.at(i)) {
+            return false;
+        }
     }
 
     // Merge
@@ -40,20 +45,24 @@ bool CommandItemMove::mergeWith(const QUndoCommand* command)
 
 void CommandItemMove::undo()
 {
-    if (!_item) {
-        return;
-    }
+    for (auto item : _items) {
+        if (!item) {
+            continue;
+        }
 
-    _item->moveBy(_moveBy * -1);
+        item->moveBy(_moveBy * -1);
+    }
 }
 
 void CommandItemMove::redo()
 {
-    if (!_item) {
-        return;
-    }
+    for (auto item : _items) {
+        if (!item) {
+            continue;
+        }
 
-    _item->moveBy(_moveBy);
+        item->moveBy(_moveBy);
+    }
 }
 
 void CommandItemMove::updateText()

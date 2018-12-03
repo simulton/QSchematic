@@ -697,7 +697,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
         if (event->buttons() & Qt::LeftButton) {
 
             // Create a list of selected items
-            QList<Item*> itemsToMove;
+            QVector<QPointer<Item>> itemsToMove;
             for (QGraphicsItem* graphicsItem : selectedItems()) {
                 Item* item = qgraphicsitem_cast<Item*>(graphicsItem);
                 if (item) {
@@ -707,9 +707,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 
             // Figure out how far to move
             QVector2D moveBy(event->scenePos() - event->lastScenePos());
-            for (auto item : itemsToMove) {
-                _undoStack->push(new CommandItemMove(item, moveBy));
-            }
+            _undoStack->push(new CommandItemMove(itemsToMove, moveBy));
         }
 
         QGraphicsScene::mouseMoveEvent(event);

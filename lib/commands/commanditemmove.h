@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QUndoCommand>
+#include <QVector>
 #include <QPointer>
 #include <QVector2D>
 
@@ -13,7 +14,7 @@ namespace QSchematic
     class CommandItemMove : public QUndoCommand
     {
     public:
-        CommandItemMove(QPointer<Item> item, const QVector2D& moveBy, QUndoCommand* parent = nullptr);
+        CommandItemMove(const QVector<QPointer<Item>>& item, const QVector2D& moveBy, QUndoCommand* parent = nullptr);
 
         virtual int id() const override;
         virtual bool mergeWith(const QUndoCommand* command) override;
@@ -23,7 +24,7 @@ namespace QSchematic
     private:
         void updateText();
 
-        QPointer<Item> _item;
+        QVector<QPointer<Item>> _items;
         QVector2D _moveBy;
     };
 
