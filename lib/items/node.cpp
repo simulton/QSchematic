@@ -82,6 +82,11 @@ bool Node::fromJson(const QJsonObject& object)
     return true;
 }
 
+Node::Mode Node::mode() const
+{
+    return _mode;
+}
+
 void Node::setSize(const QSize& size)
 {
     // Boundary checks

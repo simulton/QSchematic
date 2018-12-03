@@ -29,12 +29,19 @@ namespace QSchematic {
         };
         Q_ENUM(ResizePolicy)
 
+        enum Mode {
+            None,
+            Resize
+        };
+        Q_ENUM(Mode)
+
         Node(int type = Item::NodeType, QGraphicsItem* parent = nullptr);
         virtual ~Node() override = default;
 
         virtual QJsonObject toJson() const override;
         virtual bool fromJson(const QJsonObject& object) override;
 
+        Mode mode() const;
         void setSize(const QSize& size);
         void setSize(int width, int height);
         QSize size() const;
@@ -71,11 +78,6 @@ namespace QSchematic {
         void paintResizeHandles(QPainter& painter);
 
     private:
-        enum Mode {
-            None,
-            Resize
-        };
-
         Mode _mode;
         QPoint _lastMousePosWithGridMove;
         RectanglePoint _resizeHandle;

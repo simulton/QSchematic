@@ -695,19 +695,37 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
     {
         // Move if supposed to
         if (event->buttons() & Qt::LeftButton) {
-
-            // Create a list of selected items
-            QVector<QPointer<Item>> itemsToMove;
+            // Figure out if we're currently resizing something
+            bool resizingNode = false;
             for (QGraphicsItem* graphicsItem : selectedItems()) {
-                Item* item = qgraphicsitem_cast<Item*>(graphicsItem);
-                if (item) {
-                    itemsToMove << item;
+                Node* node = qgraphicsitem_cast<Node*>(graphicsItem);
+                if (node && node->mode() == Node::Resize) {
+                    resizingNode = true;
+                    break;
                 }
             }
 
-            // Figure out how far to move
-            QVector2D moveBy(event->scenePos() - event->lastScenePos());
-            _undoStack->push(new CommandItemMove(itemsToMove, moveBy));
+            // Only move if we're not resizing a node
+            if (!resizingNode) {
+
+                // Create a list of selected items
+                QVector<QPointer<Item>> itemsToMove;
+                for (QGraphicsItem* graphicsItem : selectedItems()) {
+                    Item* item = qgraphicsitem_cast<Item*>(graphicsItem);
+                    if (item) {
+                        itemsToMove << item;
+                    }
+                }
+
+                // Perform the move
+                QVector2D moveBy(event->scenePos() - event->lastScenePos());
+                _undoStack->push(new CommandItemMove(itemsToMove, moveBy));
+
+            } else {
+
+                QGraphicsScene::mouseMoveEvent(event);
+
+            }
         }
 
         QGraphicsScene::mouseMoveEvent(event);
