@@ -78,6 +78,7 @@ namespace QSchematic {
     protected:
         Settings _settings;
 
+        Scene* scene() const;
         void addTypeIdentifierToJson(QJsonObject& object) const;
 
         bool isHighlighted() const;

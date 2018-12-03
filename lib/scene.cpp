@@ -680,7 +680,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 
 void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
-    //event->accept();
+    event->accept();
 
     // Get rid of any popup infobox
     _popupInfobox.reset();

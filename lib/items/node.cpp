@@ -6,6 +6,7 @@
 #include <QJsonArray>
 #include "node.h"
 #include "itemfactory.h"
+#include "../commands/commandnoderesize.h"
 #include "../utils.h"
 #include "../scene.h"
 
@@ -397,9 +398,10 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                 break;
             }
 
-            // Set new size & position
-            setSize(newWidth, newHeight);
-            setGridPos(newX, newY);
+            // Apply
+            if (scene()) {
+                scene()->undoStack()->push(new CommandNodeResize(this, QPoint(newX, newY), QSize(newWidth, newHeight)));
+            }
         }
 
         break;

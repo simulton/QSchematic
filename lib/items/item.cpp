@@ -57,6 +57,11 @@ bool Item::fromJson(const QJsonObject& object)
     return true;
 }
 
+Scene* Item::scene() const
+{
+    return qobject_cast<Scene*>(QGraphicsObject::scene());
+}
+
 void Item::addTypeIdentifierToJson(QJsonObject& object) const
 {
     object.insert(JSON_ID_STRING, type());

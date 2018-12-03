@@ -1,12 +1,13 @@
 #include <memory>
 #include "../items/item.h"
+#include "commands.h"
 #include "commanditemmove.h"
 
 using namespace QSchematic;
 
 CommandItemMove::CommandItemMove(QPointer<Item> item, const QVector2D& moveBy, QUndoCommand* parent) :
     QUndoCommand(parent),
-    _item(std::move(item)),
+    _item(item),
     _moveBy(moveBy)
 {
     updateText();
@@ -14,7 +15,7 @@ CommandItemMove::CommandItemMove(QPointer<Item> item, const QVector2D& moveBy, Q
 
 int CommandItemMove::id() const
 {
-    return 0;
+    return ItemMoveCommandType;
 }
 
 bool CommandItemMove::mergeWith(const QUndoCommand* command)
