@@ -260,12 +260,19 @@ void MainWindow::demo()
 {
     _scene->setSceneRect(-500, -500, 3000, 3000);
 
-    Operation* o = new Operation;
-    o->addConnector(new OperationConnector(QPoint(0, 3), QStringLiteral("in")));
-    o->addConnector(new OperationConnector(QPoint(5, 3), QStringLiteral("out")));
-    o->setGridPos(4, 15);
-    o->setConnectorsMovable(true);
-    _scene->addItem(o);
+    Operation* o1 = new Operation;
+    o1->addConnector(new OperationConnector(QPoint(0, 2), QStringLiteral("in")));
+    o1->addConnector(new OperationConnector(QPoint(8, 2), QStringLiteral("out")));
+    o1->setGridPos(4, 15);
+    o1->setConnectorsMovable(true);
+    _scene->addItem(o1);
+
+    Operation* o2 = new Operation;
+    o2->addConnector(new OperationConnector(QPoint(0, 2), QStringLiteral("in")));
+    o2->addConnector(new OperationConnector(QPoint(8, 2), QStringLiteral("out")));
+    o2->setGridPos(4, 15);
+    o2->setConnectorsMovable(true);
+    _scene->addItem(o2);
 
     Condition* c = new Condition;
     c->setGridPos(14, 5);

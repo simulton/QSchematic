@@ -14,7 +14,7 @@ const int SHADOW_THICKNESS     = 10;
 Operation::Operation(QGraphicsItem* parent) :
     QSchematic::Node(::ItemType::OperationType, parent)
 {
-    setSize(10, 5);
+    setSize(8, 4);
     setAllowMouseResize(true);
     setConnectorsMovable(false);
     setConnectorsSnapPolicy(QSchematic::Connector::NodeSizerectOutline);
