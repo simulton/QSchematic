@@ -11,7 +11,7 @@ namespace QSchematic
         Q_DISABLE_COPY(WireRoundedCorners)
 
     public:
-        WireRoundedCorners(QGraphicsItem* parent = nullptr);
+        WireRoundedCorners(int type = Item::WireRoundedCornersType, QGraphicsItem* parent = nullptr);
         virtual ~WireRoundedCorners() override = default;
 
         virtual QJsonObject toJson() const override;

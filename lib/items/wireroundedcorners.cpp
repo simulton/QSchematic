@@ -16,8 +16,8 @@ const QColor COLOR_SELECTED       = QColor("#0f16af");
 
 using namespace QSchematic;
 
-WireRoundedCorners::WireRoundedCorners(QGraphicsItem* parent) :
-    Wire(Item::WireRoundedCornersType, parent)
+WireRoundedCorners::WireRoundedCorners(int type, QGraphicsItem* parent) :
+    Wire(type, parent)
 {
 }
 
