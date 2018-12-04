@@ -5,7 +5,7 @@
 class QPoint;
 class QPointF;
 class QRectF;
-class QPainterPath;
+class QVector2D;
 
 namespace QSchematic {
 
@@ -18,6 +18,7 @@ namespace QSchematic {
         QPoint toGridPoint(const QPointF& point) const;
         QPoint toScenePoint(const QPoint& gridPoint) const;
         QPoint snapToGridPoint(const QPointF& scenePoint) const;
+        void snapToGrid(QVector2D& sceneVector) const;
 
         bool debug;
         int gridSize;

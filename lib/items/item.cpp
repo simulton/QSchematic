@@ -6,6 +6,8 @@
 #include <QJsonObject>
 #include "item.h"
 #include "../scene.h"
+#include "../commands/commanditemmove.h"
+#include "../commands/commanditemsetvisible.h"
 
 using namespace QSchematic;
 
@@ -54,6 +56,11 @@ bool Item::fromJson(const QJsonObject& object)
     setHighlightEnabled(object["highlight enabled"].toBool());
 
     return true;
+}
+
+Scene* Item::scene() const
+{
+    return qobject_cast<Scene*>(QGraphicsObject::scene());
 }
 
 void Item::addTypeIdentifierToJson(QJsonObject& object) const
@@ -138,7 +145,7 @@ qreal Item::posY() const
 
 void Item::setScenePos(const QPointF& point)
 {
-    QGraphicsObject::setPos(mapToScene(point));
+    QGraphicsObject::setPos(mapToParent(mapFromScene(point)));
 }
 
 void Item::setScenePos(qreal x, qreal y)
@@ -171,10 +178,15 @@ qreal Item::scenePosY() const
     return scenePos().y();
 }
 
+void Item::moveBy(const QVector2D& moveBy)
+{
+    setPos(pos() + moveBy.toPointF());
+}
+
 void Item::setSettings(const Settings& settings)
 {
-    // Update grid size
-    setPos((pos() / _settings.gridSize) * settings.gridSize);
+    // Resnap to grid
+    setPos(_settings.snapToGridPoint(pos()));
 
     // Store the new settings
     _settings = settings;
@@ -186,6 +198,20 @@ void Item::setSettings(const Settings& settings)
 const Settings& Item::settings() const
 {
     return _settings;
+}
+
+void Item::setVisible(bool enabled)
+{
+    if (scene()) {
+        scene()->undoStack()->push(new CommandItemSetVisible(this, enabled));
+    } else {
+        QGraphicsObject::setVisible(enabled);
+    }
+}
+
+bool Item::isVisible() const
+{
+    return QGraphicsObject::isVisible();
 }
 
 void Item::setMovable(bool enabled)
@@ -297,19 +323,20 @@ void Item::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
 
 QVariant Item::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
 {
-    switch (change) {
+    switch (change)
+    {
     case QGraphicsItem::ItemPositionChange:
+    {
+        QPointF newPos = value.toPointF();
         if (snapToGrid()) {
-            QPoint newPos = _settings.snapToGridPoint(value.toPointF());
-            return newPos;
+            newPos =_settings.snapToGridPoint(newPos);
         }
-        return value;
-
-    default:
-        break;
+        return newPos;
     }
 
-    return QGraphicsItem::itemChange(change, value);
+    default:
+        return QGraphicsItem::itemChange(change, value);
+    }
 }
 
 void Item::timerTimeout()

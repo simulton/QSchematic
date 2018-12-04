@@ -4,6 +4,8 @@
 #include <QBrush>
 #include <QJsonObject>
 #include "label.h"
+#include "../commands/commandlabelrename.h"
+#include "../scene.h"
 
 const QColor COLOR_LABEL             = QColor("#000000");
 const QColor COLOR_LABEL_HIGHLIGHTED = QColor("#dc2479");
@@ -51,9 +53,12 @@ QRectF Label::boundingRect() const
 
 void Label::setText(const QString& text)
 {
-    _text = text;
-
-    calculateTextRect();
+    if (scene()) {
+        scene()->undoStack()->push(new CommandLabelRename(this, text));
+    } else {
+        _text = text;
+        calculateTextRect();
+    }
 }
 
 void Label::setFont(const QFont& font)

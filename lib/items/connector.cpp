@@ -179,14 +179,12 @@ QVariant Connector::itemChange(QGraphicsItem::GraphicsItemChange change, const Q
             break;
         }
 
-        // Snap to grid if supposed to
+        // Honor snap-to-grid
         if (snapToGrid()) {
-            return _settings.snapToGridPoint(proposedPos);
-        } else {
-            return proposedPos;
+            proposedPos = _settings.snapToGridPoint(proposedPos);
         }
 
-        break;
+        return proposedPos;
     }
 
     default:
@@ -223,6 +221,13 @@ void Connector::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
     painter->setPen(bodyPen);
     painter->setBrush(bodyBrush);
     painter->drawRoundedRect(_symbolRect, _settings.gridSize/4, _settings.gridSize/4);
+}
+
+Label& Connector::label() const
+{
+    Q_ASSERT(_label);
+
+    return *_label;
 }
 
 void Connector::calculateSymbolRect()

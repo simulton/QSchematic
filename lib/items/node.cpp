@@ -6,6 +6,7 @@
 #include <QJsonArray>
 #include "node.h"
 #include "itemfactory.h"
+#include "../commands/commandnoderesize.h"
 #include "../utils.h"
 #include "../scene.h"
 
@@ -79,6 +80,11 @@ bool Node::fromJson(const QJsonObject& object)
     }
 
     return true;
+}
+
+Node::Mode Node::mode() const
+{
+    return _mode;
 }
 
 void Node::setSize(const QSize& size)
@@ -170,6 +176,7 @@ bool Node::addConnector(Connector* connector)
     connector->setParentItem(this);
     connector->setMovable(_connectorsMovable);
     connector->setSnapPolicy(_connectorsSnapPolicy);
+    connector->setSnapToGrid(_connectorsSnapToGrid);
 
     _connectors << connector;
 
@@ -396,9 +403,10 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                 break;
             }
 
-            // Set new size & position
-            setSize(newWidth, newHeight);
-            setGridPos(newX, newY);
+            // Apply
+            if (scene()) {
+                scene()->undoStack()->push(new CommandNodeResize(this, QPoint(newX, newY), QSize(newWidth, newHeight)));
+            }
         }
 
         break;

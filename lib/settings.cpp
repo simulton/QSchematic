@@ -1,6 +1,6 @@
 #include <QPointF>
 #include <QRectF>
-#include <QPainterPath>
+#include <QVector2D>
 #include "settings.h"
 
 using namespace QSchematic;
@@ -38,4 +38,10 @@ QPoint Settings::snapToGridPoint(const QPointF& scenePoint) const
     int yV = qRound(scenePoint.y() / gridSize) * gridSize;
 
     return QPoint(xV, yV);
+}
+
+void Settings::snapToGrid(QVector2D& sceneVector) const
+{
+    sceneVector.setX(qRound(sceneVector.x() / gridSize) * gridSize);
+    sceneVector.setY(qRound(sceneVector.y() / gridSize) * gridSize);
 }

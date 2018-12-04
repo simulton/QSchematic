@@ -9,6 +9,8 @@
 #include <QDir>
 #include <QMenuBar>
 #include <QMenu>
+#include <QUndoView>
+#include <QDockWidget>
 #include "../../../lib/scene.h"
 #include "../../../lib/view.h"
 #include "../../../lib/settings.h"
@@ -34,11 +36,13 @@ MainWindow::MainWindow(QWidget *parent)
     _settings.showGrid = false;
     _settings.routeStraightAngles = true;
 
+    // Scene (object needed in createActions())
+    _scene = new QSchematic::Scene;
+
     // Create actions
     createActions();
 
     // Scene
-    _scene = new QSchematic::Scene;
     _scene->setSettings(_settings);
     auto wireFactory = std::bind(&MainWindow::wireFactory, this);
     _scene->setWireFactory(wireFactory);
@@ -58,6 +62,12 @@ MainWindow::MainWindow(QWidget *parent)
     _view = new QSchematic::View;
     _view->setSettings(_settings);
     _view->setScene(_scene);
+
+    // Undo view
+    _undoView = new QUndoView(_scene->undoStack());
+    QDockWidget* undoDockWiget = new QDockWidget;
+    undoDockWiget->setWidget(_undoView);
+    addDockWidget(Qt::LeftDockWidgetArea, undoDockWiget);
 
     // Menus
     {
@@ -83,6 +93,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Toolbar
     QToolBar* editorToolbar = new QToolBar;
+    editorToolbar->addAction(_actionUndo);
+    editorToolbar->addAction(_actionRedo);
     editorToolbar->addAction(_actionModeNormal);
     editorToolbar->addAction(_actionModeWire);
     editorToolbar->addSeparator();
@@ -159,6 +171,16 @@ void MainWindow::createActions()
         save();
     });
 
+    // Undo
+    _actionUndo = _scene->undoStack()->createUndoAction(this, QStringLiteral("Undo"));
+    _actionUndo->setText("Undo");
+    _actionUndo->setShortcut(QKeySequence::Undo);
+
+    // Redo
+    _actionRedo = _scene->undoStack()->createRedoAction(this, QStringLiteral("Redo"));
+    _actionRedo->setText("Redo");
+    _actionRedo->setShortcut(QKeySequence::Redo);
+
     // Mode: Normal
     _actionModeNormal = new QAction("Normal Mode", this);
     _actionModeNormal->setToolTip("Change to the normal mode (allows to move components).");
@@ -229,14 +251,21 @@ std::unique_ptr<QSchematic::Wire> MainWindow::wireFactory() const
 
 void MainWindow::demo()
 {
-    _scene->setSceneRect(-1000, -1000, 4000, 4000);
+    _scene->setSceneRect(-500, -500, 3000, 3000);
 
-    Operation* o = new Operation;
-    o->addConnector(new OperationConnector(QPoint(0, 3), QStringLiteral("in")));
-    o->addConnector(new OperationConnector(QPoint(5, 3), QStringLiteral("out")));
-    o->setGridPos(4, 15);
-    o->setConnectorsMovable(true);
-    _scene->addItem(o);
+    Operation* o1 = new Operation;
+    o1->addConnector(new OperationConnector(QPoint(0, 2), QStringLiteral("in")));
+    o1->addConnector(new OperationConnector(QPoint(8, 2), QStringLiteral("out")));
+    o1->setGridPos(4, 15);
+    o1->setConnectorsMovable(true);
+    _scene->addItem(o1);
+
+    Operation* o2 = new Operation;
+    o2->addConnector(new OperationConnector(QPoint(0, 2), QStringLiteral("in")));
+    o2->addConnector(new OperationConnector(QPoint(8, 2), QStringLiteral("out")));
+    o2->setGridPos(-5, -8);
+    o2->setConnectorsMovable(true);
+    _scene->addItem(o2);
 
     Condition* c = new Condition;
     c->setGridPos(14, 5);

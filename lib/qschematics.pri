@@ -15,7 +15,12 @@ HEADERS += \
     $$PWD/utils.h \
     $$PWD/interfaces/json.h \
     $$PWD/items/itemfactory.h \
-    $$PWD/items/wireroundedcorners.h
+    $$PWD/items/wireroundedcorners.h \
+    $$PWD/commands/commanditemmove.h \
+    $$PWD/commands/commandnoderesize.h \
+    $$PWD/commands/commands.h \
+    $$PWD/commands/commandlabelrename.h \
+    $$PWD/commands/commanditemsetvisible.h
 
 SOURCES += \
     $$PWD/items/connector.cpp \
@@ -32,4 +37,8 @@ SOURCES += \
     $$PWD/view.cpp \
     $$PWD/utils.cpp \
     $$PWD/items/itemfactory.cpp \
-    $$PWD/items/wireroundedcorners.cpp
+    $$PWD/items/wireroundedcorners.cpp \
+    $$PWD/commands/commanditemmove.cpp \
+    $$PWD/commands/commandnoderesize.cpp \
+    $$PWD/commands/commandlabelrename.cpp \
+    $$PWD/commands/commanditemsetvisible.cpp

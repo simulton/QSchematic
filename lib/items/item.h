@@ -11,6 +11,8 @@ namespace QSchematic {
 
     class Item : public QGraphicsObject, public Json
     {
+        friend class CommandItemSetVisible;
+
         Q_OBJECT
         Q_DISABLE_COPY(Item)
 
@@ -56,8 +58,11 @@ namespace QSchematic {
         QPointF scenePos() const;
         qreal scenePosX() const;
         qreal scenePosY() const;
+        void moveBy(const QVector2D& moveBy);
         void setSettings(const Settings& settings);
         const Settings& settings() const;
+        void setVisible(bool enabled);
+        bool isVisible() const;
         void setMovable(bool enabled);
         bool isMovable() const;
         void setSnapToGrid(bool enabled);
@@ -77,6 +82,7 @@ namespace QSchematic {
     protected:
         Settings _settings;
 
+        Scene* scene() const;
         void addTypeIdentifierToJson(QJsonObject& object) const;
 
         bool isHighlighted() const;
