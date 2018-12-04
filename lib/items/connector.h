@@ -43,6 +43,9 @@ namespace QSchematic {
         virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value) override;
         virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
+    protected:
+        Label& label() const;
+
     private:
         void calculateSymbolRect();
         void calculateTextDirection();

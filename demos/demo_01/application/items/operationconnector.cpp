@@ -4,6 +4,8 @@
 #include <QMenu>
 #include <QAction>
 #include <QJsonObject>
+#include <QInputDialog>
+#include "../../../lib/items/label.h"
 #include "operationconnector.h"
 #include "itemtypes.h"
 
@@ -72,16 +74,25 @@ void OperationConnector::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
     QMenu menu;
     {
         // Label visibility
-        QAction* _labelVisibility = new QAction;
-        _labelVisibility->setCheckable(true);
-        _labelVisibility->setChecked(labelIsVisible());
-        _labelVisibility->setText("Label visible");
-        connect(_labelVisibility, &QAction::toggled, [this](bool enabled) {
+        QAction* labelVisibility = new QAction;
+        labelVisibility->setCheckable(true);
+        labelVisibility->setChecked(labelIsVisible());
+        labelVisibility->setText("Label visible");
+        connect(labelVisibility, &QAction::toggled, [this](bool enabled) {
             setLabelIsVisible(enabled);
         });
 
+        // Text
+        QAction* text = new QAction;
+        text->setText("Rename ...");
+        connect(text, &QAction::triggered, [this] {
+            const QString& newText = QInputDialog::getText(nullptr, "Rename Connector", "New connector text", QLineEdit::Normal, label().text());
+            label().setText(newText);
+        });
+
         // Assemble
-        menu.addAction(_labelVisibility);
+        menu.addAction(labelVisibility);
+        menu.addAction(text);
     }
 
     // Sow the menu

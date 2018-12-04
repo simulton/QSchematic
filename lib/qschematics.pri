@@ -18,7 +18,8 @@ HEADERS += \
     $$PWD/items/wireroundedcorners.h \
     $$PWD/commands/commanditemmove.h \
     $$PWD/commands/commandnoderesize.h \
-    $$PWD/commands/commands.h
+    $$PWD/commands/commands.h \
+    $$PWD/commands/commandlabelrename.h
 
 SOURCES += \
     $$PWD/items/connector.cpp \
@@ -37,4 +38,5 @@ SOURCES += \
     $$PWD/items/itemfactory.cpp \
     $$PWD/items/wireroundedcorners.cpp \
     $$PWD/commands/commanditemmove.cpp \
-    $$PWD/commands/commandnoderesize.cpp
+    $$PWD/commands/commandnoderesize.cpp \
+    $$PWD/commands/commandlabelrename.cpp

@@ -223,6 +223,13 @@ void Connector::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
     painter->drawRoundedRect(_symbolRect, _settings.gridSize/4, _settings.gridSize/4);
 }
 
+Label& Connector::label() const
+{
+    Q_ASSERT(_label);
+
+    return *_label;
+}
+
 void Connector::calculateSymbolRect()
 {
     _symbolRect = QRectF(-SIZE*_settings.gridSize/2.0, -SIZE*_settings.gridSize/2.0, SIZE*_settings.gridSize, SIZE*_settings.gridSize);

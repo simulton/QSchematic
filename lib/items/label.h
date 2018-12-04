@@ -8,6 +8,8 @@ namespace QSchematic {
 
     class Label : public Item
     {
+        friend class CommandLabelRename;
+
     public:
         Label(QGraphicsItem* parent = nullptr);
         Label(const Label& other) = delete;
