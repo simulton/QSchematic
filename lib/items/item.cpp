@@ -7,6 +7,7 @@
 #include "item.h"
 #include "../scene.h"
 #include "../commands/commanditemmove.h"
+#include "../commands/commanditemsetvisible.h"
 
 using namespace QSchematic;
 
@@ -197,6 +198,20 @@ void Item::setSettings(const Settings& settings)
 const Settings& Item::settings() const
 {
     return _settings;
+}
+
+void Item::setVisible(bool enabled)
+{
+    if (scene()) {
+        scene()->undoStack()->push(new CommandItemSetVisible(this, enabled));
+    } else {
+        QGraphicsObject::setVisible(enabled);
+    }
+}
+
+bool Item::isVisible() const
+{
+    return QGraphicsObject::isVisible();
 }
 
 void Item::setMovable(bool enabled)

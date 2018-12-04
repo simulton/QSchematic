@@ -5,6 +5,7 @@ namespace QSchematic
     enum CommandType {
         ItemMoveCommandType,
         NodeResizeCommandType,
-        LabelResizeCommandType
+        LabelResizeCommandType,
+        ItemSetVisibleCommand
     };
 }
