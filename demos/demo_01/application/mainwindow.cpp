@@ -175,18 +175,11 @@ void MainWindow::createActions()
     _actionUndo = _scene->undoStack()->createUndoAction(this, QStringLiteral("Undo"));
     _actionUndo->setText("Undo");
     _actionUndo->setShortcut(QKeySequence::Undo);
-    connect(_actionUndo, &QAction::triggered, [this]{
-        _scene->undo();
-    });
-    addAction(_actionUndo);
 
     // Redo
     _actionRedo = _scene->undoStack()->createRedoAction(this, QStringLiteral("Redo"));
     _actionRedo->setText("Redo");
     _actionRedo->setShortcut(QKeySequence::Redo);
-    connect(_actionRedo, &QAction::triggered, [this]{
-        _scene->redo();
-    });
 
     // Mode: Normal
     _actionModeNormal = new QAction("Normal Mode", this);
@@ -270,7 +263,7 @@ void MainWindow::demo()
     Operation* o2 = new Operation;
     o2->addConnector(new OperationConnector(QPoint(0, 2), QStringLiteral("in")));
     o2->addConnector(new OperationConnector(QPoint(8, 2), QStringLiteral("out")));
-    o2->setGridPos(4, 15);
+    o2->setGridPos(-5, -8);
     o2->setConnectorsMovable(true);
     _scene->addItem(o2);
 
