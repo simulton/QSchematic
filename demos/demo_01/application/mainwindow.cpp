@@ -13,7 +13,6 @@
 #include "../../../lib/view.h"
 #include "../../../lib/settings.h"
 #include "../../../lib/items/node.h"
-#include "../../../lib/items/wireroundedcorners.h"
 #include "../../../lib/items/itemfactory.h"
 #include "mainwindow.h"
 #include "resources.h"
@@ -21,6 +20,7 @@
 #include "items/operation.h"
 #include "items/operationconnector.h"
 #include "items/condition.h"
+#include "items/fancywire.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -110,7 +110,7 @@ MainWindow::MainWindow(QWidget *parent)
     resize(2800, 1500);
     _view->setZoomValue(1.5);
 
-    //demo();
+    demo();
 }
 
 bool MainWindow::save() const
@@ -224,7 +224,7 @@ void MainWindow::settingsChanged()
 
 std::unique_ptr<QSchematic::Wire> MainWindow::wireFactory() const
 {
-    return std::unique_ptr<QSchematic::Wire>(new QSchematic::WireRoundedCorners);
+    return std::unique_ptr<QSchematic::Wire>(new FancyWire);
 }
 
 void MainWindow::demo()

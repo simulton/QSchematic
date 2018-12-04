@@ -7,4 +7,5 @@ enum ItemType {
     OperationConnectorType,
     ConditionType,
     ConditionConnectorType,
+    FancyWireType
 };

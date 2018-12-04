@@ -1,11 +1,17 @@
-#ifndef FANCYWIRE_H
-#define FANCYWIRE_H
+#pragma once
 
+#include "../../../lib/items/wireroundedcorners.h"
 
-class FancyWire
+class FancyWire : public QSchematic::WireRoundedCorners
 {
-public:
-    FancyWire();
-};
+    Q_OBJECT
+    Q_DISABLE_COPY(FancyWire)
 
-#endif // FANCYWIRE_H
+public:
+    FancyWire(QGraphicsItem* parent = nullptr);
+    virtual ~FancyWire() override = default;
+
+    virtual QJsonObject toJson() const override;
+    virtual bool fromJson(const QJsonObject& object) override;
+    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
+};

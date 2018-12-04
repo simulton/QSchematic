@@ -32,7 +32,8 @@ SOURCES += \
     resources.cpp \
     items/customitemfactory.cpp \
     items/operationconnector.cpp \
-    items/conditionconnector.cpp
+    items/conditionconnector.cpp \
+    items/fancywire.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -42,7 +43,8 @@ HEADERS += \
     items/customitemfactory.h \
     items/itemtypes.h \
     items/operationconnector.h \
-    items/conditionconnector.h
+    items/conditionconnector.h \
+    items/fancywire.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
