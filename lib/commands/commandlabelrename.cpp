@@ -11,6 +11,8 @@ CommandLabelRename::CommandLabelRename(const QPointer<Label>& label, const QStri
     _newText(newText)
 {
     _oldText = label->text();
+
+    setText(QStringLiteral("Change label text"));
 }
 
 int CommandLabelRename::id() const
