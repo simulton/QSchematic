@@ -788,6 +788,28 @@
 								},
 								{
 									"_type": "UMLOperation",
+									"_id": "AAAAAAFnUw+219x6hsc=",
+									"_parent": {
+										"$ref": "AAAAAAFmstNm6sAb25g="
+									},
+									"name": "connectionPoints",
+									"parameters": [
+										{
+											"_type": "UMLParameter",
+											"_id": "AAAAAAFnUw/gfdzV5fM=",
+											"_parent": {
+												"$ref": "AAAAAAFnUw+219x6hsc="
+											},
+											"type": {
+												"$ref": "AAAAAAFmwhdOmGYvbWY="
+											},
+											"multiplicity": "0..*",
+											"direction": "return"
+										}
+									]
+								},
+								{
+									"_type": "UMLOperation",
 									"_id": "AAAAAAFnUw9nZ9wFDhU=",
 									"_parent": {
 										"$ref": "AAAAAAFmstNm6sAb25g="
@@ -805,29 +827,6 @@
 											"type": {
 												"$ref": "AAAAAAFmuktEzYpHKLc="
 											}
-										}
-									]
-								},
-								{
-									"_type": "UMLOperation",
-									"_id": "AAAAAAFnUw+219x6hsc=",
-									"_parent": {
-										"$ref": "AAAAAAFmstNm6sAb25g="
-									},
-									"name": "connectionPoints",
-									"visibility": "private",
-									"parameters": [
-										{
-											"_type": "UMLParameter",
-											"_id": "AAAAAAFnUw/gfdzV5fM=",
-											"_parent": {
-												"$ref": "AAAAAAFnUw+219x6hsc="
-											},
-											"type": {
-												"$ref": "AAAAAAFmwhdOmGYvbWY="
-											},
-											"multiplicity": "0..*",
-											"direction": "return"
 										}
 									]
 								},
@@ -12622,23 +12621,6 @@
 												},
 												{
 													"_type": "UMLOperationView",
-													"_id": "AAAAAAFnUw9niNwIKPY=",
-													"_parent": {
-														"$ref": "AAAAAAFmstNm9cAkLg4="
-													},
-													"model": {
-														"$ref": "AAAAAAFnUw9nZ9wFDhU="
-													},
-													"font": "Arial;13;0",
-													"left": 789,
-													"top": 463,
-													"width": 367.1865234375,
-													"height": 13,
-													"text": "-setupNewItem(item: Item)",
-													"horizontalAlignment": 0
-												},
-												{
-													"_type": "UMLOperationView",
 													"_id": "AAAAAAFnUw+2+tx9Q28=",
 													"_parent": {
 														"$ref": "AAAAAAFmstNm9cAkLg4="
@@ -12648,10 +12630,27 @@
 													},
 													"font": "Arial;13;0",
 													"left": 789,
+													"top": 463,
+													"width": 367.1865234375,
+													"height": 13,
+													"text": "+connectionPoints(): QPoint[0..*]",
+													"horizontalAlignment": 0
+												},
+												{
+													"_type": "UMLOperationView",
+													"_id": "AAAAAAFnUw9niNwIKPY=",
+													"_parent": {
+														"$ref": "AAAAAAFmstNm9cAkLg4="
+													},
+													"model": {
+														"$ref": "AAAAAAFnUw9nZ9wFDhU="
+													},
+													"font": "Arial;13;0",
+													"left": 789,
 													"top": 478,
 													"width": 367.1865234375,
 													"height": 13,
-													"text": "-connectionPoints(): QPoint[0..*]",
+													"text": "-setupNewItem(item: Item)",
 													"horizontalAlignment": 0
 												},
 												{
@@ -13894,13 +13893,30 @@
 													"height": 13,
 													"text": "#resizeHandles(): TBD",
 													"horizontalAlignment": 0
+												},
+												{
+													"_type": "UMLOperationView",
+													"_id": "AAAAAAFneg7/VZxLbNE=",
+													"_parent": {
+														"$ref": "AAAAAAFmsthVIMNhKy0="
+													},
+													"model": {
+														"$ref": "AAAAAAFna3VL/SJWkPM="
+													},
+													"font": "Arial;13;0",
+													"left": 685,
+													"top": 1079,
+													"width": 284.349609375,
+													"height": 13,
+													"text": "#paintResizeHandles(painter: QPainter)",
+													"horizontalAlignment": 0
 												}
 											],
 											"font": "Arial;13;0",
 											"left": 680,
 											"top": 744,
 											"width": 294.349609375,
-											"height": 338
+											"height": 353
 										},
 										{
 											"_type": "UMLReceptionCompartmentView",
@@ -13940,7 +13956,7 @@
 									"left": 680,
 									"top": 696,
 									"width": 294.349609375,
-									"height": 386,
+									"height": 401,
 									"nameCompartment": {
 										"$ref": "AAAAAAFmsthVIMNbSoA="
 									},
@@ -15489,7 +15505,7 @@
 													"top": 869,
 													"width": 304.966796875,
 													"height": 13,
-													"text": "+removeDuplicatePoints()",
+													"text": "+simplify()",
 													"horizontalAlignment": 0
 												},
 												{
@@ -15503,7 +15519,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 1037,
-													"top": 899,
+													"top": 884,
 													"width": 304.966796875,
 													"height": 13,
 													"text": "+label(): WireNetLabel",
@@ -15520,7 +15536,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 1037,
-													"top": 914,
+													"top": 899,
 													"width": 304.966796875,
 													"height": 13,
 													"text": "-updateWireJunctions()",
@@ -15537,7 +15553,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 1037,
-													"top": 929,
+													"top": 914,
 													"width": 304.966796875,
 													"height": 13,
 													"text": "-wirePointMoved(wire, point : WirePoint)",
@@ -15554,7 +15570,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 1037,
-													"top": 944,
+													"top": 929,
 													"width": 304.966796875,
 													"height": 13,
 													"text": "-labelHighlightChanged(label: item, highlighted: bool)",
@@ -15571,10 +15587,10 @@
 													},
 													"font": "Arial;13;0",
 													"left": 1037,
-													"top": 959,
+													"top": 944,
 													"width": 304.966796875,
 													"height": 13,
-													"text": "+wireHighlightChanged(wire: item, highlighted: bool)",
+													"text": "-wireHighlightChanged(wire: item, highlighted: bool)",
 													"horizontalAlignment": 0
 												}
 											],
@@ -15582,7 +15598,7 @@
 											"left": 1032,
 											"top": 744,
 											"width": 314.966796875,
-											"height": 233
+											"height": 218
 										},
 										{
 											"_type": "UMLReceptionCompartmentView",
@@ -15765,9 +15781,9 @@
 												"$ref": "AAAAAAFnUtGPZdEBb44="
 											},
 											"font": "Arial;13;0",
-											"left": 1112,
+											"left": 1111,
 											"top": 664,
-											"width": 19.5126953125,
+											"width": 20,
 											"height": 13,
 											"alpha": -0.5790744357049518,
 											"distance": 31.064449134018133,
@@ -18866,7 +18882,8 @@
 											"_parent": {
 												"$ref": "AAAAAAFnUkMuDYdGz64="
 											},
-											"name": "wire"
+											"name": "wire",
+											"type": ""
 										},
 										{
 											"_type": "UMLParameter",
@@ -18893,7 +18910,8 @@
 											"_parent": {
 												"$ref": "AAAAAAFnUkNxaohBnmk="
 											},
-											"name": "wire"
+											"name": "wire",
+											"type": ""
 										},
 										{
 											"_type": "UMLParameter",
@@ -18920,7 +18938,8 @@
 											"_parent": {
 												"$ref": "AAAAAAFnUkOhJYk828k="
 											},
-											"name": "wire"
+											"name": "wire",
+											"type": ""
 										},
 										{
 											"_type": "UMLParameter",
@@ -18947,6 +18966,7 @@
 											"_parent": {
 												"$ref": "AAAAAAFnUkR5SoxVLA0="
 											},
+											"type": "",
 											"multiplicity": "0..*",
 											"direction": "return"
 										}
@@ -19049,7 +19069,8 @@
 											"_parent": {
 												"$ref": "AAAAAAFnUkjYaJPZjcs="
 											},
-											"name": "wire"
+											"name": "wire",
+											"type": ""
 										},
 										{
 											"_type": "UMLParameter",

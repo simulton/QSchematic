@@ -50,6 +50,7 @@ namespace QSchematic {
         QList<WireNet*> nets(const WireNet& wireNet) const;
         WireNet* net(const Wire& wire) const;
         QList<WireNet*> netsAt(const QPoint& point);
+        QList<QPoint> connectionPoints() const;
 
     signals:
         void modeChanged(Mode newMode);
@@ -63,7 +64,6 @@ namespace QSchematic {
 
     private:
         void setupNewItem(Item* item);
-        QList<QPoint> connectionPoints() const;
         void addWireNet(std::unique_ptr<WireNet> wireNet);
 
         QList<WireNet*> _nets;
