@@ -4,6 +4,7 @@
 #include <QPainter>
 #include "../../../lib/items/wirepoint.h"
 #include "../../../lib/scene.h"
+#include "../../../lib/settings.h"
 #include "itemtypes.h"
 #include "fancywire.h"
 
@@ -54,13 +55,13 @@ void FancyWire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
     // Make points fancy if they are on top of one of our connectors
     painter->setPen(pen);
     painter->setBrush(brush);
-    const auto& wirePoints = sceneWirePointsRelative();
+    const auto& wirePoints = sceneWirePointsAbsolute();
     auto it = wirePoints.constBegin();
     while (it != wirePoints.constEnd()) {
         const auto& wirePoint = it->toPoint();
 
-        if (connectionPoints.contains(wirePoint)) {
-            painter->drawEllipse(wirePoint, SIZE, SIZE);
+        if (connectionPoints.contains(_settings.toGridPoint(wirePoint))) {
+            painter->drawEllipse(wirePoint - gridPos(), SIZE, SIZE);
         }
 
         it++;
