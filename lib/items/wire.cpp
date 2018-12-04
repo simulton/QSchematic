@@ -135,6 +135,19 @@ QVector<WirePoint> Wire::sceneWirePointsRelative() const
     return points;
 }
 
+QVector<WirePoint> Wire::sceneWirePointsAbsolute() const
+{
+    QVector<WirePoint> points;
+
+    for (const WirePoint& point : _points) {
+        WirePoint&& tmp = WirePoint(_settings.toScenePoint(point.toPoint() + gridPos()));
+        tmp.setIsJunction(point.isJunction());
+        points.append(tmp);
+    }
+
+    return points;
+}
+
 QVector<QPoint> Wire::scenePointsRelative() const
 {
     QVector<QPoint> points;

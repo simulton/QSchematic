@@ -50,6 +50,7 @@ namespace QSchematic {
         static void simplify(QVector<WirePoint>& points);
 
         QVector<WirePoint> sceneWirePointsRelative() const;
+        QVector<WirePoint> sceneWirePointsAbsolute() const;
         QVector<QPoint> scenePointsRelative() const;
         QVector<QPoint> scenePointsAbsolute() const;
         void calculateBoundingRect();
