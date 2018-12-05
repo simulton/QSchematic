@@ -49,6 +49,21 @@ bool Condition::fromJson(const QJsonObject& object)
     return true;
 }
 
+std::unique_ptr<QSchematic::Item> Condition::deepCopy() const
+{
+    auto clone = std::make_unique<Condition>(parentItem());
+    copyAttributes(*(clone.get()));
+
+    return clone;
+}
+
+void Condition::copyAttributes(Condition& dest) const
+{
+    QSchematic::Node::copyAttributes(dest);
+
+    dest._polygon = _polygon;
+}
+
 QPainterPath Condition::shape() const
 {
     QPainterPath basePath;
@@ -73,7 +88,7 @@ void Condition::placeConnectors()
     // Add new connectors
     auto points = QSchematic::Utils::rectanglePoints(sizeRect(), QSchematic::Utils::RectangleEdgeCenterPoints);
     for (const auto& point : points) {
-        addConnector(new ConditionConnector(point.toPoint(), QStringLiteral("[case]")));
+        addConnector(std::make_unique<ConditionConnector>(point.toPoint(), QStringLiteral("[case]")));
     }
 }
 

@@ -22,7 +22,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-CONFIG += c++11 silent
+CONFIG += c++14 silent
 
 SOURCES += \
         main.cpp \
@@ -33,7 +33,8 @@ SOURCES += \
     items/customitemfactory.cpp \
     items/operationconnector.cpp \
     items/conditionconnector.cpp \
-    items/fancywire.cpp
+    items/fancywire.cpp \
+    commands/commandnodeaddconnector.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -44,7 +45,9 @@ HEADERS += \
     items/itemtypes.h \
     items/operationconnector.h \
     items/conditionconnector.h \
-    items/fancywire.h
+    items/fancywire.h \
+    commands/commands.h \
+    commands/commandnodeaddconnector.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

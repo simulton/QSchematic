@@ -5,6 +5,7 @@
 #include "../../../lib/settings.h"
 
 class QUndoView;
+class QGraphicsSceneContextMenuEvent;
 
 namespace QSchematic {
     class Editor;
