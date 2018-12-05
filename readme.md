@@ -15,7 +15,7 @@ Technical stuff:
   - Written in C++
   - Everything is contained within the `QSchematic` namespace
   - Tested with Qt5
-  - No dependencies other than Qt5 and a C++11 compatible compiler
+  - No dependencies other than Qt5 and a C++14 compatible compiler
   - BSD 3-clause licensed
 
 # State
