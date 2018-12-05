@@ -33,6 +33,19 @@ bool FancyWire::fromJson(const QJsonObject& object)
     return true;
 }
 
+std::unique_ptr<QSchematic::Item> FancyWire::deepCopy() const
+{
+    auto clone = std::make_unique<FancyWire>(parentItem());
+    copyAttributes(*(clone.get()));
+
+    return clone;
+}
+
+void FancyWire::copyAttributes(FancyWire& dest) const
+{
+    QSchematic::WireRoundedCorners::copyAttributes(dest);
+}
+
 void FancyWire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     // Base class

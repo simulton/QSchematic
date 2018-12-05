@@ -46,6 +46,24 @@ bool Label::fromJson(const QJsonObject& object)
     return true;
 }
 
+std::unique_ptr<Item> Label::deepCopy() const
+{
+    auto clone = std::make_unique<Label>(parentItem());
+    copyAttributes(*(clone.get()));
+
+    return clone;
+}
+
+void Label::copyAttributes(Label& dest) const
+{
+    Item::copyAttributes(dest);
+
+    dest._text = _text;
+    dest._font = _font;
+    dest._textRect = _textRect;
+    dest._connectionPoint = _connectionPoint;
+}
+
 QRectF Label::boundingRect() const
 {
     return _textRect;

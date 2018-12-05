@@ -40,6 +40,7 @@ namespace QSchematic {
 
         virtual QJsonObject toJson() const override;
         virtual bool fromJson(const QJsonObject& object) override;
+        virtual std::unique_ptr<Item> deepCopy() const override;
 
         Mode mode() const;
         void setSize(const QSize& size);
@@ -51,7 +52,7 @@ namespace QSchematic {
         ResizePolicy mouseResizePolicy() const;
         void setAllowMouseResize(bool enabled);
         bool allowMouseResize() const;
-        bool addConnector(Connector* connector);
+        bool addConnector(std::unique_ptr<Connector> connector);
         bool removeConnector(const QPoint& point);
         void clearConnectors();
         QList<Connector*> connectors() const;
@@ -74,6 +75,7 @@ namespace QSchematic {
         virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
     protected:
+        void copyAttributes(Node& dest) const;
         QMap<RectanglePoint, QRect> resizeHandles() const;
         void paintResizeHandles(QPainter& painter);
 

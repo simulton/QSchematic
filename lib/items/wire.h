@@ -24,6 +24,7 @@ namespace QSchematic {
 
         virtual QJsonObject toJson() const override;
         virtual bool fromJson(const QJsonObject& object) override;
+        virtual std::unique_ptr<Item> deepCopy() const;
         virtual QRectF boundingRect() const override;
         virtual QPainterPath shape() const override;
 
@@ -47,6 +48,7 @@ namespace QSchematic {
         void pointMoved(Wire& wire, WirePoint& point);
 
     protected:
+        void copyAttributes(Wire& dest) const;
         static void simplify(QVector<WirePoint>& points);
 
         QVector<WirePoint> sceneWirePointsRelative() const;

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <QGraphicsObject>
 #include "../interfaces/json.h"
 #include "../types.h"
@@ -35,6 +36,7 @@ namespace QSchematic {
 
         virtual QJsonObject toJson() const override;
         virtual bool fromJson(const QJsonObject& object) override;
+        virtual std::unique_ptr<Item> deepCopy() const = 0;
 
         int type() const final;
         void setGridPos(const QPoint& gridPos);
@@ -81,6 +83,8 @@ namespace QSchematic {
 
     protected:
         Settings _settings;
+
+        void copyAttributes(Item& dest) const;
 
         Scene* scene() const;
         void addTypeIdentifierToJson(QJsonObject& object) const;

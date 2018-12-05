@@ -17,6 +17,7 @@ namespace QSchematic {
 
         virtual QJsonObject toJson() const override;
         virtual bool fromJson(const QJsonObject& object) override;
+        virtual std::unique_ptr<Item> deepCopy() const;
 
         virtual QRectF boundingRect() const final;
 
@@ -28,6 +29,7 @@ namespace QSchematic {
         QRectF textRect() const;
 
     protected:
+        void copyAttributes(Label& dest) const;
         void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
 
     private:

@@ -39,6 +39,19 @@ bool ConditionConnector::fromJson(const QJsonObject& object)
     return true;
 }
 
+std::unique_ptr<QSchematic::Item> ConditionConnector::deepCopy() const
+{
+    auto clone = std::make_unique<ConditionConnector>(gridPos(), text(), parentItem());
+    copyAttributes(*(clone.get()));
+
+    return clone;
+}
+
+void ConditionConnector::copyAttributes(ConditionConnector& dest) const
+{
+    QSchematic::Connector::copyAttributes(dest);
+}
+
 QRectF ConditionConnector::boundingRect() const
 {
     return RECT;

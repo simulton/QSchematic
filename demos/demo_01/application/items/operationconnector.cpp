@@ -41,6 +41,19 @@ bool OperationConnector::fromJson(const QJsonObject& object)
     return true;
 }
 
+std::unique_ptr<QSchematic::Item> OperationConnector::deepCopy() const
+{
+    auto clone = std::make_unique<OperationConnector>(gridPos(), text(), parentItem());
+    copyAttributes(*(clone.get()));
+
+    return clone;
+}
+
+void OperationConnector::copyAttributes(OperationConnector& dest) const
+{
+    QSchematic::Connector::copyAttributes(dest);
+}
+
 QRectF OperationConnector::boundingRect() const
 {
     return RECT;

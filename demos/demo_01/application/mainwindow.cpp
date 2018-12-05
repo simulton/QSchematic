@@ -11,6 +11,7 @@
 #include <QMenu>
 #include <QUndoView>
 #include <QDockWidget>
+#include <QGraphicsSceneContextMenuEvent>
 #include "../../../lib/scene.h"
 #include "../../../lib/view.h"
 #include "../../../lib/settings.h"
@@ -254,15 +255,15 @@ void MainWindow::demo()
     _scene->setSceneRect(-500, -500, 3000, 3000);
 
     Operation* o1 = new Operation;
-    o1->addConnector(new OperationConnector(QPoint(0, 2), QStringLiteral("in")));
-    o1->addConnector(new OperationConnector(QPoint(8, 2), QStringLiteral("out")));
+    o1->addConnector(std::make_unique<OperationConnector>(QPoint(0, 2), QStringLiteral("in")));
+    o1->addConnector(std::make_unique<OperationConnector>(QPoint(8, 2), QStringLiteral("out")));
     o1->setGridPos(4, 15);
     o1->setConnectorsMovable(true);
     _scene->addItem(o1);
 
     Operation* o2 = new Operation;
-    o2->addConnector(new OperationConnector(QPoint(0, 2), QStringLiteral("in")));
-    o2->addConnector(new OperationConnector(QPoint(8, 2), QStringLiteral("out")));
+    o2->addConnector(std::make_unique<OperationConnector>(QPoint(0, 2), QStringLiteral("in")));
+    o2->addConnector(std::make_unique<OperationConnector>(QPoint(8, 2), QStringLiteral("out")));
     o2->setGridPos(-5, -8);
     o2->setConnectorsMovable(true);
     _scene->addItem(o2);

@@ -58,6 +58,16 @@ bool Item::fromJson(const QJsonObject& object)
     return true;
 }
 
+void Item::copyAttributes(Item& dest) const
+{
+    dest.setParentItem(parentItem());
+
+    dest._snapToGrid = _snapToGrid;
+    dest._highlightEnabled = _highlightEnabled;
+    dest._highlighted = _highlighted;
+    dest._oldGridPoint = _oldGridPoint;
+}
+
 Scene* Item::scene() const
 {
     return qobject_cast<Scene*>(QGraphicsObject::scene());

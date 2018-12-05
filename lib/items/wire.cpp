@@ -95,6 +95,25 @@ bool Wire::fromJson(const QJsonObject& object)
     return true;
 }
 
+std::unique_ptr<Item> Wire::deepCopy() const
+{
+    auto clone = std::make_unique<Wire>(type(), parentItem());
+    copyAttributes(*(clone.get()));
+
+    return clone;
+}
+
+void Wire::copyAttributes(Wire& dest) const
+{
+    Item::copyAttributes(dest);
+
+    dest._points = _points;
+    dest._rect = _rect;
+    dest._pointToMoveIndex = _pointToMoveIndex;
+    dest._lineSegmentToMoveIndex = _lineSegmentToMoveIndex;
+    dest._prevMousePos = _prevMousePos;
+}
+
 void Wire::update()
 {
     calculateBoundingRect();

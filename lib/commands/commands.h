@@ -3,9 +3,11 @@
 namespace QSchematic
 {
     enum CommandType {
-        ItemMoveCommandType,
+        ItemMoveCommandType      = 0,
         NodeResizeCommandType,
         LabelResizeCommandType,
-        ItemSetVisibleCommand
+        ItemSetVisibleCommand,
+
+        QSchematicCommandUserType = 1000
     };
 }

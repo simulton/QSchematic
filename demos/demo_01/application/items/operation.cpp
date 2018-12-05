@@ -1,9 +1,13 @@
 #include <QPainter>
 #include <QJsonObject>
-#include <QRadialGradient>
+#include <QLinearGradient>
+#include <QMenu>
+#include <QGraphicsSceneContextMenuEvent>
+#include "../../../lib/scene.h"
 #include "itemtypes.h"
 #include "operation.h"
-#include "conditionconnector.h"
+#include "operationconnector.h"
+#include "../commands/commandnodeaddconnector.h"
 
 const QColor COLOR_HIGHLIGHTED = QColor(Qt::blue).lighter();
 const QColor COLOR_BODY_FILL   = QColor(Qt::gray).lighter(140);
@@ -36,6 +40,19 @@ bool Operation::fromJson(const QJsonObject& object)
     QSchematic::Node::fromJson(object["node"].toObject());
 
     return true;
+}
+
+std::unique_ptr<QSchematic::Item> Operation::deepCopy() const
+{
+    auto clone = std::make_unique<Operation>(parentItem());
+    copyAttributes(*(clone.get()));
+
+    return clone;
+}
+
+void Operation::copyAttributes(Operation& dest) const
+{
+    QSchematic::Node::copyAttributes(dest);
 }
 
 void Operation::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
@@ -125,3 +142,30 @@ void Operation::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
         paintResizeHandles(*painter);
     }
 }
+
+void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
+{
+    // Create the menu
+    QMenu menu;
+    {
+        // Add connector
+        QAction* newConnector = new QAction;
+        newConnector->setText("Add connector");
+        connect(newConnector, &QAction::triggered, [this, event] {
+            auto connector = std::make_unique<OperationConnector>(event->pos().toPoint(), QStringLiteral("Unnamed"), this);
+
+            if (scene()) {
+                scene()->undoStack()->push(new CommandNodeAddConnector(this, std::move(connector)));
+            } else {
+                addConnector(std::move(connector));
+            }
+        });
+
+        // Assemble
+        menu.addAction(newConnector);
+    }
+
+    // Sow the menu
+    menu.exec(event->screenPos());
+}
+

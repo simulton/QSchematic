@@ -25,6 +25,7 @@ namespace QSchematic {
 
         virtual QJsonObject toJson() const override;
         virtual bool fromJson(const QJsonObject& object) override;
+        virtual std::unique_ptr<Item> deepCopy() const override;
 
         void setSnapPolicy(SnapPolicy policy);
         SnapPolicy snapPolicy() const;
@@ -44,6 +45,7 @@ namespace QSchematic {
         virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
     protected:
+        void copyAttributes(Connector& dest) const;
         Label& label() const;
 
     private:

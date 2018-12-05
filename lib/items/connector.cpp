@@ -69,6 +69,30 @@ bool Connector::fromJson(const QJsonObject& object)
     return true;
 }
 
+std::unique_ptr<Item> Connector::deepCopy() const
+{
+    auto clone = std::make_unique<Connector>(type(), gridPos(), text(), parentItem());
+    copyAttributes(*(clone.get()));
+
+    return clone;
+}
+
+void Connector::copyAttributes(Connector& dest) const
+{
+    Q_ASSERT(_label);
+
+    Item::copyAttributes(dest);
+
+    dest._snapPolicy = _snapPolicy;
+    dest._symbolRect = _symbolRect;
+    dest._forceTextDirection = _forceTextDirection;
+    dest._textDirection = _textDirection;
+
+    delete dest._label;
+    dest._label = dynamic_cast<Label*>(_label->deepCopy().release());
+    Q_ASSERT(dest._label);
+}
+
 void Connector::setSnapPolicy(Connector::SnapPolicy policy)
 {
     _snapPolicy = policy;

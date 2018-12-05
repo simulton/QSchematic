@@ -75,11 +75,38 @@ bool Node::fromJson(const QJsonObject& object)
                 continue;
             }
             connector->fromJson(object);
-            addConnector(connector);
+            addConnector(std::unique_ptr<Connector>(connector));
         }
     }
 
     return true;
+}
+
+std::unique_ptr<Item> Node::deepCopy() const
+{
+    auto clone = std::make_unique<Node>(type(), parentItem());
+    copyAttributes(*(clone.get()));
+
+    return clone;
+}
+
+void Node::copyAttributes(Node& dest) const
+{
+    Item::copyAttributes(dest);
+
+    dest._mode = _mode;
+    dest._lastMousePosWithGridMove = _lastMousePosWithGridMove;
+    dest._resizeHandle = _resizeHandle;
+    dest._size = _size;
+    dest._mouseResizePolicy = _mouseResizePolicy;
+    dest._allowMouseResize = _allowMouseResize;
+    dest._connectorsMovable = _connectorsMovable;
+    dest._connectorsSnapPolicy = _connectorsSnapPolicy;
+    dest._connectorsSnapToGrid = _connectorsSnapToGrid;
+    for (const auto& connector : _connectors) {
+        auto connectorClone = qgraphicsitem_cast<Connector*>(connector->deepCopy().release());
+        dest.addConnector(std::unique_ptr<Connector>(connectorClone));
+    }
 }
 
 Node::Mode Node::mode() const
@@ -167,7 +194,7 @@ QMap<RectanglePoint, QRect> Node::resizeHandles() const
     return map;
 }
 
-bool Node::addConnector(Connector* connector)
+bool Node::addConnector(std::unique_ptr<Connector> connector)
 {
     if (!connector) {
         return false;
@@ -178,7 +205,7 @@ bool Node::addConnector(Connector* connector)
     connector->setSnapPolicy(_connectorsSnapPolicy);
     connector->setSnapToGrid(_connectorsSnapToGrid);
 
-    _connectors << connector;
+    _connectors << connector.release();
 
     return true;
 }
