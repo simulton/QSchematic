@@ -17,7 +17,7 @@ namespace QSchematic {
 
         virtual QJsonObject toJson() const override;
         virtual bool fromJson(const QJsonObject& object) override;
-        virtual std::unique_ptr<Item> deepCopy() const;
+        virtual std::unique_ptr<Item> deepCopy() const override;
 
         virtual QRectF boundingRect() const final;
 
