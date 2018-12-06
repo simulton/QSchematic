@@ -43,6 +43,7 @@ QJsonObject Operation::toJson() const
     QJsonObject object;
 
     object.insert("node", QSchematic::Node::toJson());
+    object.insert("label", _label->toJson());
     addTypeIdentifierToJson(object);
 
     return object;
@@ -51,6 +52,7 @@ QJsonObject Operation::toJson() const
 bool Operation::fromJson(const QJsonObject& object)
 {
     QSchematic::Node::fromJson(object["node"].toObject());
+    _label->fromJson(object["label"].toObject());
 
     return true;
 }
