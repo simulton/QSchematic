@@ -106,6 +106,9 @@ bool Scene::fromJson(const QJsonObject& object)
         }
     }
 
+    // Clear the undo history
+    _undoStack->clear();
+
     return true;
 }
 
