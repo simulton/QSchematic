@@ -10,7 +10,7 @@ CommandItemMove::CommandItemMove(const QVector<QPointer<Item>>& items, const QVe
     _items(items),
     _moveBy(moveBy)
 {
-    updateText();
+    setText(QStringLiteral("Move item"));
 }
 
 int CommandItemMove::id() const
@@ -38,7 +38,6 @@ bool CommandItemMove::mergeWith(const QUndoCommand* command)
 
     // Merge
     _moveBy += myCommand->_moveBy;
-    updateText();
 
     return true;
 }
@@ -63,16 +62,4 @@ void CommandItemMove::redo()
 
         item->moveBy(_moveBy);
     }
-}
-
-void CommandItemMove::updateText()
-{
-    QString text =
-            QStringLiteral("Move item by ( ") +
-            QString::number(static_cast<qreal>(_moveBy.x())) +
-            QStringLiteral(" / ") +
-            QString::number(static_cast<qreal>(_moveBy.y())) +
-            QStringLiteral(")");
-
-    setText(text);
 }

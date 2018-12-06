@@ -22,8 +22,6 @@ namespace QSchematic
         virtual void redo() override;
 
     private:
-        void updateText();
-
         QVector<QPointer<Item>> _items;
         QVector2D _moveBy;
     };
