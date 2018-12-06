@@ -30,7 +30,6 @@ public:
 
 private:
     void settingsChanged();
-    std::unique_ptr<QSchematic::Wire> wireFactory() const;
 
     QSchematic::Editor* _schematicEditor;
     QSchematic::Scene* _scene;
