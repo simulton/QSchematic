@@ -2,6 +2,10 @@
 
 #include "../../../lib/items/node.h"
 
+namespace QSchematic
+{
+    class Label;
+}
 
 class Operation : public QSchematic::Node
 {
@@ -18,6 +22,14 @@ public:
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event) override;
 
+    std::shared_ptr<QSchematic::Label> label() const;
+
 protected:
     void copyAttributes(Operation& dest) const;
+
+private:
+    std::shared_ptr<QSchematic::Label> _label;
+
+private slots:
+    void repositionLabel();
 };

@@ -28,23 +28,19 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     items/operation.cpp \
-    items/condition.cpp \
     resources.cpp \
     items/customitemfactory.cpp \
     items/operationconnector.cpp \
-    items/conditionconnector.cpp \
     items/fancywire.cpp \
     commands/commandnodeaddconnector.cpp
 
 HEADERS += \
         mainwindow.h \
     items/operation.h \
-    items/condition.h \
     resources.h \
     items/customitemfactory.h \
     items/itemtypes.h \
     items/operationconnector.h \
-    items/conditionconnector.h \
     items/fancywire.h \
     commands/commands.h \
     commands/commandnodeaddconnector.h

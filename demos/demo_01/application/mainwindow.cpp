@@ -1,4 +1,5 @@
 #include <functional>
+#include <memory>
 #include <QToolBar>
 #include <QSlider>
 #include <QLabel>
@@ -16,13 +17,13 @@
 #include "../../../lib/view.h"
 #include "../../../lib/settings.h"
 #include "../../../lib/items/node.h"
+#include "../../../lib/items/label.h"
 #include "../../../lib/items/itemfactory.h"
 #include "mainwindow.h"
 #include "resources.h"
 #include "items/customitemfactory.h"
 #include "items/operation.h"
 #include "items/operationconnector.h"
-#include "items/condition.h"
 #include "items/fancywire.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -67,6 +68,7 @@ MainWindow::MainWindow(QWidget *parent)
     // Undo view
     _undoView = new QUndoView(_scene->undoStack());
     QDockWidget* undoDockWiget = new QDockWidget;
+    undoDockWiget->setWindowTitle("Command histoy");
     undoDockWiget->setWidget(_undoView);
     addDockWidget(Qt::LeftDockWidgetArea, undoDockWiget);
 
@@ -257,18 +259,29 @@ void MainWindow::demo()
     Operation* o1 = new Operation;
     o1->addConnector(std::make_unique<OperationConnector>(QPoint(0, 2), QStringLiteral("in")));
     o1->addConnector(std::make_unique<OperationConnector>(QPoint(8, 2), QStringLiteral("out")));
-    o1->setGridPos(4, 15);
+    o1->setGridPos(-7, -6);
     o1->setConnectorsMovable(true);
+    o1->label()->setText(QStringLiteral("Operation 1"));
     _scene->addItem(o1);
 
     Operation* o2 = new Operation;
     o2->addConnector(std::make_unique<OperationConnector>(QPoint(0, 2), QStringLiteral("in")));
     o2->addConnector(std::make_unique<OperationConnector>(QPoint(8, 2), QStringLiteral("out")));
-    o2->setGridPos(-5, -8);
+    o2->setGridPos(-4, 6);
     o2->setConnectorsMovable(true);
+    o1->label()->setText(QStringLiteral("Operation 2"));
     _scene->addItem(o2);
+    _scene->addItem(o1);
 
-    Condition* c = new Condition;
-    c->setGridPos(14, 5);
-    _scene->addItem(c);
+    Operation* o3 = new Operation;
+    o3->setSize(8, 6);
+    o3->addConnector(std::make_unique<OperationConnector>(QPoint(0, 2), QStringLiteral("in 1")));
+    o3->addConnector(std::make_unique<OperationConnector>(QPoint(0, 4), QStringLiteral("in 2")));
+    o3->addConnector(std::make_unique<OperationConnector>(QPoint(8, 3), QStringLiteral("out")));
+    o3->setGridPos(12, -2);
+    o3->setConnectorsMovable(true);
+    o3->label()->setText(QStringLiteral("Operation 3"));
+    _scene->addItem(o3);
+
+    _scene->undoStack()->clear();
 }

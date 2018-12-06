@@ -3,7 +3,9 @@
 #include <QLinearGradient>
 #include <QMenu>
 #include <QGraphicsSceneContextMenuEvent>
+#include <QInputDialog>
 #include "../../../lib/scene.h"
+#include "../../../lib/items/label.h"
 #include "itemtypes.h"
 #include "operation.h"
 #include "operationconnector.h"
@@ -18,6 +20,17 @@ const int SHADOW_THICKNESS     = 10;
 Operation::Operation(QGraphicsItem* parent) :
     QSchematic::Node(::ItemType::OperationType, parent)
 {
+    // Label
+    _label = std::make_shared<QSchematic::Label>(this);
+    _label->setMovable(false);
+    _label->setText(QStringLiteral("Unnamed"));
+
+    // Misc
+    connect(this, &QSchematic::Node::sizeChanged, [this]{
+        _label->setConnectionPoint(sizeSceneRect().center());
+        repositionLabel();
+    });
+    connect(_label.get(), &QSchematic::Label::textChanged, this, &Operation::repositionLabel);
     setSize(8, 4);
     setAllowMouseResize(true);
     setConnectorsMovable(false);
@@ -53,6 +66,12 @@ std::unique_ptr<QSchematic::Item> Operation::deepCopy() const
 void Operation::copyAttributes(Operation& dest) const
 {
     QSchematic::Node::copyAttributes(dest);
+}
+
+void Operation::repositionLabel()
+{
+    const auto& centerDiff = sizeSceneRect().center() - _label->textRect().center();
+    _label->setPos(centerDiff);
 }
 
 void Operation::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
@@ -148,6 +167,14 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
     // Create the menu
     QMenu menu;
     {
+        // Text
+        QAction* text = new QAction;
+        text->setText("Rename ...");
+        connect(text, &QAction::triggered, [this] {
+            const QString& newText = QInputDialog::getText(nullptr, "Rename Connector", "New connector text", QLineEdit::Normal, _label->text());
+            _label->setText(newText);
+        });
+
         // Add connector
         QAction* newConnector = new QAction;
         newConnector->setText("Add connector");
@@ -162,6 +189,7 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         });
 
         // Assemble
+        menu.addAction(text);
         menu.addAction(newConnector);
     }
 
@@ -169,3 +197,7 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
     menu.exec(event->screenPos());
 }
 
+std::shared_ptr<QSchematic::Label> Operation::label() const
+{
+    return _label;
+}
