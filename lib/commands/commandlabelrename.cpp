@@ -48,6 +48,7 @@ void CommandLabelRename::undo()
     _label->_text = _oldText;
     _label->calculateTextRect();
     _label->update();
+    emit _label->textChanged(_label->text());
 }
 
 void CommandLabelRename::redo()
@@ -59,4 +60,5 @@ void CommandLabelRename::redo()
     _label->_text = _newText;
     _label->calculateTextRect();
     _label->update();
+    emit _label->textChanged(_label->text());
 }

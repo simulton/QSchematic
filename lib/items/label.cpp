@@ -76,6 +76,7 @@ void Label::setText(const QString& text)
     } else {
         _text = text;
         calculateTextRect();
+        emit textChanged(_text);
     }
 }
 

@@ -8,11 +8,16 @@ namespace QSchematic {
 
     class Label : public Item
     {
+        Q_OBJECT
+        Q_DISABLE_COPY(Label)
+
         friend class CommandLabelRename;
+
+    signals:
+        void textChanged(const QString& newText);
 
     public:
         Label(QGraphicsItem* parent = nullptr);
-        Label(const Label& other) = delete;
         virtual ~Label() override = default;
 
         virtual QJsonObject toJson() const override;
