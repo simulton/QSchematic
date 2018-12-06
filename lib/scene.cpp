@@ -20,7 +20,7 @@ Scene::Scene(QObject* parent) :
     QGraphicsScene(parent),
     _mode(NormalMode),
     _newWireSegment(false),
-    _invertWirePosture(false)
+    _invertWirePosture(true)
 {
     // Undo stack
     _undoStack = new QUndoStack;
