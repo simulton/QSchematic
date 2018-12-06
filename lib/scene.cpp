@@ -715,7 +715,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                 QVector<QPointer<Item>> itemsToMove;
                 for (QGraphicsItem* graphicsItem : selectedItems()) {
                     Item* item = qgraphicsitem_cast<Item*>(graphicsItem);
-                    if (item) {
+                    if (item and item->isMovable()) {
                         itemsToMove << item;
                     }
                 }
