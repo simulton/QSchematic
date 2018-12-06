@@ -125,7 +125,7 @@ void Node::setSize(const QSize& size)
 
     _size = size;
 
-    emit sizeChanged(_size);
+    emit sizeChanged();
 }
 
 void Node::setSize(int width, int height)

@@ -18,7 +18,7 @@ namespace QSchematic {
         Q_DISABLE_COPY(Node)
 
     signals:
-        void sizeChanged(const QSize& newSize);
+        void sizeChanged();
 
     public:
         enum ResizePolicy {
