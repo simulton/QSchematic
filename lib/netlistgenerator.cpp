@@ -16,6 +16,7 @@ Netlist NetlistGenerator::generate(const Scene& scene)
 
     // Create a list of global nets (WireNets that share the same net name)
     QList<GlobalNet> globalNets;
+    unsigned anonNetCounter = 0;
     for (const WireNet* wireNet : scene.nets()) {
         // Sanity check
         if (!wireNet) {
@@ -44,7 +45,7 @@ Netlist NetlistGenerator::generate(const Scene& scene)
 
             // Prevent empty names
             if (newGlobalNet.name.isEmpty()) {
-                newGlobalNet.name = QString("N%1").arg(globalNets.count()+1, 3, 10, QChar('0'));
+                newGlobalNet.name = QString("N%1").arg(anonNetCounter++, 3, 10, QChar('0'));
             }
 
             globalNets.append(newGlobalNet);
