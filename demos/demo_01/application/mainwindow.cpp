@@ -19,6 +19,8 @@
 #include "../../../lib/items/node.h"
 #include "../../../lib/items/label.h"
 #include "../../../lib/items/itemfactory.h"
+#include "../../../lib/netlist.h"
+#include "../../../lib/netlistgenerator.h"
 #include "mainwindow.h"
 #include "resources.h"
 #include "items/customitemfactory.h"
@@ -102,6 +104,8 @@ MainWindow::MainWindow(QWidget *parent)
     editorToolbar->addSeparator();
     editorToolbar->addAction(_actionRouteStraightAngles);
     editorToolbar->addAction(_actionPreserveStraightAngles);
+    editorToolbar->addSeparator();
+    editorToolbar->addAction(_actionGenerateNetlist);
     addToolBar(editorToolbar);
 
     // View toolbar
@@ -124,7 +128,7 @@ MainWindow::MainWindow(QWidget *parent)
     resize(2800, 1500);
     _view->setZoomValue(1.5);
 
-    demo();
+    //demo();
 }
 
 bool MainWindow::save() const
@@ -154,7 +158,7 @@ bool MainWindow::load()
 
     return true;
 }
-
+#include <QDebug>
 void MainWindow::createActions()
 {
     // Open
@@ -230,6 +234,12 @@ void MainWindow::createActions()
         settingsChanged();
     });
 
+    _actionGenerateNetlist = new QAction("Generate netlist");
+    connect(_actionGenerateNetlist, &QAction::triggered, [this]{
+        auto netlist = QSchematic::NetlistGenerator::generate(*_scene);
+        qDebug() << netlist.toJson();
+    });
+
     // Debug mode
     _actionDebugMode = new QAction("Debug");
     _actionDebugMode->setCheckable(true);
@@ -251,27 +261,26 @@ void MainWindow::demo()
     _scene->setSceneRect(-500, -500, 3000, 3000);
 
     Operation* o1 = new Operation;
-    o1->addConnector(std::make_unique<OperationConnector>(QPoint(0, 2), QStringLiteral("in")));
-    o1->addConnector(std::make_unique<OperationConnector>(QPoint(8, 2), QStringLiteral("out")));
+    o1->addConnector(std::make_shared<OperationConnector>(QPoint(0, 2), QStringLiteral("in")));
+    o1->addConnector(std::make_shared<OperationConnector>(QPoint(8, 2), QStringLiteral("out")));
     o1->setGridPos(-7, -6);
     o1->setConnectorsMovable(true);
     o1->label()->setText(QStringLiteral("Operation 1"));
     _scene->addItem(o1);
 
     Operation* o2 = new Operation;
-    o2->addConnector(std::make_unique<OperationConnector>(QPoint(0, 2), QStringLiteral("in")));
-    o2->addConnector(std::make_unique<OperationConnector>(QPoint(8, 2), QStringLiteral("out")));
+    o2->addConnector(std::make_shared<OperationConnector>(QPoint(0, 2), QStringLiteral("in")));
+    o2->addConnector(std::make_shared<OperationConnector>(QPoint(8, 2), QStringLiteral("out")));
     o2->setGridPos(-4, 6);
     o2->setConnectorsMovable(true);
     o1->label()->setText(QStringLiteral("Operation 2"));
     _scene->addItem(o2);
-    _scene->addItem(o1);
 
     Operation* o3 = new Operation;
     o3->setSize(8, 6);
-    o3->addConnector(std::make_unique<OperationConnector>(QPoint(0, 2), QStringLiteral("in 1")));
-    o3->addConnector(std::make_unique<OperationConnector>(QPoint(0, 4), QStringLiteral("in 2")));
-    o3->addConnector(std::make_unique<OperationConnector>(QPoint(8, 3), QStringLiteral("out")));
+    o3->addConnector(std::make_shared<OperationConnector>(QPoint(0, 2), QStringLiteral("in 1")));
+    o3->addConnector(std::make_shared<OperationConnector>(QPoint(0, 4), QStringLiteral("in 2")));
+    o3->addConnector(std::make_shared<OperationConnector>(QPoint(8, 3), QStringLiteral("out")));
     o3->setGridPos(12, -2);
     o3->setConnectorsMovable(true);
     o3->label()->setText(QStringLiteral("Operation 3"));

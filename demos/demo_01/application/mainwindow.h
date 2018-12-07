@@ -45,5 +45,6 @@ private:
     QAction* _actionShowGrid;
     QAction* _actionRouteStraightAngles;
     QAction* _actionPreserveStraightAngles;
+    QAction* _actionGenerateNetlist;
     QAction* _actionDebugMode;
 };

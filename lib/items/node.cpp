@@ -5,6 +5,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include "node.h"
+#include "label.h"
 #include "itemfactory.h"
 #include "../commands/commandnoderesize.h"
 #include "../utils.h"
@@ -30,6 +31,11 @@ Node::Node(int type, QGraphicsItem* parent) :
     _connectorsSnapPolicy(Connector::NodeSizerectOutline),
     _connectorsSnapToGrid(true)
 {
+    // Label
+    _label = std::make_shared<QSchematic::Label>(this);
+    _label->setVisible(false);
+    _label->setMovable(true);
+    _label->setText(QStringLiteral("Unnamed"));
 }
 
 QJsonObject Node::toJson() const
@@ -45,7 +51,7 @@ QJsonObject Node::toJson() const
     object.insert("connectors snap to grid", connectorsSnapToGrid());
 
     QJsonArray connectorsArray;
-    for (const Connector* connector : connectors()) {
+    for (const auto& connector : connectors()) {
         connectorsArray << connector->toJson();
     }
     object.insert("connectors", connectorsArray);
@@ -194,7 +200,7 @@ QMap<RectanglePoint, QRect> Node::resizeHandles() const
     return map;
 }
 
-bool Node::addConnector(std::unique_ptr<Connector> connector)
+bool Node::addConnector(const std::shared_ptr<Connector>& connector)
 {
     if (!connector) {
         return false;
@@ -205,7 +211,7 @@ bool Node::addConnector(std::unique_ptr<Connector> connector)
     connector->setSnapPolicy(_connectorsSnapPolicy);
     connector->setSnapToGrid(_connectorsSnapToGrid);
 
-    _connectors << connector.release();
+    _connectors << connector;
 
     return true;
 }
@@ -215,9 +221,8 @@ bool Node::removeConnector(const QPoint& point)
     for (auto it = _connectors.begin(); it != _connectors.end(); it++) {
         Q_ASSERT(*it);
 
-        if (mapFromItem(*it, (*it)->connectionPoint()) == point) {
+        if (mapFromItem((*it).get(), (*it)->connectionPoint()) == point) {
             _connectors.removeAll(*it);
-            delete *it;
 
             return true;
         }
@@ -228,11 +233,10 @@ bool Node::removeConnector(const QPoint& point)
 
 void Node::clearConnectors()
 {
-    qDeleteAll(_connectors);
     _connectors.clear();
 }
 
-QList<Connector*> Node::connectors() const
+QList<std::shared_ptr<Connector>> Node::connectors() const
 {
     return _connectors;
 }
@@ -299,6 +303,11 @@ void Node::setConnectorsSnapToGrid(bool enabled)
 bool Node::connectorsSnapToGrid() const
 {
     return _connectorsSnapToGrid;
+}
+
+std::shared_ptr<Label> Node::label() const
+{
+    return _label;
 }
 
 void Node::mousePressEvent(QGraphicsSceneMouseEvent* event)
