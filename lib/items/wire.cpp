@@ -42,6 +42,7 @@ Wire::Wire(int type, QGraphicsItem* parent) :
 
     // ALWAYS snap to grid
     setSnapToGrid(true);
+    setMovable(false);
 }
 
 QJsonObject Wire::toJson() const
