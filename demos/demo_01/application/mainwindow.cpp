@@ -147,6 +147,8 @@ bool MainWindow::save() const
 
 bool MainWindow::load()
 {
+    _scene->clear();
+
     QFile file(QDir::homePath() + "/Documents/junk/qschematic.json");
     file.open(QFile::ReadOnly);
     if (!file.isOpen()) {
@@ -258,6 +260,7 @@ void MainWindow::settingsChanged()
 
 void MainWindow::demo()
 {
+    _scene->clear();
     _scene->setSceneRect(-500, -500, 3000, 3000);
 
     Operation* o1 = new Operation;

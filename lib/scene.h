@@ -40,6 +40,7 @@ namespace QSchematic {
         void setMode(Mode mode);
         void toggleWirePosture();
 
+        void clear();
         bool addItem(Item* item); // Takes ownership
         QList<Item*> items() const;
         QList<Item*> items(Item::ItemType itemType) const;

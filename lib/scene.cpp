@@ -165,6 +165,21 @@ void Scene::toggleWirePosture()
     _invertWirePosture = !_invertWirePosture;
 }
 
+void Scene::clear()
+{
+    // Base class implementation
+    QGraphicsScene::clear();
+
+    // Nets
+    _nets.clear();
+
+    // Selected items
+    _selectedItems.clear();
+
+    // Undo stack
+    _undoStack->clear();
+}
+
 bool Scene::addItem(Item* item)
 {
     setupNewItem(item);
