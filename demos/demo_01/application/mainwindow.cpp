@@ -128,7 +128,7 @@ MainWindow::MainWindow(QWidget *parent)
     resize(2800, 1500);
     _view->setZoomValue(1.5);
 
-    //demo();
+    demo();
 }
 
 bool MainWindow::save() const
