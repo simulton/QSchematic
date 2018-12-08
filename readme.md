@@ -7,6 +7,7 @@ Feature overview:
   - Add, remove, move, resize nodes
   - Connect nodes with wires
   - Undo/redo
+  - Drag'n'Drop
   - Generate netlists
   - Serialization to/from JSON
   - Completely customizable by inheriting from the provided classes
