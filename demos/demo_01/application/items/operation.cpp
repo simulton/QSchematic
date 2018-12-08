@@ -27,6 +27,10 @@ Operation::Operation(QGraphicsItem* parent) :
         label()->setConnectionPoint(sizeSceneRect().center());
         repositionLabel();
     });
+    connect(this, &QSchematic::Item::settingsChanged, [this]{
+        label()->setConnectionPoint(sizeSceneRect().center());
+        repositionLabel();
+    });
     connect(label().get(), &QSchematic::Label::textChanged, this, &Operation::repositionLabel);
     setSize(8, 4);
     setAllowMouseResize(true);

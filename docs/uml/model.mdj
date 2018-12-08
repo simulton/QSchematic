@@ -1695,6 +1695,24 @@
 									"target": {
 										"$ref": "AAAAAAFmwhdOmGYvbWY="
 									}
+								},
+								{
+									"_type": "UMLSignal",
+									"_id": "AAAAAAFnjorR2VkWshY=",
+									"_parent": {
+										"$ref": "AAAAAAFmuktEzYpHKLc="
+									},
+									"name": "settingsChanged",
+									"operations": [
+										{
+											"_type": "UMLOperation",
+											"_id": "AAAAAAFnjor5flpR/LM=",
+											"_parent": {
+												"$ref": "AAAAAAFnjorR2VkWshY="
+											},
+											"name": "settingsChanged"
+										}
+									]
 								}
 							],
 							"attributes": [
