@@ -27,23 +27,31 @@ CONFIG += c++14 silent
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    items/operation.cpp \
     resources.cpp \
+    commands/commandnodeaddconnector.cpp \
     items/customitemfactory.cpp \
-    items/operationconnector.cpp \
     items/fancywire.cpp \
-    commands/commandnodeaddconnector.cpp
+    items/operation.cpp \
+    items/operationconnector.cpp \
+    itemslibrary/itemslibrarymodel.cpp \
+    itemslibrary/itemslibraryview.cpp \
+    itemslibrary/itemsslibrarywidget.cpp
 
 HEADERS += \
         mainwindow.h \
-    items/operation.h \
     resources.h \
-    items/customitemfactory.h \
-    items/itemtypes.h \
-    items/operationconnector.h \
-    items/fancywire.h \
     commands/commands.h \
-    commands/commandnodeaddconnector.h
+    commands/commandnodeaddconnector.h \\
+    items/customitemfactory.h \
+    items/fancywire.h \
+    items/itemtypes.h \
+    items/operation.h \
+    items/operationconnector.h \
+    itemslibrary/itemslibrarymodel.h \
+    itemslibrary/itemslibrarymodelitem.h \
+    itemslibrary/itemslibraryview.h \
+    itemslibrary/itemsslibrarywidget.h \
+    itemslibrary/iteminfo.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

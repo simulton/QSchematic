@@ -65,6 +65,10 @@ namespace QSchematic {
         virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
         virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
         virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* mouseEvent) override;
+        virtual void dragEnterEvent(QGraphicsSceneDragDropEvent* event) override;
+        virtual void dragMoveEvent(QGraphicsSceneDragDropEvent* event) override;
+        virtual void dragLeaveEvent(QGraphicsSceneDragDropEvent* event) override;
+        virtual void dropEvent(QGraphicsSceneDragDropEvent* event) override;
         virtual void drawBackground(QPainter* painter, const QRectF& rect) override;
 
     private:

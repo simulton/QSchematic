@@ -14,6 +14,8 @@ namespace QSchematic {
     class Wire;
 }
 
+class ItemsLibraryWidget;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -36,6 +38,7 @@ private:
     QSchematic::Scene* _scene;
     QSchematic::View* _view;
     QSchematic::Settings _settings;
+    ItemsLibraryWidget* _itemLibraryWidget;
     QUndoView* _undoView;
     QAction* _actionOpen;
     QAction* _actionSave;

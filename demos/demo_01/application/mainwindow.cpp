@@ -25,6 +25,7 @@
 #include "items/operation.h"
 #include "items/operationconnector.h"
 #include "items/fancywire.h"
+#include "itemslibrary/itemsslibrarywidget.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -64,6 +65,13 @@ MainWindow::MainWindow(QWidget *parent)
     _view = new QSchematic::View;
     _view->setSettings(_settings);
     _view->setScene(_scene);
+
+    // Item library
+    _itemLibraryWidget = new ItemsLibraryWidget(this);
+    QDockWidget* itemLibraryDock = new QDockWidget;
+    itemLibraryDock->setWindowTitle("Items");
+    itemLibraryDock->setWidget(_itemLibraryWidget);
+    addDockWidget(Qt::LeftDockWidgetArea, itemLibraryDock);
 
     // Undo view
     _undoView = new QUndoView(_scene->undoStack());
@@ -124,6 +132,7 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowTitle("Schematic Editor");
     resize(2800, 1500);
     _view->setZoomValue(1.5);
+    _itemLibraryWidget->setPixmapScale(1.5);
 
     demo();
 }

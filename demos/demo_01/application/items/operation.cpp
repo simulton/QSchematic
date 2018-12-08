@@ -33,7 +33,7 @@ Operation::Operation(QGraphicsItem* parent) :
     connect(_label.get(), &QSchematic::Label::textChanged, this, &Operation::repositionLabel);
     setSize(8, 4);
     setAllowMouseResize(true);
-    setConnectorsMovable(false);
+    setConnectorsMovable(true);
     setConnectorsSnapPolicy(QSchematic::Connector::NodeSizerectOutline);
     setConnectorsSnapToGrid(true);
 }
@@ -72,6 +72,14 @@ void Operation::repositionLabel()
 {
     const auto& centerDiff = sizeSceneRect().center() - _label->textRect().center();
     _label->setPos(centerDiff);
+}
+
+QRectF Operation::boundingRect() const
+{
+    QRectF rect = sizeSceneRect();
+    rect.adjust(0, 0, SHADOW_THICKNESS, SHADOW_THICKNESS);
+
+    return rect;
 }
 
 void Operation::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)

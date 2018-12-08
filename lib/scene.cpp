@@ -5,11 +5,13 @@
 #include <QJsonArray>
 #include <QUndoStack>
 #include <QPixmap>
+#include <QMimeData>
 #include "scene.h"
 #include "settings.h"
 #include "commands/commanditemmove.h"
 #include "items/itemfactory.h"
 #include "items/item.h"
+#include "items/itemmimedata.h"
 #include "items/node.h"
 #include "items/connector.h"
 #include "items/wire.h"
@@ -875,6 +877,67 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
         return;
     }
 
+    }
+}
+
+
+void Scene::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
+{
+    // Create a list of mime formats we can handle
+    QStringList mimeFormatsWeCanHandle {
+        MIME_TYPE_NODE,
+    };
+
+    // Check whether we can handle this drag/drop
+    for (const QString& format : mimeFormatsWeCanHandle) {
+        if (event->mimeData()->hasFormat(format)) {
+            clearSelection();
+            event->acceptProposedAction();
+            return;
+        }
+    }
+
+    event->ignore();
+}
+
+void Scene::dragMoveEvent(QGraphicsSceneDragDropEvent* event)
+{
+    event->acceptProposedAction();
+}
+
+void Scene::dragLeaveEvent(QGraphicsSceneDragDropEvent* event)
+{
+    event->acceptProposedAction();
+}
+
+void Scene::dropEvent(QGraphicsSceneDragDropEvent* event)
+{
+    event->accept();
+
+    // Check the mime data
+    const QMimeData* mimeData = event->mimeData();
+    if (!mimeData) {
+        return;
+    }
+
+    // Nodes
+    if (mimeData->hasFormat(MIME_TYPE_NODE)) {
+        // Get the ItemMimeData
+        const ItemMimeData* mimeData = qobject_cast<const ItemMimeData*>(event->mimeData());
+        if (!mimeData) {
+            return;
+        }
+
+        // Get the Item
+        auto item = mimeData->item();
+        if (!item) {
+            return;
+        }
+
+        // Add to scene
+        item->setPos(event->scenePos());
+        setupNewItem(item.get());
+        addItem(item.release());
     }
 }
 
