@@ -541,7 +541,6 @@ void Wire::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
 
 void Wire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-    // ToDo: Merge the swich() statements into one
     Q_UNUSED(option);
     Q_UNUSED(widget);
 
