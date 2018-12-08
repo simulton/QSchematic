@@ -4,6 +4,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QUndoStack>
+#include <QPixmap>
 #include "scene.h"
 #include "settings.h"
 #include "commands/commanditemmove.h"
@@ -24,6 +25,14 @@ Scene::Scene(QObject* parent) :
 {
     // Undo stack
     _undoStack = new QUndoStack;
+
+    // Stuff
+    connect(this, &QGraphicsScene::sceneRectChanged, [this]{
+        renderCachedBackground();
+    });
+
+    // Prepare the background
+    renderCachedBackground();
 }
 
 QJsonObject Scene::toJson() const
@@ -123,6 +132,7 @@ void Scene::setSettings(const Settings& settings)
     _settings = settings;
 
     // Redraw
+    renderCachedBackground();
     update();
 }
 
@@ -870,14 +880,17 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 
 void Scene::drawBackground(QPainter* painter, const QRectF& rect)
 {
-    // Background pen
-    QPen backgroundPen;
-    backgroundPen.setStyle(Qt::NoPen);
+    painter->drawPixmap(rect.topLeft(), _backgroundPixmap);
+}
 
-    // Background brush
-    QBrush backgroundBrush;
-    backgroundBrush.setStyle(Qt::SolidPattern);
-    backgroundBrush.setColor(Qt::white);
+void Scene::renderCachedBackground()
+{
+    // Create the pixmap
+    QRect rect = sceneRect().toRect();
+    if (rect.isNull() or !rect.isValid()) {
+        return;
+    }
+    QPixmap pixmap(rect.width(), rect.height());
 
     // Grid pen
     QPen gridPen;
@@ -890,13 +903,15 @@ void Scene::drawBackground(QPainter* painter, const QRectF& rect)
     QBrush gridBrush;
     gridBrush.setStyle(Qt::NoBrush);
 
+    // Create a painter
+    QPainter painter(&pixmap);
+    painter.setRenderHint(QPainter::Antialiasing, _settings.antialiasing);
+
     // Draw background
-    painter->setPen(backgroundPen);
-    painter->setBrush(backgroundBrush);
-    painter->drawRect(rect);
+    pixmap.fill(Qt::white);
 
     // Draw the grid if supposed to
-    if (_settings.showGrid && (_settings.gridSize > 0)) {
+    if (_settings.showGrid and (_settings.gridSize > 0)) {
         qreal left = int(rect.left()) - (int(rect.left()) % _settings.gridSize);
         qreal top = int(rect.top()) - (int(rect.top()) % _settings.gridSize);
 
@@ -909,10 +924,16 @@ void Scene::drawBackground(QPainter* painter, const QRectF& rect)
         }
 
         // Draw the actual grid points
-        painter->setPen(gridPen);
-        painter->setBrush(gridBrush);
-        painter->drawPoints(points.data(), points.size());
+        painter.setPen(gridPen);
+        painter.setBrush(gridBrush);
+        painter.drawPoints(points.data(), points.size());
     }
+
+    painter.end();
+
+    // Update
+    _backgroundPixmap = pixmap;
+    update();
 }
 
 void Scene::setupNewItem(Item* item)

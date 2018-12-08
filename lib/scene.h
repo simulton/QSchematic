@@ -68,12 +68,14 @@ namespace QSchematic {
         virtual void drawBackground(QPainter* painter, const QRectF& rect) override;
 
     private:
+        void renderCachedBackground();
         void setupNewItem(Item* item);
         void addWireNet(std::unique_ptr<WireNet> wireNet);
         QList<Item*> itemsAt(const QPointF& scenePos, Qt::SortOrder order = Qt::DescendingOrder) const;
 
         QList<WireNet*> _nets;
         Settings _settings;
+        QPixmap _backgroundPixmap;
         std::function<std::unique_ptr<Wire>()> _wireFactory;
         Mode _mode;
         QScopedPointer<Wire> _newWire;

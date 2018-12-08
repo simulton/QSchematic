@@ -271,7 +271,6 @@ void MainWindow::demo()
     o2->setConnectorsMovable(true);
     o1->label()->setText(QStringLiteral("Operation 2"));
     _scene->addItem(o2);
-    _scene->addItem(o1);
 
     Operation* o3 = new Operation;
     o3->setSize(8, 6);
