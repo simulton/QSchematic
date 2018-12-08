@@ -86,15 +86,6 @@ MainWindow::MainWindow(QWidget *parent)
         setMenuBar(menuBar);
     }
 
-    // Grid size slider
-    QSlider* gridSize = new QSlider(Qt::Horizontal);
-    gridSize->setRange(1, 100);
-    gridSize->setValue(20);
-    connect(gridSize, &QSlider::valueChanged, [this](int value){
-        _settings.gridSize = value;
-        _scene->setSettings(_settings);
-    });
-
     // Toolbar
     QToolBar* editorToolbar = new QToolBar;
     editorToolbar->addAction(_actionUndo);
@@ -110,8 +101,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     // View toolbar
     QToolBar* viewToolbar = new QToolBar;
-    viewToolbar->addWidget(new QLabel("Grid size:"));
-    viewToolbar->addWidget(gridSize);
     viewToolbar->addAction(_actionShowGrid);
     addToolBar(viewToolbar);
 
