@@ -8,9 +8,13 @@ class OperationDemo1 : public Operation
     Q_DISABLE_COPY(OperationDemo1)
 
 public:
-    explicit OperationDemo1();
+    explicit OperationDemo1(QGraphicsItem* parent = nullptr);
     virtual ~OperationDemo1() override = default;
 
     virtual QJsonObject toJson() const override;
     virtual bool fromJson(const QJsonObject& object) override;
+    virtual std::unique_ptr<QSchematic::Item> deepCopy() const override;
+
+private:
+    void copyAttributes(OperationDemo1& dest) const;
 };

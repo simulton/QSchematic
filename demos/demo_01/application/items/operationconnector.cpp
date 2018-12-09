@@ -24,7 +24,6 @@ OperationConnector::OperationConnector(const QPoint& gridPoint, const QString& t
 {
     label()->setVisible(false);
     setForceTextDirection(true);
-    setForcedTextDirection(QSchematic::LeftToRight);
 }
 
 QJsonObject OperationConnector::toJson() const

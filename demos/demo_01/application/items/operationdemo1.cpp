@@ -9,11 +9,11 @@ struct ConnectorAttribute {
     QString name;
 };
 
-OperationDemo1::OperationDemo1() :
-    Operation(::ItemType::OperationDemo1Type)
+OperationDemo1::OperationDemo1(QGraphicsItem* parent) :
+    Operation(::ItemType::OperationDemo1Type, parent)
 {
     setSize(8, 8);
-    label()->setText("Demo 1");
+    label()->setText(QStringLiteral("Demo 1"));
 
     QVector<ConnectorAttribute> connectorAttributes = {
         { QPoint(0, 2), QStringLiteral("in 1") },
@@ -43,4 +43,17 @@ bool OperationDemo1::fromJson(const QJsonObject& object)
     Operation::fromJson(object["operation"].toObject());
 
     return true;
+}
+
+std::unique_ptr<QSchematic::Item> OperationDemo1::deepCopy() const
+{
+    auto clone = std::make_unique<OperationDemo1>(parentItem());
+    copyAttributes(*(clone.get()));
+
+    return clone;
+}
+
+void OperationDemo1::copyAttributes(OperationDemo1& dest) const
+{
+    Operation::copyAttributes(dest);
 }
