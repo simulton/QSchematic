@@ -35,7 +35,8 @@ SOURCES += \
     items/operationconnector.cpp \
     itemslibrary/itemslibrarymodel.cpp \
     itemslibrary/itemslibraryview.cpp \
-    itemslibrary/itemsslibrarywidget.cpp
+    itemslibrary/itemsslibrarywidget.cpp \
+    commands/commandnoderename.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -51,7 +52,8 @@ HEADERS += \
     itemslibrary/itemslibrarymodelitem.h \
     itemslibrary/itemslibraryview.h \
     itemslibrary/itemsslibrarywidget.h \
-    itemslibrary/iteminfo.h
+    itemslibrary/iteminfo.h \
+    commands/commandnoderename.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
