@@ -44,9 +44,7 @@ void ItemsLibraryView::startDrag(Qt::DropActions supportedActions)
     // Create the drag object
     QDrag* drag = new QDrag(this);
     drag->setMimeData(data);
-    QPixmap pixmap = m->item()->toPixmap();
-    QSize pixmapSize = pixmap.size();
-    drag->setPixmap(pixmap.scaled(pixmapSize*_scale, Qt::KeepAspectRatio, Qt::FastTransformation));
+    drag->setPixmap(m->item()->toPixmap(_scale));
     drag->setHotSpot(QPoint(0, 0));
 
     // Execute the drag

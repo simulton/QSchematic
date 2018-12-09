@@ -69,6 +69,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Item library
     _itemLibraryWidget = new ItemsLibraryWidget(this);
+    connect(_view, &QSchematic::View::zoomChanged, _itemLibraryWidget, &ItemsLibraryWidget::setPixmapScale);
     QDockWidget* itemLibraryDock = new QDockWidget;
     itemLibraryDock->setWindowTitle("Items");
     itemLibraryDock->setWidget(_itemLibraryWidget);
@@ -124,7 +125,6 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowTitle("Schematic Editor");
     resize(2800, 1500);
     _view->setZoomValue(1.5);
-    _itemLibraryWidget->setPixmapScale(1.5);
 
     demo();
 }
