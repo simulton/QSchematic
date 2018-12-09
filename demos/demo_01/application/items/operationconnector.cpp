@@ -22,7 +22,7 @@ const qreal PEN_WIDTH          = 1.5;
 OperationConnector::OperationConnector(const QPoint& gridPoint, const QString& text, QGraphicsItem* parent) :
     QSchematic::Connector(::ItemType::OperationConnectorType, gridPoint, text, parent)
 {
-    label()->setVisible(true);
+    label()->setVisible(false);
     setForceTextDirection(true);
     setForcedTextDirection(QSchematic::LeftToRight);
 }
