@@ -4,7 +4,6 @@
 #include <QBrush>
 #include <QJsonObject>
 #include "label.h"
-#include "../commands/commandlabelrename.h"
 #include "../scene.h"
 
 const QColor COLOR_LABEL             = QColor("#000000");
@@ -71,13 +70,9 @@ QRectF Label::boundingRect() const
 
 void Label::setText(const QString& text)
 {
-    if (scene()) {
-        scene()->undoStack()->push(new CommandLabelRename(this, text));
-    } else {
-        _text = text;
-        calculateTextRect();
-        emit textChanged(_text);
-    }
+    _text = text;
+    calculateTextRect();
+    emit textChanged(_text);
 }
 
 void Label::setFont(const QFont& font)

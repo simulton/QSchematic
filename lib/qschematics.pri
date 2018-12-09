@@ -19,8 +19,6 @@ HEADERS += \
     $$PWD/commands/commanditemmove.h \
     $$PWD/commands/commandnoderesize.h \
     $$PWD/commands/commands.h \
-    $$PWD/commands/commandlabelrename.h \
-    $$PWD/commands/commanditemsetvisible.h \
     $$PWD/items/itemmimedata.h
 
 SOURCES += \
@@ -41,6 +39,4 @@ SOURCES += \
     $$PWD/items/wireroundedcorners.cpp \
     $$PWD/commands/commanditemmove.cpp \
     $$PWD/commands/commandnoderesize.cpp \
-    $$PWD/commands/commandlabelrename.cpp \
-    $$PWD/commands/commanditemsetvisible.cpp \
     $$PWD/items/itemmimedata.cpp
