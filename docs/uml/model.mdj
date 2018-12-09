@@ -2770,7 +2770,6 @@
 										"$ref": "AAAAAAFmsx1Vl2Wko8g="
 									},
 									"name": "label",
-									"visibility": "protected",
 									"parameters": [
 										{
 											"_type": "UMLParameter",
@@ -5915,7 +5914,7 @@
 													"top": 1053,
 													"width": 256.84521484375,
 													"height": 13,
-													"text": "#label(): Label",
+													"text": "+label(): Label",
 													"horizontalAlignment": 0
 												}
 											],

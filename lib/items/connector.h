@@ -38,13 +38,13 @@ namespace QSchematic {
         virtual void update() override;
 
         QPoint connectionPoint() const;
+        std::shared_ptr<Label> label() const;
         virtual QRectF boundingRect() const override;
         virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value) override;
         virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
     protected:
         void copyAttributes(Connector& dest) const;
-        std::shared_ptr<Label> label() const;
 
     private:
         void calculateSymbolRect();
