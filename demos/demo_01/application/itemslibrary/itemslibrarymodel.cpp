@@ -35,7 +35,7 @@ void ItemsLibraryModel::createModel()
     endInsertRows();
 
     // Operations
-    addTreeItem("Operation", QIcon(), new ::Operation, rootOperations);
+    addTreeItem("Generic Operation", QIcon(), new ::Operation, rootOperations);
 }
 
 void ItemsLibraryModel::addTreeItem(const QString& name, const QIcon& icon, const QSchematic::Item* item, ItemsLibraryModelItem<itemType>* parent)
@@ -135,12 +135,17 @@ QVariant ItemsLibraryModel::data(const QModelIndex& index, int role) const
         return QVariant();
     }
 
+    // Retrieve the model item
     ItemsLibraryModelItem<itemType>* modelItem = static_cast<ItemsLibraryModelItem<itemType>*>(index.internalPointer());
     if (!modelItem) {
         return QVariant();
     }
-    switch (modelItem->type()) {
 
+    // Retrieve the ItemInfo
+    const ItemInfo* itemInfo = reinterpret_cast<const ItemInfo*>(modelItem->data());
+
+    // Return the appropriate data
+    switch (modelItem->type()) {
     case ItemsLibraryModel::RootOperations:
     {
         switch (role) {
@@ -153,8 +158,8 @@ QVariant ItemsLibraryModel::data(const QModelIndex& index, int role) const
     {
         switch (role) {
         case Qt::DisplayRole:
-#warning ToDo: return the name from the ItemInfo
-            return "Operation";
+            Q_ASSERT(itemInfo);
+            return itemInfo->name;
         }
     }
 
