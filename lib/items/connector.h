@@ -35,8 +35,6 @@ namespace QSchematic {
         bool forceTextDirection() const;
         void setForcedTextDirection(Direction direction);
         Direction textDirection() const;
-        void setLabelIsVisible(bool enabled);
-        bool labelIsVisible() const;
         virtual void update() override;
 
         QPoint connectionPoint() const;

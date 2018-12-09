@@ -135,16 +135,6 @@ Direction Connector::textDirection() const
     return _textDirection;
 }
 
-void Connector::setLabelIsVisible(bool enabled)
-{
-    _label->setVisible(enabled);
-}
-
-bool Connector::labelIsVisible() const
-{
-    return _label->isVisible();
-}
-
 void Connector::update()
 {
     calculateSymbolRect();

@@ -7,6 +7,7 @@
 #include <QInputDialog>
 #include "../../../lib/items/label.h"
 #include "../../../lib/scene.h"
+#include "../commands/commanditemvisibility.h"
 #include "../commands/commandlabelrename.h"
 #include "operationconnector.h"
 #include "itemtypes.h"
@@ -21,7 +22,7 @@ const qreal PEN_WIDTH          = 1.5;
 OperationConnector::OperationConnector(const QPoint& gridPoint, const QString& text, QGraphicsItem* parent) :
     QSchematic::Connector(::ItemType::OperationConnectorType, gridPoint, text, parent)
 {
-    setLabelIsVisible(false);
+    label()->setVisible(true);
     setForceTextDirection(true);
     setForcedTextDirection(QSchematic::LeftToRight);
 }
@@ -91,10 +92,14 @@ void OperationConnector::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         // Label visibility
         QAction* labelVisibility = new QAction;
         labelVisibility->setCheckable(true);
-        labelVisibility->setChecked(labelIsVisible());
+        labelVisibility->setChecked(label()->isVisible());
         labelVisibility->setText("Label visible");
         connect(labelVisibility, &QAction::toggled, [this](bool enabled) {
-            setLabelIsVisible(enabled);
+            if (scene()) {
+                scene()->undoStack()->push(new CommandItemVisibility(label(), enabled));
+            } else {
+                label()->setVisible(enabled);
+            }
         });
 
         // Text
