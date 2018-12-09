@@ -46,7 +46,7 @@ namespace QSchematic {
 
     protected:
         void copyAttributes(Connector& dest) const;
-        Label& label() const;
+        std::shared_ptr<Label> label() const;
 
     private:
         void calculateSymbolRect();
@@ -56,7 +56,7 @@ namespace QSchematic {
         QRectF _symbolRect;
         bool _forceTextDirection;
         Direction _textDirection;
-        Label* _label;
+        std::shared_ptr<Label> _label;
     };
 
 }

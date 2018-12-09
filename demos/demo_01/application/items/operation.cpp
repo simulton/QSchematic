@@ -10,7 +10,7 @@
 #include "operation.h"
 #include "operationconnector.h"
 #include "../commands/commandnodeaddconnector.h"
-#include "../commands/commandnoderename.h"
+#include "../commands/commandlabelrename.h"
 
 const QColor COLOR_HIGHLIGHTED = QColor(Qt::blue).lighter();
 const QColor COLOR_BODY_FILL   = QColor(Qt::gray).lighter(140);
@@ -186,7 +186,7 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
             const QString& newText = QInputDialog::getText(nullptr, "Rename Connector", "New connector text", QLineEdit::Normal, label()->text());
 
             if (scene()) {
-                scene()->undoStack()->push(new CommandNodeRename(this, newText));
+                scene()->undoStack()->push(new CommandLabelRename(label(), newText));
             } else {
                 label()->setText(newText);
             }

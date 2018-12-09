@@ -6,6 +6,8 @@
 #include <QJsonObject>
 #include <QInputDialog>
 #include "../../../lib/items/label.h"
+#include "../../../lib/scene.h"
+#include "../commands/commandlabelrename.h"
 #include "operationconnector.h"
 #include "itemtypes.h"
 
@@ -99,8 +101,13 @@ void OperationConnector::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         QAction* text = new QAction;
         text->setText("Rename ...");
         connect(text, &QAction::triggered, [this] {
-            const QString& newText = QInputDialog::getText(nullptr, "Rename Connector", "New connector text", QLineEdit::Normal, label().text());
-            label().setText(newText);
+            const QString& newText = QInputDialog::getText(nullptr, "Rename Connector", "New connector text", QLineEdit::Normal, label()->text());
+
+            if (scene()) {
+                scene()->undoStack()->push(new CommandLabelRename(label(), newText));
+            } else {
+                label()->setText(newText);
+            }
         });
 
         // Assemble

@@ -36,7 +36,7 @@ SOURCES += \
     itemslibrary/itemslibrarymodel.cpp \
     itemslibrary/itemslibraryview.cpp \
     itemslibrary/itemsslibrarywidget.cpp \
-    commands/commandnoderename.cpp
+    commands/commandlabelrename.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -53,7 +53,7 @@ HEADERS += \
     itemslibrary/itemslibraryview.h \
     itemslibrary/itemsslibrarywidget.h \
     itemslibrary/iteminfo.h \
-    commands/commandnoderename.h
+    commands/commandlabelrename.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

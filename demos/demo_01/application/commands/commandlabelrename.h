@@ -1,19 +1,17 @@
 #pragma once
 
 #include <QUndoCommand>
-#include <QPointer>
 #include <memory>
 
 namespace QSchematic
 {
-    class Node;
-    class Connector;
+    class Label;
 }
 
-class CommandNodeRename : public QUndoCommand
+class CommandLabelRename : public QUndoCommand
 {
 public:
-    CommandNodeRename(const QPointer<QSchematic::Node>& node, const QString& newText, QUndoCommand* parent = nullptr);
+    CommandLabelRename(const std::shared_ptr<QSchematic::Label>& label, const QString& newText, QUndoCommand* parent = nullptr);
 
     virtual int id() const override;
     virtual bool mergeWith(const QUndoCommand* command) override;
@@ -21,7 +19,7 @@ public:
     virtual void redo() override;
 
 private:
-    QPointer<QSchematic::Node> _node;
+    std::shared_ptr<QSchematic::Label> _label;
     QString _oldText;
     QString _newText;
 };

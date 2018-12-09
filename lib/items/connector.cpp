@@ -22,7 +22,7 @@ Connector::Connector(int type, const QPoint& gridPoint, const QString& text, QGr
     _textDirection(Direction::LeftToRight)
 {
     // Label
-    _label = new Label(this);
+    _label = std::make_shared<Label>(this);
     _label->setText(text);
 
     // Flags
@@ -88,9 +88,7 @@ void Connector::copyAttributes(Connector& dest) const
     dest._forceTextDirection = _forceTextDirection;
     dest._textDirection = _textDirection;
 
-    delete dest._label;
-    dest._label = dynamic_cast<Label*>(_label->deepCopy().release());
-    Q_ASSERT(dest._label);
+    dest._label = std::shared_ptr<Label>(qgraphicsitem_cast<Label*>(_label->deepCopy().release()));
 }
 
 void Connector::setSnapPolicy(Connector::SnapPolicy policy)
@@ -247,11 +245,9 @@ void Connector::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
     painter->drawRoundedRect(_symbolRect, _settings.gridSize/4, _settings.gridSize/4);
 }
 
-Label& Connector::label() const
+std::shared_ptr<Label> Connector::label() const
 {
-    Q_ASSERT(_label);
-
-    return *_label;
+    return _label;
 }
 
 void Connector::calculateSymbolRect()
