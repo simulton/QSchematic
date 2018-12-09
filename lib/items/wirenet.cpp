@@ -3,17 +3,18 @@
 #include <QJsonValue>
 #include "wirenet.h"
 #include "wire.h"
+#include "label.h"
 #include "itemfactory.h"
 
 using namespace QSchematic;
 
 WireNet::WireNet(QObject* parent) :
-    QObject(parent),
-    _label(*this)
+    QObject(parent)
 {
-    _label.setPos(0, 0);
-
-    connect(&_label, &WireNetLabel::highlightChanged, this, &WireNet::labelHighlightChanged);
+    // Label
+    _label = std::make_shared<Label>();
+    _label->setPos(0, 0);
+    connect(_label.get(), &Label::highlightChanged, this, &WireNet::labelHighlightChanged);
 }
 
 WireNet::~WireNet()
@@ -52,7 +53,7 @@ bool WireNet::fromJson(const QJsonObject& object)
         addWire(*newWire);
     }
 
-    connect(&_label, &WireNetLabel::highlightChanged, this, &WireNet::labelHighlightChanged);
+    connect(_label.get(), &Label::highlightChanged, this, &WireNet::labelHighlightChanged);
 
     return true;
 }
@@ -113,8 +114,8 @@ void WireNet::setName(const QString& name)
 {
     _name = name;
 
-    _label.setText(_name);
-    _label.setVisible(!_name.isEmpty());
+    _label->setText(_name);
+    _label->setVisible(!_name.isEmpty());
 }
 
 void WireNet::setHighlighted(bool highlighted)
@@ -129,7 +130,7 @@ void WireNet::setHighlighted(bool highlighted)
     }
 
     // Label
-    _label.setHighlighted(highlighted);
+    _label->setHighlighted(highlighted);
 
     emit highlightChanged(highlighted);
 }
@@ -170,7 +171,7 @@ QList<QPoint> WireNet::points() const
     return list;
 }
 
-WireNetLabel& WireNet::label()
+std::shared_ptr<Label> WireNet::label()
 {
     return _label;
 }

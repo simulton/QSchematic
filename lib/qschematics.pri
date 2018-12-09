@@ -6,7 +6,6 @@ HEADERS += \
     $$PWD/items/node.h \
     $$PWD/items/wire.h \
     $$PWD/items/wirenet.h \
-    $$PWD/items/wirenetlabel.h \
     $$PWD/items/wirepoint.h \
     $$PWD/scene.h \
     $$PWD/settings.h \
@@ -32,7 +31,6 @@ SOURCES += \
     $$PWD/items/node.cpp \
     $$PWD/items/wire.cpp \
     $$PWD/items/wirenet.cpp \
-    $$PWD/items/wirenetlabel.cpp \
     $$PWD/items/wirepoint.cpp \
     $$PWD/scene.cpp \
     $$PWD/settings.cpp \

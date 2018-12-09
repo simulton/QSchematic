@@ -6,12 +6,13 @@
 #include <memory>
 #include "../interfaces/json.h"
 #include "line.h"
-#include "wirenetlabel.h"
 
 namespace QSchematic {
 
+    class Item;
     class Wire;
     class WirePoint;
+    class Label;
 
     class WireNet : public QObject, public Json
     {
@@ -36,7 +37,7 @@ namespace QSchematic {
         QList<Wire*> wires() const;
         QList<Line> lineSegments() const;
         QList<QPoint> points() const;
-        WireNetLabel& label();  // Only use this to add the label to the scene!!!
+        std::shared_ptr<Label> label();
 
     signals:
         void pointMoved(Wire& wire, WirePoint& point);
@@ -52,7 +53,7 @@ namespace QSchematic {
 
         QList<Wire*> _wires;
         QString _name;
-        WireNetLabel _label;
+        std::shared_ptr<Label> _label;
     };
 
 }
