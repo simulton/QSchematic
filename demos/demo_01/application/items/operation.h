@@ -14,7 +14,7 @@ public:
     virtual QJsonObject toJson() const override;
     virtual bool fromJson(const QJsonObject& object) override;
     virtual std::unique_ptr<QSchematic::Item> deepCopy() const override;
-    virtual QRectF boundingRect() const;
+    virtual QRectF boundingRect() const override;
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event) override;
 
