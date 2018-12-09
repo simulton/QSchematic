@@ -83,7 +83,7 @@ namespace QSchematic {
         QPixmap _backgroundPixmap;
         std::function<std::unique_ptr<Wire>()> _wireFactory;
         Mode _mode;
-        QScopedPointer<Wire> _newWire;
+        std::shared_ptr<Wire> _newWire;
         bool _newWireSegment;
         bool _invertWirePosture;
         QPointF _lastMousePos;

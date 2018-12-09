@@ -156,7 +156,7 @@ void Scene::setMode(Scene::Mode mode)
 
     // Discard current wire/bus
     case WireMode:
-        _newWire.reset(nullptr);
+        _newWire.reset();
         break;
 
     default:
@@ -661,10 +661,9 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
                 if (_wireFactory) {
                     _newWire.reset(_wireFactory().release());
                 } else {
-                    _newWire.reset(new Wire);
+                    _newWire = std::make_shared<Wire>();
                 }
-                _newWire->setAcceptHoverEvents(false);
-                addItem(_newWire.data());
+                _undoStack->push(new CommandItemAdd(this, _newWire));
             }
             _newWire->appendPoint(mousetoGridPoint);
             _newWireSegment = true;
@@ -886,8 +885,9 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
             _newWire->setAcceptHoverEvents(true);
             _newWire->setFlag(QGraphicsItem::ItemIsSelectable, true);
             _newWire->simplify();
-            connect(_newWire.data(), &Wire::showPopup, this, &Scene::showPopup);
-            addWire(_newWire.take());
+            connect(_newWire.get(), &Wire::showPopup, this, &Scene::showPopup);
+            addWire(_newWire.get());
+            _newWire.reset();
 
             return;
         }
