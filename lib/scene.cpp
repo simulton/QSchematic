@@ -94,6 +94,10 @@ bool Scene::fromJson(const QJsonObject& object)
             QJsonObject object = value.toObject();
             if (!object.isEmpty()) {
                 std::unique_ptr<Item> node = ItemFactory::instance().fromJson(object);
+                if (!node) {
+                    qCritical("Scene::fromJson(): Couldn't restore node. Skipping.");
+                    continue;
+                }
                 node->fromJson(object);
                 addItem(node.release());
             }
