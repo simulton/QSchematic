@@ -55,9 +55,9 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
     // Retrieve the scene points as we'll need them a lot
     auto sceneWirePoints(sceneWirePointsRelative());
     simplify(sceneWirePoints);
-    QVector<QPoint> scenePoints;
+    QVector<WirePoint> scenePoints;
     for (const auto& wirePoint : sceneWirePoints) {
-        scenePoints << wirePoint.toPoint();
+        scenePoints << wirePoint;
     }
 
     // Nothing to do if there are no points
@@ -100,28 +100,34 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
         // Render
         for (int i = 0; i <= scenePoints.count()-2; i++) {
             // Retrieve points
-            QPoint p1 = scenePoints.at(i);
-            QPoint p2 = scenePoints.at(i+1);
+            WirePoint p1 = scenePoints.at(i);
+            WirePoint p2 = scenePoints.at(i+1);
 
             // If there are just two points we need to render the line just like this and we're done
             if (scenePoints.count() == 2) {
-                painter->drawLine(p1, p2);
+                painter->drawLine(p1.toPoint(), p2.toPoint());
                 break;
 
             // If we have two line segments we want to render an arc connecting them
             } else if (i < scenePoints.count()-2) {
                 // Retrieve the third point (now we have two wire segments defined by p1, p2 and p3)
-                QPoint p3 = scenePoints.at(i+2);
+                WirePoint p3 = scenePoints.at(i+2);
 
                 // Determine arc position/direction
                 // Also determine the actual line segments
-                QLineF line1(p1, p2);
-                QLineF line2(p2, p3);
+                QLineF line1(p1.toPoint(), p2.toPoint());
+                QLineF line2(p2.toPoint(), p3.toPoint());
                 QuarterCircleSegment segment = None;
                 {
                     int linePointAdjust = _settings.gridSize;
                     bool hasPrevious = true;
                     bool hasNext = true;
+
+                    // Overwrite line adjust if we're at a junction
+#warning ToDo: This needs fixing. The previous line segment is one grid unit too short
+                    if (p2.isJunction()) {
+                        linePointAdjust = 0;
+                    }
 
                     // Figure out whether we have a previous point
                     hasPrevious = (i != 0);
@@ -134,11 +140,10 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                     //     the three points are "not close" to each other
                     //  B: We need an 'S' instead of an arc as we shift the line by one grid cell.
                     //  C: We need a 'U' as the lines makes a U-turn
-                    QPoint d1(p2 - p1);
+                    QPoint d1(p2.toPoint() - p1.toPoint());
                     ConnectionType connectionType = Arc;
                     ConnectionDirection connectionDirection = Up;
                     if (i >= 1) {
-
                         if (qAbs(d1.y()) == settings().gridSize) {
                             if (p3.x() > p2.x()) {
                                 connectionType = SCurve;
@@ -248,6 +253,11 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                     }
                 }
 
+                // We certainly don't want an arc if this is a junction
+                if (p2.isJunction()) {
+                    segment = None;
+                }
+
                 // Render lines
                 if (i == 0) {
                     painter->drawLine(line1);
@@ -324,8 +334,8 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
         // Render
         painter->setPen(penHandle);
         painter->setBrush(brushHandle);
-        for (const QPoint& point : scenePoints) {
-            QRectF handleRect(point.x() - HANDLE_SIZE, point.y() - HANDLE_SIZE, 2*HANDLE_SIZE, 2*HANDLE_SIZE);
+        for (const WirePoint& point : scenePoints) {
+            QRectF handleRect(point.x() - HANDLE_SIZE, point.toPoint().y() - HANDLE_SIZE, 2*HANDLE_SIZE, 2*HANDLE_SIZE);
             painter->drawRect(handleRect);
         }
     }
