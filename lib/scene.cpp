@@ -733,8 +733,10 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                 }
 
                 // Perform the move
-                QVector2D moveBy(event->scenePos() - event->lastScenePos());
-                _undoStack->push(new CommandItemMove(itemsToMove, moveBy));
+                if (!itemsToMove.isEmpty()) {
+                    QVector2D moveBy(event->scenePos() - event->lastScenePos());
+                    _undoStack->push(new CommandItemMove(itemsToMove, moveBy));
+                }
 
             } else {
 
