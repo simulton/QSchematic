@@ -34,12 +34,15 @@ QJsonObject OperationDemo1::toJson() const
     QJsonObject object;
 
     object.insert("operation", Operation::toJson());
+    addTypeIdentifierToJson(object);
 
     return object;
 }
 
 bool OperationDemo1::fromJson(const QJsonObject& object)
 {
+    clearConnectors();
+
     Operation::fromJson(object["operation"].toObject());
 
     return true;

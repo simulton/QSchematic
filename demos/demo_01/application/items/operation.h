@@ -21,7 +21,4 @@ public:
 
 protected:
     void copyAttributes(Operation& dest) const;
-
-private slots:
-    void repositionLabel();
 };

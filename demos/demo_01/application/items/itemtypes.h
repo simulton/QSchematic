@@ -7,5 +7,6 @@ enum ItemType {
     OperationConnectorType,
     FancyWireType,
     OperationDemo1Type,
-    FlowStartType
+    FlowStartType,
+    FlowEndType
 };

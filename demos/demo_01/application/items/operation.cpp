@@ -27,15 +27,13 @@ Operation::Operation(int type, QGraphicsItem* parent) :
     label()->setText(QStringLiteral("Generic"));
     label()->setMovable(true);
     label()->setVisible(true);
+    label()->setGridPos(0, -1);
     connect(this, &QSchematic::Node::sizeChanged, [this]{
         label()->setConnectionPoint(sizeSceneRect().center());
-        repositionLabel();
     });
     connect(this, &QSchematic::Item::settingsChanged, [this]{
         label()->setConnectionPoint(sizeSceneRect().center());
-        repositionLabel();
     });
-    connect(label().get(), &QSchematic::Label::textChanged, this, &Operation::repositionLabel);
     setSize(8, 4);
     setAllowMouseResize(true);
     setConnectorsMovable(true);
@@ -78,12 +76,6 @@ std::unique_ptr<QSchematic::Item> Operation::deepCopy() const
 void Operation::copyAttributes(Operation& dest) const
 {
     QSchematic::Node::copyAttributes(dest);
-}
-
-void Operation::repositionLabel()
-{
-    const auto& centerDiff = sizeSceneRect().center() - label()->textRect().center();
-    label()->setPos(centerDiff);
 }
 
 QRectF Operation::boundingRect() const

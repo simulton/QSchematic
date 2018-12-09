@@ -6,6 +6,7 @@
 #include "../items/operation.h"
 #include "../items/operationdemo1.h"
 #include "../items/flowstart.h"
+#include "../items/flowend.h"
 #include "../../../lib/items/item.h"
 #include "../../../lib/items/itemmimedata.h"
 
@@ -48,6 +49,7 @@ void ItemsLibraryModel::createModel()
 
     // Flows
     addTreeItem("Start", QIcon(), new ::FlowStart, rootFlows);
+    addTreeItem("End", QIcon(), new ::FlowEnd, rootFlows);
 }
 
 void ItemsLibraryModel::addTreeItem(const QString& name, const QIcon& icon, const QSchematic::Item* item, ItemsLibraryModelItem<itemType>* parent)

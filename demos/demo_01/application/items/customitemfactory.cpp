@@ -8,6 +8,8 @@
 #include "operationdemo1.h"
 #include "customitemfactory.h"
 #include "fancywire.h"
+#include "flowstart.h"
+#include "flowend.h"
 
 std::unique_ptr<QSchematic::Item> CustomItemFactory::fromJson(const QJsonObject& object)
 {
@@ -31,6 +33,14 @@ std::unique_ptr<QSchematic::Item> CustomItemFactory::fromJson(const QJsonObject&
 
     case ItemType::FancyWireType:
         item.reset(new FancyWire);
+        break;
+
+    case ItemType::FlowStartType:
+        item.reset(new FlowStart);
+        break;
+
+    case ItemType::FlowEndType:
+        item.reset(new FlowEnd);
         break;
     }
 
