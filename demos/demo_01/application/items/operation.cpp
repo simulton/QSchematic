@@ -9,6 +9,7 @@
 #include "itemtypes.h"
 #include "operation.h"
 #include "operationconnector.h"
+#include "../commands/commanditemvisibility.h"
 #include "../commands/commandnodeaddconnector.h"
 #include "../commands/commandlabelrename.h"
 
@@ -192,6 +193,19 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
             }
         });
 
+        // Label visibility
+        QAction* labelVisibility = new QAction;
+        labelVisibility->setCheckable(true);
+        labelVisibility->setChecked(label()->isVisible());
+        labelVisibility->setText("Label visible");
+        connect(labelVisibility, &QAction::toggled, [this](bool enabled) {
+            if (scene()) {
+                scene()->undoStack()->push(new CommandItemVisibility(label(), enabled));
+            } else {
+                label()->setVisible(enabled);
+            }
+        });
+
         // Add connector
         QAction* newConnector = new QAction;
         newConnector->setText("Add connector");
@@ -207,6 +221,8 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 
         // Assemble
         menu.addAction(text);
+        menu.addAction(labelVisibility);
+        menu.addSeparator();
         menu.addAction(newConnector);
     }
 
