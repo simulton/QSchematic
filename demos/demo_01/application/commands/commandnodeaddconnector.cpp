@@ -33,7 +33,7 @@ void CommandNodeAddConnector::undo()
     }
 
     _node->removeConnector(_connector);
-    _connector->QGraphicsObject::setVisible(false);
+    _connector->setVisible(false);
 }
 
 void CommandNodeAddConnector::redo()
@@ -43,5 +43,5 @@ void CommandNodeAddConnector::redo()
     }
 
     _node->addConnector(_connector);
-    _connector->QGraphicsObject::setVisible(true);
+    _connector->setVisible(true);
 }
