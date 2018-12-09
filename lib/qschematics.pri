@@ -21,7 +21,8 @@ HEADERS += \
     $$PWD/items/itemmimedata.h \
     $$PWD/commands/commanditemadd.h \
     $$PWD/netlist.h \
-    $$PWD/netlistgenerator.h
+    $$PWD/netlistgenerator.h \
+    $$PWD/commands/commanditemremove.h
 
 SOURCES += \
     $$PWD/items/connector.cpp \
@@ -43,4 +44,5 @@ SOURCES += \
     $$PWD/items/itemmimedata.cpp \
     $$PWD/commands/commanditemadd.cpp \
     $$PWD/netlist.cpp \
-    $$PWD/netlistgenerator.cpp
+    $$PWD/netlistgenerator.cpp \
+    $$PWD/commands/commanditemremove.cpp

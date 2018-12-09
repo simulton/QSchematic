@@ -6,6 +6,7 @@
 #include <QInputDialog>
 #include "../../../lib/scene.h"
 #include "../../../lib/items/label.h"
+#include "../../../lib/commands/commanditemremove.h"
 #include "operation.h"
 #include "operationconnector.h"
 #include "../commands/commanditemvisibility.h"
@@ -217,11 +218,22 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
             }
         });
 
+        // Delete
+        QAction* deleteFromModel = new QAction;
+        deleteFromModel->setText("Delete");
+        connect(deleteFromModel, &QAction::triggered, [this] {
+            if (scene()) {
+                scene()->undoStack()->push(new QSchematic::CommandItemRemove(scene(), this));
+            }
+        });
+
         // Assemble
         menu.addAction(text);
         menu.addAction(labelVisibility);
         menu.addSeparator();
         menu.addAction(newConnector);
+        menu.addSeparator();
+        menu.addAction(deleteFromModel);
     }
 
     // Sow the menu
