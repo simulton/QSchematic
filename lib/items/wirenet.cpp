@@ -66,11 +66,24 @@ bool WireNet::addWire(Wire& wire)
     for (int i = 0; i < wire.points().count(); i++) {
         const WirePoint& point = wire.points().at(i);
         for (const Line& line : lineSegments()) {
+            wire.setPointIsJunction(i, false);
             if (line.containsPoint(point.toPoint(), 0)) {
                 wire.setPointIsJunction(i, true);
                 break;
             }
-            wire.setPointIsJunction(i, false);
+        }
+    }
+
+    // Check if we dropped on a point of the existing wire
+    // If so, mark that one as a junction
+    for (auto& existingWire : _wires) {
+        for (int i = 0; i < existingWire->wirePoints().count(); i++) {
+            const WirePoint& existingWirePoint = existingWire->wirePoints().at(i);
+            for (const auto& wirePoint : wire.points()) {
+                if (existingWirePoint == wirePoint) {
+                    existingWire->setPointIsJunction(i, true);
+                }
+            }
         }
     }
 
