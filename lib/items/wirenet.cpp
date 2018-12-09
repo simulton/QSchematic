@@ -84,7 +84,7 @@ bool WireNet::addWire(Wire& wire)
 
 bool WireNet::removeWire(Wire& wire)
 {
-    disconnect(&wire, 0, this, 0);
+    disconnect(&wire, nullptr, this, nullptr);
     _wires.removeAll(&wire);
 
     updateWireJunctions();
