@@ -13,6 +13,7 @@
 #include <QUndoView>
 #include <QDockWidget>
 #include <QGraphicsSceneContextMenuEvent>
+#include <QInputDialog>
 #include "../../../lib/scene.h"
 #include "../../../lib/view.h"
 #include "../../../lib/settings.h"
@@ -158,7 +159,7 @@ bool MainWindow::load()
 
     return true;
 }
-#include <QDebug>
+
 void MainWindow::createActions()
 {
     // Open
@@ -237,7 +238,9 @@ void MainWindow::createActions()
     _actionGenerateNetlist = new QAction("Generate netlist");
     connect(_actionGenerateNetlist, &QAction::triggered, [this]{
         auto netlist = QSchematic::NetlistGenerator::generate(*_scene);
-        qDebug() << netlist.toJson();
+        QJsonDocument document(netlist.toJson());
+
+        QInputDialog::getMultiLineText(this, "Netlist", "Generated netlist", document.toJson(QJsonDocument::Indented));
     });
 
     // Debug mode
