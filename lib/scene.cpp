@@ -898,7 +898,6 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
     }
 }
 
-
 void Scene::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
 {
     // Create a list of mime formats we can handle
