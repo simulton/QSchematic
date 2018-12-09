@@ -13,7 +13,7 @@ CommandItemAdd::CommandItemAdd(const QPointer<Scene>& scene, const std::shared_p
     QObject::connect(_scene.data(), &QObject::destroyed, [this]{
         setObsolete(true);
     });
-    setText(QStringLiteral("Add node"));
+    setText(QStringLiteral("Add item"));
 }
 
 int CommandItemAdd::id() const
