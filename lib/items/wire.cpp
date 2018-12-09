@@ -384,6 +384,11 @@ bool Wire::pointIsOnWire(const QPoint& point) const
     return false;
 }
 
+QVector<WirePoint> Wire::wirePoints() const
+{
+    return _points;
+}
+
 QVector<QPoint> Wire::points() const
 {
     QVector<QPoint> list;

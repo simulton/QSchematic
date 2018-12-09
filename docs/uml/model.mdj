@@ -9570,6 +9570,40 @@
 												},
 												{
 													"_type": "UMLOperationView",
+													"_id": "AAAAAAFnVheBlMhdDFY=",
+													"_parent": {
+														"$ref": "AAAAAAFnVhVq97umN6U="
+													},
+													"model": {
+														"$ref": "AAAAAAFnVheBaMhIkxk="
+													},
+													"font": "Arial;13;0",
+													"left": 1013,
+													"top": 1015,
+													"width": 316.84326171875,
+													"height": 13,
+													"text": "+points(): QPoint[0..*]",
+													"horizontalAlignment": 0
+												},
+												{
+													"_type": "UMLOperationView",
+													"_id": "AAAAAAFnkwYWi40ZPX4=",
+													"_parent": {
+														"$ref": "AAAAAAFnVhVq97umN6U="
+													},
+													"model": {
+														"$ref": "AAAAAAFnkwYWQ40Hgyg="
+													},
+													"font": "Arial;13;0",
+													"left": 1013,
+													"top": 1030,
+													"width": 316.84326171875,
+													"height": 13,
+													"text": "+wirePoints(): WirePoint[0..*]",
+													"horizontalAlignment": 0
+												},
+												{
+													"_type": "UMLOperationView",
 													"_id": "AAAAAAFnXKlAPQNQ0/M=",
 													"_parent": {
 														"$ref": "AAAAAAFnVhVq97umN6U="
@@ -9579,7 +9613,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 1013,
-													"top": 1015,
+													"top": 1045,
 													"width": 316.84326171875,
 													"height": 13,
 													"text": "+sceneWirePointsRelative(): WirePoint[0..*]",
@@ -9596,7 +9630,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 1013,
-													"top": 1030,
+													"top": 1060,
 													"width": 316.84326171875,
 													"height": 13,
 													"text": "+sceneWirePointsAbsolute(): WirePoint[0..*]",
@@ -9613,7 +9647,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 1013,
-													"top": 1045,
+													"top": 1075,
 													"width": 316.84326171875,
 													"height": 13,
 													"text": "+scenePointsRelative(): QPoint[0..*]",
@@ -9630,27 +9664,10 @@
 													},
 													"font": "Arial;13;0",
 													"left": 1013,
-													"top": 1060,
+													"top": 1090,
 													"width": 316.84326171875,
 													"height": 13,
 													"text": "+scenePointsAbsolute(): QPoint[0..*]",
-													"horizontalAlignment": 0
-												},
-												{
-													"_type": "UMLOperationView",
-													"_id": "AAAAAAFnVheBlMhdDFY=",
-													"_parent": {
-														"$ref": "AAAAAAFnVhVq97umN6U="
-													},
-													"model": {
-														"$ref": "AAAAAAFnVheBaMhIkxk="
-													},
-													"font": "Arial;13;0",
-													"left": 1013,
-													"top": 1075,
-													"width": 316.84326171875,
-													"height": 13,
-													"text": "+points(): QPoint[0..*]",
 													"horizontalAlignment": 0
 												},
 												{
@@ -9664,7 +9681,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 1013,
-													"top": 1090,
+													"top": 1105,
 													"width": 316.84326171875,
 													"height": 13,
 													"text": "+simplify()",
@@ -9681,7 +9698,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 1013,
-													"top": 1105,
+													"top": 1120,
 													"width": 316.84326171875,
 													"height": 13,
 													"text": "+movePointBy(index: int, moveBy: QVector2D)",
@@ -9698,7 +9715,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 1013,
-													"top": 1120,
+													"top": 1135,
 													"width": 316.84326171875,
 													"height": 13,
 													"text": "+movePointTo(index: int, moveTo: QPoint)",
@@ -9715,7 +9732,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 1013,
-													"top": 1135,
+													"top": 1150,
 													"width": 316.84326171875,
 													"height": 13,
 													"text": "+moveLineSegmentBy(index: int, moveBy: QVector2D)",
@@ -9732,7 +9749,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 1013,
-													"top": 1150,
+													"top": 1165,
 													"width": 316.84326171875,
 													"height": 13,
 													"text": "+setPointIsJunction(index: int, enabled: bool)",
@@ -9749,7 +9766,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 1013,
-													"top": 1165,
+													"top": 1180,
 													"width": 316.84326171875,
 													"height": 13,
 													"text": "+pointIsOnWire(point: QPoint): bool",
@@ -9766,7 +9783,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 1013,
-													"top": 1180,
+													"top": 1195,
 													"width": 316.84326171875,
 													"height": 13,
 													"text": "+lineSegments(): Line[0..*]",
@@ -9783,7 +9800,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 1013,
-													"top": 1195,
+													"top": 1210,
 													"width": 316.84326171875,
 													"height": 13,
 													"text": "#calculateBoundingRect()",
@@ -9800,7 +9817,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 1013,
-													"top": 1210,
+													"top": 1225,
 													"width": 316.84326171875,
 													"height": 13,
 													"text": "#removeDuplicatePoints(points: WirePoints[0..*])",
@@ -9817,7 +9834,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 1013,
-													"top": 1225,
+													"top": 1240,
 													"width": 316.84326171875,
 													"height": 13,
 													"text": "#removeObsoletePoints(points: WirePoints[0..*])",
@@ -9834,7 +9851,7 @@
 													},
 													"font": "Arial;13;0",
 													"left": 1013,
-													"top": 1240,
+													"top": 1255,
 													"width": 316.84326171875,
 													"height": 13,
 													"text": "#simplify(points: WirePoints[0..*])",
@@ -9845,7 +9862,7 @@
 											"left": 1008,
 											"top": 905,
 											"width": 326.84326171875,
-											"height": 353
+											"height": 368
 										},
 										{
 											"_type": "UMLReceptionCompartmentView",
@@ -9885,7 +9902,7 @@
 									"left": 1008,
 									"top": 880,
 									"width": 326.84326171875,
-									"height": 378,
+									"height": 393,
 									"nameCompartment": {
 										"$ref": "AAAAAAFnVhVq97ug8yQ="
 									},
@@ -9925,7 +9942,7 @@
 											"visible": false,
 											"font": "Arial;13;0",
 											"left": 1182,
-											"top": 1289,
+											"top": 1297,
 											"height": 13,
 											"alpha": 1.5707963267948966,
 											"distance": 15,
@@ -9946,7 +9963,7 @@
 											"visible": null,
 											"font": "Arial;13;0",
 											"left": 1197,
-											"top": 1289,
+											"top": 1297,
 											"height": 13,
 											"alpha": 1.5707963267948966,
 											"distance": 30,
@@ -9967,7 +9984,7 @@
 											"visible": false,
 											"font": "Arial;13;0",
 											"left": 1153,
-											"top": 1290,
+											"top": 1298,
 											"height": 13,
 											"alpha": -1.5707963267948966,
 											"distance": 15,
@@ -9987,7 +10004,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 1120,
-											"top": 1273,
+											"top": 1288,
 											"width": 37.92724609375,
 											"height": 13,
 											"alpha": -0.9380474369998082,
@@ -10010,7 +10027,7 @@
 											"visible": false,
 											"font": "Arial;13;0",
 											"left": 1196,
-											"top": 1279,
+											"top": 1294,
 											"height": 13,
 											"alpha": 0.7853981633974483,
 											"distance": 40,
@@ -10030,7 +10047,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 1184,
-											"top": 1272,
+											"top": 1287,
 											"width": 19.5126953125,
 											"height": 13,
 											"alpha": 0.8491415701403401,
@@ -10141,7 +10158,7 @@
 									"tail": {
 										"$ref": "AAAAAAFnVhVq9rufFG4="
 									},
-									"points": "1168:1257;1168:1336",
+									"points": "1168:1272;1168:1336",
 									"showVisibility": true,
 									"nameLabel": {
 										"$ref": "AAAAAAFnVhhXrswMoNI="
@@ -20026,6 +20043,50 @@
 								},
 								{
 									"_type": "UMLOperation",
+									"_id": "AAAAAAFnVheBaMhIkxk=",
+									"_parent": {
+										"$ref": "AAAAAAFnVhVq9rudwrA="
+									},
+									"name": "points",
+									"parameters": [
+										{
+											"_type": "UMLParameter",
+											"_id": "AAAAAAFnVheGSsipGb0=",
+											"_parent": {
+												"$ref": "AAAAAAFnVheBaMhIkxk="
+											},
+											"type": {
+												"$ref": "AAAAAAFmwhdOmGYvbWY="
+											},
+											"multiplicity": "0..*",
+											"direction": "return"
+										}
+									]
+								},
+								{
+									"_type": "UMLOperation",
+									"_id": "AAAAAAFnkwYWQ40Hgyg=",
+									"_parent": {
+										"$ref": "AAAAAAFnVhVq9rudwrA="
+									},
+									"name": "wirePoints",
+									"parameters": [
+										{
+											"_type": "UMLParameter",
+											"_id": "AAAAAAFnkwZCQI2V9Cc=",
+											"_parent": {
+												"$ref": "AAAAAAFnkwYWQ40Hgyg="
+											},
+											"type": {
+												"$ref": "AAAAAAFnUiqd4znAIFE="
+											},
+											"multiplicity": "0..*",
+											"direction": "return"
+										}
+									]
+								},
+								{
+									"_type": "UMLOperation",
 									"_id": "AAAAAAFnXKlABgM7mow=",
 									"_parent": {
 										"$ref": "AAAAAAFnVhVq9rudwrA="
@@ -20103,28 +20164,6 @@
 											"_id": "AAAAAAFnXKooJgX3Dw8=",
 											"_parent": {
 												"$ref": "AAAAAAFnXKoJywVpoUY="
-											},
-											"type": {
-												"$ref": "AAAAAAFmwhdOmGYvbWY="
-											},
-											"multiplicity": "0..*",
-											"direction": "return"
-										}
-									]
-								},
-								{
-									"_type": "UMLOperation",
-									"_id": "AAAAAAFnVheBaMhIkxk=",
-									"_parent": {
-										"$ref": "AAAAAAFnVhVq9rudwrA="
-									},
-									"name": "points",
-									"parameters": [
-										{
-											"_type": "UMLParameter",
-											"_id": "AAAAAAFnVheGSsipGb0=",
-											"_parent": {
-												"$ref": "AAAAAAFnVheBaMhIkxk="
 											},
 											"type": {
 												"$ref": "AAAAAAFmwhdOmGYvbWY="

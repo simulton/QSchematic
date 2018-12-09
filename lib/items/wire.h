@@ -34,6 +34,7 @@ namespace QSchematic {
         void removeFirstPoint();
         void removeLastPoint();
         void removePoint(const QPoint& point);
+        QVector<WirePoint> wirePoints() const;
         QVector<QPoint> points() const;
         QVector<WirePoint> sceneWirePointsRelative() const;
         QVector<WirePoint> sceneWirePointsAbsolute() const;
