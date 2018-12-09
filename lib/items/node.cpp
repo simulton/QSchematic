@@ -201,7 +201,7 @@ bool Node::addConnector(const std::shared_ptr<Connector>& connector)
     }
 
     connector->setParentItem(this);
-    connector->QGraphicsObject::setVisible(true);
+    connector->setVisible(true);
     connector->setMovable(_connectorsMovable);
     connector->setSnapPolicy(_connectorsSnapPolicy);
     connector->setSnapToGrid(_connectorsSnapToGrid);
@@ -218,7 +218,7 @@ bool Node::removeConnector(const std::shared_ptr<Connector>& connector)
     }
 
     connector->setParentItem(nullptr);
-    connector->QGraphicsObject::setVisible(false);
+    connector->setVisible(false);
 
     _connectors.removeAll(connector);
 

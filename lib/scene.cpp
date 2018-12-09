@@ -9,6 +9,7 @@
 #include "scene.h"
 #include "settings.h"
 #include "commands/commanditemmove.h"
+#include "commands/commanditemadd.h"
 #include "items/itemfactory.h"
 #include "items/item.h"
 #include "items/itemmimedata.h"
@@ -936,10 +937,10 @@ void Scene::dropEvent(QGraphicsSceneDragDropEvent* event)
             return;
         }
 
-        // Add to scene
+        // Add to the scene
         item->setPos(event->scenePos());
         setupNewItem(item.get());
-        addItem(item.release());
+        _undoStack->push(new CommandItemAdd(this, std::shared_ptr<Item>(item.release())));
     }
 }
 
