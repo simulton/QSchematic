@@ -1,6 +1,5 @@
 #include <QPainter>
 #include <QJsonObject>
-#include <QLinearGradient>
 #include <QMenu>
 #include <QGraphicsSceneContextMenuEvent>
 #include <QInputDialog>
@@ -16,6 +15,7 @@
 const QColor COLOR_HIGHLIGHTED = QColor(Qt::blue).lighter();
 const QColor COLOR_BODY_FILL   = QColor(Qt::gray).lighter(140);
 const QColor COLOR_BODY_BORDER = QColor(Qt::black);
+const QColor COLOR_SHADOW      = QColor(150, 150, 150, 50);
 const qreal PEN_WIDTH          = 1.5;
 const int SHADOW_THICKNESS     = 10;
 
@@ -125,22 +125,14 @@ void Operation::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
         QRect shadowRect(SHADOW_THICKNESS, SHADOW_THICKNESS, bodyRect.width(), bodyRect.height());
         qreal radius = _settings.gridSize/2;
 
-        // Shadow stuff
+        // Shadow
         {
-            // Gradient
-            QLinearGradient gradient;
-            gradient.setStart(0, 0);
-            gradient.setFinalStop(bodyRect.width(), 0);
-            QColor grey1(150, 150, 150, 125);
-            QColor grey2(225, 225, 225, 125);
-            gradient.setColorAt(0, grey1);
-            gradient.setColorAt(1, grey2);
-
             // Pen
             QPen pen(Qt::NoPen);
 
             // Brush
-            QBrush brush(gradient);
+            QBrush brush(Qt::SolidPattern);
+            brush.setColor(COLOR_SHADOW);
 
             // Render
             painter->setPen(pen);
