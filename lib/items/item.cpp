@@ -274,8 +274,8 @@ QPixmap Item::toPixmap(qreal scale)
 
     // Render
     QPainter painter(&pixmap);
-    painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.setRenderHint(QPainter::TextAntialiasing, true);
+    painter.setRenderHint(QPainter::Antialiasing, _settings.antialiasing);
+    painter.setRenderHint(QPainter::TextAntialiasing, _settings.antialiasing);
     painter.translate(-rect.topLeft());
     painter.scale(scale, scale);
     paint(&painter, nullptr, nullptr);
