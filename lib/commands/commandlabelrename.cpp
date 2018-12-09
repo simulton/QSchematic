@@ -1,8 +1,10 @@
-#include "../../../lib/items/label.h"
+#include "../items/label.h"
 #include "commands.h"
 #include "commandlabelrename.h"
 
-CommandLabelRename::CommandLabelRename(const std::shared_ptr<QSchematic::Label>& label, const QString& newText, QUndoCommand* parent) :
+using namespace QSchematic;
+
+CommandLabelRename::CommandLabelRename(const std::shared_ptr<Label>& label, const QString& newText, QUndoCommand* parent) :
     QUndoCommand(parent),
     _label(label),
     _newText(newText)

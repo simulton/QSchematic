@@ -28,7 +28,6 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     resources.cpp \
-    commands/commandnodeaddconnector.cpp \
     items/customitemfactory.cpp \
     items/fancywire.cpp \
     items/operation.cpp \
@@ -36,15 +35,14 @@ SOURCES += \
     itemslibrary/itemslibrarymodel.cpp \
     itemslibrary/itemslibraryview.cpp \
     itemslibrary/itemsslibrarywidget.cpp \
-    commands/commandlabelrename.cpp \
-    commands/commanditemvisibility.cpp \
-    items/operationdemo1.cpp
+    items/operationdemo1.cpp \
+    commands/commandnodeaddconnector.cpp
 
 HEADERS += \
         mainwindow.h \
     resources.h \
     commands/commands.h \
-    commands/commandnodeaddconnector.h \\
+    commands/commandnodeaddconnector.h \
     items/customitemfactory.h \
     items/fancywire.h \
     items/itemtypes.h \
@@ -55,8 +53,6 @@ HEADERS += \
     itemslibrary/itemslibraryview.h \
     itemslibrary/itemsslibrarywidget.h \
     itemslibrary/iteminfo.h \
-    commands/commandlabelrename.h \
-    commands/commanditemvisibility.h \
     items/operationdemo1.h
 
 # Default rules for deployment.

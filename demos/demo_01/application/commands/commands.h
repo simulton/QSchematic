@@ -3,7 +3,5 @@
 #include "../../../lib/commands/commands.h"
 
 enum CommandType {
-    ItemVisibilityCommandType = QSchematic::QSchematicCommandUserType + 1,
-    NodeAddConnectorCommandType,
-    LabelRenameCommandType
+    NodeAddConnectorCommandType = QSchematic::QSchematicCommandUserType + 1,
 };

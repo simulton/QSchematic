@@ -1,8 +1,10 @@
-#include "../../../lib/items/item.h"
+#include "../items/item.h"
 #include "commands.h"
 #include "commanditemvisibility.h"
 
-CommandItemVisibility::CommandItemVisibility(const std::shared_ptr<QSchematic::Item>& item, bool newVisibility, QUndoCommand* parent) :
+using namespace QSchematic;
+
+CommandItemVisibility::CommandItemVisibility(const std::shared_ptr<Item>& item, bool newVisibility, QUndoCommand* parent) :
     QUndoCommand(parent),
     _item(item),
     _newVisibility(newVisibility)

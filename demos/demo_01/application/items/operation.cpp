@@ -7,11 +7,11 @@
 #include "../../../lib/scene.h"
 #include "../../../lib/items/label.h"
 #include "../../../lib/commands/commanditemremove.h"
+#include "../../../lib/commands/commanditemvisibility.h"
+#include "../../../lib/commands/commandlabelrename.h"
 #include "operation.h"
 #include "operationconnector.h"
-#include "../commands/commanditemvisibility.h"
 #include "../commands/commandnodeaddconnector.h"
-#include "../commands/commandlabelrename.h"
 
 const QColor COLOR_HIGHLIGHTED = QColor(Qt::blue).lighter();
 const QColor COLOR_BODY_FILL   = QColor(Qt::gray).lighter(140);
@@ -186,7 +186,7 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
             const QString& newText = QInputDialog::getText(nullptr, "Rename Connector", "New connector text", QLineEdit::Normal, label()->text());
 
             if (scene()) {
-                scene()->undoStack()->push(new CommandLabelRename(label(), newText));
+                scene()->undoStack()->push(new QSchematic::CommandLabelRename(label(), newText));
             } else {
                 label()->setText(newText);
             }
@@ -199,7 +199,7 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         labelVisibility->setText("Label visible");
         connect(labelVisibility, &QAction::toggled, [this](bool enabled) {
             if (scene()) {
-                scene()->undoStack()->push(new CommandItemVisibility(label(), enabled));
+                scene()->undoStack()->push(new QSchematic::CommandItemVisibility(label(), enabled));
             } else {
                 label()->setVisible(enabled);
             }

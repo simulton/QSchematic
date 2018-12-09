@@ -15,14 +15,16 @@ HEADERS += \
     $$PWD/interfaces/json.h \
     $$PWD/items/itemfactory.h \
     $$PWD/items/wireroundedcorners.h \
-    $$PWD/commands/commanditemmove.h \
-    $$PWD/commands/commandnoderesize.h \
-    $$PWD/commands/commands.h \
     $$PWD/items/itemmimedata.h \
-    $$PWD/commands/commanditemadd.h \
     $$PWD/netlist.h \
     $$PWD/netlistgenerator.h \
-    $$PWD/commands/commanditemremove.h
+    $$PWD/commands/commanditemadd.h \
+    $$PWD/commands/commanditemmove.h \
+    $$PWD/commands/commanditemremove.h \
+    $$PWD/commands/commanditemvisibility.h \
+    $$PWD/commands/commandlabelrename.h \
+    $$PWD/commands/commandnoderesize.h \
+    $$PWD/commands/commands.h
 
 SOURCES += \
     $$PWD/items/connector.cpp \
@@ -39,10 +41,12 @@ SOURCES += \
     $$PWD/utils.cpp \
     $$PWD/items/itemfactory.cpp \
     $$PWD/items/wireroundedcorners.cpp \
-    $$PWD/commands/commanditemmove.cpp \
-    $$PWD/commands/commandnoderesize.cpp \
     $$PWD/items/itemmimedata.cpp \
-    $$PWD/commands/commanditemadd.cpp \
     $$PWD/netlist.cpp \
     $$PWD/netlistgenerator.cpp \
-    $$PWD/commands/commanditemremove.cpp
+    $$PWD/commands/commanditemadd.cpp \
+    $$PWD/commands/commanditemmove.cpp \
+    $$PWD/commands/commanditemremove.cpp \
+    $$PWD/commands/commanditemvisibility.cpp \
+    $$PWD/commands/commandlabelrename.cpp \
+    $$PWD/commands/commandnoderesize.cpp
