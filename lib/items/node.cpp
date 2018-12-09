@@ -49,6 +49,7 @@ QJsonObject Node::toJson() const
     object.insert("connectors movable", connectorsMovable());
     object.insert("connectors snap policy", connectorsSnapPolicy());
     object.insert("connectors snap to grid", connectorsSnapToGrid());
+    object.insert("label", label()->toJson());
 
     QJsonArray connectorsArray;
     for (const auto& connector : connectors()) {
@@ -72,6 +73,7 @@ bool Node::fromJson(const QJsonObject& object)
     setConnectorsMovable(object["connectors movable"].toBool());
     setConnectorsSnapPolicy(static_cast<Connector::SnapPolicy>(object["connectors snap policy"].toInt()));
     setConnectorsSnapToGrid(object["connectors snap to grid"].toBool());
+    label()->fromJson(object["label"].toObject());
 
     for (const QJsonValue& value : object["connectors"].toArray()) {
         QJsonObject object = value.toObject();

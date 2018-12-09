@@ -22,7 +22,8 @@ Operation::Operation(int type, QGraphicsItem* parent) :
     QSchematic::Node(type, parent)
 {
     // Misc
-    label()->setMovable(false);
+    label()->setText(QStringLiteral("Generic"));
+    label()->setMovable(true);
     label()->setVisible(true);
     connect(this, &QSchematic::Node::sizeChanged, [this]{
         label()->setConnectionPoint(sizeSceneRect().center());
@@ -45,7 +46,6 @@ QJsonObject Operation::toJson() const
     QJsonObject object;
 
     object.insert("node", QSchematic::Node::toJson());
-    object.insert("label", label()->toJson());
     addTypeIdentifierToJson(object);
 
     return object;
@@ -54,7 +54,6 @@ QJsonObject Operation::toJson() const
 bool Operation::fromJson(const QJsonObject& object)
 {
     QSchematic::Node::fromJson(object["node"].toObject());
-    label()->fromJson(object["label"].toObject());
 
     return true;
 }
