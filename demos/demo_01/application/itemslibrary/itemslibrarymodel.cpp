@@ -4,6 +4,7 @@
 #include "itemslibrarymodelitem.h"
 #include "iteminfo.h"
 #include "../items/operation.h"
+#include "../items/operationdemo1.h"
 #include "../../../lib/items/item.h"
 #include "../../../lib/items/itemmimedata.h"
 
@@ -35,7 +36,8 @@ void ItemsLibraryModel::createModel()
     endInsertRows();
 
     // Operations
-    addTreeItem("Generic Operation", QIcon(), new ::Operation, rootOperations);
+    addTreeItem("Generic", QIcon(), new ::Operation, rootOperations);
+    addTreeItem("Demo 1", QIcon(), new ::OperationDemo1, rootOperations);
 }
 
 void ItemsLibraryModel::addTreeItem(const QString& name, const QIcon& icon, const QSchematic::Item* item, ItemsLibraryModelItem<itemType>* parent)

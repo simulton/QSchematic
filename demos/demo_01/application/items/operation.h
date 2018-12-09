@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../../lib/items/node.h"
+#include "itemtypes.h"
 
 class Operation : public QSchematic::Node
 {
@@ -8,7 +9,7 @@ class Operation : public QSchematic::Node
     Q_DISABLE_COPY(Operation)
 
 public:
-    explicit Operation(QGraphicsItem* parent = nullptr);
+    explicit Operation(int type = ::ItemType::OperationType, QGraphicsItem* parent = nullptr);
     virtual ~Operation() override = default;
 
     virtual QJsonObject toJson() const override;

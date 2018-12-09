@@ -5,5 +5,6 @@
 enum ItemType {
     OperationType = QSchematic::Item::QSchematicItemUserType + 1,
     OperationConnectorType,
-    FancyWireType
+    FancyWireType,
+    OperationDemo1Type
 };

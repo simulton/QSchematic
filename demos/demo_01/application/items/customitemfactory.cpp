@@ -5,6 +5,7 @@
 #include "itemtypes.h"
 #include "operation.h"
 #include "operationconnector.h"
+#include "operationdemo1.h"
 #include "customitemfactory.h"
 #include "fancywire.h"
 
@@ -22,6 +23,10 @@ std::unique_ptr<QSchematic::Item> CustomItemFactory::fromJson(const QJsonObject&
 
     case ItemType::OperationConnectorType:
         item.reset(new OperationConnector);
+        break;
+
+    case ItemType::OperationDemo1Type:
+        item.reset(new OperationDemo1);
         break;
 
     case ItemType::FancyWireType:

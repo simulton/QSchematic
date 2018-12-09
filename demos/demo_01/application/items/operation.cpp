@@ -6,7 +6,6 @@
 #include <QInputDialog>
 #include "../../../lib/scene.h"
 #include "../../../lib/items/label.h"
-#include "itemtypes.h"
 #include "operation.h"
 #include "operationconnector.h"
 #include "../commands/commanditemvisibility.h"
@@ -19,8 +18,8 @@ const QColor COLOR_BODY_BORDER = QColor(Qt::black);
 const qreal PEN_WIDTH          = 1.5;
 const int SHADOW_THICKNESS     = 10;
 
-Operation::Operation(QGraphicsItem* parent) :
-    QSchematic::Node(::ItemType::OperationType, parent)
+Operation::Operation(int type, QGraphicsItem* parent) :
+    QSchematic::Node(type, parent)
 {
     // Misc
     label()->setMovable(false);
@@ -62,7 +61,7 @@ bool Operation::fromJson(const QJsonObject& object)
 
 std::unique_ptr<QSchematic::Item> Operation::deepCopy() const
 {
-    auto clone = std::make_unique<Operation>(parentItem());
+    auto clone = std::make_unique<Operation>(::ItemType::OperationType, parentItem());
     copyAttributes(*(clone.get()));
 
     return clone;
