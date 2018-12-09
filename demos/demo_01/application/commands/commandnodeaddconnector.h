@@ -13,7 +13,7 @@ namespace QSchematic
 class CommandNodeAddConnector : public QUndoCommand
 {
 public:
-    CommandNodeAddConnector(const QPointer<QSchematic::Node>& node, std::unique_ptr<QSchematic::Connector> connector, QUndoCommand* parent = nullptr);
+    CommandNodeAddConnector(const QPointer<QSchematic::Node>& node, const std::shared_ptr<QSchematic::Connector>& connector, QUndoCommand* parent = nullptr);
 
     virtual int id() const override;
     virtual bool mergeWith(const QUndoCommand* command) override;
@@ -22,5 +22,5 @@ public:
 
 private:
     QPointer<QSchematic::Node> _node;
-    std::unique_ptr<QSchematic::Connector> _connector;
+    std::shared_ptr<QSchematic::Connector> _connector;
 };

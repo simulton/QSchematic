@@ -10,6 +10,9 @@ CommandItemSetVisible::CommandItemSetVisible(const QPointer<Item>& item, bool vi
     _item(item),
     _newVisibility(visible)
 {
+    QObject::connect(_item.data(), &QObject::destroyed, [this]{
+        setObsolete(true);
+    });
     _oldVisibility = item->isVisible();
 
     setText(QStringLiteral("Change visibility"));

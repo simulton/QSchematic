@@ -266,16 +266,16 @@ void MainWindow::demo()
     _scene->setSceneRect(-500, -500, 3000, 3000);
 
     Operation* o1 = new Operation;
-    o1->addConnector(std::make_unique<OperationConnector>(QPoint(0, 2), QStringLiteral("in")));
-    o1->addConnector(std::make_unique<OperationConnector>(QPoint(8, 2), QStringLiteral("out")));
+    o1->addConnector(std::make_shared<OperationConnector>(QPoint(0, 2), QStringLiteral("in")));
+    o1->addConnector(std::make_shared<OperationConnector>(QPoint(8, 2), QStringLiteral("out")));
     o1->setGridPos(-7, -6);
     o1->setConnectorsMovable(true);
     o1->label()->setText(QStringLiteral("Operation 1"));
     _scene->addItem(o1);
 
     Operation* o2 = new Operation;
-    o2->addConnector(std::make_unique<OperationConnector>(QPoint(0, 2), QStringLiteral("in")));
-    o2->addConnector(std::make_unique<OperationConnector>(QPoint(8, 2), QStringLiteral("out")));
+    o2->addConnector(std::make_shared<OperationConnector>(QPoint(0, 2), QStringLiteral("in")));
+    o2->addConnector(std::make_shared<OperationConnector>(QPoint(8, 2), QStringLiteral("out")));
     o2->setGridPos(-4, 6);
     o2->setConnectorsMovable(true);
     o1->label()->setText(QStringLiteral("Operation 2"));
@@ -283,9 +283,9 @@ void MainWindow::demo()
 
     Operation* o3 = new Operation;
     o3->setSize(8, 6);
-    o3->addConnector(std::make_unique<OperationConnector>(QPoint(0, 2), QStringLiteral("in 1")));
-    o3->addConnector(std::make_unique<OperationConnector>(QPoint(0, 4), QStringLiteral("in 2")));
-    o3->addConnector(std::make_unique<OperationConnector>(QPoint(8, 3), QStringLiteral("out")));
+    o3->addConnector(std::make_shared<OperationConnector>(QPoint(0, 2), QStringLiteral("in 1")));
+    o3->addConnector(std::make_shared<OperationConnector>(QPoint(0, 4), QStringLiteral("in 2")));
+    o3->addConnector(std::make_shared<OperationConnector>(QPoint(8, 3), QStringLiteral("out")));
     o3->setGridPos(12, -2);
     o3->setConnectorsMovable(true);
     o3->label()->setText(QStringLiteral("Operation 3"));

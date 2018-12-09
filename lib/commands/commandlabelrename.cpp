@@ -12,6 +12,9 @@ CommandLabelRename::CommandLabelRename(const QPointer<Label>& label, const QStri
 {
     _oldText = label->text();
 
+    QObject::connect(_label.data(), &QObject::destroyed, [this]{
+        setObsolete(true);
+    });
     setText(QStringLiteral("Change label text"));
 }
 

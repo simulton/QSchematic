@@ -45,7 +45,7 @@ QJsonObject Node::toJson() const
     object.insert("connectors snap to grid", connectorsSnapToGrid());
 
     QJsonArray connectorsArray;
-    for (const Connector* connector : connectors()) {
+    for (const auto& connector : connectors()) {
         connectorsArray << connector->toJson();
     }
     object.insert("connectors", connectorsArray);
@@ -194,45 +194,43 @@ QMap<RectanglePoint, QRect> Node::resizeHandles() const
     return map;
 }
 
-bool Node::addConnector(std::unique_ptr<Connector> connector)
+bool Node::addConnector(const std::shared_ptr<Connector>& connector)
 {
     if (!connector) {
         return false;
     }
 
     connector->setParentItem(this);
+    connector->QGraphicsObject::setVisible(true);
     connector->setMovable(_connectorsMovable);
     connector->setSnapPolicy(_connectorsSnapPolicy);
     connector->setSnapToGrid(_connectorsSnapToGrid);
 
-    _connectors << connector.release();
+    _connectors << connector;
 
     return true;
 }
 
-bool Node::removeConnector(const QPoint& point)
+bool Node::removeConnector(const std::shared_ptr<Connector>& connector)
 {
-    for (auto it = _connectors.begin(); it != _connectors.end(); it++) {
-        Q_ASSERT(*it);
-
-        if (mapFromItem(*it, (*it)->connectionPoint()) == point) {
-            _connectors.removeAll(*it);
-            delete *it;
-
-            return true;
-        }
+    if (!connector or !_connectors.contains(connector)) {
+        return false;
     }
 
-    return false;
+    connector->setParentItem(nullptr);
+    connector->QGraphicsObject::setVisible(false);
+
+    _connectors.removeAll(connector);
+
+    return true;
 }
 
 void Node::clearConnectors()
 {
-    qDeleteAll(_connectors);
     _connectors.clear();
 }
 
-QList<Connector*> Node::connectors() const
+QList<std::shared_ptr<Connector>> Node::connectors() const
 {
     return _connectors;
 }

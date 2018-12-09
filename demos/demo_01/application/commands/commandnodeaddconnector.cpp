@@ -3,11 +3,14 @@
 #include "commands.h"
 #include "commandnodeaddconnector.h"
 
-CommandNodeAddConnector::CommandNodeAddConnector(const QPointer<QSchematic::Node>& node, std::unique_ptr<QSchematic::Connector> connector, QUndoCommand* parent) :
+CommandNodeAddConnector::CommandNodeAddConnector(const QPointer<QSchematic::Node>& node, const std::shared_ptr<QSchematic::Connector>& connector, QUndoCommand* parent) :
     QUndoCommand(parent),
     _node(node),
-    _connector(std::move(connector))
+    _connector(connector)
 {
+    QObject::connect(_node.data(), &QObject::destroyed, [this]{
+        setObsolete(true);
+    });
     setText(QStringLiteral("Add connector"));
 }
 
@@ -29,8 +32,8 @@ void CommandNodeAddConnector::undo()
         return;
     }
 
-#warning ToDo
-    //_node->removeConnector(_connector->connectionPoint());
+    _node->removeConnector(_connector);
+    _connector->QGraphicsObject::setVisible(false);
 }
 
 void CommandNodeAddConnector::redo()
@@ -39,6 +42,6 @@ void CommandNodeAddConnector::redo()
         return;
     }
 
-    auto connectorClone = qgraphicsitem_cast<QSchematic::Connector*>(_connector->deepCopy().release());
-    _node->addConnector(std::unique_ptr<QSchematic::Connector>(connectorClone));
+    _node->addConnector(_connector);
+    _connector->QGraphicsObject::setVisible(true);
 }

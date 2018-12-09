@@ -195,11 +195,8 @@ Qt::ItemFlags ItemsLibraryModel::flags(const QModelIndex& index) const
 
 QStringList ItemsLibraryModel::mimeTypes() const
 {
-    QStringList types;
 
-    types << "application/ugfx_item";
-
-    return types;
+    return { QSchematic::MIME_TYPE_NODE };
 }
 
 QMimeData* ItemsLibraryModel::mimeData(const QModelIndexList& indexes) const

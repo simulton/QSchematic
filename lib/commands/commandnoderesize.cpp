@@ -13,6 +13,9 @@ CommandNodeResize::CommandNodeResize(QPointer<Node> node, const QPoint& newGridP
 {
     _oldGridPos = node->gridPos();
     _oldSize = node->size();
+    QObject::connect(_node.data(), &QObject::destroyed, [this]{
+        setObsolete(true);
+    });
     setText(QStringLiteral("Node resize"));
 }
 

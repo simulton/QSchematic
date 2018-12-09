@@ -187,12 +187,12 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         QAction* newConnector = new QAction;
         newConnector->setText("Add connector");
         connect(newConnector, &QAction::triggered, [this, event] {
-            auto connector = std::make_unique<OperationConnector>(event->pos().toPoint(), QStringLiteral("Unnamed"), this);
+            auto connector = std::make_shared<OperationConnector>(event->pos().toPoint(), QStringLiteral("Unnamed"), this);
 
             if (scene()) {
-                scene()->undoStack()->push(new CommandNodeAddConnector(this, std::move(connector)));
+                scene()->undoStack()->push(new CommandNodeAddConnector(this, connector));
             } else {
-                addConnector(std::move(connector));
+                addConnector(connector);
             }
         });
 
