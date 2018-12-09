@@ -16,6 +16,7 @@ public:
     virtual QJsonObject toJson() const override;
     virtual bool fromJson(const QJsonObject& object) override;
     virtual std::unique_ptr<Item> deepCopy() const override;
+    virtual QRectF boundingRect() const override;
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
 protected:
@@ -23,4 +24,5 @@ protected:
 
 private:
     std::shared_ptr<OperationConnector> _connector;
+    QPolygon _symbolPolygon;
 };
