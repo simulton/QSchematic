@@ -24,7 +24,7 @@ namespace QSchematic {
 
         virtual QJsonObject toJson() const override;
         virtual bool fromJson(const QJsonObject& object) override;
-        virtual std::unique_ptr<Item> deepCopy() const;
+        virtual std::unique_ptr<Item> deepCopy() const override;
         virtual QRectF boundingRect() const override;
         virtual QPainterPath shape() const override;
 
@@ -34,6 +34,11 @@ namespace QSchematic {
         void removeFirstPoint();
         void removeLastPoint();
         void removePoint(const QPoint& point);
+        QVector<QPoint> points() const;
+        QVector<WirePoint> sceneWirePointsRelative() const;
+        QVector<WirePoint> sceneWirePointsAbsolute() const;
+        QVector<QPoint> scenePointsRelative() const;
+        QVector<QPoint> scenePointsAbsolute() const;
         void simplify();
         void movePointBy(int index, const QVector2D& moveBy);
         void movePointTo(int index, const QPoint& moveTo);
@@ -41,7 +46,6 @@ namespace QSchematic {
         void setPointIsJunction(int index, bool isJunction);
         bool pointIsOnWire(const QPoint& point) const;
 
-        QVector<QPoint> points() const;
         QList<QSchematic::Line> lineSegments() const;
 
     signals:
@@ -50,11 +54,6 @@ namespace QSchematic {
     protected:
         void copyAttributes(Wire& dest) const;
         static void simplify(QVector<WirePoint>& points);
-
-        QVector<WirePoint> sceneWirePointsRelative() const;
-        QVector<WirePoint> sceneWirePointsAbsolute() const;
-        QVector<QPoint> scenePointsRelative() const;
-        QVector<QPoint> scenePointsAbsolute() const;
         void calculateBoundingRect();
 
         virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;

@@ -78,6 +78,7 @@ namespace QSchematic {
         void moved(Item& item, const QVector2D& movedBy);
         void showPopup(const Item& item);
         void highlightChanged(const Item& item, bool isHighlighted);
+        void settingsChanged();
 
     protected:
         Settings _settings;

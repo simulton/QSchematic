@@ -200,6 +200,9 @@ void Item::setSettings(const Settings& settings)
     // Store the new settings
     _settings = settings;
 
+    // Let everyone know
+    emit settingsChanged();
+
     // Update
     update();
 }

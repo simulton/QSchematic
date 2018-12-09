@@ -19,6 +19,8 @@
 #include "../../../lib/items/node.h"
 #include "../../../lib/items/label.h"
 #include "../../../lib/items/itemfactory.h"
+#include "../../../lib/netlist.h"
+#include "../../../lib/netlistgenerator.h"
 #include "mainwindow.h"
 #include "resources.h"
 #include "items/customitemfactory.h"
@@ -47,8 +49,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Scene
     _scene->setSettings(_settings);
-    auto wireFactory = std::bind(&MainWindow::wireFactory, this);
-    _scene->setWireFactory(wireFactory);
+    _scene->setWireFactory([]{ return std::make_unique<FancyWire>(); });
     connect(_scene, &QSchematic::Scene::modeChanged, [this](QSchematic::Scene::Mode mode){
         switch (mode) {
         case QSchematic::Scene::NormalMode:
@@ -93,15 +94,6 @@ MainWindow::MainWindow(QWidget *parent)
         setMenuBar(menuBar);
     }
 
-    // Grid size slider
-    QSlider* gridSize = new QSlider(Qt::Horizontal);
-    gridSize->setRange(1, 100);
-    gridSize->setValue(20);
-    connect(gridSize, &QSlider::valueChanged, [this](int value){
-        _settings.gridSize = value;
-        _scene->setSettings(_settings);
-    });
-
     // Toolbar
     QToolBar* editorToolbar = new QToolBar;
     editorToolbar->addAction(_actionUndo);
@@ -111,12 +103,12 @@ MainWindow::MainWindow(QWidget *parent)
     editorToolbar->addSeparator();
     editorToolbar->addAction(_actionRouteStraightAngles);
     editorToolbar->addAction(_actionPreserveStraightAngles);
+    editorToolbar->addSeparator();
+    editorToolbar->addAction(_actionGenerateNetlist);
     addToolBar(editorToolbar);
 
     // View toolbar
     QToolBar* viewToolbar = new QToolBar;
-    viewToolbar->addWidget(new QLabel("Grid size:"));
-    viewToolbar->addWidget(gridSize);
     viewToolbar->addAction(_actionShowGrid);
     addToolBar(viewToolbar);
 
@@ -153,6 +145,8 @@ bool MainWindow::save() const
 
 bool MainWindow::load()
 {
+    _scene->clear();
+
     QFile file(QDir::homePath() + "/Documents/junk/qschematic.json");
     file.open(QFile::ReadOnly);
     if (!file.isOpen()) {
@@ -164,7 +158,7 @@ bool MainWindow::load()
 
     return true;
 }
-
+#include <QDebug>
 void MainWindow::createActions()
 {
     // Open
@@ -240,6 +234,12 @@ void MainWindow::createActions()
         settingsChanged();
     });
 
+    _actionGenerateNetlist = new QAction("Generate netlist");
+    connect(_actionGenerateNetlist, &QAction::triggered, [this]{
+        auto netlist = QSchematic::NetlistGenerator::generate(*_scene);
+        qDebug() << netlist.toJson();
+    });
+
     // Debug mode
     _actionDebugMode = new QAction("Debug");
     _actionDebugMode->setCheckable(true);
@@ -256,13 +256,9 @@ void MainWindow::settingsChanged()
     _scene->setSettings(_settings);
 }
 
-std::unique_ptr<QSchematic::Wire> MainWindow::wireFactory() const
-{
-    return std::unique_ptr<QSchematic::Wire>(new FancyWire);
-}
-
 void MainWindow::demo()
 {
+    _scene->clear();
     _scene->setSceneRect(-500, -500, 3000, 3000);
 
     Operation* o1 = new Operation;

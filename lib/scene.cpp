@@ -106,7 +106,7 @@ bool Scene::fromJson(const QJsonObject& object)
         for (const QJsonValue& value : array) {
             QJsonObject object = value.toObject();
             if (!object.isEmpty()) {
-                std::unique_ptr<WireNet> net(new WireNet);
+                auto net = std::make_unique<WireNet>();
                 net->fromJson(object);
 
                 for (Wire* wire : net->wires()) {
@@ -176,6 +176,21 @@ void Scene::setMode(Scene::Mode mode)
 void Scene::toggleWirePosture()
 {
     _invertWirePosture = !_invertWirePosture;
+}
+
+void Scene::clear()
+{
+    // Base class implementation
+    QGraphicsScene::clear();
+
+    // Nets
+    _nets.clear();
+
+    // Selected items
+    _selectedItems.clear();
+
+    // Undo stack
+    _undoStack->clear();
 }
 
 bool Scene::addItem(Item* item)
@@ -270,7 +285,7 @@ bool Scene::addWire(Wire* wire)
     }
 
     // No point of the new wire lies on an existing line segment - create a new wire net
-    std::unique_ptr<WireNet> newNet(new WireNet);
+    auto newNet = std::make_unique<WireNet>();
     newNet->addWire(*wire);
     addWireNet(std::move(newNet));
 

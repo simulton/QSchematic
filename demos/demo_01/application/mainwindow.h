@@ -32,7 +32,6 @@ public:
 
 private:
     void settingsChanged();
-    std::unique_ptr<QSchematic::Wire> wireFactory() const;
 
     QSchematic::Editor* _schematicEditor;
     QSchematic::Scene* _scene;
@@ -49,5 +48,6 @@ private:
     QAction* _actionShowGrid;
     QAction* _actionRouteStraightAngles;
     QAction* _actionPreserveStraightAngles;
+    QAction* _actionGenerateNetlist;
     QAction* _actionDebugMode;
 };

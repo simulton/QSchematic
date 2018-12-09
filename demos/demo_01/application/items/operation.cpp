@@ -20,17 +20,18 @@ const int SHADOW_THICKNESS     = 10;
 Operation::Operation(QGraphicsItem* parent) :
     QSchematic::Node(::ItemType::OperationType, parent)
 {
-    // Label
-    _label = std::make_shared<QSchematic::Label>(this);
-    _label->setMovable(false);
-    _label->setText(QStringLiteral("Unnamed"));
-
     // Misc
+    label()->setMovable(false);
+    label()->setVisible(true);
     connect(this, &QSchematic::Node::sizeChanged, [this]{
-        _label->setConnectionPoint(sizeSceneRect().center());
+        label()->setConnectionPoint(sizeSceneRect().center());
         repositionLabel();
     });
-    connect(_label.get(), &QSchematic::Label::textChanged, this, &Operation::repositionLabel);
+    connect(this, &QSchematic::Item::settingsChanged, [this]{
+        label()->setConnectionPoint(sizeSceneRect().center());
+        repositionLabel();
+    });
+    connect(label().get(), &QSchematic::Label::textChanged, this, &Operation::repositionLabel);
     setSize(8, 4);
     setAllowMouseResize(true);
     setConnectorsMovable(true);
@@ -43,6 +44,7 @@ QJsonObject Operation::toJson() const
     QJsonObject object;
 
     object.insert("node", QSchematic::Node::toJson());
+    object.insert("label", label()->toJson());
     addTypeIdentifierToJson(object);
 
     return object;
@@ -51,6 +53,7 @@ QJsonObject Operation::toJson() const
 bool Operation::fromJson(const QJsonObject& object)
 {
     QSchematic::Node::fromJson(object["node"].toObject());
+    label()->fromJson(object["label"].toObject());
 
     return true;
 }
@@ -70,8 +73,8 @@ void Operation::copyAttributes(Operation& dest) const
 
 void Operation::repositionLabel()
 {
-    const auto& centerDiff = sizeSceneRect().center() - _label->textRect().center();
-    _label->setPos(centerDiff);
+    const auto& centerDiff = sizeSceneRect().center() - label()->textRect().center();
+    label()->setPos(centerDiff);
 }
 
 QRectF Operation::boundingRect() const
@@ -179,8 +182,8 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         QAction* text = new QAction;
         text->setText("Rename ...");
         connect(text, &QAction::triggered, [this] {
-            const QString& newText = QInputDialog::getText(nullptr, "Rename Connector", "New connector text", QLineEdit::Normal, _label->text());
-            _label->setText(newText);
+            const QString& newText = QInputDialog::getText(nullptr, "Rename Connector", "New connector text", QLineEdit::Normal, label()->text());
+            label()->setText(newText);
         });
 
         // Add connector
@@ -203,9 +206,4 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 
     // Sow the menu
     menu.exec(event->screenPos());
-}
-
-std::shared_ptr<QSchematic::Label> Operation::label() const
-{
-    return _label;
 }

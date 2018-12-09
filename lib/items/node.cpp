@@ -5,6 +5,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include "node.h"
+#include "label.h"
 #include "itemfactory.h"
 #include "../commands/commandnoderesize.h"
 #include "../utils.h"
@@ -30,6 +31,11 @@ Node::Node(int type, QGraphicsItem* parent) :
     _connectorsSnapPolicy(Connector::NodeSizerectOutline),
     _connectorsSnapToGrid(true)
 {
+    // Label
+    _label = std::make_shared<QSchematic::Label>(this);
+    _label->setVisible(false);
+    _label->setMovable(true);
+    _label->setText(QStringLiteral("Unnamed"));
 }
 
 QJsonObject Node::toJson() const
@@ -297,6 +303,11 @@ void Node::setConnectorsSnapToGrid(bool enabled)
 bool Node::connectorsSnapToGrid() const
 {
     return _connectorsSnapToGrid;
+}
+
+std::shared_ptr<Label> Node::label() const
+{
+    return _label;
 }
 
 void Node::mousePressEvent(QGraphicsSceneMouseEvent* event)

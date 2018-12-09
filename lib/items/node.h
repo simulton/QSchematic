@@ -11,6 +11,7 @@ class QGraphicsSceneHoverEvent;
 namespace QSchematic {
 
     class Connector;
+    class Label;
 
     class Node : public Item
     {
@@ -64,6 +65,7 @@ namespace QSchematic {
         Connector::SnapPolicy connectorsSnapPolicy() const;
         void setConnectorsSnapToGrid(bool enabled);
         bool connectorsSnapToGrid() const;
+        std::shared_ptr<QSchematic::Label> label() const;
 
         virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
         virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
@@ -80,6 +82,7 @@ namespace QSchematic {
         void paintResizeHandles(QPainter& painter);
 
     private:
+        std::shared_ptr<Label> _label;
         Mode _mode;
         QPoint _lastMousePosWithGridMove;
         RectanglePoint _resizeHandle;
