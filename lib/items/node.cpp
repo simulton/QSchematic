@@ -111,10 +111,6 @@ void Node::copyAttributes(Node& dest) const
     dest._connectorsMovable = _connectorsMovable;
     dest._connectorsSnapPolicy = _connectorsSnapPolicy;
     dest._connectorsSnapToGrid = _connectorsSnapToGrid;
-    for (const auto& connector : _connectors) {
-        auto connectorClone = qgraphicsitem_cast<Connector*>(connector->deepCopy().release());
-        dest.addConnector(std::unique_ptr<Connector>(connectorClone));
-    }
 }
 
 Node::Mode Node::mode() const
