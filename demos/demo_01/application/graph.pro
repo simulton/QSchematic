@@ -36,7 +36,8 @@ SOURCES += \
     itemslibrary/itemslibraryview.cpp \
     itemslibrary/itemsslibrarywidget.cpp \
     items/operationdemo1.cpp \
-    commands/commandnodeaddconnector.cpp
+    commands/commandnodeaddconnector.cpp \
+    items/flowstart.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -53,7 +54,8 @@ HEADERS += \
     itemslibrary/itemslibraryview.h \
     itemslibrary/itemsslibrarywidget.h \
     itemslibrary/iteminfo.h \
-    items/operationdemo1.h
+    items/operationdemo1.h \
+    items/flowstart.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

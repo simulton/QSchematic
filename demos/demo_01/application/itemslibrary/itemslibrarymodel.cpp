@@ -5,6 +5,7 @@
 #include "iteminfo.h"
 #include "../items/operation.h"
 #include "../items/operationdemo1.h"
+#include "../items/flowstart.h"
 #include "../../../lib/items/item.h"
 #include "../../../lib/items/itemmimedata.h"
 
@@ -35,9 +36,18 @@ void ItemsLibraryModel::createModel()
     _rootItem->appendChild(rootOperations);
     endInsertRows();
 
+    // Root flows
+    ItemsLibraryModelItem<itemType>* rootFlows = new ItemsLibraryModelItem<itemType>(RootFlows, nullptr, _rootItem);
+    beginInsertRows(QModelIndex(), _rootItem->childCount(), _rootItem->childCount());
+    _rootItem->appendChild(rootFlows);
+    endInsertRows();
+
     // Operations
     addTreeItem("Generic", QIcon(), new ::Operation, rootOperations);
     addTreeItem("Demo 1", QIcon(), new ::OperationDemo1, rootOperations);
+
+    // Flows
+    addTreeItem("Start", QIcon(), new ::FlowStart, rootFlows);
 }
 
 void ItemsLibraryModel::addTreeItem(const QString& name, const QIcon& icon, const QSchematic::Item* item, ItemsLibraryModelItem<itemType>* parent)
@@ -157,6 +167,23 @@ QVariant ItemsLibraryModel::data(const QModelIndex& index, int role) const
     }
 
     case ItemsLibraryModel::Operation:
+    {
+        switch (role) {
+        case Qt::DisplayRole:
+            Q_ASSERT(itemInfo);
+            return itemInfo->name;
+        }
+    }
+
+    case ItemsLibraryModel::RootFlows:
+    {
+        switch (role) {
+        case Qt::DisplayRole:
+            return "Flows";
+        }
+    }
+
+    case ItemsLibraryModel::Flow:
     {
         switch (role) {
         case Qt::DisplayRole:

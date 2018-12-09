@@ -264,7 +264,7 @@ QPixmap Item::toPixmap(qreal scale)
 {
     // Retrieve the bounding rect
     QRect rect = boundingRect().toRect();
-    if (rect.isNull() || !rect.isValid()) {
+    if (rect.isNull() or !rect.isValid()) {
         return QPixmap();
     }
 

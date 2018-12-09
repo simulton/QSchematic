@@ -16,7 +16,9 @@ public:
     enum LibraryItems {
         Root,
         RootOperations,
-        Operation
+        Operation,
+        RootFlows,
+        Flow
     };
     Q_ENUM(LibraryItems)
 
