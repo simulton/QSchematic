@@ -20,7 +20,9 @@ HEADERS += \
     $$PWD/commands/commandnoderesize.h \
     $$PWD/commands/commands.h \
     $$PWD/items/itemmimedata.h \
-    $$PWD/commands/commanditemadd.h
+    $$PWD/commands/commanditemadd.h \
+    $$PWD/netlist.h \
+    $$PWD/netlistgenerator.h
 
 SOURCES += \
     $$PWD/items/connector.cpp \
@@ -41,4 +43,6 @@ SOURCES += \
     $$PWD/commands/commanditemmove.cpp \
     $$PWD/commands/commandnoderesize.cpp \
     $$PWD/items/itemmimedata.cpp \
-    $$PWD/commands/commanditemadd.cpp
+    $$PWD/commands/commanditemadd.cpp \
+    $$PWD/netlist.cpp \
+    $$PWD/netlistgenerator.cpp
