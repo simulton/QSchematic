@@ -15,11 +15,11 @@
 
 const QColor COLOR_BODY_FILL   = QColor(Qt::gray).lighter(140);
 const QColor COLOR_BODY_BORDER = QColor(Qt::black);
-const QColor COLOR_SHADOW      = QColor(150, 150, 150, 50);
+const QColor SHADOW_COLOR      = QColor(63, 63, 63, 100);
 const qreal PEN_WIDTH          = 1.5;
 const qreal SHADOW_OFFSET      = 7;
 const qreal SHADOW_BLUR_RADIUS = 10;
-#include <QGraphicsBlurEffect>
+
 Operation::Operation(int type, QGraphicsItem* parent) :
     QSchematic::Node(type, parent)
 {
@@ -46,7 +46,7 @@ Operation::Operation(int type, QGraphicsItem* parent) :
     auto graphicsEffect = new QGraphicsDropShadowEffect(this);
     graphicsEffect->setOffset(SHADOW_OFFSET);
     graphicsEffect->setBlurRadius(SHADOW_BLUR_RADIUS);
-    graphicsEffect->setColor(QColor(63, 63, 63, 100));
+    graphicsEffect->setColor(SHADOW_COLOR);
     setGraphicsEffect(graphicsEffect);
 }
 
