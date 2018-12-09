@@ -723,7 +723,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 
     case NormalMode:
     {
-        // Move if supposed to
+        // Move or resize if supposed to
         if (event->buttons() & Qt::LeftButton) {
             // Figure out if we're currently resizing something
             bool resizingNode = false;
@@ -735,7 +735,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                 }
             }
 
-            // Only move if we're not resizing a node
+            // Move
             if (!resizingNode) {
 
                 // Create a list of selected items
@@ -753,6 +753,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                     _undoStack->push(new CommandItemMove(itemsToMove, moveBy));
                 }
 
+            // Resize (and everything else)
             } else {
 
                 QGraphicsScene::mouseMoveEvent(event);
