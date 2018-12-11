@@ -25,7 +25,7 @@ public:
     MainWindow(QWidget* parent = nullptr);
     ~MainWindow() override = default;
 
-    bool save() const;
+    bool save();
     bool load();
     void createActions();
     void demo();

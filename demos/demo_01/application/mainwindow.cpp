@@ -14,6 +14,7 @@
 #include <QDockWidget>
 #include <QGraphicsSceneContextMenuEvent>
 #include <QInputDialog>
+#include <QFileDialog>
 #include "../../../lib/scene.h"
 #include "../../../lib/view.h"
 #include "../../../lib/settings.h"
@@ -29,6 +30,8 @@
 #include "items/operationconnector.h"
 #include "items/fancywire.h"
 #include "itemslibrary/itemsslibrarywidget.h"
+
+const QString FILE_FILTERS = "JSON (*.json)";
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -130,11 +133,19 @@ MainWindow::MainWindow(QWidget *parent)
     demo();
 }
 
-bool MainWindow::save() const
+bool MainWindow::save()
 {
+    // Create JSON document
     QJsonDocument document(_scene->toJson());
 
-    QFile file(QDir::homePath() + "/Documents/junk/qschematic.json");
+    // Prompt for a path
+    QString path = QFileDialog::getSaveFileName(this, "Save to file", QDir::homePath(), FILE_FILTERS);
+    if (path.isEmpty()) {
+        return false;
+    }
+
+    // Save
+    QFile file(path);
     file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate);
     if (!file.isOpen()) {
         return false;
@@ -146,14 +157,23 @@ bool MainWindow::save() const
 
 bool MainWindow::load()
 {
+    // Prompt for a path
+    QString path = QFileDialog::getOpenFileName(this, "Load from file", QDir::homePath(), FILE_FILTERS);
+    if (path.isEmpty()) {
+        return false;
+    }
+
+    // Get rid of everything existing
     _scene->clear();
 
-    QFile file(QDir::homePath() + "/Documents/junk/qschematic.json");
+    // Read the file
+    QFile file(path);
     file.open(QFile::ReadOnly);
     if (!file.isOpen()) {
         return false;
     }
 
+    // Load from file contents
     QJsonDocument document = QJsonDocument::fromJson(file.readAll());
     _scene->fromJson(document.object());
 
