@@ -70,7 +70,7 @@ namespace QSchematic {
         void setHighlighted(bool isHighlighted);
         void setHighlightEnabled(bool enabled);
         bool highlightEnabled() const;
-        QPixmap toPixmap(qreal scale = 1.0);
+        QPixmap toPixmap(QPointF& hotSpot, qreal scale = 1.0);
         virtual void update();
         virtual QWidget* popupInfobox() const;
 

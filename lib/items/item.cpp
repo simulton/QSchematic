@@ -260,13 +260,22 @@ bool Item::highlightEnabled() const
     return _highlightEnabled;
 }
 
-QPixmap Item::toPixmap(qreal scale)
+QPixmap Item::toPixmap(QPointF& hotSpot, qreal scale)
 {
     // Retrieve the bounding rect
-    QRect rect = boundingRect().toRect();
+    QRectF rectF = boundingRect();
+    rectF = rectF.united(childrenBoundingRect());
+
+    // Adjust the rectangle as the QPixmap doesn't handle negative coordinates
+    rectF.setWidth(rectF.width() - rectF.x());
+    rectF.setHeight(rectF.height() - rectF.y());
+    const QRect& rect = rectF.toRect();
     if (rect.isNull() or !rect.isValid()) {
         return QPixmap();
     }
+
+    // Provide the hot spot
+    hotSpot = -rectF.topLeft();
 
     // Create the pixmap
     QPixmap pixmap(rect.size() * scale);
@@ -276,12 +285,12 @@ QPixmap Item::toPixmap(qreal scale)
     QPainter painter(&pixmap);
     painter.setRenderHint(QPainter::Antialiasing, _settings.antialiasing);
     painter.setRenderHint(QPainter::TextAntialiasing, _settings.antialiasing);
-    painter.translate(-rect.topLeft());
     painter.scale(scale, scale);
+    painter.translate(hotSpot);
     paint(&painter, nullptr, nullptr);
     for (QGraphicsItem* child : childItems()) {
         painter.save();
-        painter.translate(child->mapToParent(pos()));
+        painter.translate(child->pos());
         child->paint(&painter, nullptr, nullptr);
         painter.restore();
     }
