@@ -82,7 +82,10 @@ void FlowStart::copyAttributes(FlowStart& dest) const
 
 QRectF FlowStart::boundingRect() const
 {
-    return _symbolPolygon.boundingRect();
+    QRectF rect = _symbolPolygon.boundingRect();
+    qreal adj = SHADOW_BLUR_RADIUS;
+
+    return rect.adjusted(-adj, -adj, adj, adj);
 }
 
 void FlowStart::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
