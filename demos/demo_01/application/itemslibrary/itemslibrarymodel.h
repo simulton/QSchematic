@@ -18,7 +18,9 @@ public:
         RootOperations,
         Operation,
         RootFlows,
-        Flow
+        Flow,
+        RootBascis,
+        Basic
     };
     Q_ENUM(LibraryItems)
 

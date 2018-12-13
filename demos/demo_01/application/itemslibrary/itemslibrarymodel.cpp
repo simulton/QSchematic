@@ -9,6 +9,7 @@
 #include "../items/flowend.h"
 #include "../../../lib/items/item.h"
 #include "../../../lib/items/itemmimedata.h"
+#include "../../../lib/items/label.h"
 
 ItemsLibraryModel::ItemsLibraryModel(QObject* parent) : QAbstractItemModel(parent)
 {
@@ -43,6 +44,12 @@ void ItemsLibraryModel::createModel()
     _rootItem->appendChild(rootFlows);
     endInsertRows();
 
+    // Root basics
+    ItemsLibraryModelItem<itemType>* rootBasics = new ItemsLibraryModelItem<itemType>(RootBascis, nullptr, _rootItem);
+    beginInsertRows(QModelIndex(), _rootItem->childCount(), _rootItem->childCount());
+    _rootItem->appendChild(rootBasics);
+    endInsertRows();
+
     // Operations
     addTreeItem("Generic", QIcon(), new ::Operation, rootOperations);
     addTreeItem("Demo 1", QIcon(), new ::OperationDemo1, rootOperations);
@@ -50,6 +57,12 @@ void ItemsLibraryModel::createModel()
     // Flows
     addTreeItem("Start", QIcon(), new ::FlowStart, rootFlows);
     addTreeItem("End", QIcon(), new ::FlowEnd, rootFlows);
+
+    // Basics
+    auto label = new QSchematic::Label;
+    label->setHasConnectionPoint(false);
+    label->setText(QStringLiteral("Label"));
+    addTreeItem("Label", QIcon(), label, rootBasics);
 }
 
 void ItemsLibraryModel::addTreeItem(const QString& name, const QIcon& icon, const QSchematic::Item* item, ItemsLibraryModelItem<itemType>* parent)
@@ -186,6 +199,23 @@ QVariant ItemsLibraryModel::data(const QModelIndex& index, int role) const
     }
 
     case ItemsLibraryModel::Flow:
+    {
+        switch (role) {
+        case Qt::DisplayRole:
+            Q_ASSERT(itemInfo);
+            return itemInfo->name;
+        }
+    }
+
+    case ItemsLibraryModel::RootBascis:
+    {
+        switch (role) {
+        case Qt::DisplayRole:
+            return "Basics";
+        }
+    }
+
+    case ItemsLibraryModel::Basic:
     {
         switch (role) {
         case Qt::DisplayRole:
