@@ -26,8 +26,8 @@ QJsonObject Label::toJson() const
 #warning ToDo: Add font
     object.insert("text", text());
     object.insert("has connection point", _hasConnectionPoint);
-    object.insert("connction point x", _connectionPoint.x());
-    object.insert("connction point y", _connectionPoint.y());
+    object.insert("connection point x", _connectionPoint.x());
+    object.insert("connection point y", _connectionPoint.y());
 
     object.insert("item", Item::toJson());
     addTypeIdentifierToJson(object);
