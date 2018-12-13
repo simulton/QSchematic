@@ -13,7 +13,8 @@ const qreal LABEL_TEXT_PADDING = 2;
 using namespace QSchematic;
 
 Label::Label(QGraphicsItem* parent) :
-    Item(Item::LabelType, parent)
+    Item(Item::LabelType, parent),
+    _hasConnectionPoint(true)
 {
     setSnapToGrid(false);
 }
@@ -24,6 +25,7 @@ QJsonObject Label::toJson() const
 
 #warning ToDo: Add font
     object.insert("text", text());
+    object.insert("has connection point", _hasConnectionPoint);
     object.insert("connction point x", _connectionPoint.x());
     object.insert("connction point y", _connectionPoint.y());
 
@@ -39,6 +41,7 @@ bool Label::fromJson(const QJsonObject& object)
     Item::fromJson(object["item"].toObject());
 
     setText(object["text"].toString());
+    _hasConnectionPoint = object["has connection point"].toBool(true);
     _connectionPoint.rx() = object["connection point x"].toInt();
     _connectionPoint.ry() = object["connection point y"].toInt();
 
@@ -80,6 +83,16 @@ void Label::setFont(const QFont& font)
     _font = font;
 
     calculateTextRect();
+}
+
+void Label::setHasConnectionPoint(bool enabled)
+{
+    _hasConnectionPoint = enabled;
+}
+
+bool Label::hasConnectionPoint() const
+{
+    return _hasConnectionPoint;
 }
 
 void Label::setConnectionPoint(const QPointF& connectionPoint)

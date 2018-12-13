@@ -30,6 +30,8 @@ namespace QSchematic {
         QString text() const;
         void setFont(const QFont& font);
         QFont font() const;
+        void setHasConnectionPoint(bool enabled);
+        bool hasConnectionPoint() const;
         void setConnectionPoint(const QPointF& connectionPoint);    // Parent coordinates
         QRectF textRect() const;
 
@@ -43,6 +45,7 @@ namespace QSchematic {
         QString _text;
         QFont _font;
         QRectF _textRect;
+        bool _hasConnectionPoint;
         QPointF _connectionPoint;   // Parent coordinates
     };
 
