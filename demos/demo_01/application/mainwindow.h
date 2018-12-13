@@ -32,6 +32,7 @@ public:
 
 private:
     void settingsChanged();
+    void print();
 
     QSchematic::Editor* _schematicEditor;
     QSchematic::Scene* _scene;
@@ -41,6 +42,7 @@ private:
     QUndoView* _undoView;
     QAction* _actionOpen;
     QAction* _actionSave;
+    QAction* _actionPrint;
     QAction* _actionUndo;
     QAction* _actionRedo;
     QAction* _actionModeNormal;

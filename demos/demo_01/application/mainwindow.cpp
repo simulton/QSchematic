@@ -15,6 +15,10 @@
 #include <QGraphicsSceneContextMenuEvent>
 #include <QInputDialog>
 #include <QFileDialog>
+#ifndef QT_NO_PRINTER
+    #include <QPrinter>
+    #include <QPrintDialog>
+#endif
 #include "../../../lib/scene.h"
 #include "../../../lib/view.h"
 #include "../../../lib/settings.h"
@@ -92,6 +96,8 @@ MainWindow::MainWindow(QWidget *parent)
         QMenu* fileMenu = new QMenu(QStringLiteral("&File"));
         fileMenu->addAction(_actionOpen);
         fileMenu->addAction(_actionSave);
+        fileMenu->addSeparator();
+        fileMenu->addAction(_actionPrint);
 
         // Menubar
         QMenuBar* menuBar = new QMenuBar;
@@ -198,6 +204,14 @@ void MainWindow::createActions()
         save();
     });
 
+    // Print
+    _actionPrint = new QAction;
+    _actionPrint->setText("Print");
+    _actionPrint->setShortcut(QKeySequence::Print);
+    connect(_actionPrint, &QAction::triggered, [this]{
+        print();
+    });
+
     // Undo
     _actionUndo = _scene->undoStack()->createUndoAction(this, QStringLiteral("Undo"));
     _actionUndo->setText("Undo");
@@ -277,6 +291,21 @@ void MainWindow::settingsChanged()
 {
     _view->setSettings(_settings);
     _scene->setSettings(_settings);
+}
+
+void MainWindow::print()
+{
+    Q_ASSERT(_scene);
+#ifndef QT_NO_PRINTER
+
+    QPrinter printer(QPrinter::HighResolution);
+    if (QPrintDialog(&printer).exec() == QDialog::Accepted) {
+        QPainter painter(&printer);
+        painter.setRenderHint(QPainter::Antialiasing);
+        _scene->render(&painter);
+    }
+
+#endif // QT_NO_PRINTER
 }
 
 void MainWindow::demo()

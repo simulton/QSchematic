@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui widgets
+qtHaveModule(printsupport): QT += printsupport
 
 TARGET = graph
 TEMPLATE = app
