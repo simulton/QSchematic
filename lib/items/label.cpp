@@ -63,6 +63,7 @@ void Label::copyAttributes(Label& dest) const
     dest._text = _text;
     dest._font = _font;
     dest._textRect = _textRect;
+    dest._hasConnectionPoint = _hasConnectionPoint;
     dest._connectionPoint = _connectionPoint;
 }
 
