@@ -130,7 +130,7 @@ void Label::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWi
     Q_UNUSED(widget)
 
     // Draw a dashed line to the wire if selected
-    if (isHighlighted()) {
+    if (isHighlighted() and _hasConnectionPoint) {
         // Line pen
         QPen penLine;
         penLine.setColor(COLOR_LABEL_HIGHLIGHTED);
