@@ -22,7 +22,8 @@ Connector::Connector(int type, const QPoint& gridPoint, const QString& text, QGr
     _textDirection(Direction::LeftToRight)
 {
     // Label
-    _label = std::make_shared<Label>(this);
+    _label = std::make_shared<Label>();
+    _label->setParentItem(this);
     _label->setText(text);
 
     // Flags
