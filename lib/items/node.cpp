@@ -32,7 +32,8 @@ Node::Node(int type, QGraphicsItem* parent) :
     _connectorsSnapToGrid(true)
 {
     // Label
-    _label = std::make_shared<QSchematic::Label>(this);
+    _label = std::make_shared<QSchematic::Label>();
+    _label->setParentItem(this);
     _label->setVisible(false);
     _label->setMovable(true);
     _label->setText(QStringLiteral("Unnamed"));

@@ -17,7 +17,7 @@ namespace QSchematic {
         void textChanged(const QString& newText);
 
     public:
-        Label(QGraphicsItem* parent = nullptr);
+        Label(int type = Item::LabelType, QGraphicsItem* parent = nullptr);
         virtual ~Label() override = default;
 
         virtual QJsonObject toJson() const override;

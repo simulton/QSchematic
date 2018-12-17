@@ -12,8 +12,8 @@ const qreal LABEL_TEXT_PADDING = 2;
 
 using namespace QSchematic;
 
-Label::Label(QGraphicsItem* parent) :
-    Item(Item::LabelType, parent),
+Label::Label(int type, QGraphicsItem* parent) :
+    Item(type, parent),
     _hasConnectionPoint(true)
 {
     setSnapToGrid(false);
@@ -50,7 +50,7 @@ bool Label::fromJson(const QJsonObject& object)
 
 std::unique_ptr<Item> Label::deepCopy() const
 {
-    auto clone = std::make_unique<Label>(parentItem());
+    auto clone = std::make_unique<Label>(type(), parentItem());
     copyAttributes(*(clone.get()));
 
     return clone;
