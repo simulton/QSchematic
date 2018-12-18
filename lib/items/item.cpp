@@ -59,8 +59,12 @@ bool Item::fromJson(const QJsonObject& object)
 
 void Item::copyAttributes(Item& dest) const
 {
+    // Base class
     dest.setParentItem(parentItem());
+    dest.setPos(pos());
+    dest.setVisible(isVisible());
 
+    // Attributes
     dest._snapToGrid = _snapToGrid;
     dest._highlightEnabled = _highlightEnabled;
     dest._highlighted = _highlighted;
