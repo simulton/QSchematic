@@ -58,8 +58,10 @@ std::unique_ptr<Item> Label::deepCopy() const
 
 void Label::copyAttributes(Label& dest) const
 {
+    // Base class
     Item::copyAttributes(dest);
 
+    // Attributes
     dest._text = _text;
     dest._font = _font;
     dest._textRect = _textRect;
