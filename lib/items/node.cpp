@@ -101,8 +101,15 @@ std::unique_ptr<Item> Node::deepCopy() const
 
 void Node::copyAttributes(Node& dest) const
 {
+    // Base class
     Item::copyAttributes(dest);
 
+    // Label
+    auto labelClone = qgraphicsitem_cast<Label*>(_label->deepCopy().release());
+    dest._label = std::shared_ptr<Label>(labelClone);
+    dest._label->setParentItem(&dest);
+
+    // Attributes
     dest._mode = _mode;
     dest._lastMousePosWithGridMove = _lastMousePosWithGridMove;
     dest._resizeHandle = _resizeHandle;
