@@ -82,14 +82,19 @@ void Connector::copyAttributes(Connector& dest) const
 {
     Q_ASSERT(_label);
 
+    // Base class
     Item::copyAttributes(dest);
 
+    // Label
+    auto labelClone = qgraphicsitem_cast<Label*>(_label->deepCopy().release());
+    dest._label = std::shared_ptr<Label>(labelClone);
+    dest._label->setParentItem(&dest);
+
+    // Attributes
     dest._snapPolicy = _snapPolicy;
     dest._symbolRect = _symbolRect;
     dest._forceTextDirection = _forceTextDirection;
     dest._textDirection = _textDirection;
-
-    dest._label = std::shared_ptr<Label>(qgraphicsitem_cast<Label*>(_label->deepCopy().release()));
 }
 
 void Connector::setSnapPolicy(Connector::SnapPolicy policy)
