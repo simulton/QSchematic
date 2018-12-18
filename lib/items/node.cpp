@@ -109,6 +109,14 @@ void Node::copyAttributes(Node& dest) const
     dest._label = std::shared_ptr<Label>(labelClone);
     dest._label->setParentItem(&dest);
 
+    // Connectors
+    dest._connectors.clear();
+    for (const auto& connector : _connectors) {
+        auto connectorClone = qgraphicsitem_cast<Connector*>(connector->deepCopy().release());
+        connectorClone->setParentItem(&dest);
+        dest._connectors << std::shared_ptr<Connector>(connectorClone);
+    }
+
     // Attributes
     dest._mode = _mode;
     dest._lastMousePosWithGridMove = _lastMousePosWithGridMove;
