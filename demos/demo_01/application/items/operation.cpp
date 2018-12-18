@@ -173,6 +173,19 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
             }
         });
 
+        // Duplicate
+        QAction* duplicate = new QAction;
+        duplicate->setText("Duplicate");
+        connect(duplicate, &QAction::triggered, [this] {
+            if (!scene()) {
+                return;
+            }
+
+            auto clone = deepCopy();
+            clone->setPos( pos() + QPointF(5*_settings.gridSize, 5*_settings.gridSize));
+            scene()->addItem(clone.release());
+        });
+
         // Delete
         QAction* deleteFromModel = new QAction;
         deleteFromModel->setText("Delete");
@@ -188,6 +201,7 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         menu.addSeparator();
         menu.addAction(newConnector);
         menu.addSeparator();
+        menu.addAction(duplicate);
         menu.addAction(deleteFromModel);
     }
 
