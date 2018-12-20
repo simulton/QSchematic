@@ -28,6 +28,9 @@ Scene::Scene(QObject* parent) :
 {
     // Undo stack
     _undoStack = new QUndoStack;
+    connect(_undoStack, &QUndoStack::cleanChanged, [this](bool isClean) {
+        emit isDirtyChanged(!isClean);
+    });
 
     // Stuff
     connect(this, &QGraphicsScene::sceneRectChanged, [this]{
@@ -182,6 +185,20 @@ void Scene::toggleWirePosture()
     _invertWirePosture = !_invertWirePosture;
 }
 
+bool Scene::isDirty() const
+{
+    Q_ASSERT(_undoStack);
+
+    return _undoStack->isClean();
+}
+
+void Scene::clearIsDirty()
+{
+    Q_ASSERT(_undoStack);
+
+    _undoStack->setClean();
+}
+
 void Scene::clear()
 {
     // Remove from scene
@@ -199,6 +216,7 @@ void Scene::clear()
 
     // Undo stack
     _undoStack->clear();
+    clearIsDirty();
 
     // Update
     update();

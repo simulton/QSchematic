@@ -40,6 +40,9 @@ namespace QSchematic {
         void setMode(Mode mode);
         void toggleWirePosture();
 
+        bool isDirty() const;
+        void clearIsDirty();
+
         void clear();
         bool addItem(Item* item); // Takes ownership
         QList<Item*> items() const;
@@ -60,6 +63,7 @@ namespace QSchematic {
 
     signals:
         void modeChanged(Mode newMode);
+        void isDirtyChanged(bool isDirty);
 
     protected:
         virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
