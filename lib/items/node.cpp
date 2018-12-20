@@ -76,7 +76,7 @@ bool Node::fromJson(const QJsonObject& object)
     setConnectorsSnapToGrid(object["connectors snap to grid"].toBool());
     label()->fromJson(object["label"].toObject());
 
-    _connectors.clear();
+    clearConnectors();
     for (const QJsonValue& value : object["connectors"].toArray()) {
         QJsonObject object = value.toObject();
         if (!object.isEmpty()) {
@@ -111,7 +111,7 @@ void Node::copyAttributes(Node& dest) const
     dest._label->setParentItem(&dest);
 
     // Connectors
-    dest._connectors.clear();
+    dest.clearConnectors();
     for (const auto& connector : _connectors) {
         auto connectorClone = qgraphicsitem_cast<Connector*>(connector->deepCopy().release());
         connectorClone->setParentItem(&dest);
@@ -248,6 +248,15 @@ bool Node::removeConnector(const std::shared_ptr<Connector>& connector)
 
 void Node::clearConnectors()
 {
+    // Remove from scene
+    auto s = scene();
+    if (s) {
+        for (auto connector : _connectors) {
+            s->removeItem(connector.get());
+        }
+    }
+
+    // Clear the local list
     _connectors.clear();
 }
 
