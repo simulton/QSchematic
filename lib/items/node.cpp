@@ -76,6 +76,7 @@ bool Node::fromJson(const QJsonObject& object)
     setConnectorsSnapToGrid(object["connectors snap to grid"].toBool());
     label()->fromJson(object["label"].toObject());
 
+    _connectors.clear();
     for (const QJsonValue& value : object["connectors"].toArray()) {
         QJsonObject object = value.toObject();
         if (!object.isEmpty()) {
