@@ -184,8 +184,12 @@ void Scene::toggleWirePosture()
 
 void Scene::clear()
 {
-    // Base class implementation
-    QGraphicsScene::clear();
+    // Remove from scene
+    // Do not use QGraphicsScene::clear() as that would also delete the items. However,
+    // we still need them as we manage them via smart pointers
+    for (auto item : QGraphicsScene::items()) {
+        removeItem(item);
+    }
 
     // Nets
     _nets.clear();
@@ -195,6 +199,9 @@ void Scene::clear()
 
     // Undo stack
     _undoStack->clear();
+
+    // Update
+    update();
 }
 
 bool Scene::addItem(Item* item)
