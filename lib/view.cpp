@@ -3,6 +3,7 @@
 #include <QScrollBar>
 #include <QAction>
 #include <QMenu>
+#include "commands/commanditemremove.h"
 #include "view.h"
 #include "scene.h"
 #include "settings.h"
@@ -75,6 +76,17 @@ void View::keyPressEvent(QKeyEvent* event)
     case Qt::Key_Escape:
         if (_scene) {
             _scene->setMode(Scene::NormalMode);
+        }
+        return;
+
+    case Qt::Key_Delete:
+        if (_scene) {
+            for (auto item : _scene->selectedItems()) {
+                auto qschematicItem = dynamic_cast<Item*>(item);
+                if (qschematicItem) {
+                    _scene->undoStack()->push(new CommandItemRemove(_scene, qschematicItem));
+                }
+            }
         }
         return;
 
