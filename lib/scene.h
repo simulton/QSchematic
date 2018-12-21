@@ -46,7 +46,7 @@ namespace QSchematic {
         void clear();
         bool addItem(Item* item); // Takes ownership
         QList<Item*> items() const;
-        QList<Item*> items(Item::ItemType itemType) const;
+        QList<Item*> items(int itemType) const;
         QList<Node*> nodes() const;
         bool addWire(Wire* wire);
         bool removeWire(Wire& wire);

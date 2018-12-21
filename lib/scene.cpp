@@ -189,7 +189,7 @@ bool Scene::isDirty() const
 {
     Q_ASSERT(_undoStack);
 
-    return !_undoStack->isClean();
+    return _undoStack->isClean();
 }
 
 void Scene::clearIsDirty()
@@ -248,7 +248,7 @@ QList<Item*> Scene::items() const
     return items;
 }
 
-QList<Item*> Scene::items(Item::ItemType itemType) const
+QList<Item*> Scene::items(int itemType) const
 {
     QList<Item*> items;
 

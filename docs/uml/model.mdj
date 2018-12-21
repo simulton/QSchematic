@@ -746,10 +746,8 @@
 											"_parent": {
 												"$ref": "AAAAAAFnUwwFM9aWzIo="
 											},
-											"name": "type",
-											"type": {
-												"$ref": "AAAAAAFmukvgjIsM9T8="
-											}
+											"name": "type ",
+											"type": "int"
 										},
 										{
 											"_type": "UMLParameter",
@@ -12758,7 +12756,7 @@
 													"top": 373,
 													"width": 367.1865234375,
 													"height": 13,
-													"text": "+items(type: ItemType): Item[0..*]",
+													"text": "+items(type : int): Item[0..*]",
 													"horizontalAlignment": 0
 												},
 												{
