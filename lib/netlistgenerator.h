@@ -64,6 +64,7 @@ namespace QSchematic
             // Export nets
             QVector<Net<TNode, TConnector>> nets;
             for (const auto& globalNet : globalNets) {
+                // Create the new Net
                 Net<TNode, TConnector> net;
                 net.name = globalNet.name;
 
