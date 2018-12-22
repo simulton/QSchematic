@@ -8,7 +8,7 @@ Feature overview:
   - Connect nodes with wires
   - Undo/redo
   - Drag'n'Drop
-  - Generate netlists
+  - Template based netlist generation
   - Serialization to/from JSON
   - Completely customizable by inheriting from the provided classes
 

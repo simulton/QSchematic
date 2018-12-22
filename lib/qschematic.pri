@@ -42,8 +42,6 @@ SOURCES += \
     $$PWD/items/itemfactory.cpp \
     $$PWD/items/wireroundedcorners.cpp \
     $$PWD/items/itemmimedata.cpp \
-    $$PWD/netlist.cpp \
-    $$PWD/netlistgenerator.cpp \
     $$PWD/commands/commanditemadd.cpp \
     $$PWD/commands/commanditemmove.cpp \
     $$PWD/commands/commanditemremove.cpp \
