@@ -1,4 +1,5 @@
-#include "../items/node.h"
+#include "../items/item.h"
+#include "../items/wire.h"
 #include "../scene.h"
 #include "commands.h"
 #include "commanditemremove.h"
@@ -35,7 +36,18 @@ void CommandItemRemove::undo()
         return;
     }
 
-    _scene->addItem(_item);
+    // Is this a wire?
+    auto wire = qgraphicsitem_cast<Wire*>(_item);
+    if (wire) {
+        _scene->addWire(wire);
+    }
+
+    // Otherwise, fall back to normal item behavior
+    else {
+        _scene->addItem(_item);
+    }
+
+    // Set the item's old parent
     _item->setParentItem(_itemParent);
 }
 
@@ -45,6 +57,17 @@ void CommandItemRemove::redo()
         return;
     }
 
+    // Store the parent
     _itemParent = _item->parentItem();
-    _scene->removeItem(_item);
+
+    // Is this a wire?
+    auto wire = qgraphicsitem_cast<Wire*>(_item);
+    if (wire) {
+        _scene->removeWire(*wire);
+    }
+
+    // Otherwise, fall back to normal item behavior
+    else {
+        _scene->removeItem(_item);
+    }
 }

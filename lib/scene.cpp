@@ -318,11 +318,23 @@ bool Scene::addWire(Wire* wire)
     newNet->addWire(*wire);
     addWireNet(std::move(newNet));
 
+    // Add wire to scene
+    // Wires createde by mouse interactions are already added to the scene in the Scene::mouseXxxEvent() calls. Prevent
+    // adding an already added item to the scene
+    if (wire->QGraphicsItem::scene() != this) {
+        if (!addItem(wire)) {
+            return false;
+        }
+    }
+
     return true;
 }
 
 bool Scene::removeWire(Wire& wire)
 {
+    // Remove the wire from the scene
+    removeItem(&wire);
+
     // Remove the wire from the list
     QList<WireNet*> netsToDelete;
     for (WireNet* net : _nets) {
