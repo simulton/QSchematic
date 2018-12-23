@@ -40,14 +40,14 @@ bool WireRoundedCorners::fromJson(const QJsonObject& object)
 
 void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-    //////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////
     // Don't try to understand this without pen & paper.                                           //
     // Seriously.                                                                                  //
     // It took me four days and lots of drugs to get through this. I hope that no other human ever //
     // has to write this again. If you need something like this, take this code. Copy it, paste it //
     // in your own software, make a small donation to any open source project of your choosing and //
     // never look at it again.                                                                     //
-    //////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////
 
     Q_UNUSED(option);
     Q_UNUSED(widget);
