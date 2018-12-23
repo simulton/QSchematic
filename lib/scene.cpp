@@ -189,7 +189,7 @@ bool Scene::isDirty() const
 {
     Q_ASSERT(_undoStack);
 
-    return _undoStack->isClean();
+    return !_undoStack->isClean();
 }
 
 void Scene::clearIsDirty()
