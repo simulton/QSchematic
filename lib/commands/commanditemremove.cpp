@@ -37,7 +37,7 @@ void CommandItemRemove::undo()
     }
 
     // Is this a wire?
-    auto wire = qgraphicsitem_cast<Wire*>(_item);
+    auto wire = dynamic_cast<Wire*>(_item);
     if (wire) {
         _scene->addWire(wire);
     }
@@ -61,7 +61,7 @@ void CommandItemRemove::redo()
     _itemParent = _item->parentItem();
 
     // Is this a wire?
-    auto wire = qgraphicsitem_cast<Wire*>(_item);
+    auto wire = dynamic_cast<Wire*>(_item);
     if (wire) {
         _scene->removeWire(*wire);
     }
