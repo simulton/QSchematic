@@ -180,6 +180,7 @@ void Scene::setMode(Scene::Mode mode)
     // Let the world know
     emit modeChanged(_mode);
 }
+
 void Scene::toggleWirePosture()
 {
     _invertWirePosture = !_invertWirePosture;
