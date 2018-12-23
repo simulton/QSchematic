@@ -282,8 +282,10 @@ QList<Node*> Scene::nodes() const
 
 bool Scene::addWire(Wire* wire)
 {
-    if (!wire)
+    // Sanity check
+    if (!wire) {
         return false;
+    }
 
     // Check if any point of the wire lies on any line segment of all existing line segments.
     // If yes, add to that net. Otherwise, create a new one
@@ -928,7 +930,6 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
             _newWire->setFlag(QGraphicsItem::ItemIsSelectable, true);
             _newWire->simplify();
             connect(_newWire.get(), &Wire::showPopup, this, &Scene::showPopup);
-            addWire(_newWire.get());
             _newWire.reset();
 
             return;

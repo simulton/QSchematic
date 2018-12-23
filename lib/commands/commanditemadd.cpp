@@ -1,4 +1,5 @@
-#include "../items/node.h"
+#include "../items/item.h"
+#include "../items/wire.h"
 #include "../scene.h"
 #include "commands.h"
 #include "commanditemadd.h"
@@ -34,7 +35,16 @@ void CommandItemAdd::undo()
         return;
     }
 
-    _scene->removeItem(_item.get());
+    // Is this a wire?
+    auto wire = qgraphicsitem_cast<Wire*>(_item.get());
+    if (wire) {
+        _scene->removeWire(*wire);
+    }
+
+    // Otherwise, fall back to normal item behavior
+    else {
+        _scene->removeItem(_item.get());
+    }
 }
 
 void CommandItemAdd::redo()
@@ -43,5 +53,14 @@ void CommandItemAdd::redo()
         return;
     }
 
-    _scene->addItem(_item.get());
+    // Is this a wire?
+    auto wire = qgraphicsitem_cast<Wire*>(_item.get());
+    if (wire) {
+        _scene->addWire(wire);
+    }
+
+    // Otherwise, fall back to normal item behavior
+    else {
+        _scene->addItem(_item.get());
+    }
 }
