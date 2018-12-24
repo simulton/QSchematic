@@ -180,7 +180,6 @@ void Scene::setMode(Scene::Mode mode)
     // Let the world know
     emit modeChanged(_mode);
 }
-
 void Scene::toggleWirePosture()
 {
     _invertWirePosture = !_invertWirePosture;
@@ -493,26 +492,34 @@ void Scene::wirePointMoved(Wire& wire, WirePoint& point)
 {
     Q_UNUSED(point)
 
-    // Remove the wire from the current net
-    // Remove wire nets that have no more wires
-    QList<WireNet*> netsToDelete;
-    for (WireNet* net : _nets) {
+    // Remove the Wire from the current WireNet if it is part of a WireNet
+    auto it = _nets.begin();
+    while (it != _nets.end()) {
+        // Alias the Net
+        auto& net = *it;
+
+        // Remove the Wire from the Net
         if (net->contains(wire)) {
             net->removeWire(wire);
-            net->setHighlighted(false); // Clear the highlighting
+            net->setHighlighted(false);
+
+            // Remove the WireNet if it has no more Wires
+            if (net->wires().isEmpty()) {
+                it = _nets.erase(it);
+                delete net;
+            }
+
+            // A Wire can only be part of one WireNet - therefore, we're done
             break;
-        }
 
-        if (net->wires().count() <= 0) {
-            netsToDelete.append(net);
+        } else {
+
+            it++;
+
         }
     }
-    for (WireNet* net : netsToDelete) {
-        _nets.removeAll(net);
-        delete net;
-    }
 
-    // If the point is on an existing wire net, add the wire to that net. Otherwise, create a new net
+    // Add the wire
     addWire(&wire);
 }
 
