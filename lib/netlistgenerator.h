@@ -95,12 +95,6 @@ namespace QSchematic
 
                         // Create a list of all connectors in this net
                         net.connectors << templateConnector;
-
-                        // Create the Connector/Node pairs
-                        auto connectorSceneConnectionPoint = templateConnector->connectionPoint();
-                        if (wireScenePoints.contains(connectorSceneConnectionPoint)) {
-                            net.connectorWithNodes << ConnectorWithNode<TNode, TConnector>(templateConnector, templateNode);
-                        }
                     }
                 }
 

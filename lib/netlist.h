@@ -17,36 +17,11 @@ namespace QSchematic
     class Connector;
 
     template<typename TNode, typename TConnector>
-    struct ConnectorWithNode
-    {
-        ConnectorWithNode() :
-            _connector(nullptr),
-            _node(nullptr)
-        {
-        }
-
-        ConnectorWithNode(TConnector connector, TNode node) :
-            _connector(connector),
-            _node(node)
-        {
-        }
-
-        TConnector _connector;
-        TNode _node;
-    };
-
-    template<typename TNode, typename TConnector>
     struct Net
     {
         QString name;
-        QVector<ConnectorWithNode<TNode, TConnector>> connectorWithNodes;
         QVector<TNode> nodes;
         QVector<TConnector> connectors;
-
-        bool isValid() const
-        {
-            return !connectorWithNodes.isEmpty();
-        }
     };
 
     template<typename TNode, typename TConnector>
@@ -71,16 +46,22 @@ namespace QSchematic
             for (const auto& net : _nets) {
                 QJsonObject netObject;
 
+                // Net name
                 netObject.insert("name", net.name);
 
-                QJsonArray netConnectionsArray;
-                for (const auto& connectorWithNode : net.connectorWithNodes) {
-                    QJsonObject connection;
-                    connection.insert("node text", connectorWithNode._node->label()->text());
-                    connection.insert("connector text", connectorWithNode._connector->text());
-                    netConnectionsArray.append(connection);
+                // Nodes
+                QJsonArray nodesArray;
+                for (const auto& node : net.nodes) {
+                    nodesArray.append(node->label()->text());
                 }
-                netObject.insert("connections", netConnectionsArray);
+                netObject.insert("nodes", nodesArray);
+
+                // Connectors
+                QJsonArray connectorsArray;
+                for (const auto& connector : net.connectors) {
+                    connectorsArray.append(connector->label()->text());
+                }
+                netObject.insert("connectors", connectorsArray);
 
                 netsArray.append(netObject);
             }
