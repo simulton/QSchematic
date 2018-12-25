@@ -1,7 +1,7 @@
 #pragma once
 
-#include <memory>
-#include <QVector>
+#include <vector>
+#include <map>
 #include <QJsonObject>
 #include <QJsonArray>
 #include "items/wire.h"
@@ -20,8 +20,9 @@ namespace QSchematic
     struct Net
     {
         QString name;
-        QVector<TNode> nodes;
-        QVector<TConnector> connectors;
+        std::vector<TNode> nodes;
+        std::vector<TConnector> connectors;
+        std::map<TConnector, TNode> connectorNodePairs;
     };
 
     template<typename TNode, typename TConnector>
@@ -62,6 +63,16 @@ namespace QSchematic
                     connectorsArray.append(connector->label()->text());
                 }
                 netObject.insert("connectors", connectorsArray);
+
+                // ConnectorNodePairs
+                QJsonArray netConnectionsArray;
+                for (auto it = net.connectorNodePairs.cbegin(); it != net.connectorNodePairs.cend(); it++) {
+                    QJsonObject connection;
+                    connection.insert("node text", it->second->label()->text());
+                    connection.insert("connector text", it->first->text());
+                    netConnectionsArray.append(connection);
+                }
+                netObject.insert("connector node pairs", netConnectionsArray);
 
                 netsArray.append(netObject);
             }
