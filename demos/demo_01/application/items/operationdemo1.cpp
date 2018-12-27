@@ -41,8 +41,6 @@ QJsonObject OperationDemo1::toJson() const
 
 bool OperationDemo1::fromJson(const QJsonObject& object)
 {
-    clearConnectors();
-
     Operation::fromJson(object["operation"].toObject());
 
     return true;

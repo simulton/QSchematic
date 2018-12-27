@@ -26,12 +26,12 @@ FlowStart::FlowStart() :
     _symbolPolygon << QPoint(-1*sz, 1*sz);
 
     // Connector
-    _connector = std::make_shared<OperationConnector>();
-    _connector->setParentItem(this);
-    _connector->label()->setVisible(false);
-    _connector->label()->setMovable(false);
-    _connector->setGridPos(1, 0);
-    addConnector(_connector);
+    auto connector = std::make_shared<OperationConnector>();
+    connector->setParentItem(this);
+    connector->label()->setVisible(false);
+    connector->label()->setMovable(false);
+    connector->setGridPos(1, 0);
+    addConnector(connector);
 
     // Label
     label()->setText("Start");

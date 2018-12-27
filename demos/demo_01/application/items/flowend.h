@@ -23,6 +23,5 @@ protected:
     void copyAttributes(FlowEnd& dest) const;
 
 private:
-    std::shared_ptr<OperationConnector> _connector;
     QPolygon _symbolPolygon;
 };

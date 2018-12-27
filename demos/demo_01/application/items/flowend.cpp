@@ -26,13 +26,13 @@ FlowEnd::FlowEnd() :
     _symbolPolygon << QPoint(3*sz, -1*sz);
 
     // Connector
-    _connector = std::make_shared<OperationConnector>();
-    _connector->setParentItem(this);
-    _connector->label()->setVisible(false);
-    _connector->label()->setMovable(false);
-    _connector->setGridPosX(1);
-    _connector->setGridPosY(1);
-    addConnector(_connector);
+    auto connector = std::make_shared<OperationConnector>();
+    connector->setParentItem(this);
+    connector->label()->setVisible(false);
+    connector->label()->setMovable(false);
+    connector->setGridPosX(1);
+    connector->setGridPosY(1);
+    addConnector(connector);
 
     // Label
     label()->setText("End");

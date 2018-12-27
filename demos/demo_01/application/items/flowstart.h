@@ -2,8 +2,6 @@
 
 #include "../../../lib/items/node.h"
 
-class OperationConnector;
-
 class FlowStart : public QSchematic::Node
 {
     Q_OBJECT
@@ -23,6 +21,5 @@ protected:
     void copyAttributes(FlowStart& dest) const;
 
 private:
-    std::shared_ptr<OperationConnector> _connector;
     QPolygon _symbolPolygon;
 };
