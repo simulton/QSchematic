@@ -66,6 +66,8 @@ namespace QSchematic {
         void setConnectorsSnapToGrid(bool enabled);
         bool connectorsSnapToGrid() const;
         std::shared_ptr<QSchematic::Label> label() const;
+        void setText(const QString& text);
+        QString text() const;
 
         virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
         virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;

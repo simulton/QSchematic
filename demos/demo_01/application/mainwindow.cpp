@@ -23,7 +23,6 @@
 #include "../../../lib/view.h"
 #include "../../../lib/settings.h"
 #include "../../../lib/items/node.h"
-#include "../../../lib/items/label.h"
 #include "../../../lib/items/itemfactory.h"
 #include "../../../lib/netlist.h"
 #include "../../../lib/netlistgenerator.h"
@@ -318,7 +317,7 @@ void MainWindow::demo()
     o1->addConnector(std::make_shared<OperationConnector>(QPoint(8, 2), QStringLiteral("out")));
     o1->setGridPos(-7, -6);
     o1->setConnectorsMovable(true);
-    o1->label()->setText(QStringLiteral("Operation 1"));
+    o1->setText(QStringLiteral("Operation 1"));
     _scene->addItem(o1);
 
     auto o2 = std::make_shared<Operation>();
@@ -326,7 +325,7 @@ void MainWindow::demo()
     o2->addConnector(std::make_shared<OperationConnector>(QPoint(8, 2), QStringLiteral("out")));
     o2->setGridPos(-4, 6);
     o2->setConnectorsMovable(true);
-    o1->label()->setText(QStringLiteral("Operation 2"));
+    o1->setText(QStringLiteral("Operation 2"));
     _scene->addItem(o2);
 
     auto o3 = std::make_shared<Operation>();
@@ -336,7 +335,7 @@ void MainWindow::demo()
     o3->addConnector(std::make_shared<OperationConnector>(QPoint(8, 3), QStringLiteral("out")));
     o3->setGridPos(12, -2);
     o3->setConnectorsMovable(true);
-    o3->label()->setText(QStringLiteral("Operation 3"));
+    o3->setText(QStringLiteral("Operation 3"));
     _scene->addItem(o3);
 
     _scene->undoStack()->clear();

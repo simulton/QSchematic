@@ -334,6 +334,21 @@ std::shared_ptr<Label> Node::label() const
     return _label;
 }
 
+
+void Node::setText(const QString& text)
+{
+    Q_ASSERT(_label);
+
+    _label->setText(text);
+}
+
+QString Node::text() const
+{
+    Q_ASSERT(_label);
+
+    return _label->text();
+}
+
 void Node::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     event->accept();
