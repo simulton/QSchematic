@@ -66,6 +66,8 @@ namespace QSchematic {
     signals:
         void modeChanged(Mode newMode);
         void isDirtyChanged(bool isDirty);
+        void itemAdded(const std::shared_ptr<Item>& item);
+        void itemRemoved(const std::shared_ptr<Item>& item);
 
     protected:
         virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;

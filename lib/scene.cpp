@@ -238,6 +238,9 @@ bool Scene::addItem(const std::shared_ptr<Item>& item)
     // Store the shared pointer to keep the item alive for the QGraphicsScene
     _items << item;
 
+    // Let the world know
+    emit itemAdded(item);
+
     return true;
 }
 
@@ -253,6 +256,9 @@ bool Scene::removeItem(const std::shared_ptr<Item>& item)
 
     // Remove shared pointer from local list to reduce instance count
     _items.removeAll(item);
+
+    // Let the world know
+    emit itemRemoved(item);
 
     return true;
 }
