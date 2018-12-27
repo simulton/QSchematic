@@ -250,7 +250,6 @@ bool Scene::removeItem(const std::shared_ptr<Item>& item)
 
     // Remove from scene
     QGraphicsScene::removeItem(item.get());
-    update();
 
     // Remove shared pointer from local list to reduce instance count
     _items.removeAll(item);
@@ -285,9 +284,10 @@ QVector<std::shared_ptr<Item>> Scene::selectedItems() const
 
     // Retrieve corresponding smart pointers
     QVector<std::shared_ptr<Item>> items(rawItems.count());
-    for (auto& i : _items) {
-        if (rawItems.contains(i.get())) {
-            items << i;
+    int i = 0;
+    for (auto& item : _items) {
+        if (rawItems.contains(item.get())) {
+            items[i++] = item;
         }
     }
 
