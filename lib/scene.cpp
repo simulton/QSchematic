@@ -207,12 +207,15 @@ void Scene::clear()
     for (auto& item : _items) {
         removeItem(item);
     }
+    Q_ASSERT(_items.isEmpty());
 
     // Nets
     _nets.clear();
+    Q_ASSERT(_nets.isEmpty());
 
     // Selected items
     _selectedItems.clear();
+    Q_ASSERT(_selectedItems.isEmpty());
 
     // Undo stack
     _undoStack->clear();
