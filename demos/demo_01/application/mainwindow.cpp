@@ -315,7 +315,7 @@ void MainWindow::demo()
     auto o1 = std::make_shared<Operation>();
     o1->addConnector(std::make_shared<OperationConnector>(QPoint(0, 2), QStringLiteral("in")));
     o1->addConnector(std::make_shared<OperationConnector>(QPoint(8, 2), QStringLiteral("out")));
-    o1->setGridPos(-7, -6);
+    o1->setGridPos(0, 0);
     o1->setConnectorsMovable(true);
     o1->setText(QStringLiteral("Operation 1"));
     _scene->addItem(o1);
@@ -323,9 +323,9 @@ void MainWindow::demo()
     auto o2 = std::make_shared<Operation>();
     o2->addConnector(std::make_shared<OperationConnector>(QPoint(0, 2), QStringLiteral("in")));
     o2->addConnector(std::make_shared<OperationConnector>(QPoint(8, 2), QStringLiteral("out")));
-    o2->setGridPos(-4, 6);
+    o2->setGridPos(-14, 9);
     o2->setConnectorsMovable(true);
-    o1->setText(QStringLiteral("Operation 2"));
+    o2->setText(QStringLiteral("Operation 2"));
     _scene->addItem(o2);
 
     auto o3 = std::make_shared<Operation>();
@@ -333,10 +333,20 @@ void MainWindow::demo()
     o3->addConnector(std::make_shared<OperationConnector>(QPoint(0, 2), QStringLiteral("in 1")));
     o3->addConnector(std::make_shared<OperationConnector>(QPoint(0, 4), QStringLiteral("in 2")));
     o3->addConnector(std::make_shared<OperationConnector>(QPoint(8, 3), QStringLiteral("out")));
-    o3->setGridPos(12, -2);
+    o3->setGridPos(18, -8);
     o3->setConnectorsMovable(true);
     o3->setText(QStringLiteral("Operation 3"));
     _scene->addItem(o3);
+
+    auto o4 = std::make_shared<Operation>();
+    o4->setSize(8, 6);
+    o4->addConnector(std::make_shared<OperationConnector>(QPoint(0, 2), QStringLiteral("in 1")));
+    o4->addConnector(std::make_shared<OperationConnector>(QPoint(0, 4), QStringLiteral("in 2")));
+    o4->addConnector(std::make_shared<OperationConnector>(QPoint(8, 3), QStringLiteral("out")));
+    o4->setGridPos(18, 10);
+    o4->setConnectorsMovable(true);
+    o4->setText(QStringLiteral("Operation 4"));
+    _scene->addItem(o4);
 
     _scene->undoStack()->clear();
 }
