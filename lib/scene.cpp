@@ -1066,7 +1066,7 @@ void Scene::dropEvent(QGraphicsSceneDragDropEvent* event)
 
         // Add to the scene
         item->setPos(event->scenePos());
-        _undoStack->push(new CommandItemAdd(this, std::shared_ptr<Item>(item.release())));
+        _undoStack->push(new CommandItemAdd(this, std::move(item)));
     }
 }
 
