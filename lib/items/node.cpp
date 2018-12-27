@@ -252,7 +252,7 @@ void Node::clearConnectors()
     auto s = scene();
     if (s) {
         for (auto connector : _connectors) {
-            s->removeItem(connector.get());
+            s->removeItem(connector);
         }
     }
 

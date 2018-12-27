@@ -6,7 +6,7 @@
 
 using namespace QSchematic;
 
-CommandItemRemove::CommandItemRemove(const QPointer<Scene>& scene, Item* item, QUndoCommand* parent) :
+CommandItemRemove::CommandItemRemove(const QPointer<Scene>& scene, const std::shared_ptr<Item>& item, QUndoCommand* parent) :
     QUndoCommand(parent),
     _scene(scene),
     _item(item)
@@ -37,7 +37,7 @@ void CommandItemRemove::undo()
     }
 
     // Is this a wire?
-    auto wire = dynamic_cast<Wire*>(_item);
+    auto wire = std::dynamic_pointer_cast<Wire>(_item);
     if (wire) {
         _scene->addWire(wire);
     }
@@ -61,9 +61,9 @@ void CommandItemRemove::redo()
     _itemParent = _item->parentItem();
 
     // Is this a wire?
-    auto wire = dynamic_cast<Wire*>(_item);
+    auto wire = std::dynamic_pointer_cast<Wire>(_item);
     if (wire) {
-        _scene->removeWire(*wire);
+        _scene->removeWire(wire);
     }
 
     // Otherwise, fall back to normal item behavior

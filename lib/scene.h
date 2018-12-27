@@ -44,17 +44,19 @@ namespace QSchematic {
         void clearIsDirty();
 
         void clear();
-        bool addItem(Item* item); // Takes ownership
-        QList<Item*> items() const;
-        QList<Item*> items(int itemType) const;
-        QList<Node*> nodes() const;
-        bool addWire(Wire* wire);
-        bool removeWire(Wire& wire);
-        QList<Wire*> wires() const;
-        QList<WireNet*> nets() const;
-        QList<WireNet*> nets(const WireNet& wireNet) const;
-        WireNet* net(const Wire& wire) const;
-        QList<WireNet*> netsAt(const QPoint& point);
+        bool addItem(const std::shared_ptr<Item>& item);
+        bool removeItem(const std::shared_ptr<Item>& item);
+        QList<std::shared_ptr<Item>> items() const;
+        QList<std::shared_ptr<Item>> items(int itemType) const;
+        QVector<std::shared_ptr<Item>> selectedItems() const;
+        QList<std::shared_ptr<Node>> nodes() const;
+        bool addWire(const std::shared_ptr<Wire>& wire);
+        bool removeWire(const std::shared_ptr<Wire>& wire);
+        QList<std::shared_ptr<Wire>> wires() const;
+        QList<std::shared_ptr<WireNet>> nets() const;
+        QList<std::shared_ptr<WireNet>> nets(const std::shared_ptr<WireNet>& wireNet) const;
+        std::shared_ptr<WireNet> net(const std::shared_ptr<Wire>& wire) const;
+        QList<std::shared_ptr<WireNet>> netsAt(const QPoint& point);
         QList<QPoint> connectionPoints() const;
 
         void undo();
@@ -78,11 +80,12 @@ namespace QSchematic {
 
     private:
         void renderCachedBackground();
-        void setupNewItem(Item* item);
+        void setupNewItem(Item& item);
         void addWireNet(std::unique_ptr<WireNet> wireNet);
         QList<Item*> itemsAt(const QPointF& scenePos, Qt::SortOrder order = Qt::DescendingOrder) const;
 
-        QList<WireNet*> _nets;
+        QList<std::shared_ptr<Item>> _items;
+        QList<std::shared_ptr<WireNet>> _nets;
         Settings _settings;
         QPixmap _backgroundPixmap;
         std::function<std::unique_ptr<Wire>()> _wireFactory;
@@ -91,7 +94,7 @@ namespace QSchematic {
         bool _newWireSegment;
         bool _invertWirePosture;
         QPointF _lastMousePos;
-        QList<Item*> _selectedItems;
+        QList<std::shared_ptr<Item>> _selectedItems;
         QScopedPointer<QGraphicsProxyWidget> _popupInfobox;
         QUndoStack* _undoStack;
 
@@ -100,7 +103,7 @@ namespace QSchematic {
         void wireNetHighlightChanged(bool highlighted);
         void wirePointMoved(Wire& wire, WirePoint& point);
         void wireMovePoint(const QPoint& point, Wire& wire, const QVector2D& movedBy) const;
-        QList<Wire*> wiresConnectedTo(const Node& node, const QVector2D& offset) const;
+        QList<std::shared_ptr<Wire>> wiresConnectedTo(const Node& node, const QVector2D& offset) const;
         void showPopup(const Item& item);
     };
 

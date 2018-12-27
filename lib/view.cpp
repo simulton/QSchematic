@@ -82,10 +82,7 @@ void View::keyPressEvent(QKeyEvent* event)
     case Qt::Key_Delete:
         if (_scene) {
             for (auto item : _scene->selectedItems()) {
-                auto qschematicItem = dynamic_cast<Item*>(item);
-                if (qschematicItem) {
-                    _scene->undoStack()->push(new CommandItemRemove(_scene, qschematicItem));
-                }
+                _scene->undoStack()->push(new CommandItemRemove(_scene, item));
             }
         }
         return;

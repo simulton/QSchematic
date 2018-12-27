@@ -1,9 +1,8 @@
 #pragma once
 
+#include <memory>
 #include <QObject>
 #include <QList>
-#include <QSharedPointer>
-#include <memory>
 #include "../interfaces/json.h"
 #include "line.h"
 
@@ -21,20 +20,19 @@ namespace QSchematic {
 
     public:
         WireNet(QObject* parent = nullptr);
-        virtual ~WireNet() override;
 
         virtual QJsonObject toJson() const override;
         virtual bool fromJson(const QJsonObject& object) override;
 
-        bool addWire(Wire& wire);
-        bool removeWire(Wire& wire);
-        bool contains(const Wire& wire) const;
+        bool addWire(const std::shared_ptr<Wire>& wire);
+        bool removeWire(const std::shared_ptr<Wire>& wire);
+        bool contains(const std::shared_ptr<Wire>& wire) const;
         void simplify();
         void setName(const QString& name);
         void setHighlighted(bool highlighted);
 
         QString name() const;
-        QList<Wire*> wires() const;
+        QList<std::shared_ptr<Wire>> wires() const;
         QList<Line> lineSegments() const;
         QList<QPoint> points() const;
         std::shared_ptr<Label> label();
@@ -51,7 +49,7 @@ namespace QSchematic {
     private:
         void updateWireJunctions();
 
-        QList<Wire*> _wires;
+        QList<std::shared_ptr<Wire>> _wires;
         QString _name;
         std::shared_ptr<Label> _label;
     };

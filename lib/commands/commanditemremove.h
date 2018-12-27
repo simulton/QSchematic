@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <QUndoCommand>
 #include <QPointer>
 
@@ -13,7 +14,7 @@ namespace QSchematic
     class CommandItemRemove : public QUndoCommand
     {
     public:
-        CommandItemRemove(const QPointer<Scene>& scene, Item* item, QUndoCommand* parent = nullptr);
+        CommandItemRemove(const QPointer<Scene>& scene, const std::shared_ptr<Item>& item, QUndoCommand* parent = nullptr);
 
         virtual int id() const override;
         virtual bool mergeWith(const QUndoCommand* command) override;
@@ -22,7 +23,7 @@ namespace QSchematic
 
     private:
         QPointer<Scene> _scene;
-        Item* _item;
+        std::shared_ptr<Item> _item;
         QGraphicsItem* _itemParent;
     };
 

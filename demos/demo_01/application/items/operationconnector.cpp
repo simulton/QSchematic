@@ -120,7 +120,8 @@ void OperationConnector::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         deleteFromModel->setText("Delete");
         connect(deleteFromModel, &QAction::triggered, [this] {
             if (scene()) {
-                scene()->undoStack()->push(new QSchematic::CommandItemRemove(scene(), this));
+#warning ToDo: Implement this (signal needed)?
+                //scene()->undoStack()->push(new QSchematic::CommandItemRemove(scene(), this));
             }
         });
 

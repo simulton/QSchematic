@@ -36,14 +36,14 @@ void CommandItemAdd::undo()
     }
 
     // Is this a wire?
-    auto wire = dynamic_cast<Wire*>(_item.get());
+    auto wire = std::dynamic_pointer_cast<Wire>(_item);
     if (wire) {
-        _scene->removeWire(*wire);
+        _scene->removeWire(wire);
     }
 
     // Otherwise, fall back to normal item behavior
     else {
-        _scene->removeItem(_item.get());
+        _scene->removeItem(_item);
     }
 }
 
@@ -54,13 +54,13 @@ void CommandItemAdd::redo()
     }
 
     // Is this a wire?
-    auto wire = dynamic_cast<Wire*>(_item.get());
+    auto wire = std::dynamic_pointer_cast<Wire>(_item);
     if (wire) {
         _scene->addWire(wire);
     }
 
     // Otherwise, fall back to normal item behavior
     else {
-        _scene->addItem(_item.get());
+        _scene->addItem(_item);
     }
 }

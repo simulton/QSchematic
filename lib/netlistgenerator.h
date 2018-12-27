@@ -20,13 +20,13 @@ namespace QSchematic
             struct GlobalNet
             {
                 QString name;
-                QList<const WireNet*> wireNets;
+                QList<std::shared_ptr<WireNet>> wireNets;
             };
 
             // Create a list of global nets (WireNets that share the same net name)
             QList<GlobalNet> globalNets;
             unsigned anonNetCounter = 0;
-            for (const WireNet* wireNet : scene.nets()) {
+            for (const auto& wireNet : scene.nets()) {
                 // Sanity check
                 if (!wireNet) {
                     continue;
@@ -77,7 +77,7 @@ namespace QSchematic
                 // Build a list of all connectors
                 for (auto& node : scene.nodes()) {
                     // Convert to template node type
-                    TNode templateNode = qgraphicsitem_cast<TNode>(node);
+                    TNode templateNode = qgraphicsitem_cast<TNode>(node.get());
                     if (!templateNode) {
                         continue;
                     }

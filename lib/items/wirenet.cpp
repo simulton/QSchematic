@@ -17,11 +17,6 @@ WireNet::WireNet(QObject* parent) :
     connect(_label.get(), &Label::highlightChanged, this, &WireNet::labelHighlightChanged);
 }
 
-WireNet::~WireNet()
-{
-    qDeleteAll(_wires);
-}
-
 QJsonObject WireNet::toJson() const
 {
     QJsonObject object;
@@ -29,7 +24,7 @@ QJsonObject WireNet::toJson() const
     object.insert("name", name());
 
     QJsonArray wiresArray;
-    for (const Wire* wire : _wires) {
+    for (const auto& wire : _wires) {
         wiresArray.append(wire->toJson());
     }
     object.insert("wires", wiresArray);
@@ -46,11 +41,12 @@ bool WireNet::fromJson(const QJsonObject& object)
         QJsonObject wireObject = wireValue.toObject();
         if (wireObject.isEmpty())
             continue;
-        Wire* newWire = dynamic_cast<Wire*>(ItemFactory::instance().fromJson(wireObject).release());
+        auto newWire = ItemFactory::instance().fromJson(wireObject);
+        auto sharedNewWire = std::dynamic_pointer_cast<Wire>(std::shared_ptr<Item>(std::move(newWire)));
         if (!newWire)
             continue;
         newWire->fromJson(wireObject);
-        addWire(*newWire);
+        addWire(sharedNewWire);
     }
 
     connect(_label.get(), &Label::highlightChanged, this, &WireNet::labelHighlightChanged);
@@ -58,17 +54,22 @@ bool WireNet::fromJson(const QJsonObject& object)
     return true;
 }
 
-bool WireNet::addWire(Wire& wire)
+bool WireNet::addWire(const std::shared_ptr<Wire>& wire)
 {
+    // Sanity check
+    if (!wire) {
+        return false;
+    }
+
     // Update the junctions
     // Do this before we add the wire so that lineSegments() doesn't contain the line segments
     // of the new wire. Otherwise all points will be marked as junctions.
-    for (int i = 0; i < wire.points().count(); i++) {
-        const WirePoint& point = wire.points().at(i);
+    for (int i = 0; i < wire->points().count(); i++) {
+        const WirePoint& point = wire->points().at(i);
         for (const Line& line : lineSegments()) {
-            wire.setPointIsJunction(i, false);
+            wire->setPointIsJunction(i, false);
             if (line.containsPoint(point.toPoint(), 0)) {
-                wire.setPointIsJunction(i, true);
+                wire->setPointIsJunction(i, true);
                 break;
             }
         }
@@ -79,7 +80,7 @@ bool WireNet::addWire(Wire& wire)
     for (auto& existingWire : _wires) {
         for (int i = 0; i < existingWire->wirePoints().count(); i++) {
             const WirePoint& existingWirePoint = existingWire->wirePoints().at(i);
-            for (const auto& wirePoint : wire.points()) {
+            for (const auto& wirePoint : wire->points()) {
                 if (existingWirePoint == wirePoint) {
                     existingWire->setPointIsJunction(i, true);
                 }
@@ -88,27 +89,27 @@ bool WireNet::addWire(Wire& wire)
     }
 
     // Add the wire
-    connect(&wire, &Wire::pointMoved, this, &WireNet::wirePointMoved);
-    connect(&wire, &Wire::highlightChanged, this, &WireNet::wireHighlightChanged);
-    _wires.append(&wire);
+    connect(wire.get(), &Wire::pointMoved, this, &WireNet::wirePointMoved);
+    connect(wire.get(), &Wire::highlightChanged, this, &WireNet::wireHighlightChanged);
+    _wires.append(wire);
 
     return true;
 }
 
-bool WireNet::removeWire(Wire& wire)
+bool WireNet::removeWire(const std::shared_ptr<Wire>& wire)
 {
-    disconnect(&wire, nullptr, this, nullptr);
-    _wires.removeAll(&wire);
+    disconnect(wire.get(), nullptr, this, nullptr);
+    _wires.removeAll(wire);
 
     updateWireJunctions();
 
     return true;
 }
 
-bool WireNet::contains(const Wire& wire) const
+bool WireNet::contains(const std::shared_ptr<Wire>& wire) const
 {
-    for (const Wire* w : _wires) {
-        if (w == &wire) {
+    for (const auto& w : _wires) {
+        if (w == wire) {
             return true;
         }
     }
@@ -118,7 +119,7 @@ bool WireNet::contains(const Wire& wire) const
 
 void WireNet::simplify()
 {
-    for (Wire* wire : _wires) {
+    for (auto& wire : _wires) {
         wire->simplify();
     }
 }
@@ -134,7 +135,7 @@ void WireNet::setName(const QString& name)
 void WireNet::setHighlighted(bool highlighted)
 {
     // Wires
-    for (Wire* wire : _wires) {
+    for (auto& wire : _wires) {
         if (!wire) {
             continue;
         }
@@ -153,7 +154,7 @@ QString WireNet::name()const
     return _name;
 }
 
-QList<Wire*> WireNet::wires() const
+QList<std::shared_ptr<Wire>> WireNet::wires() const
 {
     return _wires;
 }
@@ -162,7 +163,7 @@ QList<Line> WireNet::lineSegments() const
 {
     QList<Line> list;
 
-    for (const Wire* wire : _wires) {
+    for (const auto& wire : _wires) {
         if (!wire) {
             continue;
         }
@@ -177,7 +178,7 @@ QList<QPoint> WireNet::points() const
 {
     QList<QPoint> list;
 
-    for (const Wire* wire : _wires) {
+    for (const auto& wire : _wires) {
         list.append(wire->points().toList());
     }
 
@@ -214,11 +215,11 @@ void WireNet::wireHighlightChanged(const Item& item, bool highlighted)
 
 void WireNet::updateWireJunctions()
 {
-    for (Wire* wire : _wires) {
+    for (auto& wire : _wires) {
 
         // Create a list of wire segments which dont't contains the current wire
         QList<Line> lineSegments;
-        for (const Wire* w : _wires) {
+        for (const auto& w : _wires) {
             if (w != wire) {
                 lineSegments.append(w->lineSegments());
             }
