@@ -68,7 +68,7 @@ void Item::copyAttributes(Item& dest) const
     dest._snapToGrid = _snapToGrid;
     dest._highlightEnabled = _highlightEnabled;
     dest._highlighted = _highlighted;
-    dest._oldGridPoint = _oldGridPoint;
+    dest._oldPos = _oldPos;
 }
 
 Scene* Item::scene() const
@@ -357,13 +357,13 @@ void Item::timerTimeout()
 
 void Item::posChanged()
 {
-    QPoint newGridPoint = gridPos();
-    QVector2D movedBy(newGridPoint - _oldGridPoint);
+    const QPointF& newPos = pos();
+    QVector2D movedBy(newPos - _oldPos);
     if (!movedBy.isNull()) {
         emit moved(*this, movedBy);
     }
 
-    _oldGridPoint = newGridPoint;
+    _oldPos = newPos;
 }
 
 void Item::update()

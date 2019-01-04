@@ -103,7 +103,7 @@ namespace QSchematic {
         bool _snapToGrid;
         bool _highlightEnabled;
         bool _highlighted;
-        QPoint _oldGridPoint;
+        QPointF _oldPos;
         QTimer* _hoverTimer;
     };
 
