@@ -3,32 +3,39 @@
 using namespace QSchematic;
 
 WirePoint::WirePoint() :
-    QPoint()
+    QPointF()
 {
     _isJunction = false;
 }
 
 WirePoint::WirePoint(const WirePoint& other) :
-    QPoint(other)
+    QPointF(other)
 {
     _isJunction = other._isJunction;
 }
 
 WirePoint::WirePoint(const QPoint& point) :
-    QPoint(point)
+    QPointF(point)
+{
+    _isJunction = false;
+}
+
+WirePoint::WirePoint(const QPointF& point) :
+    QPointF(point)
 {
     _isJunction = false;
 }
 
 WirePoint::WirePoint(int x, int y) :
-    QPoint(x, y)
+    QPointF(x, y)
 {
     _isJunction = false;
 }
 
-QPoint WirePoint::toPoint() const
+WirePoint::WirePoint(qreal x, qreal y) :
+    QPointF(x, y)
 {
-    return QPoint(x(), y());
+    _isJunction = false;
 }
 
 void WirePoint::setIsJunction(bool isJunction)
@@ -41,15 +48,28 @@ bool WirePoint::isJunction() const
     return _isJunction;
 }
 
-bool operator==(const WirePoint& a, const WirePoint& b) {
+bool operator==(const WirePoint& a, const WirePoint& b)
+{
     return operator==(a.toPoint(), b.toPoint());
 }
 
-bool operator==(const WirePoint& a, const QPoint& b) {
+bool operator==(const WirePoint& a, const QPoint& b)
+{
     return operator==(a.toPoint(), b);
 }
 
-const QPoint operator+(const WirePoint& a, const QPoint& b) {
+bool operator==(const WirePoint& a, const QPointF& b)
+{
+    return operator==(a, b);
+}
+
+const QPoint operator+(const WirePoint& a, const QPoint& b)
+{
     return operator+(a.toPoint(), b);
+}
+
+const QPointF operator+(const WirePoint& a, const QPointF& b)
+{
+    return operator+(a, b);
 }
 
