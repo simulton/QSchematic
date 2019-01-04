@@ -1152,7 +1152,9 @@ QList<QPointF> Scene::connectionPoints() const
     QList<QPointF> list;
 
     for (const auto& node : nodes()) {
-        list << node->connectionPoints();
+        for (const auto& connectionPoint : node->connectionPoints()) {
+            list << connectionPoint + node->pos();
+        }
     }
 
     return list;
