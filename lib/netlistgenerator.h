@@ -82,9 +82,6 @@ namespace QSchematic
                         continue;
                     }
 
-                    // Create list of all nodes in this net
-                    net.nodes.push_back(templateNode);
-
                     // Loop through all Node's connectors
                     for (auto& connector : node->connectors()) {
                         // Convert to template connector type
@@ -93,12 +90,17 @@ namespace QSchematic
                             continue;
                         }
 
-                        // Create a list of all connectors in this net
-                        net.connectors.push_back(templateConnector);
-
                         // Create the Connector/Node pairs
-                        auto connectorSceneConnectionPoint = templateConnector->connectionPoint();
+                        auto connectorSceneConnectionPoint = templateConnector->mapToScene(templateConnector->connectionPoint());
                         if (wireScenePoints.contains(connectorSceneConnectionPoint)) {
+
+                            // Create list of all nodes in this net
+                            net.nodes.push_back(templateNode);
+
+                            // Create a list of all connectors in this net
+                            net.connectors.push_back(templateConnector);
+
+                            // Connector/Node pairs
                             net.connectorNodePairs.emplace(std::pair<TConnector, TNode>(templateConnector, templateNode));
                         }
                     }
