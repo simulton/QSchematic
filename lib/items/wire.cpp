@@ -130,7 +130,7 @@ QRectF Wire::boundingRect() const
 QPainterPath Wire::shape() const
 {
     QPainterPath basePath;
-    basePath.addPolygon(QPolygon(scenePointsRelative()));
+    basePath.addPolygon(QPolygon(pointsRelative()));
 
     QPainterPathStroker str;
     str.setCapStyle(Qt::FlatCap);
@@ -142,20 +142,12 @@ QPainterPath Wire::shape() const
     return resultPath;
 }
 
-QVector<WirePoint> Wire::sceneWirePointsRelative() const
+QVector<WirePoint> Wire::wirePointsRelative() const
 {
-    QVector<WirePoint> points;
-
-    for (const WirePoint& point : _points) {
-        WirePoint&& tmp = WirePoint(_settings.toScenePoint(point.toPoint()));
-        tmp.setIsJunction(point.isJunction());
-        points.append(tmp);
-    }
-
-    return points;
+    return _points;
 }
 
-QVector<WirePoint> Wire::sceneWirePointsAbsolute() const
+QVector<WirePoint> Wire::wirePointsAbsolute() const
 {
     QVector<WirePoint> points;
 
@@ -168,18 +160,18 @@ QVector<WirePoint> Wire::sceneWirePointsAbsolute() const
     return points;
 }
 
-QVector<QPoint> Wire::scenePointsRelative() const
+QVector<QPoint> Wire::pointsRelative() const
 {
     QVector<QPoint> points;
 
     for (const WirePoint& point : _points) {
-        points << _settings.toScenePoint(point.toPoint());
+        points << point.toPoint();
     }
 
     return points;
 }
 
-QVector<QPoint> Wire::scenePointsAbsolute() const
+QVector<QPoint> Wire::pointsAbsolute() const
 {
     QVector<QPoint> points;
 
@@ -193,7 +185,8 @@ QVector<QPoint> Wire::scenePointsAbsolute() const
 void Wire::calculateBoundingRect()
 {
     // Find top-left most point
-    QPointF topLeft(INT_MAX, INT_MAX);
+    const int& intMaxValue = std::numeric_limits<int>::max();
+    QPointF topLeft(intMaxValue, intMaxValue);
     for (auto& point : _points) {
         if (point.x() < topLeft.x())
             topLeft.setX(point.x());
@@ -202,7 +195,8 @@ void Wire::calculateBoundingRect()
     }
 
     // Find bottom-right most point
-    QPointF bottomRight(INT_MIN, INT_MIN);
+    const int& intMinValue = std::numeric_limits<int>::min();
+    QPointF bottomRight(intMinValue, intMinValue);
     for (auto& point : _points) {
         if (point.x() > bottomRight.x())
             bottomRight.setX(point.x());
@@ -211,7 +205,7 @@ void Wire::calculateBoundingRect()
     }
 
     // Create the rectangle
-    _rect = QRectF(topLeft * _settings.gridSize, bottomRight * _settings.gridSize);
+    _rect = QRectF(topLeft, bottomRight);
 }
 
 void Wire::prependPoint(const QPoint& point)
@@ -384,22 +378,6 @@ bool Wire::pointIsOnWire(const QPoint& point) const
     return false;
 }
 
-QVector<WirePoint> Wire::wirePoints() const
-{
-    return _points;
-}
-
-QVector<QPoint> Wire::points() const
-{
-    QVector<QPoint> list;
-
-    for (const WirePoint& wirePoint : _points) {
-        list << gridPos() + wirePoint.toPoint();
-    }
-
-    return list;
-}
-
 QList<Line> Wire::lineSegments() const
 {
     // A line segment requires at least two points... duuuh
@@ -422,7 +400,7 @@ void Wire::mousePressEvent(QGraphicsSceneMouseEvent* event)
     // Check wheter we clicked on a handle
     if (isSelected()) {
         // Check whether we clicked on a handle
-        QVector<QPoint> points(scenePointsAbsolute());
+        QVector<QPoint> points(pointsAbsolute());
         for (int i = 0; i < points.count(); i++) {
             QRectF handleRect(points.at(i).x() - HANDLE_SIZE, points.at(i).y() - HANDLE_SIZE, 2*HANDLE_SIZE, 2*HANDLE_SIZE);
 
@@ -514,7 +492,7 @@ void Wire::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
     }
 
     // Check whether we hover over a point handle
-    QVector<QPoint> points(scenePointsAbsolute());
+    QVector<QPoint> points(pointsAbsolute());
     for (int i = 0; i < points.count(); i++) {
         QRectF handleRect(points.at(i).x() - HANDLE_SIZE, points.at(i).y() - HANDLE_SIZE, 2*HANDLE_SIZE, 2*HANDLE_SIZE);
 
@@ -584,12 +562,12 @@ void Wire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     // Draw the actual line
     painter->setPen(penLine);
     painter->setBrush(brushLine);
-    QVector<QPoint> points = scenePointsRelative();
+    QVector<QPoint> points = pointsRelative();
     painter->drawPolyline(points.constData(), points.count());
 
     // Draw the junction poins
     int junctionRadius = 4;
-    for (const WirePoint& wirePoint : sceneWirePointsRelative()) {
+    for (const WirePoint& wirePoint : wirePointsRelative()) {
         if (wirePoint.isJunction()) {
             painter->setPen(penJunction);
             painter->setBrush(brushJunction);

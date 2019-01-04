@@ -53,7 +53,7 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
     Q_UNUSED(widget);
 
     // Retrieve the scene points as we'll need them a lot
-    auto sceneWirePoints(sceneWirePointsRelative());
+    auto sceneWirePoints(wirePointsRelative());
     simplify(sceneWirePoints);
     QVector<WirePoint> scenePoints;
     for (const auto& wirePoint : sceneWirePoints) {
@@ -311,7 +311,7 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
 
     // Draw the junction poins
     int junctionRadius = 4;
-    for (const QSchematic::WirePoint& wirePoint : sceneWirePointsRelative()) {
+    for (const QSchematic::WirePoint& wirePoint : wirePointsRelative()) {
         if (wirePoint.isJunction()) {
             painter->setPen(penJunction);
             painter->setBrush(brushJunction);

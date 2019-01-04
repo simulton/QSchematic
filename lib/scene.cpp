@@ -330,7 +330,7 @@ bool Scene::addWire(const std::shared_ptr<Wire>& wire)
     // If yes, add to that net. Otherwise, create a new one
     for (auto& net : _nets) {
         for (const Line& line : net->lineSegments()) {
-            for (const WirePoint& point : wire->points()) {
+            for (const WirePoint& point : wire->pointsRelative()) {
                 if (line.containsPoint(point.toPoint(), 0)) {
                     net->addWire(wire);
                     return true;
@@ -343,7 +343,7 @@ bool Scene::addWire(const std::shared_ptr<Wire>& wire)
     // If yes, add to that net. Otherwise, create a new one
     for (auto& net : _nets) {
         for (const auto& otherWire : net->wires()) {
-            for (const WirePoint& otherPoint : otherWire->points()) {
+            for (const WirePoint& otherPoint : otherWire->wirePointsRelative()) {
                 for (const Line& line : wire->lineSegments()) {
                     if (line.containsPoint(otherPoint.toPoint())) {
                         net->addWire(wire);
@@ -590,7 +590,7 @@ void Scene::wireMovePoint(const QPoint& point, Wire& wire, const QVector2D& move
     // If there are only two points (one line segment) and we are supposed to preserve
     // straight angles, we need to insert two additional points if we are not moving in
     // the direction of the line.
-    if (wire.points().count() == 2 && _settings.preserveStraightAngles) {
+    if (wire.pointsRelative().count() == 2 && _settings.preserveStraightAngles) {
         const Line& line = wire.lineSegments().first();
 
         // Only do this if we're not moving in the direction of the line. Because in that case
@@ -628,8 +628,8 @@ void Scene::wireMovePoint(const QPoint& point, Wire& wire, const QVector2D& move
     }
 
     // Move the points
-    for (int i = 0; i < wire.points().count(); i++) {
-        QPoint currPoint = wire.points().at(i);
+    for (int i = 0; i < wire.pointsRelative().count(); i++) {
+        QPoint currPoint = wire.pointsRelative().at(i);
         if (currPoint == point-movedBy.toPoint()) {
 
             // Preserve straight angles (if supposed to)
@@ -637,7 +637,7 @@ void Scene::wireMovePoint(const QPoint& point, Wire& wire, const QVector2D& move
 
                 // Move previous point
                 if (i >= 1) {
-                    QPoint prevPoint = wire.points().at(i-1);
+                    QPoint prevPoint = wire.pointsRelative().at(i-1);
                     Line line(prevPoint, currPoint);
 
                     // Make sure that two wire points never collide
@@ -657,8 +657,8 @@ void Scene::wireMovePoint(const QPoint& point, Wire& wire, const QVector2D& move
                 }
 
                 // Move next point
-                if (i < wire.points().count()-1) {
-                    QPoint nextPoint = wire.points().at(i+1);
+                if (i < wire.pointsRelative().count()-1) {
+                    QPoint nextPoint = wire.pointsRelative().at(i+1);
                     Line line(currPoint, nextPoint);
 
                     // Make sure that two wire points never collide
@@ -691,7 +691,7 @@ QList<std::shared_ptr<Wire>> Scene::wiresConnectedTo(const Node& node, const QVe
     QList<std::shared_ptr<Wire>> list;
 
     for (auto& wire : wires()) {
-        for (const WirePoint& wirePoint : wire->points()) {
+        for (const WirePoint& wirePoint : wire->wirePointsRelative()) {
             for (const QPoint& connectionPoint : node.connectionPoints()) {
                 if (wirePoint.toPoint() == connectionPoint+offset.toPoint()) {
                     list.append(wire);
@@ -767,8 +767,6 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
         // Left mouse button
         if (event->button() == Qt::LeftButton) {
 
-            QPoint mousetoGridPoint = _settings.toGridPoint(event->scenePos());
-
             // Start a new wire if there isn't already one. Else continue the current one.
             if (!_newWire) {
                 if (_wireFactory) {
@@ -778,7 +776,8 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
                 }
                 _undoStack->push(new CommandItemAdd(this, _newWire));
             }
-            _newWire->appendPoint(mousetoGridPoint);
+#warning Todo: Use QPointF instead
+            _newWire->appendPoint(event->scenePos().toPoint());
             _newWireSegment = true;
         }
 
@@ -887,18 +886,19 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
         }
 
         // Transform mouse coordinates to grid positions (snapped to nearest grid point)
-        QPoint mouseGridPos = _settings.toGridPoint(newMousePos);
+#warning ToDo: Use QPointF
+        const QPoint& mouseGridPos = _settings.snapToGridPoint(newMousePos);
 
         // Add a new wire segment. Only allow straight angles (if supposed to)
         if (_settings.routeStraightAngles) {
             if (_newWireSegment) {
                 // Remove the last point if there was a previous segment
-                if (_newWire->points().count() > 1) {
+                if (_newWire->pointsRelative().count() > 1) {
                     _newWire->removeLastPoint();
                 }
 
                 // Create the intermediate point that creates the straight angle
-                WirePoint prevNode(_newWire->points().at(_newWire->points().count()-1));
+                WirePoint prevNode(_newWire->pointsRelative().at(_newWire->pointsRelative().count()-1));
                 QPoint corner(prevNode.x(), mouseGridPos.y());
                 if (_invertWirePosture) {
                     corner.setX(mouseGridPos.x());
@@ -912,7 +912,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                 _newWireSegment = false;
             } else {
                 // Create the intermediate point that creates the straight angle
-                WirePoint p1(_newWire->points().at(_newWire->points().count()-3));
+                WirePoint p1(_newWire->pointsRelative().at(_newWire->pointsRelative().count()-3));
                 QPoint p2(p1.x(), mouseGridPos.y());
                 QPoint p3(mouseGridPos);
                 if (_invertWirePosture) {
@@ -921,14 +921,14 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                 }
 
                 // Modify the actual wire
-                _newWire->movePointTo(_newWire->points().count()-2, p2);
-                _newWire->movePointTo(_newWire->points().count()-1, p3);
+                _newWire->movePointTo(_newWire->pointsRelative().count()-2, p2);
+                _newWire->movePointTo(_newWire->pointsRelative().count()-1, p3);
             }
         } else {
             // Don't care about angles and stuff. Fuck geometry, right?
             QPoint newGridPoint = _settings.toGridPoint(newMousePos);
-            if (_newWire->points().count() > 1) {
-                _newWire->movePointTo(_newWire->points().count()-1, newGridPoint);
+            if (_newWire->pointsRelative().count() > 1) {
+                _newWire->movePointTo(_newWire->pointsRelative().count()-1, newGridPoint);
             } else {
                 _newWire->appendPoint(newGridPoint);
             }
@@ -958,7 +958,7 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
     {
 
         // Only do something if there's a wire
-        if (_newWire && _newWire->points().count() > 1) {
+        if (_newWire && _newWire->pointsRelative().count() > 1) {
             bool wireIsFloating = true;
 
             // Get rid of the last point as mouseDoubleClickEvent() is following mousePressEvent()
@@ -966,7 +966,7 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 
             // Check whether the wire was connected to a connector
             for (const QPoint& connectionPoint : connectionPoints()) {
-                if (connectionPoint == _newWire->points().last()) {
+                if (connectionPoint == _newWire->pointsRelative().last()) {
                     wireIsFloating = false;
                     break;
                 }
@@ -974,7 +974,7 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 
             // Check wether the wire was connected to another wire
             for (const auto& wire : wires()) {
-                if (wire->pointIsOnWire(_newWire->points().last())) {
+                if (wire->pointIsOnWire(_newWire->pointsRelative().last())) {
                     wireIsFloating = false;
                     break;
                 }
@@ -1119,6 +1119,13 @@ void Scene::renderCachedBackground()
         painter.setPen(gridPen);
         painter.setBrush(gridBrush);
         painter.drawPoints(points.data(), points.size());
+    }
+
+    // Mark the origin if supposed to
+    if (_settings.debug) {
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(QBrush(Qt::red));
+        painter.drawEllipse(-6, -6, 12, 12);
     }
 
     painter.end();

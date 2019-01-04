@@ -11,7 +11,8 @@ namespace QSchematic {
     class Line;
 
     /**
-     * IMPORTANT NOTE: The points coordinates are ABSOLUTE and in SCHEMATIC COORDINATES.
+     * IMPORTANT NOTE: The points coordinates are RELATIVE and in SCENE COORDINATES.
+     *                 Wires must be movable so we can move entire groups of stuff.
      */
     class Wire : public Item
     {
@@ -34,12 +35,10 @@ namespace QSchematic {
         void removeFirstPoint();
         void removeLastPoint();
         void removePoint(const QPoint& point);
-        QVector<WirePoint> wirePoints() const;
-        QVector<QPoint> points() const;
-        QVector<WirePoint> sceneWirePointsRelative() const;
-        QVector<WirePoint> sceneWirePointsAbsolute() const;
-        QVector<QPoint> scenePointsRelative() const;
-        QVector<QPoint> scenePointsAbsolute() const;
+        QVector<WirePoint> wirePointsRelative() const;
+        QVector<WirePoint> wirePointsAbsolute() const;
+        QVector<QPoint> pointsRelative() const;
+        QVector<QPoint> pointsAbsolute() const;
         void simplify();
         void movePointBy(int index, const QVector2D& moveBy);
         void movePointTo(int index, const QPoint& moveTo);
@@ -68,14 +67,14 @@ namespace QSchematic {
     private:
         Q_DISABLE_COPY(Wire)
 
-        static void removeDuplicatePoints(QVector<WirePoint>& points);
-        static void removeObsoletePoints(QVector<WirePoint>& points);
+        static void removeDuplicatePoints(QVector<WirePoint>& pointsRelative);
+        static void removeObsoletePoints(QVector<WirePoint>& pointsRelative);
 
-        QVector<WirePoint> _points; // Store grid coordinates, not scene coordinates, but RELATIVE to this object
+        QVector<WirePoint> _points;
         QRectF _rect;
         int _pointToMoveIndex;
         int _lineSegmentToMoveIndex;
-        QPoint _prevMousePos;   // Store grid coordinates, not scene coordinates
+        QPoint _prevMousePos;
     };
 
 }

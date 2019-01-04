@@ -68,7 +68,7 @@ void FancyWire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
     // Make points fancy if they are on top of one of our connectors
     painter->setPen(pen);
     painter->setBrush(brush);
-    const auto& wirePoints = sceneWirePointsAbsolute();
+    const auto& wirePoints = wirePointsAbsolute();
     auto it = wirePoints.constBegin();
     while (it != wirePoints.constEnd()) {
         const auto& wirePoint = it->toPoint();

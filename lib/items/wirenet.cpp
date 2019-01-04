@@ -64,8 +64,8 @@ bool WireNet::addWire(const std::shared_ptr<Wire>& wire)
     // Update the junctions
     // Do this before we add the wire so that lineSegments() doesn't contain the line segments
     // of the new wire. Otherwise all points will be marked as junctions.
-    for (int i = 0; i < wire->points().count(); i++) {
-        const WirePoint& point = wire->points().at(i);
+    for (int i = 0; i < wire->pointsRelative().count(); i++) {
+        const WirePoint& point = wire->pointsRelative().at(i);
         for (const Line& line : lineSegments()) {
             wire->setPointIsJunction(i, false);
             if (line.containsPoint(point.toPoint(), 0)) {
@@ -78,9 +78,10 @@ bool WireNet::addWire(const std::shared_ptr<Wire>& wire)
     // Check if we dropped on a point of the existing wire
     // If so, mark that one as a junction
     for (auto& existingWire : _wires) {
-        for (int i = 0; i < existingWire->wirePoints().count(); i++) {
-            const WirePoint& existingWirePoint = existingWire->wirePoints().at(i);
-            for (const auto& wirePoint : wire->points()) {
+        auto existingWirePointsRelative = existingWire->wirePointsRelative();
+        for (int i = 0; i < existingWirePointsRelative.count(); i++) {
+            const WirePoint& existingWirePoint = existingWirePointsRelative.at(i);
+            for (const auto& wirePoint : wire->pointsRelative()) {
                 if (existingWirePoint == wirePoint) {
                     existingWire->setPointIsJunction(i, true);
                 }
@@ -179,7 +180,7 @@ QList<QPoint> WireNet::points() const
     QList<QPoint> list;
 
     for (const auto& wire : _wires) {
-        list.append(wire->points().toList());
+        list.append(wire->pointsRelative().toList());
     }
 
     return list;
@@ -226,8 +227,8 @@ void WireNet::updateWireJunctions()
         }
 
         // Check for each point whether it's part of a line segment
-        for (int i = 0; i < wire->points().count(); i++) {
-            const WirePoint& point = wire->points().at(i);
+        for (int i = 0; i < wire->pointsRelative().count(); i++) {
+            const WirePoint& point = wire->pointsRelative().at(i);
             for (const Line& line : lineSegments) {
                 if (line.containsPoint(point.toPoint(), 0)) {
                     wire->setPointIsJunction(i, true);
