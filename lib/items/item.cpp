@@ -199,7 +199,7 @@ void Item::moveBy(const QVector2D& moveBy)
 void Item::setSettings(const Settings& settings)
 {
     // Resnap to grid
-    setPos(_settings.snapToGridPoint(pos()));
+    setPos(_settings.snapToGrid(pos()));
 
     // Store the new settings
     _settings = settings;
@@ -340,7 +340,7 @@ QVariant Item::itemChange(QGraphicsItem::GraphicsItemChange change, const QVaria
     {
         QPointF newPos = value.toPointF();
         if (snapToGrid()) {
-            newPos =_settings.snapToGridPoint(newPos);
+            newPos =_settings.snapToGrid(newPos);
         }
         return newPos;
     }

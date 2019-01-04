@@ -199,7 +199,7 @@ QVariant Connector::itemChange(QGraphicsItem::GraphicsItemChange change, const Q
 
         // Honor snap-to-grid
         if (snapToGrid()) {
-            proposedPos = _settings.snapToGridPoint(proposedPos);
+            proposedPos = _settings.snapToGrid(proposedPos);
         }
 
         return proposedPos;

@@ -32,13 +32,14 @@ QPoint Settings::toScenePoint(const QPoint& gridCoordinate) const
     return gridCoordinate * gridSize;
 }
 
-QPoint Settings::snapToGridPoint(const QPointF& scenePoint) const
+QPoint Settings::snapToGrid(const QPointF& scenePoint) const
 {
     int xV = qRound(scenePoint.x() / gridSize) * gridSize;
     int yV = qRound(scenePoint.y() / gridSize) * gridSize;
 
     return QPoint(xV, yV);
 }
+
 QVector2D Settings::snapToGrid(const QVector2D& sceneVector) const
 {
     int xV = qRound(sceneVector.x() / gridSize) * gridSize;

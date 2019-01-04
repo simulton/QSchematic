@@ -447,7 +447,7 @@ void Wire::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 
     // Snap to grid (if supposed to)
     if (snapToGrid()) {
-        curPos = _settings.snapToGridPoint(curPos);
+        curPos = _settings.snapToGrid(curPos);
     }
 
     // Move a point?

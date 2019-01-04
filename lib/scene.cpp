@@ -778,7 +778,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             }
 
             // Snap to grid
-            const QPointF& snappedPos = _settings.snapToGridPoint(event->scenePos());
+            const QPointF& snappedPos = _settings.snapToGrid(event->scenePos());
             _newWire->appendPoint(snappedPos);
             _newWireSegment = true;
         }
@@ -889,7 +889,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 
         // Transform mouse coordinates to grid positions (snapped to nearest grid point)
 #warning ToDo: Use QPointF
-        const QPointF& snappedPos = _settings.snapToGridPoint(event->scenePos());
+        const QPointF& snappedPos = _settings.snapToGrid(event->scenePos());
 
         // Add a new wire segment. Only allow straight angles (if supposed to)
         if (_settings.routeStraightAngles) {
