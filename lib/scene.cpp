@@ -927,11 +927,10 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             }
         } else {
             // Don't care about angles and stuff. Fuck geometry, right?
-            QPoint newGridPoint = _settings.toGridPoint(newMousePos);
             if (_newWire->pointsRelative().count() > 1) {
-                _newWire->movePointTo(_newWire->pointsRelative().count()-1, newGridPoint);
+                _newWire->movePointTo(_newWire->pointsRelative().count()-1, snappedPos);
             } else {
-                _newWire->appendPoint(newGridPoint);
+                _newWire->appendPoint(snappedPos);
             }
         }
 
