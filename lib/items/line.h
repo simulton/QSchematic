@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QPoint>
+#include <QPointF>
 
 class QLineF;
 
@@ -11,10 +11,12 @@ namespace QSchematic {
     public:
         Line() = default;
         Line(int x1, int y1, int x2, int y2);
+        Line(qreal x1, qreal y1, qreal x2, qreal y2);
         Line(const QPoint& p1, const QPoint& p2);
+        Line(const QPointF& p1, const QPointF& p2);
 
-        QPoint p1() const;
-        QPoint p2() const;
+        QPointF p1() const;
+        QPointF p2() const;
         bool isNull() const;
         bool isHorizontal() const;
         bool isVertical() const;
@@ -26,8 +28,8 @@ namespace QSchematic {
         static bool containsPoint(const QLineF& line, const QPointF& point, unsigned tolerance = 0);
 
     private:
-        QPoint _p1;
-        QPoint _p2;
+        QPointF _p1;
+        QPointF _p2;
     };
 
 }

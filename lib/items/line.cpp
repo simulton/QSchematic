@@ -6,8 +6,14 @@
 using namespace QSchematic;
 
 Line::Line(int x1, int y1, int x2, int y2) :
-    _p1(QPoint(x1, y1)),
-    _p2(QPoint(x2, y2))
+    _p1(QPointF(x1, y1)),
+    _p2(QPointF(x2, y2))
+{
+}
+
+Line::Line(qreal x1, qreal y1, qreal x2, qreal y2) :
+    _p1(QPointF(x1, y1)),
+    _p2(QPointF(x2, y2))
 {
 }
 
@@ -17,29 +23,35 @@ Line::Line(const QPoint& p1, const QPoint& p2) :
 {
 }
 
-QPoint Line::p1() const
+Line::Line(const QPointF& p1, const QPointF& p2) :
+    _p1(p1),
+    _p2(p2)
+{
+}
+
+QPointF Line::p1() const
 {
     return _p1;
 }
 
-QPoint Line::p2() const
+QPointF Line::p2() const
 {
     return _p2;
 }
 
 bool Line::isNull() const
 {
-    return (_p1.x() == _p2.x()) && (_p1.y() == _p2.y());
+    return qFuzzyCompare(_p1.x(), _p2.x()) && qFuzzyCompare(_p1.y(), _p2.y());
 }
 
 bool Line::isHorizontal() const
 {
-    return (_p1.y() == _p2.y());
+    return qFuzzyCompare(_p1.y(), _p2.y());
 }
 
 bool Line::isVertical() const
 {
-    return (_p1.x() == _p2.x());
+    return qFuzzyCompare(_p1.x(), _p2.x());
 }
 
 qreal Line::lenght() const
