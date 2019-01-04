@@ -254,8 +254,10 @@ bool Scene::removeItem(const std::shared_ptr<Item>& item)
         return false;
     }
 
-    // Remove from scene
-    QGraphicsScene::removeItem(item.get());
+    // Remove from scene (if necessary)
+    if (item->QGraphicsItem::scene()) {
+        QGraphicsScene::removeItem(item.get());
+    }
 
     // Remove shared pointer from local list to reduce instance count
     _items.removeAll(item);
