@@ -57,7 +57,7 @@ namespace QSchematic {
         QList<std::shared_ptr<WireNet>> nets(const std::shared_ptr<WireNet>& wireNet) const;
         std::shared_ptr<WireNet> net(const std::shared_ptr<Wire>& wire) const;
         QList<std::shared_ptr<WireNet>> netsAt(const QPoint& point);
-        QList<QPoint> connectionPoints() const;
+        QList<QPointF> connectionPoints() const;
 
         void undo();
         void redo();
@@ -104,7 +104,7 @@ namespace QSchematic {
         void itemMoved(const Item& item, const QVector2D& movedBy);
         void wireNetHighlightChanged(bool highlighted);
         void wirePointMoved(Wire& wire, WirePoint& point);
-        void wireMovePoint(const QPoint& point, Wire& wire, const QVector2D& movedBy) const;
+        void wireMovePoint(const QPointF& point, Wire& wire, const QVector2D& movedBy) const;
         QList<std::shared_ptr<Wire>> wiresConnectedTo(const Node& node, const QVector2D& offset) const;
         void showPopup(const Item& item);
     };

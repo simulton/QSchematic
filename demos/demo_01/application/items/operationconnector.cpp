@@ -11,6 +11,7 @@
 #include "../../../lib/commands/commanditemvisibility.h"
 #include "../../../lib/commands/commandlabelrename.h"
 #include "operationconnector.h"
+#include "operation.h"
 #include "itemtypes.h"
 
 #define SIZE (_settings.gridSize/2)
@@ -59,13 +60,22 @@ void OperationConnector::copyAttributes(OperationConnector& dest) const
 
 QRectF OperationConnector::boundingRect() const
 {
-    return RECT;
+    qreal adj = 1.5;
+
+    return RECT.adjusted(-adj, -adj, adj, adj);
 }
 
 void OperationConnector::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     Q_UNUSED(option)
     Q_UNUSED(widget)
+
+    // Draw the bounding rect if debug mode is enabled
+    if (_settings.debug) {
+        painter->setPen(Qt::NoPen);
+        painter->setBrush(QBrush(Qt::red));
+        painter->drawRect(boundingRect());
+    }
 
     // Body pen
     QPen bodyPen;

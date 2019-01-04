@@ -130,7 +130,7 @@ QRectF Wire::boundingRect() const
 QPainterPath Wire::shape() const
 {
     QPainterPath basePath;
-    basePath.addPolygon(QPolygon(pointsRelative()));
+    basePath.addPolygon(QPolygonF(pointsRelative()));
 
     QPainterPathStroker str;
     str.setCapStyle(Qt::FlatCap);
@@ -160,9 +160,9 @@ QVector<WirePoint> Wire::wirePointsAbsolute() const
     return points;
 }
 
-QVector<QPoint> Wire::pointsRelative() const
+QVector<QPointF> Wire::pointsRelative() const
 {
-    QVector<QPoint> points;
+    QVector<QPointF> points;
 
     for (const WirePoint& point : _points) {
         points << point.toPoint();
@@ -171,12 +171,12 @@ QVector<QPoint> Wire::pointsRelative() const
     return points;
 }
 
-QVector<QPoint> Wire::pointsAbsolute() const
+QVector<QPointF> Wire::pointsAbsolute() const
 {
-    QVector<QPoint> points;
+    QVector<QPointF> points;
 
     for (const WirePoint& point : _points) {
-        points << _settings.toScenePoint(point.toPoint() + gridPos());
+        points << point + pos();
     }
 
     return points;
@@ -208,7 +208,7 @@ void Wire::calculateBoundingRect()
     _rect = QRectF(topLeft, bottomRight);
 }
 
-void Wire::prependPoint(const QPoint& point)
+void Wire::prependPoint(const QPointF& point)
 {
     prepareGeometryChange();
     _points.prepend(WirePoint(point - gridPos()));
@@ -217,7 +217,7 @@ void Wire::prependPoint(const QPoint& point)
     emit pointMoved(*this, _points.first());
 }
 
-void Wire::appendPoint(const QPoint& point)
+void Wire::appendPoint(const QPointF& point)
 {
     prepareGeometryChange();
     _points.append(WirePoint(point - gridPos()));
@@ -226,7 +226,7 @@ void Wire::appendPoint(const QPoint& point)
     emit pointMoved(*this, _points.last());
 }
 
-void Wire::insertPoint(int index, const QPoint& point)
+void Wire::insertPoint(int index, const QPointF& point)
 {
     // Boundary check
     if (index < 0 || index >= _points.count()) {
@@ -261,7 +261,7 @@ void Wire::removeLastPoint()
     calculateBoundingRect();
 }
 
-void Wire::removePoint(const QPoint& point)
+void Wire::removePoint(const QPointF& point)
 {
     prepareGeometryChange();
     _points.removeAll(WirePoint(point - gridPos()));
@@ -331,7 +331,7 @@ void Wire::movePointBy(int index, const QVector2D& moveBy)
     emit pointMoved(*this, _points[index]);
 }
 
-void Wire::movePointTo(int index, const QPoint& moveTo)
+void Wire::movePointTo(int index, const QPointF& moveTo)
 {
     if (index < 0 or index > _points.count()-1) {
         return;
@@ -367,7 +367,7 @@ void Wire::setPointIsJunction(int index, bool isJunction)
     update();
 }
 
-bool Wire::pointIsOnWire(const QPoint& point) const
+bool Wire::pointIsOnWire(const QPointF& point) const
 {
     for (const Line& lineSegment : lineSegments()) {
         if (lineSegment.containsPoint(point, 0)) {
@@ -395,30 +395,27 @@ QList<Line> Wire::lineSegments() const
 
 void Wire::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
-    _prevMousePos = _settings.toGridPoint(event->scenePos());
-
     // Check wheter we clicked on a handle
     if (isSelected()) {
         // Check whether we clicked on a handle
-        QVector<QPoint> points(pointsAbsolute());
+        QVector<QPointF> points(pointsAbsolute());
+        _pointToMoveIndex = -1;
         for (int i = 0; i < points.count(); i++) {
             QRectF handleRect(points.at(i).x() - HANDLE_SIZE, points.at(i).y() - HANDLE_SIZE, 2*HANDLE_SIZE, 2*HANDLE_SIZE);
 
             if (handleRect.contains(event->scenePos())) {
                 _pointToMoveIndex = i;
-                return;
+                break;
             }
-
-            _pointToMoveIndex = -1;
         }
 
         // Check whether we clicked on a line segment
         QList<Line> lines = lineSegments();
         for (int i = 0; i < lines.count(); i++) {
             const Line& line = lines.at(i);
-            if (line.containsPoint(_settings.toGridPoint(event->scenePos()), 1)) {
+            if (line.containsPoint(event->scenePos(), 1)) {
                 _lineSegmentToMoveIndex = i;
-                return;
+                break;
             }
 
             _lineSegmentToMoveIndex = -1;
@@ -427,6 +424,9 @@ void Wire::mousePressEvent(QGraphicsSceneMouseEvent* event)
     } else {
         Item::mousePressEvent(event);
     }
+
+    // Store last known mouse pos
+    _prevMousePos = event->scenePos();
 }
 
 void Wire::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
@@ -435,39 +435,66 @@ void Wire::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 
     _pointToMoveIndex = -1;
     _lineSegmentToMoveIndex = -1;
-    _prevMousePos = _settings.toGridPoint(event->scenePos());
-}
 
+    // Store last known mouse pos
+    _prevMousePos = event->scenePos();
+}
+#include <QtDebug>
 void Wire::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
-    QPoint curPos = _settings.toGridPoint(event->scenePos());
+    QPointF curPos = event->scenePos();
     bool ctrlPressed = QApplication::keyboardModifiers() & Qt::ControlModifier;
 
-    if (_pointToMoveIndex > -1) {
+    // Snap to grid (if supposed to)
+    if (snapToGrid()) {
+        curPos = _settings.snapToGridPoint(curPos);
+    }
 
+    // Move a point?
+    if (_pointToMoveIndex > -1) {
+        // Yep, we can do this
         event->accept();
+
+        // Move
         movePointTo(_pointToMoveIndex, curPos);
 
-    } else if (_lineSegmentToMoveIndex > -1){
+    }
 
+    // Move a line segment?
+    else if (_lineSegmentToMoveIndex > -1){
+        // Yep, we can do this
         event->accept();
-        Line line = lineSegments().at(_lineSegmentToMoveIndex);
+
+        // Determine movement vector
+        const Line& line = lineSegments().at(_lineSegmentToMoveIndex);
         QVector2D moveLineBy(0, 0);
         if (line.isHorizontal()) {
-            moveLineBy = QVector2D(0, curPos.y() - _prevMousePos.y());
+            moveLineBy = QVector2D(0, static_cast<float>(curPos.y() - _prevMousePos.y()));
         } else if (line.isVertical()) {
-            moveLineBy = QVector2D(curPos.x() - _prevMousePos.x(), 0);
-        } else if (ctrlPressed){
+            moveLineBy = QVector2D(static_cast<float>(curPos.x() - _prevMousePos.x()), 0);
+        } else if (ctrlPressed) {
             moveLineBy = QVector2D(curPos - _prevMousePos);
         }
+
+        // Snap to grid (if supposed to)
+        if (snapToGrid()) {
+            moveLineBy = _settings.snapToGrid(moveLineBy);
+        }
+
+        // Move line segment
         moveLineSegmentBy(_lineSegmentToMoveIndex, moveLineBy);
 
-    } else {
+    }
 
+    // Nothing interesting for us to do
+    else {
+
+        // Hand over to base class
         Item::mouseMoveEvent(event);
     }
 
-    _prevMousePos = curPos;
+    // Store last known mouse pos
+    _prevMousePos = event->scenePos();
 }
 
 void Wire::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
@@ -492,7 +519,7 @@ void Wire::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
     }
 
     // Check whether we hover over a point handle
-    QVector<QPoint> points(pointsAbsolute());
+    QVector<QPointF> points(pointsAbsolute());
     for (int i = 0; i < points.count(); i++) {
         QRectF handleRect(points.at(i).x() - HANDLE_SIZE, points.at(i).y() - HANDLE_SIZE, 2*HANDLE_SIZE, 2*HANDLE_SIZE);
 
@@ -506,8 +533,11 @@ void Wire::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
     bool ctrlPressed = QApplication::keyboardModifiers() & Qt::ControlModifier;
     QList<Line> lines = lineSegments();
     for (int i = 0; i < lines.count(); i++) {
+        // Retrieve the line segment
         const Line& line = lines.at(i);
-        if (line.containsPoint(_settings.toGridPoint(event->scenePos()), 1)) {
+
+        // Set the appropriate cursor
+        if (line.containsPoint(event->scenePos(), 1)) {
             if (line.isHorizontal()) {
                 setCursor(Qt::SizeVerCursor);
             } else if (line.isVertical()) {
@@ -562,7 +592,7 @@ void Wire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     // Draw the actual line
     painter->setPen(penLine);
     painter->setBrush(brushLine);
-    QVector<QPoint> points = pointsRelative();
+    const auto& points = pointsRelative();
     painter->drawPolyline(points.constData(), points.count());
 
     // Draw the junction poins
@@ -580,7 +610,7 @@ void Wire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         painter->setOpacity(0.5);
         painter->setPen(penHandle);
         painter->setBrush(brushHandle);
-        for (const QPoint& point : points) {
+        for (const QPointF& point : points) {
             QRectF handleRect(point.x() - HANDLE_SIZE, point.y() - HANDLE_SIZE, 2*HANDLE_SIZE, 2*HANDLE_SIZE);
             painter->drawRect(handleRect);
         }

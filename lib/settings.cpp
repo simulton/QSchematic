@@ -39,9 +39,10 @@ QPoint Settings::snapToGridPoint(const QPointF& scenePoint) const
 
     return QPoint(xV, yV);
 }
-
-void Settings::snapToGrid(QVector2D& sceneVector) const
+QVector2D Settings::snapToGrid(const QVector2D& sceneVector) const
 {
-    sceneVector.setX(qRound(sceneVector.x() / gridSize) * gridSize);
-    sceneVector.setY(qRound(sceneVector.y() / gridSize) * gridSize);
+    int xV = qRound(sceneVector.x() / gridSize) * gridSize;
+    int yV = qRound(sceneVector.y() / gridSize) * gridSize;
+
+    return QVector2D(xV, yV);
 }

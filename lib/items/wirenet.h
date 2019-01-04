@@ -34,7 +34,7 @@ namespace QSchematic {
         QString name() const;
         QList<std::shared_ptr<Wire>> wires() const;
         QList<Line> lineSegments() const;
-        QList<QPoint> points() const;
+        QList<QPointF> points() const;
         std::shared_ptr<Label> label();
 
     signals:

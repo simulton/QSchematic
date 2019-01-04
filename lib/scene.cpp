@@ -491,7 +491,7 @@ void Scene::itemMoved(const Item& item, const QVector2D& movedBy)
 
         // Update wire positions
         for (auto& wire : wiresConnectedToMovingObjects) {
-            for (const QPoint& connectionPoint : node->connectionPoints()) {
+            for (const QPointF& connectionPoint : node->connectionPoints()) {
                 wireMovePoint(connectionPoint, *wire, movedBy);
             }
         }
@@ -585,7 +585,7 @@ void Scene::wirePointMoved(Wire& rawWire, WirePoint& point)
     addWire(wire);
 }
 
-void Scene::wireMovePoint(const QPoint& point, Wire& wire, const QVector2D& movedBy) const
+void Scene::wireMovePoint(const QPointF& point, Wire& wire, const QVector2D& movedBy) const
 {
     // If there are only two points (one line segment) and we are supposed to preserve
     // straight angles, we need to insert two additional points if we are not moving in
@@ -597,11 +597,11 @@ void Scene::wireMovePoint(const QPoint& point, Wire& wire, const QVector2D& move
         // this is unnecessary as we're just moving one of the two points.
         if ((line.isHorizontal() && !qFuzzyIsNull(movedBy.y())) || (line.isVertical() && !qFuzzyIsNull(movedBy.x()))) {
             qreal lineLength = line.lenght();
-            QPoint p;
+            QPointF p;
 
             // The line is horizontal
             if (line.isHorizontal()) {
-                QPoint leftPoint = line.p1();
+                QPointF leftPoint = line.p1();
                 if (line.p2().x() < line.p1().x()) {
                     leftPoint = line.p2();
                 }
@@ -611,7 +611,7 @@ void Scene::wireMovePoint(const QPoint& point, Wire& wire, const QVector2D& move
 
             // The line is vertical
             } else {
-                QPoint upperPoint = line.p1();
+                QPointF upperPoint = line.p1();
                 if (line.p2().x() < line.p1().x()) {
                     upperPoint = line.p2();
                 }
@@ -629,7 +629,7 @@ void Scene::wireMovePoint(const QPoint& point, Wire& wire, const QVector2D& move
 
     // Move the points
     for (int i = 0; i < wire.pointsRelative().count(); i++) {
-        QPoint currPoint = wire.pointsRelative().at(i);
+        QPointF currPoint = wire.pointsRelative().at(i);
         if (currPoint == point-movedBy.toPoint()) {
 
             // Preserve straight angles (if supposed to)
@@ -637,11 +637,11 @@ void Scene::wireMovePoint(const QPoint& point, Wire& wire, const QVector2D& move
 
                 // Move previous point
                 if (i >= 1) {
-                    QPoint prevPoint = wire.pointsRelative().at(i-1);
+                    QPointF prevPoint = wire.pointsRelative().at(i-1);
                     Line line(prevPoint, currPoint);
 
                     // Make sure that two wire points never collide
-                    if (i >= 2 && Line(currPoint+movedBy.toPoint(), prevPoint).lenght() <= 2) {
+                    if (i >= 2 && Line(currPoint+movedBy.toPointF(), prevPoint).lenght() <= 2) {
                         wire.moveLineSegmentBy(i-2, movedBy);
                     }
 
@@ -658,11 +658,11 @@ void Scene::wireMovePoint(const QPoint& point, Wire& wire, const QVector2D& move
 
                 // Move next point
                 if (i < wire.pointsRelative().count()-1) {
-                    QPoint nextPoint = wire.pointsRelative().at(i+1);
+                    QPointF nextPoint = wire.pointsRelative().at(i+1);
                     Line line(currPoint, nextPoint);
 
                     // Make sure that two wire points never collide
-                    if (Line(currPoint+movedBy.toPoint(), nextPoint).lenght() <= 2) {
+                    if (Line(currPoint+movedBy.toPointF(), nextPoint).lenght() <= 2) {
                         wire.moveLineSegmentBy(i+1, movedBy);
                     }
 
@@ -692,8 +692,8 @@ QList<std::shared_ptr<Wire>> Scene::wiresConnectedTo(const Node& node, const QVe
 
     for (auto& wire : wires()) {
         for (const WirePoint& wirePoint : wire->wirePointsRelative()) {
-            for (const QPoint& connectionPoint : node.connectionPoints()) {
-                if (wirePoint.toPoint() == connectionPoint+offset.toPoint()) {
+            for (const QPointF& connectionPoint : node.connectionPoints()) {
+                if (wirePoint == connectionPoint+offset.toPointF()) {
                     list.append(wire);
                     break;
                 }
@@ -776,8 +776,10 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
                 }
                 _undoStack->push(new CommandItemAdd(this, _newWire));
             }
-#warning Todo: Use QPointF instead
-            _newWire->appendPoint(event->scenePos().toPoint());
+
+            // Snap to grid
+            const QPointF& snappedPos = _settings.snapToGridPoint(event->scenePos());
+            _newWire->appendPoint(snappedPos);
             _newWireSegment = true;
         }
 
@@ -887,7 +889,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 
         // Transform mouse coordinates to grid positions (snapped to nearest grid point)
 #warning ToDo: Use QPointF
-        const QPoint& mouseGridPos = _settings.snapToGridPoint(newMousePos);
+        const QPointF& snappedPos = _settings.snapToGridPoint(event->scenePos());
 
         // Add a new wire segment. Only allow straight angles (if supposed to)
         if (_settings.routeStraightAngles) {
@@ -899,22 +901,22 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 
                 // Create the intermediate point that creates the straight angle
                 WirePoint prevNode(_newWire->pointsRelative().at(_newWire->pointsRelative().count()-1));
-                QPoint corner(prevNode.x(), mouseGridPos.y());
+                QPointF corner(prevNode.x(), snappedPos.y());
                 if (_invertWirePosture) {
-                    corner.setX(mouseGridPos.x());
+                    corner.setX(snappedPos.x());
                     corner.setY(prevNode.y());
                 }
 
                 // Add the two new points
                 _newWire->appendPoint(corner);
-                _newWire->appendPoint(mouseGridPos);
+                _newWire->appendPoint(snappedPos);
 
                 _newWireSegment = false;
             } else {
                 // Create the intermediate point that creates the straight angle
                 WirePoint p1(_newWire->pointsRelative().at(_newWire->pointsRelative().count()-3));
-                QPoint p2(p1.x(), mouseGridPos.y());
-                QPoint p3(mouseGridPos);
+                QPointF p2(p1.x(), snappedPos.y());
+                QPointF p3(snappedPos);
                 if (_invertWirePosture) {
                     p2.setX(p3.x());
                     p2.setY(p1.y());
@@ -965,7 +967,7 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
             _newWire->removeLastPoint();
 
             // Check whether the wire was connected to a connector
-            for (const QPoint& connectionPoint : connectionPoints()) {
+            for (const QPointF& connectionPoint : connectionPoints()) {
                 if (connectionPoint == _newWire->pointsRelative().last()) {
                     wireIsFloating = false;
                     break;
@@ -1145,9 +1147,9 @@ void Scene::setupNewItem(Item& item)
     connect(&item, &Item::showPopup, this, &Scene::showPopup);
 }
 
-QList<QPoint> Scene::connectionPoints() const
+QList<QPointF> Scene::connectionPoints() const
 {
-    QList<QPoint> list;
+    QList<QPointF> list;
 
     for (const auto& node : nodes()) {
         list << node->connectionPoints();

@@ -265,18 +265,18 @@ QList<std::shared_ptr<Connector>> Node::connectors() const
     return _connectors;
 }
 
-QList<QPoint> Node::connectionPoints() const
+QList<QPointF> Node::connectionPoints() const
 {
-    QList<QPoint> list;
+    QList<QPointF> list;
 
     for (const auto& connector : _connectors) {
-        list << connector->connectionPoint();
+        list << connector->connectionPoint() + connector->pos();
     }
 
     return list;
 }
 
-bool Node::isConnectionPoint(const QPoint& gridPoint) const
+bool Node::isConnectionPoint(const QPointF& gridPoint) const
 {
     return connectionPoints().contains(gridPoint);
 }

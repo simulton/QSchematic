@@ -24,6 +24,7 @@ namespace QSchematic {
         WirePoint(qreal x, qreal y);
         virtual ~WirePoint() = default;
 
+        QPointF toPointF() const;
         void setIsJunction(bool isJunction);
         bool isJunction() const;
 

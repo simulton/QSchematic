@@ -29,22 +29,22 @@ namespace QSchematic {
         virtual QRectF boundingRect() const override;
         virtual QPainterPath shape() const override;
 
-        void prependPoint(const QPoint& point);
-        void appendPoint(const QPoint& point);
-        void insertPoint(int index, const QPoint& point);        // Index of new point
+        void prependPoint(const QPointF& point);
+        void appendPoint(const QPointF& point);
+        void insertPoint(int index, const QPointF& point);        // Index of new point
         void removeFirstPoint();
         void removeLastPoint();
-        void removePoint(const QPoint& point);
+        void removePoint(const QPointF& point);
         QVector<WirePoint> wirePointsRelative() const;
         QVector<WirePoint> wirePointsAbsolute() const;
-        QVector<QPoint> pointsRelative() const;
-        QVector<QPoint> pointsAbsolute() const;
+        QVector<QPointF> pointsRelative() const;
+        QVector<QPointF> pointsAbsolute() const;
         void simplify();
         void movePointBy(int index, const QVector2D& moveBy);
-        void movePointTo(int index, const QPoint& moveTo);
+        void movePointTo(int index, const QPointF& moveTo);
         void moveLineSegmentBy(int index, const QVector2D& moveBy);
         void setPointIsJunction(int index, bool isJunction);
-        bool pointIsOnWire(const QPoint& point) const;
+        bool pointIsOnWire(const QPointF& point) const;
 
         QList<QSchematic::Line> lineSegments() const;
 
@@ -74,7 +74,7 @@ namespace QSchematic {
         QRectF _rect;
         int _pointToMoveIndex;
         int _lineSegmentToMoveIndex;
-        QPoint _prevMousePos;
+        QPointF _prevMousePos;
     };
 
 }

@@ -149,9 +149,9 @@ void Connector::update()
     Item::update();
 }
 
-QPoint Connector::connectionPoint() const
+QPointF Connector::connectionPoint() const
 {
-    return _settings.toGridPoint(mapToScene(_settings.toScenePoint(QPoint(0, 0))));
+    return QPointF(0, 0);
 }
 
 QRectF Connector::boundingRect() const

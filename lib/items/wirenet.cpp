@@ -175,12 +175,12 @@ QList<Line> WireNet::lineSegments() const
     return list;
 }
 
-QList<QPoint> WireNet::points() const
+QList<QPointF> WireNet::points() const
 {
-    QList<QPoint> list;
+    QList<QPointF> list;
 
     for (const auto& wire : _wires) {
-        list.append(wire->pointsRelative().toList());
+        list.append(wire->pointsAbsolute().toList());
     }
 
     return list;

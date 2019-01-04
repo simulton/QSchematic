@@ -80,7 +80,7 @@ void Operation::copyAttributes(Operation& dest) const
 
 QRectF Operation::boundingRect() const
 {
-    qreal adj = SHADOW_BLUR_RADIUS + 1.5;
+    qreal adj = 1.5;
 
     return QRectF(sizeSceneRect()).adjusted(-adj, -adj, adj, adj);
 }

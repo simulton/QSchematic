@@ -69,7 +69,7 @@ namespace QSchematic
                 net.name = globalNet.name;
 
                 // Build a list of all wire net points in scene coordinates
-                QList<QPoint> wireScenePoints;
+                QList<QPointF> wireScenePoints;
                 for (const auto& wireNet : globalNet.wireNets) {
                     wireScenePoints << wireNet->points();
                 }

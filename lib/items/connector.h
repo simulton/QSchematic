@@ -37,7 +37,7 @@ namespace QSchematic {
         Direction textDirection() const;
         virtual void update() override;
 
-        QPoint connectionPoint() const;
+        QPointF connectionPoint() const;
         std::shared_ptr<Label> label() const;
         virtual QRectF boundingRect() const override;
         virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value) override;

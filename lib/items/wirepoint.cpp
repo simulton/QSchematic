@@ -38,6 +38,11 @@ WirePoint::WirePoint(qreal x, qreal y) :
     _isJunction = false;
 }
 
+QPointF WirePoint::toPointF() const
+{
+    return QPointF(x(), y());
+}
+
 void WirePoint::setIsJunction(bool isJunction)
 {
     _isJunction = isJunction;
@@ -60,7 +65,7 @@ bool operator==(const WirePoint& a, const QPoint& b)
 
 bool operator==(const WirePoint& a, const QPointF& b)
 {
-    return operator==(a, b);
+    return operator==(a.toPointF(), b);
 }
 
 const QPoint operator+(const WirePoint& a, const QPoint& b)
@@ -70,6 +75,6 @@ const QPoint operator+(const WirePoint& a, const QPoint& b)
 
 const QPointF operator+(const WirePoint& a, const QPointF& b)
 {
-    return operator+(a, b);
+    return operator+(a.toPointF(), b);
 }
 
