@@ -57,8 +57,8 @@ namespace QSchematic {
         bool removeConnector(const std::shared_ptr<Connector>& connector);
         void clearConnectors();
         QList<std::shared_ptr<Connector>> connectors() const;
-        QList<QPointF> connectionPoints() const;
-        bool isConnectionPoint(const QPointF& gridPos) const;
+        QList<QPointF> connectionPointsRelative() const;
+        QList<QPointF> connectionPointsAbsolute() const;
         void setConnectorsMovable(bool enabled);
         bool connectorsMovable() const;
         void setConnectorsSnapPolicy(Connector::SnapPolicy policy);

@@ -1736,7 +1736,7 @@
 									"_parent": {
 										"$ref": "AAAAAAFmsthVH8NYGkk="
 									},
-									"name": "connectionPoints",
+									"name": "connectionPointsRelative",
 									"parameters": [
 										{
 											"_type": "UMLParameter",
@@ -1744,7 +1744,9 @@
 											"_parent": {
 												"$ref": "AAAAAAFmsyQcAHNyUY0="
 											},
-											"type": "QPointF",
+											"type": {
+												"$ref": "AAAAAAFoGkAK0E9UTY4="
+											},
 											"multiplicity": "0..*",
 											"direction": "return"
 										}
@@ -1752,28 +1754,22 @@
 								},
 								{
 									"_type": "UMLOperation",
-									"_id": "AAAAAAFnUUSCdQM60ak=",
+									"_id": "AAAAAAFoGx3OzVhfTLw=",
 									"_parent": {
 										"$ref": "AAAAAAFmsthVH8NYGkk="
 									},
-									"name": "isConnectionPoint",
+									"name": "connectionPointsAbsolute",
 									"parameters": [
 										{
 											"_type": "UMLParameter",
-											"_id": "AAAAAAFnUUTEbgPUyEg=",
+											"_id": "AAAAAAFoGx3l2Fjt6zI=",
 											"_parent": {
-												"$ref": "AAAAAAFnUUSCdQM60ak="
+												"$ref": "AAAAAAFoGx3OzVhfTLw="
 											},
-											"name": "point",
-											"type": "QPointF"
-										},
-										{
-											"_type": "UMLParameter",
-											"_id": "AAAAAAFnUUTEbgPV8cg=",
-											"_parent": {
-												"$ref": "AAAAAAFnUUSCdQM60ak="
+											"type": {
+												"$ref": "AAAAAAFoGkAK0E9UTY4="
 											},
-											"type": "bool",
+											"multiplicity": "0..*",
 											"direction": "return"
 										}
 									]
@@ -3631,24 +3627,24 @@
 													"top": 1128,
 													"width": 284.349609375,
 													"height": 13,
-													"text": "+connectionPoints(): QPointF[0..*]",
+													"text": "+connectionPointsRelative(): QPointF[0..*]",
 													"horizontalAlignment": 0
 												},
 												{
 													"_type": "UMLOperationView",
-													"_id": "AAAAAAFnUUSCpgM9T48=",
+													"_id": "AAAAAAFoGx3PFlhiGSA=",
 													"_parent": {
 														"$ref": "AAAAAAFmukrir4nZE8I="
 													},
 													"model": {
-														"$ref": "AAAAAAFnUUSCdQM60ak="
+														"$ref": "AAAAAAFoGx3OzVhfTLw="
 													},
 													"font": "Arial;13;0",
 													"left": 21,
 													"top": 1143,
 													"width": 284.349609375,
 													"height": 13,
-													"text": "+isConnectionPoint(point: QPointF): bool",
+													"text": "+connectionPointsAbsolute(): QPointF[0..*]",
 													"horizontalAlignment": 0
 												},
 												{
@@ -7054,7 +7050,7 @@
 													"top": 459,
 													"width": 320.46142578125,
 													"height": 13,
-													"text": "+snapToGridCoordinate(scenePoint: QPointF): QPoint",
+													"text": "+snapToGrid(scenePoint: QPointF): QPoint",
 													"horizontalAlignment": 0
 												}
 											],
@@ -14152,23 +14148,6 @@
 												},
 												{
 													"_type": "UMLOperationView",
-													"_id": "AAAAAAFnUkvjP5/oqF4=",
-													"_parent": {
-														"$ref": "AAAAAAFmsthVIMNhKy0="
-													},
-													"model": {
-														"$ref": "AAAAAAFnUUSCdQM60ak="
-													},
-													"font": "Arial;13;0",
-													"left": 685,
-													"top": 1047,
-													"width": 284.349609375,
-													"height": 13,
-													"text": "+isConnectionPoint(point: QPointF): bool",
-													"horizontalAlignment": 0
-												},
-												{
-													"_type": "UMLOperationView",
 													"_id": "AAAAAAFnUkvjP5/rtjk=",
 													"_parent": {
 														"$ref": "AAAAAAFmsthVIMNhKy0="
@@ -19473,7 +19452,7 @@
 									"_parent": {
 										"$ref": "AAAAAAFm9fRqOE0XsC8="
 									},
-									"name": "snapToGridCoordinate",
+									"name": "snapToGrid",
 									"parameters": [
 										{
 											"_type": "UMLParameter",
@@ -19482,7 +19461,9 @@
 												"$ref": "AAAAAAFnBU6anXbykbM="
 											},
 											"name": "scenePoint",
-											"type": "QPointF"
+											"type": {
+												"$ref": "AAAAAAFoGkAK0E9UTY4="
+											}
 										},
 										{
 											"_type": "UMLParameter",
@@ -19490,9 +19471,7 @@
 											"_parent": {
 												"$ref": "AAAAAAFnBU6anXbykbM="
 											},
-											"type": {
-												"$ref": "AAAAAAFmwhdOmGYvbWY="
-											},
+											"type": "QPoint",
 											"direction": "return"
 										}
 									]

@@ -265,7 +265,7 @@ QList<std::shared_ptr<Connector>> Node::connectors() const
     return _connectors;
 }
 
-QList<QPointF> Node::connectionPoints() const
+QList<QPointF> Node::connectionPointsRelative() const
 {
     QList<QPointF> list;
 
@@ -276,9 +276,15 @@ QList<QPointF> Node::connectionPoints() const
     return list;
 }
 
-bool Node::isConnectionPoint(const QPointF& gridPoint) const
+QList<QPointF> Node::connectionPointsAbsolute() const
 {
-    return connectionPoints().contains(gridPoint);
+    QList<QPointF> list(connectionPointsRelative());
+
+    for (QPointF& point : list) {
+        point += pos();
+    }
+
+    return list;
 }
 
 void Node::setConnectorsMovable(bool enabled)
