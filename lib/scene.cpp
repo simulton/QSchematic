@@ -491,7 +491,7 @@ void Scene::itemMoved(const Item& item, const QVector2D& movedBy)
 
         // Update wire positions
         for (auto& wire : wiresConnectedToMovingObjects) {
-            for (const QPointF& connectionPoint : node->connectionPoints()) {
+            for (const QPointF& connectionPoint : node->connectionPointsAbsolute()) {
                 wireMovePoint(connectionPoint, *wire, movedBy);
             }
         }
@@ -691,8 +691,8 @@ QList<std::shared_ptr<Wire>> Scene::wiresConnectedTo(const Node& node, const QVe
     QList<std::shared_ptr<Wire>> list;
 
     for (auto& wire : wires()) {
-        for (const WirePoint& wirePoint : wire->wirePointsRelative()) {
-            for (const QPointF& connectionPoint : node.connectionPoints()) {
+        for (const WirePoint& wirePoint : wire->wirePointsAbsolute()) {
+            for (const QPointF& connectionPoint : node.connectionPointsAbsolute()) {
                 if (wirePoint == connectionPoint+offset.toPointF()) {
                     list.append(wire);
                     break;
@@ -1151,9 +1151,7 @@ QList<QPointF> Scene::connectionPoints() const
     QList<QPointF> list;
 
     for (const auto& node : nodes()) {
-        for (const auto& connectionPoint : node->connectionPoints()) {
-            list << connectionPoint + node->pos();
-        }
+        list << node->connectionPointsAbsolute();
     }
 
     return list;
