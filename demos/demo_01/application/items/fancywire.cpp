@@ -68,13 +68,13 @@ void FancyWire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
     // Make points fancy if they are on top of one of our connectors
     painter->setPen(pen);
     painter->setBrush(brush);
-    const auto& wirePoints = wirePointsAbsolute();
-    auto it = wirePoints.constBegin();
-    while (it != wirePoints.constEnd()) {
-        const auto& wirePoint = it->toPoint();
+    const auto& points = pointsAbsolute();
+    auto it = points.constBegin();
+    while (it != points.constEnd()) {
+        const auto& point = it->toPoint();
 
-        if (connectionPoints.contains(_settings.toGridPoint(wirePoint))) {
-            painter->drawEllipse(wirePoint - gridPos(), SIZE, SIZE);
+        if (connectionPoints.contains(point)) {
+            painter->drawEllipse(point, SIZE, SIZE);
         }
 
         it++;
