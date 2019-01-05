@@ -43,9 +43,9 @@ bool WireNet::fromJson(const QJsonObject& object)
             continue;
         auto newWire = ItemFactory::instance().fromJson(wireObject);
         auto sharedNewWire = std::dynamic_pointer_cast<Wire>(std::shared_ptr<Item>(std::move(newWire)));
-        if (!newWire)
+        if (!sharedNewWire)
             continue;
-        newWire->fromJson(wireObject);
+        sharedNewWire->fromJson(wireObject);
         addWire(sharedNewWire);
     }
 
