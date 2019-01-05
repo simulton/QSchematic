@@ -113,14 +113,14 @@ bool Scene::fromJson(const QJsonObject& object)
         for (const QJsonValue& value : array) {
             QJsonObject object = value.toObject();
             if (!object.isEmpty()) {
-                auto net = std::make_unique<WireNet>();
+                auto net = std::make_shared<WireNet>();
                 net->fromJson(object);
 
                 for (auto& wire : net->wires()) {
                     addItem(wire);
                 }
 
-                addWireNet(std::move(net));
+                addWireNet(net);
             }
         }
     }
@@ -716,21 +716,19 @@ void Scene::showPopup(const Item& item)
     }
 }
 
-void Scene::addWireNet(std::unique_ptr<WireNet> wireNet)
+void Scene::addWireNet(const std::shared_ptr<WireNet>& wireNet)
 {
+    // Sanity check
     if (!wireNet) {
         return;
     }
 
-    // Take ownership
-    std::shared_ptr<WireNet> net(std::move(wireNet));
+    // Setup
+    connect(wireNet.get(), &WireNet::pointMoved, this, &Scene::wirePointMoved);
+    connect(wireNet.get(), &WireNet::highlightChanged, this, &Scene::wireNetHighlightChanged);
 
-    connect(net.get(), &WireNet::pointMoved, this, &Scene::wirePointMoved);
-    connect(net.get(), &WireNet::highlightChanged, this, &Scene::wireNetHighlightChanged);
-
-    _nets.append(net);
-
-    update();
+    // Keep track of stuff
+    _nets.append(wireNet);
 }
 
 QList<Item*> Scene::itemsAt(const QPointF& scenePos, Qt::SortOrder order) const

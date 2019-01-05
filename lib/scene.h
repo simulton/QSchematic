@@ -83,7 +83,7 @@ namespace QSchematic {
     private:
         void renderCachedBackground();
         void setupNewItem(Item& item);
-        void addWireNet(std::unique_ptr<WireNet> wireNet);
+        void addWireNet(const std::shared_ptr<WireNet>& wireNet);
         QList<Item*> itemsAt(const QPointF& scenePos, Qt::SortOrder order = Qt::DescendingOrder) const;
 
         QList<std::shared_ptr<Item>> _items;
