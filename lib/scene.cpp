@@ -204,8 +204,8 @@ void Scene::clear()
     // Remove from scene
     // Do not use QGraphicsScene::clear() as that would also delete the items. However,
     // we still need them as we manage them via smart pointers (eg. in commands)
-    for (auto& item : _items) {
-        removeItem(item);
+    while (!_items.isEmpty()) {
+        removeItem(_items.first());
     }
     Q_ASSERT(_items.isEmpty());
 
