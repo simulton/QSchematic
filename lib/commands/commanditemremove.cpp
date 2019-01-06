@@ -18,6 +18,25 @@ CommandItemRemove::CommandItemRemove(const QPointer<Scene>& scene, const std::sh
     setText(QStringLiteral("Remove item"));
 }
 
+CommandItemRemove::CommandItemRemove(const QPointer<Scene>& scene, const Item* item, QUndoCommand* parent) :
+    QUndoCommand(parent)
+{
+    Q_ASSERT(_scene);
+
+    // Retrieve smart pointer
+    const std::shared_ptr<Item>* smartPointer = nullptr;
+    for (const auto& managedItem : _scene->items()) {
+        if (managedItem.get() == item) {
+            smartPointer = &managedItem;
+        }
+    }
+
+    // Call another constructor
+    if (smartPointer) {
+        CommandItemRemove(scene, *smartPointer, parent);
+    }
+}
+
 int CommandItemRemove::id() const
 {
     return ItemRemoveCommandType;

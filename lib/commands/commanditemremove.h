@@ -15,6 +15,7 @@ namespace QSchematic
     {
     public:
         CommandItemRemove(const QPointer<Scene>& scene, const std::shared_ptr<Item>& item, QUndoCommand* parent = nullptr);
+        CommandItemRemove(const QPointer<Scene>& scene, const Item* item, QUndoCommand* parent = nullptr);
 
         virtual int id() const override;
         virtual bool mergeWith(const QUndoCommand* command) override;
