@@ -1072,6 +1072,8 @@ void Scene::dropEvent(QGraphicsSceneDragDropEvent* event)
 
 void Scene::drawBackground(QPainter* painter, const QRectF& rect)
 {
+    const QPointF& pixmapTopleft = rect.topLeft() - sceneRect().topLeft();
+
     painter->drawPixmap(rect, _backgroundPixmap, QRectF(pixmapTopleft.x(), pixmapTopleft.y(), rect.width(), rect.height()));
 }
 
