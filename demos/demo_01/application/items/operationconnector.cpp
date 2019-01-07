@@ -130,7 +130,29 @@ void OperationConnector::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         deleteFromModel->setText("Delete");
         connect(deleteFromModel, &QAction::triggered, [this] {
             if (scene()) {
-                scene()->undoStack()->push(new QSchematic::CommandItemRemove(scene(), this));
+                // Retrieve smart pointer
+                std::shared_ptr<QSchematic::Item> itemPointer;
+                {
+                    // Retrieve parent (Operation)
+                    const Operation* operation = qgraphicsitem_cast<const Operation*>(parentItem());
+                    if (!operation) {
+                        return;
+                    }
+
+                    // Retrieve connector
+                    for (auto& i : operation->connectors()) {
+                        if (i.get() == this) {
+                            itemPointer = i;
+                            break;
+                        }
+                    }
+                    if (!itemPointer) {
+                        return;
+                    }
+                }
+
+                // Issue command
+                scene()->undoStack()->push(new QSchematic::CommandItemRemove(scene(), itemPointer));
             }
         });
 
