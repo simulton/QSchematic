@@ -72,7 +72,7 @@ namespace QSchematic {
         bool highlightEnabled() const;
         QPixmap toPixmap(QPointF& hotSpot, qreal scale = 1.0);
         virtual void update();
-        virtual QWidget* popupInfobox() const;
+        virtual std::unique_ptr<QWidget> popupInfobox() const;
 
     signals:
         void moved(Item& item, const QVector2D& movedBy);

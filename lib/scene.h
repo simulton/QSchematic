@@ -97,7 +97,7 @@ namespace QSchematic {
         bool _invertWirePosture;
         QPointF _lastMousePos;
         QList<std::shared_ptr<Item>> _selectedItems;
-        QScopedPointer<QGraphicsProxyWidget> _popupInfobox;
+        std::unique_ptr<QGraphicsProxyWidget> _popupInfobox;
         QUndoStack* _undoStack;
 
     private slots:

@@ -708,9 +708,14 @@ QList<std::shared_ptr<Wire>> Scene::wiresConnectedTo(const Node& node, const QVe
 
 void Scene::showPopup(const Item& item)
 {
-    _popupInfobox.reset(addWidget(item.popupInfobox()));
+    // Retrieve widget
+    auto widget = item.popupInfobox();
 
-    if (_popupInfobox) {
+    // Create proxy
+    if (widget) {
+        _popupInfobox = std::make_unique<QGraphicsProxyWidget>();
+        _popupInfobox->setWidget(widget.release());
+        QGraphicsScene::addItem(_popupInfobox.get());
         _popupInfobox->setPos(_lastMousePos + QPointF(5, 5));
         _popupInfobox->setZValue(100);
     }

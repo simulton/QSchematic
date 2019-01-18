@@ -4,6 +4,7 @@
 #include <QGraphicsSceneHoverEvent>
 #include <QTimer>
 #include <QJsonObject>
+#include <QWidget>
 #include "item.h"
 #include "../scene.h"
 #include "../commands/commanditemmove.h"
@@ -375,7 +376,7 @@ void Item::update()
     QGraphicsObject::update();
 }
 
-QWidget* Item::popupInfobox() const
+std::unique_ptr<QWidget> Item::popupInfobox() const
 {
     return nullptr;
 }
