@@ -21,7 +21,9 @@ Item::Item(int type, QGraphicsItem* parent) :
     // Highlight timer
     _hoverTimer = new QTimer(this);
     _hoverTimer->setSingleShot(true);
-    connect(_hoverTimer, &QTimer::timeout, this, &Item::timerTimeout);
+    connect(_hoverTimer, &QTimer::timeout, [this]{
+        emit showPopup(*this);
+    });
 
     // Misc
     setAcceptHoverEvents(true);
@@ -349,11 +351,6 @@ QVariant Item::itemChange(QGraphicsItem::GraphicsItemChange change, const QVaria
     default:
         return QGraphicsItem::itemChange(change, value);
     }
-}
-
-void Item::timerTimeout()
-{
-    emit showPopup(*this);
 }
 
 void Item::posChanged()

@@ -95,7 +95,6 @@ namespace QSchematic {
         virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value) override;
 
     private slots:
-        void timerTimeout();
         void posChanged();
 
     private:
