@@ -15,7 +15,7 @@ Settings::Settings() :
     routeStraightAngles(true),
     preserveStraightAngles(true),
     antialiasing(true),
-    popupDelay(400)
+    popupDelay(600)
 {
 }
 
