@@ -307,7 +307,7 @@ QPixmap Item::toPixmap(QPointF& hotSpot, qreal scale)
 
 void Item::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 {
-    event->accept();
+    Q_UNUSED(event)
 
     setHighlighted(true);
     emit highlightChanged(*this, true);
@@ -317,14 +317,14 @@ void Item::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 
 void Item::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
 {
-    event->accept();
+    Q_UNUSED(event)
 
     _hoverTimer->start(_settings.popupDelay);
 }
 
 void Item::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
 {
-    event->accept();
+    Q_UNUSED(event)
 
     _hoverTimer->stop();
     setHighlighted(false);
