@@ -25,6 +25,7 @@ Label::Label(int type, QGraphicsItem* parent) :
 bool Label::toXml(QXmlStreamWriter& xml) const
 {
 #warning ToDo: Add font
+    addTypeIdentifierToXml(xml);
     xml.writeTextElement(QStringLiteral("text"), text());
     xml.writeTextElement(QStringLiteral("connection_point"), BOOL2STR(_hasConnectionPoint));
     xml.writeTextElement(QStringLiteral("x"), QString::number(_connectionPoint.x()));
