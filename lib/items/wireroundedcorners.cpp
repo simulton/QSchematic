@@ -1,4 +1,3 @@
-#include <QJsonObject>
 #include <QPainter>
 #include <QVector2D>
 #include "wirepoint.h"
@@ -21,19 +20,17 @@ WireRoundedCorners::WireRoundedCorners(int type, QGraphicsItem* parent) :
 {
 }
 
-QJsonObject WireRoundedCorners::toJson() const
+bool WireRoundedCorners::toXml(QXmlStreamWriter& xml) const
 {
-    QJsonObject object;
+    addTypeIdentifierToXml(xml);
+    QSchematic::Wire::toXml(xml);
 
-    object.insert("wire", QSchematic::Wire::toJson());
-    addTypeIdentifierToJson(object);
-
-    return object;
+    return true;
 }
 
-bool WireRoundedCorners::fromJson(const QJsonObject& object)
+bool WireRoundedCorners::fromXml(QXmlStreamReader& reader)
 {
-    QSchematic::Wire::fromJson(object["wire"].toObject());
+    QSchematic::Wire::fromXml(reader);
 
     return true;
 }

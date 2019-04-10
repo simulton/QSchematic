@@ -2,8 +2,8 @@
 
 #include <functional>
 #include <memory>
+#include <QXmlStreamReader>
 
-class QJsonObject;
 class QString;
 
 namespace QSchematic {
@@ -13,7 +13,7 @@ namespace QSchematic {
 class CustomItemFactory
 {
 public:
-    static std::unique_ptr<QSchematic::Item> fromJson(const QJsonObject& object);
+    static std::unique_ptr<QSchematic::Item> fromXml(const QXmlStreamReader& reader);
 
 private:
     CustomItemFactory() = default;

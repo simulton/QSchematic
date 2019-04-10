@@ -1,4 +1,3 @@
-#include <QJsonObject>
 #include <QPainter>
 #include <QGraphicsDropShadowEffect>
 #include "flowend.h"
@@ -51,19 +50,17 @@ FlowEnd::FlowEnd() :
     setAllowMouseResize(false);
 }
 
-QJsonObject FlowEnd::toJson() const
+bool FlowEnd::toXml(QXmlStreamWriter& xml) const
 {
-    QJsonObject object;
+    addTypeIdentifierToXml(xml);
+    QSchematic::Node::toXml(xml);
 
-    object.insert("node", QSchematic::Node::toJson());
-    addTypeIdentifierToJson(object);
-
-    return object;
+    return true;
 }
 
-bool FlowEnd::fromJson(const QJsonObject& object)
+bool FlowEnd::fromXml(QXmlStreamReader& reader)
 {
-    QSchematic::Node::fromJson(object["node"].toObject());
+    QSchematic::Node::fromXml(reader);
 
     return true;
 }

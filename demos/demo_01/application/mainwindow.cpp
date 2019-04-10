@@ -15,6 +15,7 @@
 #include <QGraphicsSceneContextMenuEvent>
 #include <QInputDialog>
 #include <QFileDialog>
+#include <QTextCodec>
 #ifndef QT_NO_PRINTER
     #include <QPrinter>
     #include <QPrintDialog>
@@ -34,13 +35,13 @@
 #include "items/fancywire.h"
 #include "itemslibrary/itemsslibrarywidget.h"
 
-const QString FILE_FILTERS = "JSON (*.json)";
+const QString FILE_FILTERS = "XML (*.xml)";
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     // Setup the custom item factory
-    auto func = std::bind(&CustomItemFactory::fromJson, std::placeholders::_1);
+    auto func = std::bind(&CustomItemFactory::fromXml, std::placeholders::_1);
     QSchematic::ItemFactory::instance().setCustomItemsFactory(func);
 
     // Settings
@@ -140,9 +141,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 bool MainWindow::save()
 {
-    // Create JSON document
-    QJsonDocument document(_scene->toJson());
-
     // Prompt for a path
     QString path = QFileDialog::getSaveFileName(this, "Save to file", QDir::homePath(), FILE_FILTERS);
     if (path.isEmpty()) {
@@ -155,7 +153,16 @@ bool MainWindow::save()
     if (!file.isOpen()) {
         return false;
     }
-    file.write(document.toJson());
+
+    QXmlStreamWriter xml(&file);
+    xml.setCodec(QTextCodec::codecForName("UTF-8"));
+    xml.setAutoFormatting(true);
+    xml.setAutoFormattingIndent(4);
+
+    _scene->toXml(xml);
+
+    file.flush();
+    file.close();
 
     return true;
 }
@@ -179,8 +186,8 @@ bool MainWindow::load()
     }
 
     // Load from file contents
-    QJsonDocument document = QJsonDocument::fromJson(file.readAll());
-    _scene->fromJson(document.object());
+    QXmlStreamReader xml(&file);
+    _scene->fromXml(xml);
 
     return true;
 }

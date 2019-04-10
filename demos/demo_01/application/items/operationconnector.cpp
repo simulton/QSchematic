@@ -3,7 +3,6 @@
 #include <QGraphicsSceneContextMenuEvent>
 #include <QMenu>
 #include <QAction>
-#include <QJsonObject>
 #include <QInputDialog>
 #include "../../../lib/items/label.h"
 #include "../../../lib/scene.h"
@@ -28,19 +27,17 @@ OperationConnector::OperationConnector(const QPoint& gridPoint, const QString& t
     setForceTextDirection(true);
 }
 
-QJsonObject OperationConnector::toJson() const
+bool OperationConnector::toXml(QXmlStreamWriter& xml) const
 {
-    QJsonObject object;
+    addTypeIdentifierToXml(xml);
+    QSchematic::Connector::toXml(xml);
 
-    object.insert("connector", QSchematic::Connector::toJson());
-    addTypeIdentifierToJson(object);
-
-    return object;
+    return true;
 }
 
-bool OperationConnector::fromJson(const QJsonObject& object)
+bool OperationConnector::fromXml(QXmlStreamReader& reader)
 {
-    QSchematic::Connector::fromJson(object["connector"].toObject());
+    QSchematic::Connector::fromXml(reader);
 
     return true;
 }

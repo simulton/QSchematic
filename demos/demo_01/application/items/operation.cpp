@@ -1,5 +1,4 @@
 #include <QPainter>
-#include <QJsonObject>
 #include <QMenu>
 #include <QGraphicsSceneContextMenuEvent>
 #include <QInputDialog>
@@ -48,19 +47,17 @@ Operation::Operation(int type, QGraphicsItem* parent) :
     setGraphicsEffect(graphicsEffect);
 }
 
-QJsonObject Operation::toJson() const
+bool Operation::toXml(QXmlStreamWriter& xml) const
 {
-    QJsonObject object;
+    addTypeIdentifierToXml(xml);
+    QSchematic::Node::toXml(xml);
 
-    object.insert("node", QSchematic::Node::toJson());
-    addTypeIdentifierToJson(object);
-
-    return object;
+    return true;
 }
 
-bool Operation::fromJson(const QJsonObject& object)
+bool Operation::fromXml(QXmlStreamReader& reader)
 {
-    QSchematic::Node::fromJson(object["node"].toObject());
+    QSchematic::Node::fromXml(reader);
 
     return true;
 }

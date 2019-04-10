@@ -1,4 +1,3 @@
-#include <QJsonObject>
 #include "../../../lib/items/label.h"
 #include "operationdemo1.h"
 #include "operationconnector.h"
@@ -29,19 +28,19 @@ OperationDemo1::OperationDemo1(QGraphicsItem* parent) :
     }
 }
 
-QJsonObject OperationDemo1::toJson() const
+bool OperationDemo1::toXml(QXmlStreamWriter& xml) const
 {
-    QJsonObject object;
+    xml.writeStartElement(QStringLiteral("operation"));
+    addTypeIdentifierToXml(xml);
+    Operation::toXml(xml);
+    xml.writeEndElement();
 
-    object.insert("operation", Operation::toJson());
-    addTypeIdentifierToJson(object);
-
-    return object;
+    return true;
 }
 
-bool OperationDemo1::fromJson(const QJsonObject& object)
+bool OperationDemo1::fromXml(QXmlStreamReader& reader)
 {
-    Operation::fromJson(object["operation"].toObject());
+    Operation::fromXml(reader);
 
     return true;
 }

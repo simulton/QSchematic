@@ -23,8 +23,8 @@ namespace QSchematic {
         virtual ~Wire() override = default;
         virtual void update() override;
 
-        virtual QJsonObject toJson() const override;
-        virtual bool fromJson(const QJsonObject& object) override;
+        virtual bool toXml(QXmlStreamWriter& xml) const override;
+        virtual bool fromXml(QXmlStreamReader& reader) override;
         virtual std::unique_ptr<Item> deepCopy() const override;
         virtual QRectF boundingRect() const override;
         virtual QPainterPath shape() const override;

@@ -7,6 +7,9 @@
 #include "label.h"
 #include "../utils.h"
 
+#define BOOL2STR(x) (x ? QStringLiteral("true") : QStringLiteral("false"))
+#define STR2BOOL(x) (QString::compare(x, QStringLiteral("true")) == 0 ? true : false)
+
 const qreal SIZE               = 1;
 const QColor COLOR_BODY_FILL   = QColor(Qt::green);
 const QColor COLOR_BODY_BORDER = QColor(Qt::black);
@@ -43,29 +46,38 @@ Connector::Connector(int type, const QPoint& gridPoint, const QString& text, QGr
     calculateTextDirection();
 }
 
-QJsonObject Connector::toJson() const
+bool Connector::toXml(QXmlStreamWriter& xml) const
 {
-    QJsonObject object;
+    xml.writeTextElement(QStringLiteral("snap_policy"), QString::number(snapPolicy()));
+    xml.writeTextElement(QStringLiteral("force_text_direction"), BOOL2STR(forceTextDirection()));
+    xml.writeTextElement(QStringLiteral("text_direction"), QString::number(textDirection()));
+    xml.writeStartElement(QStringLiteral("label"));
+    _label->toXml(xml);
+    xml.writeEndElement();
 
-    object.insert("snap policy", snapPolicy());
-    object.insert("force text direction", forceTextDirection());
-    object.insert("text direction", textDirection());
-    object.insert("label", _label->toJson());
+    xml.writeStartElement(QStringLiteral("item"));
+    addTypeIdentifierToXml(xml);
+    Item::toXml(xml);
+    xml.writeEndElement();
 
-    object.insert("item", Item::toJson());
-    addTypeIdentifierToJson(object);
-
-    return object;
+    return true;
 }
 
-bool Connector::fromJson(const QJsonObject& object)
+bool Connector::fromXml(QXmlStreamReader& reader)
 {
-    Item::fromJson(object["item"].toObject());
-
-    setSnapPolicy(static_cast<SnapPolicy>(object["snap policy"].toInt()));
-    setForceTextDirection(object["force text direction"].toBool());
-    _textDirection = static_cast<Direction>(object["text direction"].toInt());
-    _label->fromJson(object["label"].toObject());
+    while (reader.readNextStartElement()) {
+        if (reader.name() == "item") {
+            Item::fromXml(reader);
+        } else if (reader.name() == "snap_policy") {
+            setSnapPolicy(static_cast<SnapPolicy>(reader.readElementText().toInt()));
+        } else if (reader.name() == "force_text_direction") {
+            setForceTextDirection(STR2BOOL(reader.readElementText()));
+        } else if (reader.name() == "text_direction") {
+            _textDirection = static_cast<Direction>(reader.readElementText().toInt());
+        } else if (reader.name() == "label") {
+            _label->fromXml(reader);
+        }
+    }
 
     return true;
 }
