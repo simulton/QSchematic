@@ -11,6 +11,9 @@
 #include "../utils.h"
 #include "../scene.h"
 
+#define BOOL2STR(x) (x ? QStringLiteral("true") : QStringLiteral("false"))
+#define STR2BOOL(x) (QString::compare(x, QStringLiteral("true")) == 0 ? true : false)
+
 const QColor COLOR_HIGHLIGHTED = QColor(Qt::blue).lighter();
 const QColor COLOR_BODY_FILL   = QColor(Qt::green);
 const QColor COLOR_BODY_BORDER = QColor(Qt::black);
@@ -39,55 +42,76 @@ Node::Node(int type, QGraphicsItem* parent) :
     _label->setText(QStringLiteral("Unnamed"));
 }
 
-QJsonObject Node::toJson() const
+bool Node::toXml(QXmlStreamWriter& xml) const
 {
-    QJsonObject object;
+    xml.writeTextElement(QStringLiteral("width"), QString::number(size().width()));
+    xml.writeTextElement(QStringLiteral("height"), QString::number(size().height()));
+    xml.writeTextElement(QStringLiteral("resize_policy"), QString::number(mouseResizePolicy()));
+    xml.writeTextElement(QStringLiteral("allow_mouse_resize"), BOOL2STR(allowMouseResize()));
+    xml.writeTextElement(QStringLiteral("connectors_movable"), BOOL2STR(connectorsMovable()));
+    xml.writeTextElement(QStringLiteral("connectors_snap_policy"), QString::number(connectorsSnapPolicy()));
+    xml.writeTextElement(QStringLiteral("connectors_snap_to_grid"), BOOL2STR(connectorsSnapToGrid()));
+    xml.writeStartElement(QStringLiteral("label"));
+        label()->toXml(xml);
+    xml.writeEndElement();
 
-    object.insert("size width", size().width());
-    object.insert("size height", size().height());
-    object.insert("mouse resize policy", mouseResizePolicy());
-    object.insert("allow mouse resize", allowMouseResize());
-    object.insert("connectors movable", connectorsMovable());
-    object.insert("connectors snap policy", connectorsSnapPolicy());
-    object.insert("connectors snap to grid", connectorsSnapToGrid());
-    object.insert("label", label()->toJson());
-
-    QJsonArray connectorsArray;
+    xml.writeStartElement(QStringLiteral("connectors"));
     for (const auto& connector : connectors()) {
-        connectorsArray << connector->toJson();
+        xml.writeStartElement(QStringLiteral("connector"));
+        connector->toXml(xml);
+        xml.writeEndElement();
     }
-    object.insert("connectors", connectorsArray);
+    xml.writeEndElement();
 
-    object.insert("item", Item::toJson());
-    addTypeIdentifierToJson(object);
+    xml.writeStartElement(QStringLiteral("item"));
+    addTypeIdentifierToXml(xml);
+    Item::toXml(xml);
+    xml.writeEndElement();
 
-    return object;
+    return true;
 }
 
-bool Node::fromJson(const QJsonObject& object)
+bool Node::fromXml(QXmlStreamReader& reader)
 {
-    Item::fromJson(object["item"].toObject());
-
-    setSize(object["size width"].toInt(), object["size height"].toInt());
-    setMouseResizePolicy(static_cast<ResizePolicy>(object["mouse resize policy"].toInt()));
-    setAllowMouseResize(object["allow mouse resize"].toBool());
-    setConnectorsMovable(object["connectors movable"].toBool());
-    setConnectorsSnapPolicy(static_cast<Connector::SnapPolicy>(object["connectors snap policy"].toInt()));
-    setConnectorsSnapToGrid(object["connectors snap to grid"].toBool());
-    label()->fromJson(object["label"].toObject());
-
-    clearConnectors();
-    for (const QJsonValue& value : object["connectors"].toArray()) {
-        QJsonObject object = value.toObject();
-        if (!object.isEmpty()) {
-            Connector* connector = dynamic_cast<Connector*>(ItemFactory::instance().fromJson(object).release());
-            if (!connector) {
-                continue;
+    int width = 0;
+    int height = 0;
+    while (reader.readNextStartElement()) {
+        if (reader.name() == "item") {
+            Item::fromXml(reader);
+        } else if (reader.name() == "width") {
+            width = reader.readElementText().toInt();
+        } else if (reader.name() == "height") {
+            height = reader.readElementText().toInt();
+        } else if (reader.name() == "resize_policy") {
+            setMouseResizePolicy(static_cast<ResizePolicy>(reader.readElementText().toInt()));
+        } else if (reader.name() == "allow_mouse_resize") {
+            setAllowMouseResize(STR2BOOL(reader.readElementText()));
+        } else if (reader.name() == "connectors_movable") {
+            setConnectorsMovable(STR2BOOL(reader.readElementText()));
+        } else if (reader.name() == "connectors_snap_policy") {
+            setConnectorsSnapPolicy(static_cast<Connector::SnapPolicy>(reader.readElementText().toInt()));
+        } else if (reader.name() == "connectors_snap_to_grid") {
+            setConnectorsSnapToGrid(STR2BOOL(reader.readElementText()));
+        } else if (reader.name() == "label") {
+            label()->fromXml(reader);
+        } else if (reader.name() == "connectors") {
+            clearConnectors();
+            while (reader.readNextStartElement()) {
+                if (reader.name() != "connector") {
+                    reader.skipCurrentElement();
+                    continue;
+                }
+                Connector* connector = dynamic_cast<Connector*>(ItemFactory::instance().fromXml(reader).release());
+                if (!connector) {
+                    continue;
+                }
+                connector->fromXml(reader);
+                addConnector(std::unique_ptr<Connector>(connector));
             }
-            connector->fromJson(object);
-            addConnector(std::unique_ptr<Connector>(connector));
         }
     }
+
+    setSize(width, height);
 
     return true;
 }

@@ -6,6 +6,9 @@
 #include "label.h"
 #include "../scene.h"
 
+#define BOOL2STR(x) (x ? QStringLiteral("true") : QStringLiteral("false"))
+#define STR2BOOL(x) (QString::compare(x, QStringLiteral("true")) == 0 ? true : false)
+
 const QColor COLOR_LABEL             = QColor("#000000");
 const QColor COLOR_LABEL_HIGHLIGHTED = QColor("#dc2479");
 const qreal LABEL_TEXT_PADDING = 2;
@@ -19,31 +22,37 @@ Label::Label(int type, QGraphicsItem* parent) :
     setSnapToGrid(false);
 }
 
-QJsonObject Label::toJson() const
+bool Label::toXml(QXmlStreamWriter& xml) const
 {
-    QJsonObject object;
-
 #warning ToDo: Add font
-    object.insert("text", text());
-    object.insert("has connection point", _hasConnectionPoint);
-    object.insert("connection point x", _connectionPoint.x());
-    object.insert("connection point y", _connectionPoint.y());
+    xml.writeTextElement(QStringLiteral("text"), text());
+    xml.writeTextElement(QStringLiteral("connection_point"), BOOL2STR(_hasConnectionPoint));
+    xml.writeTextElement(QStringLiteral("x"), QString::number(_connectionPoint.x()));
+    xml.writeTextElement(QStringLiteral("y"), QString::number(_connectionPoint.y()));
 
-    object.insert("item", Item::toJson());
-    addTypeIdentifierToJson(object);
+    xml.writeStartElement(QStringLiteral("item"));
+    addTypeIdentifierToXml(xml);
+    Item::toXml(xml);
+    xml.writeEndElement();
 
-    return object;
+    return true;
 }
 
-bool Label::fromJson(const QJsonObject& object)
+bool Label::fromXml(QXmlStreamReader& reader)
 {
-
-    Item::fromJson(object["item"].toObject());
-
-    setText(object["text"].toString());
-    _hasConnectionPoint = object["has connection point"].toBool(true);
-    _connectionPoint.rx() = object["connection point x"].toInt();
-    _connectionPoint.ry() = object["connection point y"].toInt();
+    while (reader.readNextStartElement()) {
+        if (reader.name() == "item") {
+            Item::fromXml(reader);
+        } else if (reader.name() == "text") {
+            setText(reader.readElementText());
+        } else if (reader.name() == "connection_point") {
+            _hasConnectionPoint = STR2BOOL(reader.readElementText());
+        } else if (reader.name() == "x") {
+            _connectionPoint.rx() = reader.readElementText().toInt();
+        } else if (reader.name() == "y") {
+            _connectionPoint.ry() = reader.readElementText().toInt();
+        }
+    }
 
     return true;
 }

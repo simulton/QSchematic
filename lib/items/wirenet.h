@@ -3,7 +3,7 @@
 #include <memory>
 #include <QObject>
 #include <QList>
-#include "../interfaces/json.h"
+#include "../interfaces/xml.h"
 #include "line.h"
 
 namespace QSchematic {
@@ -13,7 +13,7 @@ namespace QSchematic {
     class WirePoint;
     class Label;
 
-    class WireNet : public QObject, public Json
+    class WireNet : public QObject, public Xml
     {
         Q_OBJECT
         Q_DISABLE_COPY(WireNet)
@@ -21,8 +21,8 @@ namespace QSchematic {
     public:
         WireNet(QObject* parent = nullptr);
 
-        virtual QJsonObject toJson() const override;
-        virtual bool fromJson(const QJsonObject& object) override;
+        virtual bool toXml(QXmlStreamWriter& xml) const override;
+        virtual bool fromXml(QXmlStreamReader& reader) override;
 
         bool addWire(const std::shared_ptr<Wire>& wire);
         bool removeWire(const std::shared_ptr<Wire>& wire);

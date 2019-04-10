@@ -17,36 +17,41 @@ WireNet::WireNet(QObject* parent) :
     connect(_label.get(), &Label::highlightChanged, this, &WireNet::labelHighlightChanged);
 }
 
-QJsonObject WireNet::toJson() const
+bool WireNet::toXml(QXmlStreamWriter& xml) const
 {
-    QJsonObject object;
+    xml.writeAttribute(QStringLiteral("name"), name());
 
-    object.insert("name", name());
-
-    QJsonArray wiresArray;
+    xml.writeStartElement(QStringLiteral("wires"));
     for (const auto& wire : _wires) {
-        wiresArray.append(wire->toJson());
+        xml.writeStartElement(QStringLiteral("wire"));
+        wire->toXml(xml);
+        xml.writeEndElement();
     }
-    object.insert("wires", wiresArray);
+    xml.writeEndElement();
 
-    return object;
+    return true;
 }
 
-bool WireNet::fromJson(const QJsonObject& object)
+bool WireNet::fromXml(QXmlStreamReader& reader)
 {
-    setName(object["name"].toString());
+    while (reader.readNextStartElement()) {
+        setName(reader.attributes().value(QStringLiteral("name")).toString());
+        if (reader.name() == "wires") {
+            while (reader.readNextStartElement()) {
+                if (reader.name() != "wire") {
+                    reader.skipCurrentElement();
+                    continue;
+                }
 
-    QJsonArray wiresArray = object["wires"].toArray();
-    for (const QJsonValue& wireValue : wiresArray) {
-        QJsonObject wireObject = wireValue.toObject();
-        if (wireObject.isEmpty())
-            continue;
-        auto newWire = ItemFactory::instance().fromJson(wireObject);
-        auto sharedNewWire = std::dynamic_pointer_cast<Wire>(std::shared_ptr<Item>(std::move(newWire)));
-        if (!sharedNewWire)
-            continue;
-        sharedNewWire->fromJson(wireObject);
-        addWire(sharedNewWire);
+                auto newWire = ItemFactory::instance().fromXml(reader);
+                auto sharedNewWire = std::dynamic_pointer_cast<Wire>(std::shared_ptr<Item>(std::move(newWire)));
+                if (!sharedNewWire)
+                    continue;
+                sharedNewWire->fromXml(reader);
+                addWire(sharedNewWire);
+                reader.skipCurrentElement();
+            }
+        }
     }
 
     connect(_label.get(), &Label::highlightChanged, this, &WireNet::labelHighlightChanged);

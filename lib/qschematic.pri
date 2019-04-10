@@ -12,7 +12,6 @@ HEADERS += \
     $$PWD/types.h \
     $$PWD/view.h \
     $$PWD/utils.h \
-    $$PWD/interfaces/json.h \
     $$PWD/items/itemfactory.h \
     $$PWD/items/wireroundedcorners.h \
     $$PWD/items/itemmimedata.h \
@@ -24,7 +23,8 @@ HEADERS += \
     $$PWD/commands/commanditemvisibility.h \
     $$PWD/commands/commandlabelrename.h \
     $$PWD/commands/commandnoderesize.h \
-    $$PWD/commands/commands.h
+    $$PWD/commands/commands.h \
+    $$PWD/interfaces/xml.h
 
 SOURCES += \
     $$PWD/items/connector.cpp \

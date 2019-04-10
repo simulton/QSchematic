@@ -6,7 +6,7 @@
 #include <QScopedPointer>
 #include <QGraphicsProxyWidget>
 #include <QUndoStack>
-#include "interfaces/json.h"
+#include "interfaces/xml.h"
 #include "settings.h"
 #include "items/item.h"
 #include "items/wire.h"
@@ -17,7 +17,7 @@ namespace QSchematic {
     class Connector;
     class WireNet;
 
-    class Scene : public QGraphicsScene, public Json
+    class Scene : public QGraphicsScene, public Xml
     {
         Q_OBJECT
         Q_DISABLE_COPY(Scene)
@@ -32,8 +32,8 @@ namespace QSchematic {
         explicit Scene(QObject* parent = nullptr);
         virtual ~Scene() override = default;
 
-        virtual QJsonObject toJson() const override;
-        virtual bool fromJson(const QJsonObject& object) override;
+        virtual bool toXml(QXmlStreamWriter& xml) const override;
+        virtual bool fromXml(QXmlStreamReader& reader) override;
 
         void setSettings(const Settings& settings);
         void setWireFactory(const std::function<std::unique_ptr<Wire>()>& factory);

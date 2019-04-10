@@ -2,7 +2,7 @@
 
 #include <memory>
 #include <QGraphicsObject>
-#include "../interfaces/json.h"
+#include "../interfaces/xml.h"
 #include "../types.h"
 #include "../settings.h"
 
@@ -10,7 +10,7 @@ namespace QSchematic {
 
     class Scene;
 
-    class Item : public QGraphicsObject, public Json
+    class Item : public QGraphicsObject, public Xml
     {
         friend class CommandItemSetVisible;
 
@@ -29,13 +29,13 @@ namespace QSchematic {
         };
         Q_ENUM(ItemType)
 
-        const QString JSON_ID_STRING = QStringLiteral("item type id");
+        const QString JSON_ID_STRING = QStringLiteral("type_id");
 
         Item(int type, QGraphicsItem* parent = nullptr);
         virtual ~Item() override = default;
 
-        virtual QJsonObject toJson() const override;
-        virtual bool fromJson(const QJsonObject& object) override;
+        virtual bool toXml(QXmlStreamWriter& xml) const override;
+        virtual bool fromXml(QXmlStreamReader& reader) override;
         virtual std::unique_ptr<Item> deepCopy() const = 0;
 
         int type() const final;
@@ -86,7 +86,7 @@ namespace QSchematic {
         void copyAttributes(Item& dest) const;
 
         Scene* scene() const;
-        void addTypeIdentifierToJson(QJsonObject& object) const;
+        void addTypeIdentifierToXml(QXmlStreamWriter& xml) const;
 
         bool isHighlighted() const;
         virtual void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;

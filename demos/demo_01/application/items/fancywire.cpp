@@ -1,4 +1,3 @@
-#include <QJsonObject>
 #include <QPen>
 #include <QBrush>
 #include <QPainter>
@@ -16,19 +15,16 @@ FancyWire::FancyWire(QGraphicsItem* parent) :
     setZValue(1);
 }
 
-QJsonObject FancyWire::toJson() const
+bool FancyWire::toXml(QXmlStreamWriter& xml) const
 {
-    QJsonObject object;
+    QSchematic::Wire::toXml(xml);
 
-    object.insert("wire", QSchematic::Wire::toJson());
-    addTypeIdentifierToJson(object);
-
-    return object;
+    return true;
 }
 
-bool FancyWire::fromJson(const QJsonObject& object)
+bool FancyWire::fromXml(QXmlStreamReader& reader)
 {
-    QSchematic::Wire::fromJson(object["wire"].toObject());
+    QSchematic::Wire::fromXml(reader);
 
     return true;
 }

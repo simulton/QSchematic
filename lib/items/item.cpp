@@ -3,11 +3,13 @@
 #include <QVector2D>
 #include <QGraphicsSceneHoverEvent>
 #include <QTimer>
-#include <QJsonObject>
 #include <QWidget>
 #include "item.h"
 #include "../scene.h"
 #include "../commands/commanditemmove.h"
+
+#define BOOL2STR(x) (x ? QStringLiteral("true") : QStringLiteral("false"))
+#define STR2BOOL(x) (QString::compare(x, QStringLiteral("true")) == 0 ? true : false)
 
 using namespace QSchematic;
 
@@ -34,28 +36,35 @@ Item::Item(int type, QGraphicsItem* parent) :
     connect(this, &Item::yChanged, this, &Item::posChanged);
 }
 
-QJsonObject Item::toJson() const
+bool Item::toXml(QXmlStreamWriter& xml) const
 {
-    QJsonObject object;
+    xml.writeTextElement(QStringLiteral("x"), QString::number(posX()));
+    xml.writeTextElement(QStringLiteral("y"), QString::number(posY()));
+    xml.writeTextElement(QStringLiteral("movable"), BOOL2STR(isMovable()));
+    xml.writeTextElement(QStringLiteral("visible"), BOOL2STR(isVisible()));
+    xml.writeTextElement(QStringLiteral("snap_to_grid"), BOOL2STR(snapToGrid()));
+    xml.writeTextElement(QStringLiteral("highlight"), BOOL2STR(highlightEnabled()));
 
-    object.insert("pos x", posX());
-    object.insert("pos y", posY());
-    object.insert("movable", isMovable());
-    object.insert("visible", isVisible());
-    object.insert("snap to grid", snapToGrid());
-    object.insert("highlight enabled", highlightEnabled());
-
-    return object;
+    return true;
 }
 
-bool Item::fromJson(const QJsonObject& object)
+bool Item::fromXml(QXmlStreamReader& reader)
 {
-    setPosX(object["pos x"].toDouble());
-    setPosY(object["pos y"].toDouble());
-    setMovable(object["movable"].toBool());
-    setVisible(object["visible"].toBool());
-    setSnapToGrid(object["snap to grid"].toBool());
-    setHighlightEnabled(object["highlight enabled"].toBool());
+    while (reader.readNextStartElement()) {
+        if (reader.name() == "x") {
+            setPosX(reader.readElementText().toInt());
+        } else if (reader.name() == "y"){
+            setPosY(reader.readElementText().toInt());
+        } else if (reader.name() == "movable") {
+            setMovable(STR2BOOL(reader.readElementText()));
+        } else if (reader.name() == "visible") {
+            setVisible(STR2BOOL(reader.readElementText()));
+        } else if (reader.name() == "snap_to_grid") {
+            setSnapToGrid(STR2BOOL(reader.readElementText()));
+        } else if (reader.name() == "highlight") {
+            setHighlightEnabled(STR2BOOL(reader.readElementText()));
+        }
+    }
 
     return true;
 }
@@ -79,9 +88,9 @@ Scene* Item::scene() const
     return qobject_cast<Scene*>(QGraphicsObject::scene());
 }
 
-void Item::addTypeIdentifierToJson(QJsonObject& object) const
+void Item::addTypeIdentifierToXml(QXmlStreamWriter& xml) const
 {
-    object.insert(JSON_ID_STRING, type());
+    xml.writeAttribute(JSON_ID_STRING, QString::number(type()));
 }
 
 int Item::type() const

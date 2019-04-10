@@ -11,8 +11,8 @@ public:
     explicit OperationDemo1(QGraphicsItem* parent = nullptr);
     virtual ~OperationDemo1() override = default;
 
-    virtual QJsonObject toJson() const override;
-    virtual bool fromJson(const QJsonObject& object) override;
+    virtual bool toXml(QXmlStreamWriter& xml) const override;
+    virtual bool fromXml(QXmlStreamReader& reader) override;
     virtual std::unique_ptr<QSchematic::Item> deepCopy() const override;
 
 private:

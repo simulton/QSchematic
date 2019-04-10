@@ -15,22 +15,22 @@ ItemFactory& ItemFactory::instance()
     return instance;
 }
 
-void ItemFactory::setCustomItemsFactory(const std::function<std::unique_ptr<Item>(const QJsonObject&)>& factory)
+void ItemFactory::setCustomItemsFactory(const std::function<std::unique_ptr<Item>(const QXmlStreamReader&)>& factory)
 {
     _customItemFactory = factory;
 }
 
-std::unique_ptr<Item> ItemFactory::fromJson(const QJsonObject& object) const
+std::unique_ptr<Item> ItemFactory::fromXml(const QXmlStreamReader& reader) const
 {
     // Extract the type
-    Item::ItemType type = ItemFactory::extractType(object);
+    Item::ItemType type = ItemFactory::extractType(reader);
 
     // Create the item
     std::unique_ptr<Item> item;
 
     // First, try custom types
     if (_customItemFactory) {
-        item.reset(_customItemFactory(object).release());
+        item.reset(_customItemFactory(reader).release());
     }
 
     // Fall back to internal types
@@ -64,7 +64,7 @@ std::unique_ptr<Item> ItemFactory::fromJson(const QJsonObject& object) const
     return item;
 }
 
-Item::ItemType ItemFactory::extractType(const QJsonObject& object)
+Item::ItemType ItemFactory::extractType(const QXmlStreamReader& reader)
 {
-    return static_cast<Item::ItemType>(object["item type id"].toInt());
+    return static_cast<Item::ItemType>(reader.attributes().value(QStringLiteral("type_id")).toInt());
 }

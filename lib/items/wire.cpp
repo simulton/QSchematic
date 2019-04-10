@@ -1,8 +1,6 @@
 #include <QPen>
 #include <QBrush>
 #include <QPainter>
-#include <QJsonObject>
-#include <QJsonArray>
 #include <QMap>
 #include <QGraphicsSceneHoverEvent>
 #include <QApplication>
@@ -45,50 +43,62 @@ Wire::Wire(int type, QGraphicsItem* parent) :
     setMovable(false);
 }
 
-QJsonObject Wire::toJson() const
+bool Wire::toXml(QXmlStreamWriter& xml) const
 {
-    QJsonObject object;
-
+    addTypeIdentifierToXml(xml);
     // Points
-    QJsonArray pointsArray;
+    xml.writeStartElement(QStringLiteral("points"));
     for (int i = 0; i < _points.count(); i++) {
-        QJsonObject pointObject;
-        pointObject.insert("index", i);
-        pointObject.insert("x", _points.at(i).x());
-        pointObject.insert("y", _points.at(i).y());
-
-        pointsArray.append(pointObject);
+        xml.writeStartElement(QStringLiteral("point"));
+        {
+            xml.writeAttribute(QStringLiteral("index"), QString::number(i));
+            xml.writeTextElement(QStringLiteral("x"), QString::number(_points.at(i).x()));
+            xml.writeTextElement(QStringLiteral("y"), QString::number(_points.at(i).y()));
+        }
+        xml.writeEndElement();
     }
-    object.insert("points", pointsArray);
+    xml.writeEndElement();
 
     // Base class
-    object.insert("item", Item::toJson());
-    addTypeIdentifierToJson(object);
+    xml.writeStartElement(QStringLiteral("item"));
+    addTypeIdentifierToXml(xml);
+    Item::toXml(xml);
+    xml.writeEndElement();
 
-    return object;
+    return true;
 }
 
-bool Wire::fromJson(const QJsonObject& object)
+bool Wire::fromXml(QXmlStreamReader& reader)
 {
-    Item::fromJson(object["item"].toObject());
-
+    Q_ASSERT(reader.name() == "wire");
+    reader.readNextStartElement(); // points
+    Q_ASSERT(reader.name() == "points");
     // Points array
     QList<PointWithIndex> pointsUnsorted;
-    QJsonArray pointsArray = object["points"].toArray();
-    if (!pointsArray.isEmpty()) {
-        for (QJsonValue pointsValue : pointsArray) {
-            QJsonObject pointsObject = pointsValue.toObject();
-            if (pointsObject.isEmpty()) {
-                continue;
-            }
+    while (reader.readNextStartElement()) {
+        Q_ASSERT(reader.name() == "point");
+        int index = reader.attributes().value(QStringLiteral("index")).toInt();
 
-            pointsUnsorted.append(PointWithIndex(pointsObject["index"].toInt(), QPoint(pointsObject["x"].toInt(), pointsObject["y"].toInt())));
-        }
+        reader.readNextStartElement();
+        Q_ASSERT(reader.name() == "x");
+        int x = reader.readElementText().toInt();
+
+        reader.readNextStartElement();
+        Q_ASSERT(reader.name() == "y");
+        int y = reader.readElementText().toInt();
+
+        reader.skipCurrentElement();
+
+        pointsUnsorted.append(PointWithIndex(index, QPoint(x, y)));
     }
+
     std::sort(pointsUnsorted.begin(), pointsUnsorted.end());
     for (const PointWithIndex& pointWithIndex : pointsUnsorted) {
         _points.append(pointWithIndex.point);
     }
+    reader.readNextStartElement();
+    Q_ASSERT(reader.name() == "item");
+    Item::fromXml(reader);
 
     // Update stuff
     update();

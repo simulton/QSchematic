@@ -1,4 +1,3 @@
-#include <QJsonObject>
 #include <QPainter>
 #include <QGraphicsDropShadowEffect>
 #include "flowstart.h"
@@ -50,19 +49,17 @@ FlowStart::FlowStart() :
     setAllowMouseResize(false);
 }
 
-QJsonObject FlowStart::toJson() const
+bool FlowStart::toXml(QXmlStreamWriter& xml) const
 {
-    QJsonObject object;
+    addTypeIdentifierToXml(xml);
+    QSchematic::Node::toXml(xml);
 
-    object.insert("node", QSchematic::Node::toJson());
-    addTypeIdentifierToJson(object);
-
-    return object;
+    return true;
 }
 
-bool FlowStart::fromJson(const QJsonObject& object)
+bool FlowStart::fromXml(QXmlStreamReader& reader)
 {
-    QSchematic::Node::fromJson(object["node"].toObject());
+    QSchematic::Node::fromXml(reader);
 
     return true;
 }

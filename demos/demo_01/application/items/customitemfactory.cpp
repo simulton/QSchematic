@@ -1,5 +1,3 @@
-#include <QJsonObject>
-
 #include "../../../lib/items/item.h"
 #include "../../../lib/items/itemfactory.h"
 #include "itemtypes.h"
@@ -11,10 +9,10 @@
 #include "flowstart.h"
 #include "flowend.h"
 
-std::unique_ptr<QSchematic::Item> CustomItemFactory::fromJson(const QJsonObject& object)
+std::unique_ptr<QSchematic::Item> CustomItemFactory::fromXml(const QXmlStreamReader& reader)
 {
     // Extract the type
-    QSchematic::Item::ItemType type = QSchematic::ItemFactory::extractType(object);
+    QSchematic::Item::ItemType type = QSchematic::ItemFactory::extractType(reader);
 
     // Create the item
     std::unique_ptr<QSchematic::Item> item;
