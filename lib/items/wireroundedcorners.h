@@ -19,6 +19,19 @@ namespace QSchematic
         virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
     private:
+        enum ConnectionType {
+            Arc,
+            SCurve,
+            UTurn
+        };
+
+        enum ConnectionDirection {
+            Up,
+            Down,
+            Left,
+            Right
+        };
+
         enum QuarterCircleSegment {
             None,
             TopLeft,
