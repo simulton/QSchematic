@@ -9,7 +9,7 @@ Feature overview:
   - Undo/redo
   - Drag'n'Drop
   - Template based netlist generation
-  - Serialization to/from JSON
+  - Serialization to/from XML
   - Completely customizable by inheriting from the provided classes
 
 Technical stuff:
