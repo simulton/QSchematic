@@ -116,7 +116,7 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                 QLineF line2(p2.toPoint(), p3.toPoint());
                 QuarterCircleSegment segment = None;
                 {
-                    int linePointAdjust = _settings.gridSize;
+                    int linePointAdjust = _settings.gridSize/2;
                     bool hasPrevious = true;
                     bool hasNext = true;
 
@@ -262,7 +262,7 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                 painter->drawLine(line2);
 
                 // Calculate arc parameters
-                int rectSize = 2*_settings.gridSize;
+                int rectSize = _settings.gridSize;
                 QRect rect(0, 0, rectSize, rectSize);
                 int angleStart = 0;
                 int angleSpan = 90;
