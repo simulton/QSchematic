@@ -132,32 +132,6 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                     // Figure out whether we have a next point
                     hasNext = (i != scenePoints.count()-3);
 
-                    // There are three posibilities:
-                    //  A: We have a normal corner, render a normal arc within a grid cell. This is the usual case when
-                    //     the three points are "not close" to each other
-                    //  B: We need an 'S' instead of an arc as we shift the line by one grid cell.
-                    //  C: We need a 'U' as the lines makes a U-turn
-                    QPoint d1(p2.toPoint() - p1.toPoint());
-                    ConnectionType connectionType = Arc;
-                    ConnectionDirection connectionDirection = Up;
-                    if (i >= 1) {
-                        if (qAbs(d1.y()) == settings().gridSize) {
-                            if (p3.x() > p2.x()) {
-                                connectionType = SCurve;
-                            } else {
-                                connectionType = UTurn;
-                            }
-
-                        } else if (qAbs(d1.y()) == settings().gridSize) {
-
-                        }
-                    }
-                    //qDebug() << "connectionType = " << connectionType;
-                    //qDebug() << "connectionDirection = " << connectionDirection;
-#warning ToDo: Complete implementation of SCurve and UTurn connection elements
-                    Q_UNUSED(connectionType)
-                    Q_UNUSED(connectionDirection)
-
                     // Oh boy...
                     if (p3.x() < p1.x() and p3.y() < p1.y()) {
                         if (p2.x() == p3.x() and p2.y() == p1.y()) {
