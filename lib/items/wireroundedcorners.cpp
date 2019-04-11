@@ -114,10 +114,9 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                 // Also determine the actual line segments
                 QLineF line1(p1.toPoint(), p2.toPoint());
                 QLineF line2(p2.toPoint(), p3.toPoint());
-                bool tightCorner = false;
                 QuarterCircleSegment segment = None;
                 {
-                    int linePointAdjust = _settings.gridSize;
+                    int linePointAdjust = _settings.gridSize/2;
                     bool hasPrevious = true;
                     bool hasNext = true;
 
@@ -133,148 +132,93 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                     // Figure out whether we have a next point
                     hasNext = (i != scenePoints.count()-3);
 
-                    // Check if the to points are close
-                    if (qAbs(p1.x() - p2.x()) == _settings.gridSize or
-                        qAbs(p1.y() - p2.y()) == _settings.gridSize or
-                        qAbs(p2.x() - p3.x()) == _settings.gridSize or
-                        qAbs(p2.y() - p3.y()) == _settings.gridSize)
-                            tightCorner = true;
-
-                    // Only draw line up to the middle
-                    if (hasNext) {
-                        line2.setP2(QPointF((p2.x() + p3.x())/2, (p2.y() + p3.y())/2));
-                    }
-                    if (hasPrevious) {
-                        line1.setP1(QPointF((p1.x() + p2.x())/2, (p1.y() + p2.y())/2));
-                    }
-
                     // Oh boy...
                     if (p3.x() < p1.x() and p3.y() < p1.y()) {
                         if (p2.x() == p3.x() and p2.y() == p1.y()) {
                             segment = BottomLeft;
-                            if (tightCorner) {
-                                line1.setP2(QPointF(p2.x() + linePointAdjust/2, p2.y()));
-                                line2.setP1(QPointF(p2.x(), p2.y() - linePointAdjust/2));
-                            } else {
-                                line1.setP2(QPointF(p2.x() + linePointAdjust, p2.y()));
-                                line2.setP1(QPointF(p2.x(), p2.y() - linePointAdjust));
-                            }
+                            line1.setP2(QPointF(p2.x() + linePointAdjust, p2.y()));
+                            line2.setP1(QPointF(p2.x(), p2.y() - linePointAdjust));
                             if (hasPrevious) {
-                                line1.setP1(QPointF((p2.x() + p1.x())/2, p1.y()));
+                                line1.setP1(QPointF(p1.x() - linePointAdjust, p1.y()));
                             }
                             if (hasNext) {
-                                line2.setP2(QPointF(p3.x(), (p3.y() + p2.y())/2));
+                                line2.setP2(QPointF(p3.x(), p3.y() + linePointAdjust));
                             }
                         } else if (p2.x() == p1.x() and p2.y() == p3.y()) {
                             segment = TopRight;
-                            if (tightCorner) {
-                                line1.setP2(QPointF(p2.x(), p2.y() + linePointAdjust/2));
-                                line2.setP1(QPointF(p2.x() - linePointAdjust/2, p2.y()));
-                            } else {
-                                line1.setP2(QPointF(p2.x(), p2.y() + linePointAdjust));
-                                line2.setP1(QPointF(p2.x() - linePointAdjust, p2.y()));
-                            }
+                            line1.setP2(QPointF(p2.x(), p2.y() + linePointAdjust));
+                            line2.setP1(QPointF(p2.x() - linePointAdjust, p2.y()));
                             if (hasPrevious) {
-                                line1.setP1(QPointF(p1.x(), (p1.y() + p2.y())/2));
+                                line1.setP1(QPointF(p1.x(), p1.y() - linePointAdjust));
                             }
                             if (hasNext) {
-                                line2.setP2(QPointF((p3.x() + p2.x())/2, p3.y()));
+                                line2.setP2(QPointF(p3.x() + linePointAdjust, p3.y()));
                             }
                         }
                     } else if (p3.x() > p1.x() and p3.y() < p1.y()) {
                         if (p2.x() == p1.x() and p2.y() == p3.y()) {
                             segment = TopLeft;
-                            if (tightCorner) {
-                                line1.setP2(QPointF(p2.x(), p2.y() + linePointAdjust/2));
-                                line2.setP1(QPointF(p2.x() + linePointAdjust/2, p2.y()));
-                            } else {
-                                line1.setP2(QPointF(p2.x(), p2.y() + linePointAdjust));
-                                line2.setP1(QPointF(p2.x() + linePointAdjust, p2.y()));
-                            }
+                            line1.setP2(QPointF(p2.x(), p2.y() + linePointAdjust));
+                            line2.setP1(QPointF(p2.x() + linePointAdjust, p2.y()));
                             if (hasPrevious) {
-                                line1.setP1(QPointF(p1.x(), (p1.y() + p2.y())/2));
+                                line1.setP1(QPointF(p1.x(), p1.y() - linePointAdjust));
                             }
                             if (hasNext) {
-                                line2.setP2(QPointF((p3.x() + p2.x())/2, p3.y()));
+                                line2.setP2(QPointF(p3.x() - linePointAdjust, p3.y()));
                             }
                         } else if (p2.x() == p3.x() and p2.y() == p1.y()) {
                             segment = BottomRight;
-                            if (tightCorner) {
-                                line1.setP2(QPointF(p2.x() - linePointAdjust/2, p2.y()));
-                                line2.setP1(QPointF(p2.x(), p2.y() - linePointAdjust/2));
-                            } else {
-                                line1.setP2(QPointF(p2.x() - linePointAdjust, p2.y()));
-                                line2.setP1(QPointF(p2.x(), p2.y() - linePointAdjust));
-                            }
+                            line1.setP2(QPointF(p2.x() - linePointAdjust, p2.y()));
+                            line2.setP1(QPointF(p2.x(), p2.y() - linePointAdjust));
                             if (hasPrevious) {
-                                line1.setP1(QPointF((p1.x() + p2.x())/2, p1.y()));
+                                line1.setP1(QPointF(p1.x() + linePointAdjust, p1.y()));
                             }
                             if (hasNext) {
-                                line2.setP2(QPointF(p3.x(), (p3.y() + p2.y())/2));
+                                line2.setP2(QPointF(p3.x(), p3.y() + linePointAdjust));
                             }
                         }
                     } else if (p3.x() > p1.x() and p3.y() > p1.y()) {
                         if (p2.x() == p3.x() and p2.y() == p1.y()) {
                             segment = TopRight;
-                            if (tightCorner) {
-                                line1.setP2(QPointF(p2.x() - linePointAdjust/2, p2.y()));
-                                line2.setP1(QPointF(p2.x(), p2.y() + linePointAdjust/2));
-                            } else {
-                                line1.setP2(QPointF(p2.x() - linePointAdjust, p2.y()));
-                                line2.setP1(QPointF(p2.x(), p2.y() + linePointAdjust));
-                            }
+                            line1.setP2(QPointF(p2.x() - linePointAdjust, p2.y()));
+                            line2.setP1(QPointF(p2.x(), p2.y() + linePointAdjust));
                             if (hasPrevious) {
-                                line1.setP1(QPointF((p1.x() + p2.x())/2, p1.y()));
+                                line1.setP1(QPointF(p1.x() + linePointAdjust, p1.y()));
                             }
                             if (hasNext) {
-                                line2.setP2(QPointF(p3.x(), (p3.y() + p2.y())/2));
+                                line2.setP2(QPointF(p3.x(), p3.y() - linePointAdjust));
                             }
                         } else if (p2.x() == p1.x() and p2.y() == p3.y()) {
                             segment = BottomLeft;
-                            if (tightCorner) {
-                                line1.setP2(QPointF(p2.x(), p2.y() - linePointAdjust/2));
-                                line2.setP1(QPointF(p2.x() + linePointAdjust/2, p2.y()));
-                            } else {
-                                line1.setP2(QPointF(p2.x(), p2.y() - linePointAdjust));
-                                line2.setP1(QPointF(p2.x() + linePointAdjust, p2.y()));
-                            }
+                            line1.setP2(QPointF(p2.x(), p2.y() - linePointAdjust));
+                            line2.setP1(QPointF(p2.x() + linePointAdjust, p2.y()));
                             if (hasPrevious) {
-                                line1.setP1(QPointF(p1.x(), (p1.y() + p2.y())/2));
+                                line1.setP1(QPointF(p1.x(), p1.y() + linePointAdjust));
                             }
                             if (hasNext) {
-                                line2.setP2(QPointF((p3.x() + p2.x())/2 , p3.y()));
+                                line2.setP2(QPointF(p3.x() - linePointAdjust, p3.y()));
                             }
                         }
                     } else if (p3.x() < p1.x() and p3.y() > p1.y()) {
                         if (p2.x() == p1.x() and p2.y() == p3.y()) {
                             segment = BottomRight;
-                            if (tightCorner) {
-                                line1.setP2(QPointF(p2.x(), p2.y() - linePointAdjust/2));
-                                line2.setP1(QPointF(p2.x() - linePointAdjust/2, p2.y()));
-                            } else {
-                                line1.setP2(QPointF(p2.x(), p2.y() - linePointAdjust));
-                                line2.setP1(QPointF(p2.x() - linePointAdjust, p2.y()));
-                            }
+                            line1.setP2(QPointF(p2.x(), p2.y() - linePointAdjust));
+                            line2.setP1(QPointF(p2.x() - linePointAdjust, p2.y()));
                             if (hasPrevious) {
-                                line1.setP1(QPointF(p1.x(), (p1.y() + p2.y())/2));
+                                line1.setP1(QPointF(p1.x(), p1.y() + linePointAdjust));
                             }
                             if (hasNext) {
-                                line2.setP2(QPointF((p3.x() + p2.x())/2, p3.y()));
+                                line2.setP2(QPointF(p3.x() + linePointAdjust, p3.y()));
                             }
                         } else if (p2.x() == p3.x() and p2.y() == p1.y()) {
                             segment = TopLeft;
-                            if (tightCorner) {
-                                line1.setP2(QPointF(p2.x() + linePointAdjust/2, p2.y()));
-                                line2.setP1(QPointF(p2.x(), p2.y() + linePointAdjust/2));
-                            } else {
-                                line1.setP2(QPointF(p2.x() + linePointAdjust, p2.y()));
-                                line2.setP1(QPointF(p2.x(), p2.y() + linePointAdjust));
-                            }
+                            line1.setP2(QPointF(p2.x() + linePointAdjust, p2.y()));
+                            line2.setP1(QPointF(p2.x(), p2.y() + linePointAdjust));
                             if (hasPrevious) {
-                                line1.setP1(QPointF((p1.x() + p2.x())/2, p1.y()));
+                                line1.setP1(QPointF(p1.x() - linePointAdjust, p1.y()));
                             }
                             if (hasNext) {
-                                line2.setP2(QPointF(p3.x(), (p3.y() + p2.y())/2));
+                                line2.setP2(QPointF(p3.x(), p3.y() - linePointAdjust));
                             }
                         }
                     }
@@ -286,11 +230,13 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                 }
 
                 // Render lines
-                painter->drawLine(line1);
+                if (i == 0) {
+                    painter->drawLine(line1);
+                }
                 painter->drawLine(line2);
 
                 // Calculate arc parameters
-                int rectSize = tightCorner ? _settings.gridSize : 2 * _settings.gridSize;
+                int rectSize = _settings.gridSize;
                 QRect rect(0, 0, rectSize, rectSize);
                 int angleStart = 0;
                 int angleSpan = 90;
