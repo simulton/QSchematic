@@ -1,6 +1,7 @@
 #include "splinewire.h"
 #include "wirepoint.h"
 #include <QPainter>
+#include <QPainterPathStroker>
 #include <QtMath>
 
 const int LINE_WIDTH              = 2;
@@ -23,6 +24,85 @@ void SplineWire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
     Q_UNUSED(option);
     Q_UNUSED(widget);
 
+    // Pen
+    QPen penLine;
+    penLine.setStyle(Qt::SolidLine);
+    penLine.setCapStyle(Qt::RoundCap);
+    QColor penColor;
+    if (isSelected()) {
+        penColor = COLOR_SELECTED;
+    } else if (isHighlighted()) {
+        penColor = COLOR_HIGHLIGHTED;
+    } else {
+        penColor = COLOR;
+    }
+    penLine.setWidth(LINE_WIDTH);
+    penLine.setColor(penColor);
+
+    // Brush
+    QBrush brushLine;
+    brushLine.setStyle(Qt::NoBrush);
+
+    // Prepare the painter
+    painter->setPen(penLine);
+    painter->setBrush(brushLine);
+
+    painter->drawPath(path());
+
+    // Draw the junction poins
+    QPen penJunction;
+    penJunction.setStyle(Qt::NoPen);
+
+    QBrush brushJunction;
+    brushJunction.setStyle(Qt::SolidPattern);
+    brushJunction.setColor(isHighlighted() ? COLOR_HIGHLIGHTED : COLOR);
+
+    int junctionRadius = 4;
+    for (const QSchematic::WirePoint& wirePoint : wirePointsRelative()) {
+        if (wirePoint.isJunction()) {
+            painter->setPen(penJunction);
+            painter->setBrush(brushJunction);
+            painter->drawEllipse(wirePoint.toPoint(), junctionRadius, junctionRadius);
+        }
+    }
+
+    // Draw the handles (if selected)
+    if (isSelected()) {
+        // Pen
+        QPen penHandle;
+        penHandle.setColor(Qt::black);
+        penHandle.setStyle(Qt::SolidLine);
+
+        // Brush
+        QBrush brushHandle;
+        brushHandle.setColor(Qt::black);
+        brushHandle.setStyle(Qt::SolidPattern);
+
+        // Render
+        painter->setPen(penHandle);
+        painter->setBrush(brushHandle);
+        for (const WirePoint& point : wirePointsRelative()) {
+            QRectF handleRect(point.x() - HANDLE_SIZE, point.toPoint().y() - HANDLE_SIZE, 2*HANDLE_SIZE, 2*HANDLE_SIZE);
+            painter->drawRect(handleRect);
+        }
+    }
+
+    // Draw debugging stuff
+    if (_settings.debug) {
+        painter->setPen(Qt::red);
+        painter->setBrush(Qt::NoBrush);
+        painter->drawRect(boundingRect());
+
+        painter->setPen(Qt::blue);
+        painter->setBrush(Qt::NoBrush);
+        painter->drawPath(shape());
+    }
+}
+
+QPainterPath SplineWire::path() const
+{
+    QPainterPath path;
+
     // Retrieve the scene points as we'll need them a lot
     auto sceneWirePoints(wirePointsRelative());
     //simplify(sceneWirePoints);
@@ -33,15 +113,8 @@ void SplineWire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 
     // Nothing to do if there are no points
     if (scenePoints.count() < 2) {
-        return;
+        return QPainterPath();
     }
-
-    //if (scenePoints.count() == 4) {
-    //    QPainterPath path;
-    //    path.moveTo(scenePoints[0].toPointF());
-    //    path.cubicTo(scenePoints[1].toPointF(), scenePoints[2].toPointF(), scenePoints[3].toPointF());
-    //    painter->drawPath(path);
-    //}
 
     // Render
     for (int i = 0; i <= scenePoints.count()-2; i++) {
@@ -51,14 +124,13 @@ void SplineWire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 
         // If there are just two points we need to render the line just like this and we're done
         if (scenePoints.count() == 2) {
-            painter->drawLine(p1.toPoint(), p2.toPoint());
+            path.moveTo(p1.toPointF());
+            path.lineTo(p2.toPointF());
             break;
 
         // If we have two line segments we want to render an arc connecting them
         } else if (i < scenePoints.count()-2) {
             WirePoint p3 = scenePoints.at(i+2);
-
-            QPainterPath path;
 
             // Tangent at p2
             QPointF ctrlP1;
@@ -104,83 +176,20 @@ void SplineWire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
             } else {
                 path.quadTo(ctrlP1, p3.toPointF());
             }
-
-
-            // Draw curves
-            painter->drawPath(path);
         }
     }
+    return path;
+}
 
-    // Pen
-    QPen penLine;
-    penLine.setStyle(Qt::SolidLine);
-    penLine.setCapStyle(Qt::RoundCap);
-    QColor penColor;
-    if (isSelected()) {
-        penColor = COLOR_SELECTED;
-    } else if (isHighlighted()) {
-        penColor = COLOR_HIGHLIGHTED;
-    } else {
-        penColor = COLOR;
-    }
-    penLine.setWidth(LINE_WIDTH);
-    penLine.setColor(penColor);
+QPainterPath SplineWire::shape() const
+{
+    QPainterPathStroker stroker;
+    stroker.setWidth(10);
+    stroker.setCapStyle(Qt::RoundCap);
+    return stroker.createStroke(path());
+}
 
-    // Brush
-    QBrush brushLine;
-    brushLine.setStyle(Qt::NoBrush);
-
-    // Prepare the painter
-    painter->setPen(penLine);
-    painter->setBrush(brushLine);
-
-    QPen penJunction;
-    penJunction.setStyle(Qt::NoPen);
-
-    QBrush brushJunction;
-    brushJunction.setStyle(Qt::SolidPattern);
-    brushJunction.setColor(isHighlighted() ? COLOR_HIGHLIGHTED : COLOR);
-
-
-    // Draw the junction poins
-    int junctionRadius = 4;
-    for (const QSchematic::WirePoint& wirePoint : wirePointsRelative()) {
-        if (wirePoint.isJunction()) {
-            painter->setPen(penJunction);
-            painter->setBrush(brushJunction);
-            painter->drawEllipse(wirePoint.toPoint(), junctionRadius, junctionRadius);
-        }
-    }
-
-    // Draw the handles (if selected)
-    if (isSelected()) {
-        // Pen
-        QPen penHandle;
-        penHandle.setColor(Qt::black);
-        penHandle.setStyle(Qt::SolidLine);
-
-        // Brush
-        QBrush brushHandle;
-        brushHandle.setColor(Qt::black);
-        brushHandle.setStyle(Qt::SolidPattern);
-
-        // Render
-        painter->setPen(penHandle);
-        painter->setBrush(brushHandle);
-        for (const WirePoint& point : scenePoints) {
-            QRectF handleRect(point.x() - HANDLE_SIZE, point.toPoint().y() - HANDLE_SIZE, 2*HANDLE_SIZE, 2*HANDLE_SIZE);
-            painter->drawRect(handleRect);
-        }
-    }
-
-    // Draw debugging stuff
-    if (_settings.debug) {
-        painter->setPen(Qt::red);
-        painter->setBrush(Qt::NoBrush);
-        painter->drawRect(boundingRect());
-
-        painter->setPen(Qt::blue);
-        painter->setBrush(Qt::NoBrush);
-        painter->drawPath(shape());
-    }
+QRectF SplineWire::boundingRect() const
+{
+    return shape().boundingRect();
 }
