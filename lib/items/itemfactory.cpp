@@ -3,6 +3,7 @@
 #include "node.h"
 #include "wire.h"
 #include "wireroundedcorners.h"
+#include "splinewire.h"
 #include "connector.h"
 #include "label.h"
 
@@ -46,6 +47,10 @@ std::unique_ptr<Item> ItemFactory::fromXml(const QXmlStreamReader& reader) const
 
         case Item::WireRoundedCornersType:
             item.reset(new WireRoundedCorners);
+            break;
+
+        case Item::SplineWireType:
+            item.reset(new SplineWire);
             break;
 
         case Item::ConnectorType:
