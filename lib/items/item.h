@@ -24,6 +24,7 @@ namespace QSchematic {
             WireRoundedCornersType,
             ConnectorType,
             LabelType,
+            SplineWireType,
 
             QSchematicItemUserType = QGraphicsItem::UserType + 100
         };
