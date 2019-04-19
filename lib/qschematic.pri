@@ -24,7 +24,8 @@ HEADERS += \
     $$PWD/commands/commandlabelrename.h \
     $$PWD/commands/commandnoderesize.h \
     $$PWD/commands/commands.h \
-    $$PWD/interfaces/xml.h
+    $$PWD/interfaces/xml.h \
+    $$PWD/items/splinewire.h
 
 SOURCES += \
     $$PWD/items/connector.cpp \
@@ -47,4 +48,5 @@ SOURCES += \
     $$PWD/commands/commanditemremove.cpp \
     $$PWD/commands/commanditemvisibility.cpp \
     $$PWD/commands/commandlabelrename.cpp \
-    $$PWD/commands/commandnoderesize.cpp
+    $$PWD/commands/commandnoderesize.cpp \
+    $$PWD/items/splinewire.cpp

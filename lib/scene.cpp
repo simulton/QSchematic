@@ -42,7 +42,6 @@ Scene::Scene(QObject* parent) :
 
 bool Scene::toXml(QXmlStreamWriter& xml) const
 {
-    xml.writeStartDocument();
     xml.writeStartElement(QStringLiteral("qschematic"));
     xml.writeAttribute(QStringLiteral("version"), QStringLiteral("1"));
     {
