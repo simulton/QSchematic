@@ -158,8 +158,11 @@ bool MainWindow::save()
     xml.setCodec(QTextCodec::codecForName("UTF-8"));
     xml.setAutoFormatting(true);
     xml.setAutoFormattingIndent(4);
+    xml.writeStartDocument();
 
     _scene->toXml(xml);
+
+    xml.writeEndDocument();
 
     file.flush();
     file.close();
