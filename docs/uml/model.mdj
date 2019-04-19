@@ -292,10 +292,7 @@
 										"$ref": "AAAAAAFmstLrUr+1IK0="
 									},
 									"name": "panStart",
-									"visibility": "private",
-									"type": {
-										"$ref": "AAAAAAFmwhdOmGYvbWY="
-									}
+									"visibility": "private"
 								}
 							],
 							"operations": [
@@ -1028,10 +1025,7 @@
 											"_parent": {
 												"$ref": "AAAAAAFnUw6sD9sV/Aw="
 											},
-											"name": "point",
-											"type": {
-												"$ref": "AAAAAAFmwhdOmGYvbWY="
-											}
+											"name": "point"
 										},
 										{
 											"_type": "UMLParameter",
@@ -1256,10 +1250,7 @@
 											"_parent": {
 												"$ref": "AAAAAAFnUxHsSt/8uWA="
 											},
-											"name": "point",
-											"type": {
-												"$ref": "AAAAAAFmwhdOmGYvbWY="
-											}
+											"name": "point"
 										},
 										{
 											"_type": "UMLParameter",
@@ -1684,10 +1675,7 @@
 											"_parent": {
 												"$ref": "AAAAAAFnU5I8ACcjM9U="
 											},
-											"name": "point",
-											"type": {
-												"$ref": "AAAAAAFmwhdOmGYvbWY="
-											}
+											"name": "point"
 										},
 										{
 											"_type": "UMLParameter",
@@ -2085,10 +2073,7 @@
 										"$ref": "AAAAAAFmuktEzYpHKLc="
 									},
 									"name": "oldGridPoint",
-									"visibility": "private",
-									"type": {
-										"$ref": "AAAAAAFmwhdOmGYvbWY="
-									}
+									"visibility": "private"
 								}
 							],
 							"operations": [
@@ -2148,10 +2133,7 @@
 											"_parent": {
 												"$ref": "AAAAAAFm5jaIMy2Ot9k="
 											},
-											"name": "point",
-											"type": {
-												"$ref": "AAAAAAFmwhdOmGYvbWY="
-											}
+											"name": "point"
 										}
 									]
 								},
@@ -2234,9 +2216,6 @@
 											"_id": "AAAAAAFm5dfVpwsOi/w=",
 											"_parent": {
 												"$ref": "AAAAAAFm5ddUiwp0Yzo="
-											},
-											"type": {
-												"$ref": "AAAAAAFmwhdOmGYvbWY="
 											},
 											"direction": "return"
 										}
@@ -3122,7 +3101,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFmusIG1ZpuT4g="
 							},
-							"name": "JSON",
+							"name": "XML",
 							"operations": [
 								{
 									"_type": "UMLOperation",
@@ -3130,7 +3109,7 @@
 									"_parent": {
 										"$ref": "AAAAAAFmsu0K7aiKz0A="
 									},
-									"name": "toJson",
+									"name": "toXml",
 									"parameters": [
 										{
 											"_type": "UMLParameter",
@@ -3138,8 +3117,17 @@
 											"_parent": {
 												"$ref": "AAAAAAFmsu05c6jxexQ="
 											},
-											"type": "QJsonObject",
+											"type": "bool",
 											"direction": "return"
+										},
+										{
+											"_type": "UMLParameter",
+											"_id": "AAAAAAFqNYUXO/WXkQ4=",
+											"_parent": {
+												"$ref": "AAAAAAFmsu05c6jxexQ="
+											},
+											"name": "xml",
+											"type": "QXmlStreamWriter"
 										}
 									]
 								},
@@ -3149,7 +3137,7 @@
 									"_parent": {
 										"$ref": "AAAAAAFmsu0K7aiKz0A="
 									},
-									"name": "fromJson",
+									"name": "fromXml",
 									"parameters": [
 										{
 											"_type": "UMLParameter",
@@ -3166,8 +3154,8 @@
 											"_parent": {
 												"$ref": "AAAAAAFmsvDVyaq1SuY="
 											},
-											"name": "object",
-											"type": "QJsonObject"
+											"name": "xml",
+											"type": "QXmlStreamReader"
 										}
 									]
 								}
@@ -3576,7 +3564,7 @@
 													"top": 1083,
 													"width": 284.349609375,
 													"height": 13,
-													"text": "+removeConnector(point: QPoint): bool",
+													"text": "+removeConnector(point): bool",
 													"horizontalAlignment": 0
 												},
 												{
@@ -4242,7 +4230,7 @@
 													"top": 187,
 													"width": 273.86962890625,
 													"height": 13,
-													"text": "-oldGridPoint: QPoint",
+													"text": "-oldGridPoint",
 													"horizontalAlignment": 0
 												}
 											],
@@ -4310,7 +4298,7 @@
 													"top": 240,
 													"width": 273.86962890625,
 													"height": 13,
-													"text": "+setGridPos(point: QPoint)",
+													"text": "+setGridPos(point)",
 													"horizontalAlignment": 0
 												},
 												{
@@ -4378,7 +4366,7 @@
 													"top": 300,
 													"width": 273.86962890625,
 													"height": 13,
-													"text": "+gridPos(): QPoint",
+													"text": "+gridPos(): null",
 													"horizontalAlignment": 0
 												},
 												{
@@ -4999,7 +4987,7 @@
 													"font": "Arial;13;0",
 													"left": 789,
 													"top": 5,
-													"width": 194.56884765625,
+													"width": 216.9189453125,
 													"height": 13,
 													"text": "«interface»"
 												},
@@ -5012,9 +5000,9 @@
 													"font": "Arial;13;1",
 													"left": 789,
 													"top": 20,
-													"width": 194.56884765625,
+													"width": 216.9189453125,
 													"height": 13,
-													"text": "JSON"
+													"text": "XML"
 												},
 												{
 													"_type": "LabelView",
@@ -5046,7 +5034,7 @@
 											],
 											"font": "Arial;13;0",
 											"left": 784,
-											"width": 204.56884765625,
+											"width": 226.9189453125,
 											"height": 38,
 											"stereotypeLabel": {
 												"$ref": "AAAAAAFmuktxbIp4Nm0="
@@ -5099,9 +5087,9 @@
 													"font": "Arial;13;0",
 													"left": 789,
 													"top": 43,
-													"width": 218.56884765625,
+													"width": 240.9189453125,
 													"height": 13,
-													"text": "+toJson(): QJsonObject",
+													"text": "+toXml(xml: QXmlStreamWriter): bool",
 													"horizontalAlignment": 0
 												},
 												{
@@ -5116,16 +5104,16 @@
 													"font": "Arial;13;0",
 													"left": 789,
 													"top": 58,
-													"width": 218.56884765625,
+													"width": 240.9189453125,
 													"height": 13,
-													"text": "+fromJson(object: QJsonObject): bool",
+													"text": "+fromXml(xml: QXmlStreamReader): bool",
 													"horizontalAlignment": 0
 												}
 											],
 											"font": "Arial;13;0",
 											"left": 784,
 											"top": 38,
-											"width": 228.56884765625,
+											"width": 250.9189453125,
 											"height": 38
 										},
 										{
@@ -5164,7 +5152,7 @@
 									"font": "Arial;13;0",
 									"containerChangeable": true,
 									"left": 784,
-									"width": 228.56884765625,
+									"width": 250.9189453125,
 									"height": 86,
 									"stereotypeDisplay": "decoration-label",
 									"nameCompartment": {
@@ -7016,7 +7004,7 @@
 													"top": 429,
 													"width": 320.46142578125,
 													"height": 13,
-													"text": "+toGridCoordinate(scenePoint: QPointF): QPoint",
+													"text": "+toGridCoordinate(scenePoint: QPointF): null",
 													"horizontalAlignment": 0
 												},
 												{
@@ -7033,7 +7021,7 @@
 													"top": 444,
 													"width": 320.46142578125,
 													"height": 13,
-													"text": "+toScenePoint(gridPoint: QPoint): QPoint",
+													"text": "+toScenePoint(gridPoint): null",
 													"horizontalAlignment": 0
 												},
 												{
@@ -11092,7 +11080,7 @@
 													"font": "Arial;13;0",
 													"left": 645,
 													"top": 1437,
-													"width": 194.56884765625,
+													"width": 216.9189453125,
 													"height": 13,
 													"text": "«interface»"
 												},
@@ -11105,9 +11093,9 @@
 													"font": "Arial;13;1",
 													"left": 645,
 													"top": 1452,
-													"width": 194.56884765625,
+													"width": 216.9189453125,
 													"height": 13,
-													"text": "JSON"
+													"text": "XML"
 												},
 												{
 													"_type": "LabelView",
@@ -11140,7 +11128,7 @@
 											"font": "Arial;13;0",
 											"left": 640,
 											"top": 1432,
-											"width": 204.56884765625,
+											"width": 226.9189453125,
 											"height": 38,
 											"stereotypeLabel": {
 												"$ref": "AAAAAAFnWnii+ftkTDg="
@@ -11193,9 +11181,9 @@
 													"font": "Arial;13;0",
 													"left": 645,
 													"top": 1475,
-													"width": 218.56884765625,
+													"width": 240.9189453125,
 													"height": 13,
-													"text": "+toJson(): QJsonObject",
+													"text": "+toXml(xml: QXmlStreamWriter): bool",
 													"horizontalAlignment": 0
 												},
 												{
@@ -11210,16 +11198,16 @@
 													"font": "Arial;13;0",
 													"left": 645,
 													"top": 1490,
-													"width": 218.56884765625,
+													"width": 240.9189453125,
 													"height": 13,
-													"text": "+fromJson(object: QJsonObject): bool",
+													"text": "+fromXml(xml: QXmlStreamReader): bool",
 													"horizontalAlignment": 0
 												}
 											],
 											"font": "Arial;13;0",
 											"left": 640,
 											"top": 1470,
-											"width": 228.56884765625,
+											"width": 250.9189453125,
 											"height": 38
 										},
 										{
@@ -11259,7 +11247,7 @@
 									"containerChangeable": true,
 									"left": 640,
 									"top": 1432,
-									"width": 228.56884765625,
+									"width": 250.9189453125,
 									"height": 86,
 									"stereotypeDisplay": "decoration-label",
 									"nameCompartment": {
@@ -11300,7 +11288,7 @@
 											},
 											"visible": false,
 											"font": "Arial;13;0",
-											"left": 937,
+											"left": 948,
 											"top": 1481,
 											"height": 13,
 											"alpha": 1.5707963267948966,
@@ -11321,7 +11309,7 @@
 											},
 											"visible": null,
 											"font": "Arial;13;0",
-											"left": 937,
+											"left": 948,
 											"top": 1496,
 											"height": 13,
 											"alpha": 1.5707963267948966,
@@ -11342,7 +11330,7 @@
 											},
 											"visible": false,
 											"font": "Arial;13;0",
-											"left": 938,
+											"left": 949,
 											"top": 1451,
 											"height": 13,
 											"alpha": -1.5707963267948966,
@@ -11360,7 +11348,7 @@
 									"tail": {
 										"$ref": "AAAAAAFnUj1ET3M/ets="
 									},
-									"points": "1008:1472;868:1472",
+									"points": "1008:1472;890:1472",
 									"showVisibility": true,
 									"nameLabel": {
 										"$ref": "AAAAAAFnWnjIkvxIO64="
@@ -12075,7 +12063,7 @@
 													"top": 260,
 													"width": 229.07421875,
 													"height": 13,
-													"text": "-panStart: QPoint",
+													"text": "-panStart",
 													"horizontalAlignment": 0
 												}
 											],
@@ -12936,7 +12924,7 @@
 													"top": 478,
 													"width": 367.1865234375,
 													"height": 13,
-													"text": "+netsAt(point: QPoint): WireNet[0..*]",
+													"text": "+netsAt(point): WireNet[0..*]",
 													"horizontalAlignment": 0
 												},
 												{
@@ -13106,7 +13094,7 @@
 													"top": 628,
 													"width": 367.1865234375,
 													"height": 13,
-													"text": "-wireMovePoint(point: QPoint, wire: Wire, moveBy: QVector2D)",
+													"text": "-wireMovePoint(point, wire: Wire, moveBy: QVector2D)",
 													"horizontalAlignment": 0
 												},
 												{
@@ -14092,7 +14080,7 @@
 													"top": 987,
 													"width": 284.349609375,
 													"height": 13,
-													"text": "+removeConnector(point: QPoint): bool",
+													"text": "+removeConnector(point): bool",
 													"horizontalAlignment": 0
 												},
 												{
@@ -14143,7 +14131,24 @@
 													"top": 1032,
 													"width": 284.349609375,
 													"height": 13,
-													"text": "+connectionPoints(): QPointF[0..*]",
+													"text": "+connectionPointsRelative(): QPointF[0..*]",
+													"horizontalAlignment": 0
+												},
+												{
+													"_type": "UMLOperationView",
+													"_id": "AAAAAAFqNYS8jPEY6yA=",
+													"_parent": {
+														"$ref": "AAAAAAFmsthVIMNhKy0="
+													},
+													"model": {
+														"$ref": "AAAAAAFoGx3OzVhfTLw="
+													},
+													"font": "Arial;13;0",
+													"left": 685,
+													"top": 1047,
+													"width": 284.349609375,
+													"height": 13,
+													"text": "+connectionPointsAbsolute(): QPointF[0..*]",
 													"horizontalAlignment": 0
 												},
 												{
@@ -15267,7 +15272,7 @@
 													"top": 373,
 													"width": 312.5205078125,
 													"height": 13,
-													"text": "+toGridCoordinate(scenePoint: QPointF): QPoint",
+													"text": "+toGridCoordinate(scenePoint: QPointF): null",
 													"horizontalAlignment": 0
 												},
 												{
@@ -15284,7 +15289,7 @@
 													"top": 388,
 													"width": 312.5205078125,
 													"height": 13,
-													"text": "+toScenePoint(gridPoint: QPoint): QPoint",
+													"text": "+toScenePoint(gridPoint): null",
 													"horizontalAlignment": 0
 												},
 												{
@@ -15301,7 +15306,7 @@
 													"top": 403,
 													"width": 312.5205078125,
 													"height": 13,
-													"text": "+snapToGridCoordinate(scenePoint: QPointF): QPoint",
+													"text": "+snapToGrid(scenePoint: QPointF): QPoint",
 													"horizontalAlignment": 0
 												}
 											],
@@ -19407,9 +19412,6 @@
 											"_parent": {
 												"$ref": "AAAAAAFnBU3/4nPnMMQ="
 											},
-											"type": {
-												"$ref": "AAAAAAFmwhdOmGYvbWY="
-											},
 											"direction": "return"
 										}
 									]
@@ -19428,19 +19430,13 @@
 											"_parent": {
 												"$ref": "AAAAAAFnBU5IoHVDObY="
 											},
-											"name": "gridPoint",
-											"type": {
-												"$ref": "AAAAAAFmwhdOmGYvbWY="
-											}
+											"name": "gridPoint"
 										},
 										{
 											"_type": "UMLParameter",
 											"_id": "AAAAAAFnBU5Ui3WfAIQ=",
 											"_parent": {
 												"$ref": "AAAAAAFnBU5IoHVDObY="
-											},
-											"type": {
-												"$ref": "AAAAAAFmwhdOmGYvbWY="
 											},
 											"direction": "return"
 										}
@@ -19695,10 +19691,7 @@
 										"$ref": "AAAAAAFnUjE/r082yoo="
 									},
 									"name": "p1",
-									"visibility": "private",
-									"type": {
-										"$ref": "AAAAAAFmwhdOmGYvbWY="
-									}
+									"visibility": "private"
 								},
 								{
 									"_type": "UMLAttribute",
@@ -19707,10 +19700,7 @@
 										"$ref": "AAAAAAFnUjE/r082yoo="
 									},
 									"name": "p2",
-									"visibility": "private",
-									"type": {
-										"$ref": "AAAAAAFmwhdOmGYvbWY="
-									}
+									"visibility": "private"
 								}
 							],
 							"operations": [
@@ -20698,7 +20688,7 @@
 													"top": 318,
 													"width": 311.0732421875,
 													"height": 13,
-													"text": "-p1: QPoint",
+													"text": "-p1",
 													"horizontalAlignment": 0
 												},
 												{
@@ -20715,7 +20705,7 @@
 													"top": 333,
 													"width": 311.0732421875,
 													"height": 13,
-													"text": "-p2: QPoint",
+													"text": "-p2",
 													"horizontalAlignment": 0
 												}
 											],
