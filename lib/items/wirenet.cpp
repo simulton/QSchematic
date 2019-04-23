@@ -1,6 +1,3 @@
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QJsonValue>
 #include "wirenet.h"
 #include "wire.h"
 #include "label.h"
@@ -17,50 +14,9 @@ WireNet::WireNet(QObject* parent) :
     connect(_label.get(), &Label::highlightChanged, this, &WireNet::labelHighlightChanged);
 }
 
-bool WireNet::toXml(QXmlStreamWriter& xml) const
-{
-    xml.writeAttribute(QStringLiteral("name"), name());
-
-    xml.writeStartElement(QStringLiteral("wires"));
-    for (const auto& wire : _wires) {
-        xml.writeStartElement(QStringLiteral("wire"));
-        wire->toXml(xml);
-        xml.writeEndElement();
-    }
-    xml.writeEndElement();
-
-    return true;
-}
-
-bool WireNet::fromXml(QXmlStreamReader& reader)
-{
-    while (reader.readNextStartElement()) {
-        setName(reader.attributes().value(QStringLiteral("name")).toString());
-        if (reader.name() == "wires") {
-            while (reader.readNextStartElement()) {
-                if (reader.name() != "wire") {
-                    reader.skipCurrentElement();
-                    continue;
-                }
-
-                auto newWire = ItemFactory::instance().fromXml(reader);
-                auto sharedNewWire = std::dynamic_pointer_cast<Wire>(std::shared_ptr<Item>(std::move(newWire)));
-                if (!sharedNewWire)
-                    continue;
-                sharedNewWire->fromXml(reader);
-                addWire(sharedNewWire);
-                reader.skipCurrentElement();
-            }
-        }
-    }
-
-    connect(_label.get(), &Label::highlightChanged, this, &WireNet::labelHighlightChanged);
-
-    return true;
-}
-
 Gds::Container WireNet::toContainer() const
 {
+    // Wires
     Gds::Container wiresContainer;
     for (const auto& wire : _wires) {
         wiresContainer.addEntry("wire", wire->toContainer());
@@ -76,7 +32,22 @@ Gds::Container WireNet::toContainer() const
 
 void WireNet::fromContainer(const Gds::Container& container)
 {
+    // Root
+    setName( QString::fromStdString( container.getEntry<std::string>( "name" ) ) );
 
+    // Wires
+    {
+        const Gds::Container& wiresContainer = container.getEntry<Gds::Container>( "wires" );
+        for (const Gds::Container& wireContainer : wiresContainer.getEntries<Gds::Container>( "wire" ) ) {
+            auto newWire = ItemFactory::instance().fromContainer(wireContainer);
+            auto sharedNewWire = std::dynamic_pointer_cast<Wire>( std::shared_ptr<Item>( std::move(newWire) ) );
+            if (!sharedNewWire) {
+                continue;
+            }
+            sharedNewWire->fromContainer(wireContainer);
+            addWire(sharedNewWire);
+        }
+    }
 }
 
 bool WireNet::addWire(const std::shared_ptr<Wire>& wire)

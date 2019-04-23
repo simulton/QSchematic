@@ -2,7 +2,6 @@
 
 #include <functional>
 #include <memory>
-#include <QXmlStreamReader>
 
 class QString;
 
@@ -10,10 +9,14 @@ namespace QSchematic {
     class Item;
 }
 
+namespace Gds {
+    class Container;
+}
+
 class CustomItemFactory
 {
 public:
-    static std::unique_ptr<QSchematic::Item> fromXml(const QXmlStreamReader& reader);
+    static std::unique_ptr<QSchematic::Item> fromContainer(const Gds::Container& container);
 
 private:
     CustomItemFactory() = default;

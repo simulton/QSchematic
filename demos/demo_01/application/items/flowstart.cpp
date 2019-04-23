@@ -49,19 +49,18 @@ FlowStart::FlowStart() :
     setAllowMouseResize(false);
 }
 
-bool FlowStart::toXml(QXmlStreamWriter& xml) const
+Gds::Container FlowStart::toContainer() const
 {
-    addTypeIdentifierToXml(xml);
-    QSchematic::Node::toXml(xml);
+    // Root
+    Gds::Container root;
+    root.addEntry("node", QSchematic::Node::toContainer());
 
-    return true;
+    return root;
 }
 
-bool FlowStart::fromXml(QXmlStreamReader& reader)
+void FlowStart::fromContainer(const Gds::Container& container)
 {
-    QSchematic::Node::fromXml(reader);
-
-    return true;
+    QSchematic::Node::fromContainer( container.getEntry<Gds::Container>( "node") );
 }
 
 std::unique_ptr<QSchematic::Item> FlowStart::deepCopy() const

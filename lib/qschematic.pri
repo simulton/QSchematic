@@ -26,7 +26,6 @@ HEADERS += \
     $$PWD/commands/commandlabelrename.h \
     $$PWD/commands/commandnoderesize.h \
     $$PWD/commands/commands.h \
-    $$PWD/interfaces/xml.h \
     $$PWD/items/splinewire.h
 
 SOURCES += \

@@ -15,18 +15,18 @@ FancyWire::FancyWire(QGraphicsItem* parent) :
     setZValue(1);
 }
 
-bool FancyWire::toXml(QXmlStreamWriter& xml) const
+Gds::Container FancyWire::toContainer() const
 {
-    QSchematic::Wire::toXml(xml);
+    // Root
+    Gds::Container root;
+    root.addEntry("wire", QSchematic::Wire::toContainer());
 
-    return true;
+    return root;
 }
 
-bool FancyWire::fromXml(QXmlStreamReader& reader)
+void FancyWire::fromContainer(const Gds::Container& container)
 {
-    QSchematic::Wire::fromXml(reader);
-
-    return true;
+    QSchematic::Wire::fromContainer( container.getEntry<Gds::Container>( "wire" ) );
 }
 
 std::unique_ptr<QSchematic::Item> FancyWire::deepCopy() const

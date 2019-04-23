@@ -20,19 +20,19 @@ WireRoundedCorners::WireRoundedCorners(int type, QGraphicsItem* parent) :
 {
 }
 
-bool WireRoundedCorners::toXml(QXmlStreamWriter& xml) const
+Gds::Container WireRoundedCorners::toContainer() const
 {
-    addTypeIdentifierToXml(xml);
-    QSchematic::Wire::toXml(xml);
+    // Root
+    Gds::Container root;
+    root.addEntry("wire", Wire::toContainer());
 
-    return true;
+    return root;
 }
 
-bool WireRoundedCorners::fromXml(QXmlStreamReader& reader)
+void WireRoundedCorners::fromContainer(const Gds::Container& container)
 {
-    QSchematic::Wire::fromXml(reader);
-
-    return true;
+    // Root
+    Wire::fromContainer( container.getEntry<Gds::Container>( "wire" ) );
 }
 
 void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)

@@ -14,8 +14,8 @@ namespace QSchematic
         WireRoundedCorners(int type = Item::WireRoundedCornersType, QGraphicsItem* parent = nullptr);
         virtual ~WireRoundedCorners() override = default;
 
-        virtual bool toXml(QXmlStreamWriter& xml) const override;
-        virtual bool fromXml(QXmlStreamReader& reader) override;
+        virtual Gds::Container toContainer() const override;
+        virtual void fromContainer(const Gds::Container& container) override;
         virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
     private:

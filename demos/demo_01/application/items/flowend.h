@@ -13,8 +13,8 @@ public:
     FlowEnd();
     virtual ~FlowEnd() override = default;
 
-    virtual bool toXml(QXmlStreamWriter& xml) const override;
-    virtual bool fromXml(QXmlStreamReader& reader) override;
+    virtual Gds::Container toContainer() const override;
+    virtual void fromContainer(const Gds::Container& container) override;
     virtual std::unique_ptr<Item> deepCopy() const override;
     virtual QRectF boundingRect() const override;
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;

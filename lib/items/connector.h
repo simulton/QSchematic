@@ -23,8 +23,6 @@ namespace QSchematic {
         Connector(int type = Item::ConnectorType, const QPoint& gridPos = QPoint(), const QString& text = QString(), QGraphicsItem* parent = nullptr);
         virtual ~Connector() override = default;
 
-        virtual bool toXml(QXmlStreamWriter& xml) const override;
-        virtual bool fromXml(QXmlStreamReader& reader) override;
         virtual Gds::Container toContainer() const override;
         virtual void fromContainer(const Gds::Container& container) override;
         virtual std::unique_ptr<Item> deepCopy() const override;

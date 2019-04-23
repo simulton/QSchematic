@@ -16,16 +16,16 @@ namespace QSchematic
     public:
         static ItemFactory& instance();
 
-        void setCustomItemsFactory(const std::function<std::unique_ptr<Item>(const QXmlStreamReader&)>& factory);
-        std::unique_ptr<Item> fromXml(const QXmlStreamReader& reader) const;
-        static Item::ItemType extractType(const QXmlStreamReader& reader);
+        void setCustomItemsFactory(const std::function<std::unique_ptr<Item>(const Gds::Container&)>& factory);
+        std::unique_ptr<Item> fromContainer(const Gds::Container& container) const;
+        static Item::ItemType extractType(const Gds::Container& container);
 
     private:
         ItemFactory() = default;
         ItemFactory(const ItemFactory& other) = default;
         ItemFactory(ItemFactory&& other) = default;
 
-        std::function<std::unique_ptr<Item>(const QXmlStreamReader&)> _customItemFactory;
+        std::function<std::unique_ptr<Item>(const Gds::Container&)> _customItemFactory;
     };
 
 }

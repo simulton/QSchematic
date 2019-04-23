@@ -9,10 +9,10 @@
 #include "flowstart.h"
 #include "flowend.h"
 
-std::unique_ptr<QSchematic::Item> CustomItemFactory::fromXml(const QXmlStreamReader& reader)
+std::unique_ptr<QSchematic::Item> CustomItemFactory::fromContainer(const Gds::Container& container)
 {
     // Extract the type
-    QSchematic::Item::ItemType type = QSchematic::ItemFactory::extractType(reader);
+    QSchematic::Item::ItemType type = QSchematic::ItemFactory::extractType(container);
 
     // Create the item
     std::unique_ptr<QSchematic::Item> item;

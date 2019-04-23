@@ -28,21 +28,19 @@ OperationDemo1::OperationDemo1(QGraphicsItem* parent) :
     }
 }
 
-bool OperationDemo1::toXml(QXmlStreamWriter& xml) const
+Gds::Container OperationDemo1::toContainer() const
 {
-    xml.writeStartElement(QStringLiteral("operation"));
-    addTypeIdentifierToXml(xml);
-    Operation::toXml(xml);
-    xml.writeEndElement();
+    // Root
+    Gds::Container root;
+    root.addEntry("operation", Operation::toContainer());
 
-    return true;
+    return root;
 }
 
-bool OperationDemo1::fromXml(QXmlStreamReader& reader)
+void OperationDemo1::fromContainer(const Gds::Container& container)
 {
-    Operation::fromXml(reader);
-
-    return true;
+    // Root
+    Operation::fromContainer( container.getEntry<Gds::Container>( "operation" ) );
 }
 
 std::unique_ptr<QSchematic::Item> OperationDemo1::deepCopy() const

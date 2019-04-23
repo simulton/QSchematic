@@ -43,7 +43,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     // Setup the custom item factory
-    auto func = std::bind(&CustomItemFactory::fromXml, std::placeholders::_1);
+    auto func = std::bind(&CustomItemFactory::fromContainer, std::placeholders::_1);
     QSchematic::ItemFactory::instance().setCustomItemsFactory(func);
 
     // Settings
@@ -149,14 +149,14 @@ bool MainWindow::save()
         return false;
     }
 
-    // Save
+    // Open the file
     QFile file(path);
     file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate);
     if (!file.isOpen()) {
         return false;
     }
 
-    // Archive
+    // Archiver
     Gds::ArchiverXml ar;
     std::stringstream stream;
     ar.save(stream, *_scene, "qschematic");
@@ -180,16 +180,21 @@ bool MainWindow::load()
     // Get rid of everything existing
     _scene->clear();
 
-    // Read the file
+    // Open the file
     QFile file(path);
     file.open(QFile::ReadOnly);
     if (!file.isOpen()) {
         return false;
     }
 
-    // Load from file contents
-    QXmlStreamReader xml(&file);
-    _scene->fromXml(xml);
+    // Archiver
+    Gds::ArchiverXml ar;
+    std::stringstream stream;
+    stream << file.readAll().data();
+    ar.load(stream, *_scene, "qschematic");
+
+    // Clean up
+    file.close();
 
     return true;
 }

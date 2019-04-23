@@ -43,69 +43,6 @@ Wire::Wire(int type, QGraphicsItem* parent) :
     setMovable(false);
 }
 
-bool Wire::toXml(QXmlStreamWriter& xml) const
-{
-    addTypeIdentifierToXml(xml);
-    // Points
-    xml.writeStartElement(QStringLiteral("points"));
-    for (int i = 0; i < _points.count(); i++) {
-        xml.writeStartElement(QStringLiteral("point"));
-        {
-            xml.writeAttribute(QStringLiteral("index"), QString::number(i));
-            xml.writeTextElement(QStringLiteral("x"), QString::number(_points.at(i).x()));
-            xml.writeTextElement(QStringLiteral("y"), QString::number(_points.at(i).y()));
-        }
-        xml.writeEndElement();
-    }
-    xml.writeEndElement();
-
-    // Base class
-    xml.writeStartElement(QStringLiteral("item"));
-    addTypeIdentifierToXml(xml);
-    Item::toXml(xml);
-    xml.writeEndElement();
-
-    return true;
-}
-
-bool Wire::fromXml(QXmlStreamReader& reader)
-{
-    Q_ASSERT(reader.name() == "wire");
-    reader.readNextStartElement(); // points
-    Q_ASSERT(reader.name() == "points");
-    // Points array
-    QList<PointWithIndex> pointsUnsorted;
-    while (reader.readNextStartElement()) {
-        Q_ASSERT(reader.name() == "point");
-        int index = reader.attributes().value(QStringLiteral("index")).toInt();
-
-        reader.readNextStartElement();
-        Q_ASSERT(reader.name() == "x");
-        int x = reader.readElementText().toInt();
-
-        reader.readNextStartElement();
-        Q_ASSERT(reader.name() == "y");
-        int y = reader.readElementText().toInt();
-
-        reader.skipCurrentElement();
-
-        pointsUnsorted.append(PointWithIndex(index, QPoint(x, y)));
-    }
-
-    std::sort(pointsUnsorted.begin(), pointsUnsorted.end());
-    for (const PointWithIndex& pointWithIndex : pointsUnsorted) {
-        _points.append(pointWithIndex.point);
-    }
-    reader.readNextStartElement();
-    Q_ASSERT(reader.name() == "item");
-    Item::fromXml(reader);
-
-    // Update stuff
-    update();
-
-    return true;
-}
-
 Gds::Container Wire::toContainer() const
 {
     // Points
@@ -128,7 +65,19 @@ Gds::Container Wire::toContainer() const
 
 void Wire::fromContainer(const Gds::Container& container)
 {
+    // Root
+    Item::fromContainer( container.getEntry<Gds::Container>( "item" ) );
 
+    // Points
+    {
+        const Gds::Container& pointsContainer = container.getEntry<Gds::Container>( "points" );
+        for (const Gds::Container& pointContainer : pointsContainer.getEntries<Gds::Container>( "point" ) ) {
+#warning ToDo: Get index argument
+            _points.append( WirePoint( pointContainer.getEntry<double>("x"), pointContainer.getEntry<double>("y") ) );
+        }
+    }
+
+    update();
 }
 
 std::unique_ptr<Item> Wire::deepCopy() const

@@ -5,9 +5,6 @@
 #include "label.h"
 #include "../scene.h"
 
-#define BOOL2STR(x) (x ? QStringLiteral("true") : QStringLiteral("false"))
-#define STR2BOOL(x) (QString::compare(x, QStringLiteral("true")) == 0 ? true : false)
-
 const QColor COLOR_LABEL             = QColor("#000000");
 const QColor COLOR_LABEL_HIGHLIGHTED = QColor("#dc2479");
 const qreal LABEL_TEXT_PADDING = 2;
@@ -19,42 +16,6 @@ Label::Label(int type, QGraphicsItem* parent) :
     _hasConnectionPoint(true)
 {
     setSnapToGrid(false);
-}
-
-bool Label::toXml(QXmlStreamWriter& xml) const
-{
-#warning ToDo: Add font
-    addTypeIdentifierToXml(xml);
-    xml.writeTextElement(QStringLiteral("text"), text());
-    xml.writeTextElement(QStringLiteral("connection_point"), BOOL2STR(_hasConnectionPoint));
-    xml.writeTextElement(QStringLiteral("x"), QString::number(_connectionPoint.x()));
-    xml.writeTextElement(QStringLiteral("y"), QString::number(_connectionPoint.y()));
-
-    xml.writeStartElement(QStringLiteral("item"));
-    addTypeIdentifierToXml(xml);
-    Item::toXml(xml);
-    xml.writeEndElement();
-
-    return true;
-}
-
-bool Label::fromXml(QXmlStreamReader& reader)
-{
-    while (reader.readNextStartElement()) {
-        if (reader.name() == "item") {
-            Item::fromXml(reader);
-        } else if (reader.name() == "text") {
-            setText(reader.readElementText());
-        } else if (reader.name() == "connection_point") {
-            _hasConnectionPoint = STR2BOOL(reader.readElementText());
-        } else if (reader.name() == "x") {
-            _connectionPoint.rx() = reader.readElementText().toInt();
-        } else if (reader.name() == "y") {
-            _connectionPoint.ry() = reader.readElementText().toInt();
-        }
-    }
-
-    return true;
 }
 
 Gds::Container Label::toContainer() const
@@ -76,7 +37,17 @@ Gds::Container Label::toContainer() const
 
 void Label::fromContainer(const Gds::Container& container)
 {
+    Item::fromContainer( container.getEntry<Gds::Container>( "item" ) );
+    setText( QString::fromStdString( container.getEntry<std::string>( "text" ) ) );
 
+    // Connection point
+    {
+        Gds::Container connectionPointContainer = container.getEntry<Gds::Container>( "connection_point" );
+#warning ToDo: Use argument
+        _hasConnectionPoint = false;
+        _connectionPoint.setX( connectionPointContainer.getEntry<double>( "x" ) );
+        _connectionPoint.setY( connectionPointContainer.getEntry<double>( "y" ) );
+    }
 }
 
 std::unique_ptr<Item> Label::deepCopy() const

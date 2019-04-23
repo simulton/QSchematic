@@ -11,8 +11,8 @@ public:
     explicit OperationDemo1(QGraphicsItem* parent = nullptr);
     virtual ~OperationDemo1() override = default;
 
-    virtual bool toXml(QXmlStreamWriter& xml) const override;
-    virtual bool fromXml(QXmlStreamReader& reader) override;
+    virtual Gds::Container toContainer() const override;
+    virtual void fromContainer(const Gds::Container& container) override;
     virtual std::unique_ptr<QSchematic::Item> deepCopy() const override;
 
 private:

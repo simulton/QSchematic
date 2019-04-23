@@ -9,9 +9,6 @@
 #include "../utils.h"
 #include "../scene.h"
 
-#define BOOL2STR(x) (x ? QStringLiteral("true") : QStringLiteral("false"))
-#define STR2BOOL(x) (QString::compare(x, QStringLiteral("true")) == 0 ? true : false)
-
 const QColor COLOR_HIGHLIGHTED = QColor(Qt::blue).lighter();
 const QColor COLOR_BODY_FILL   = QColor(Qt::green);
 const QColor COLOR_BODY_BORDER = QColor(Qt::black);
@@ -74,7 +71,40 @@ Gds::Container Node::toContainer() const
 
 void Node::fromContainer(const Gds::Container& container)
 {
+    // Root
+    Item::fromContainer( container.getEntry<Gds::Container>( "item" ) );
+    setSize( container.getEntry<int>( "width" ), container.getEntry<int>( "height" ) );
+    _label->fromContainer( container.getEntry<Gds::Container>( "label" ) );
 
+    // Mouse resize
+    {
+        const Gds::Container& mouseResizeContainer = container.getEntry<Gds::Container>( "mouse_resize" );
+#warning ToDo: Use argument
+        setAllowMouseResize( true );
+        setMouseResizePolicy( static_cast<ResizePolicy>( mouseResizeContainer.getEntry<int>( "policy" ) ) );
+    }
+
+    // Connectors configuration
+    {
+        const Gds::Container& connectorsConfigurationContainer = container.getEntry<Gds::Container>( "connectors_configuration" );
+        setConnectorsMovable( connectorsConfigurationContainer.getEntry<bool>( "movable" ) );
+        setConnectorsSnapPolicy( static_cast<Connector::SnapPolicy>( connectorsConfigurationContainer.getEntry<int>( "snap_policy" ) ) );
+        setConnectorsSnapToGrid( connectorsConfigurationContainer.getEntry<bool>( "snap_to_grid" ) );
+    }
+
+    // Connectors
+    {
+        clearConnectors();
+        const Gds::Container& connectorsContainer = container.getEntry<Gds::Container>( "connectors" );
+        for (const Gds::Container& connectorContainer : connectorsContainer.getEntries<Gds::Container>( "connector" ) ) {
+            Connector* connector = dynamic_cast<Connector*>(ItemFactory::instance().fromContainer(connectorContainer).release());
+            if (!connector) {
+                continue;
+            }
+            connector->fromContainer(connectorContainer);
+            addConnector(std::unique_ptr<Connector>(connector));
+        }
+    }
 }
 
 std::unique_ptr<Item> Node::deepCopy() const

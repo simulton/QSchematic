@@ -1,4 +1,3 @@
-#include <QJsonObject>
 #include "itemfactory.h"
 #include "node.h"
 #include "wire.h"
@@ -16,22 +15,22 @@ ItemFactory& ItemFactory::instance()
     return instance;
 }
 
-void ItemFactory::setCustomItemsFactory(const std::function<std::unique_ptr<Item>(const QXmlStreamReader&)>& factory)
+void ItemFactory::setCustomItemsFactory(const std::function<std::unique_ptr<Item>(const Gds::Container&)>& factory)
 {
     _customItemFactory = factory;
 }
 
-std::unique_ptr<Item> ItemFactory::fromXml(const QXmlStreamReader& reader) const
+std::unique_ptr<Item> ItemFactory::fromContainer(const Gds::Container& container) const
 {
     // Extract the type
-    Item::ItemType type = ItemFactory::extractType(reader);
+    Item::ItemType type = ItemFactory::extractType(container);
 
     // Create the item
     std::unique_ptr<Item> item;
 
     // First, try custom types
     if (_customItemFactory) {
-        item.reset(_customItemFactory(reader).release());
+        item.reset(_customItemFactory(container).release());
     }
 
     // Fall back to internal types
@@ -69,7 +68,8 @@ std::unique_ptr<Item> ItemFactory::fromXml(const QXmlStreamReader& reader) const
     return item;
 }
 
-Item::ItemType ItemFactory::extractType(const QXmlStreamReader& reader)
+Item::ItemType ItemFactory::extractType(const Gds::Container& container)
 {
-    return static_cast<Item::ItemType>(reader.attributes().value(QStringLiteral("type_id")).toInt());
+#warning ToDo
+    return static_cast<Item::ItemType>( container.getEntry<int>("type_id") );
 }

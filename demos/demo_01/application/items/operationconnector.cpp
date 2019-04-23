@@ -27,19 +27,19 @@ OperationConnector::OperationConnector(const QPoint& gridPoint, const QString& t
     setForceTextDirection(true);
 }
 
-bool OperationConnector::toXml(QXmlStreamWriter& xml) const
+Gds::Container OperationConnector::toContainer() const
 {
-    addTypeIdentifierToXml(xml);
-    QSchematic::Connector::toXml(xml);
+    // Root
+    Gds::Container root;
+    root.addEntry("connector", QSchematic::Connector::toContainer());
 
-    return true;
+    return root;
 }
 
-bool OperationConnector::fromXml(QXmlStreamReader& reader)
+void OperationConnector::fromContainer(const Gds::Container& container)
 {
-    QSchematic::Connector::fromXml(reader);
-
-    return true;
+    // Root
+    QSchematic::Connector::fromContainer( container.getEntry<Gds::Container>( "connector" ) );
 }
 
 std::unique_ptr<QSchematic::Item> OperationConnector::deepCopy() const

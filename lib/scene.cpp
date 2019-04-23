@@ -40,105 +40,6 @@ Scene::Scene(QObject* parent) :
     renderCachedBackground();
 }
 
-bool Scene::toXml(QXmlStreamWriter& xml) const
-{
-    xml.writeStartElement(QStringLiteral("qschematic"));
-    xml.writeAttribute(QStringLiteral("version"), QStringLiteral("1"));
-    {
-        // Scene rect
-        xml.writeStartElement(QStringLiteral("scene"));
-        {
-            const QRect& rect = sceneRect().toRect();
-            xml.writeTextElement(QStringLiteral("x"), QString::number(rect.x()));
-            xml.writeTextElement(QStringLiteral("y"), QString::number(rect.y()));
-            xml.writeTextElement(QStringLiteral("width"), QString::number(rect.width()));
-            xml.writeTextElement(QStringLiteral("height"), QString::number(rect.height()));
-        }
-        xml.writeEndElement();
-
-        // Nodes
-        xml.writeStartElement(QStringLiteral("nodes"));
-        for (const auto& node : nodes()) {
-            xml.writeStartElement(QStringLiteral("node"));
-            node->toXml(xml);
-            xml.writeEndElement();
-        }
-        xml.writeEndElement();
-
-        // WireNets
-        xml.writeStartElement(QStringLiteral("nets"));
-        for (const auto& net : nets()) {
-            xml.writeStartElement(QStringLiteral("net"));
-            net->toXml(xml);
-            xml.writeEndElement();
-        }
-        xml.writeEndElement();
-    }
-    xml.writeEndElement();
-    xml.writeEndDocument();
-
-    return true;
-}
-
-bool Scene::fromXml(QXmlStreamReader& reader)
-{
-    if (reader.readNextStartElement()) {
-        if (reader.name() == "qschematic") {
-            while (reader.readNextStartElement()) {
-                if (reader.name() == "scene") {
-                    QRect sceneRect;
-                    while (reader.readNextStartElement()) {
-                        if (reader.name() == "x") {
-                            sceneRect.setX(reader.readElementText().toInt());
-                        } else if (reader.name() == "y") {
-                            sceneRect.setY(reader.readElementText().toInt());
-                        } else if (reader.name() == "width") {
-                            sceneRect.setWidth(reader.readElementText().toInt());
-                        } else if (reader.name() == "height") {
-                            sceneRect.setHeight(reader.readElementText().toInt());
-                        }
-                    }
-                    setSceneRect(sceneRect);
-                } else if (reader.name() == "nodes") {
-                    while (reader.readNextStartElement()) {
-                        // Skip if not a node
-                        if (reader.name() != "node") {
-                            continue;
-                        }
-
-                        std::unique_ptr<Item> node = ItemFactory::instance().fromXml(reader);
-                        if (!node) {
-                            qCritical("Scene::fromJson(): Couldn't restore node. Skipping.");
-                            continue;
-                        }
-                        node->fromXml(reader);
-                        addItem(std::move(node));
-                    }
-                } else if (reader.name() == "nets") {
-                    while (reader.readNextStartElement()) {
-                        if (reader.name() != "net") {
-                            continue;
-                        }
-                        auto net = std::make_shared<WireNet>();
-                        net->fromXml(reader);
-
-                        for (auto& wire : net->wires()) {
-                            addItem(wire);
-                        }
-
-                        addWireNet(net);
-                    }
-                }
-            }
-        }
-    }
-
-    // Clear the undo history
-    _undoStack->clear();
-
-    return true;
-}
-
 Gds::Container Scene::toContainer() const
 {
     // Scene
@@ -177,7 +78,50 @@ Gds::Container Scene::toContainer() const
 
 void Scene::fromContainer(const Gds::Container& container)
 {
+    // Scene
+    {
+        const auto& sceneContainer = container.getEntry<Gds::Container>("scene");
 
+        // Rect
+        const auto& rectContainer = sceneContainer.getEntry<Gds::Container>("rect");
+        QRect rect;
+        rect.setX( rectContainer.getEntry<int>("x") );
+        rect.setY( rectContainer.getEntry<int>("y") );
+        rect.setWidth( rectContainer.getEntry<int>("width") );
+        rect.setHeight( rectContainer.getEntry<int>("height") );
+    }
+
+    // Nodes
+    {
+        const auto& nodesContainer = container.getEntry<Gds::Container>("nodes");
+        for (const auto& nodeContainer : nodesContainer.getEntries<Gds::Container>("node")) {
+            std::unique_ptr<Item> node = ItemFactory::instance().fromContainer(nodeContainer);
+            if (!node) {
+                qCritical("Scene::fromContainer(): Couldn't restore node. Skipping.");
+                continue;
+            }
+            node->fromContainer(nodeContainer);
+            addItem(std::move(node));
+        }
+    }
+
+    // Nets
+    {
+        const auto& netsContainer = container.getEntry<Gds::Container>("nets");
+        for (const auto& netContainer : netsContainer.getEntries<Gds::Container>("net")) {
+            auto net = std::make_shared<WireNet>();
+            net->fromContainer(netContainer);
+
+            for (auto& wire : net->wires()) {
+                addItem(wire);
+            }
+
+            addWireNet(net);
+        }
+    }
+
+    // Clear the undo history
+    _undoStack->clear();
 }
 
 void Scene::setSettings(const Settings& settings)

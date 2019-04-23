@@ -7,9 +7,6 @@
 #include "../scene.h"
 #include "../commands/commanditemmove.h"
 
-#define BOOL2STR(x) (x ? QStringLiteral("true") : QStringLiteral("false"))
-#define STR2BOOL(x) (QString::compare(x, QStringLiteral("true")) == 0 ? true : false)
-
 using namespace QSchematic;
 
 Item::Item(int type, QGraphicsItem* parent) :
@@ -35,39 +32,6 @@ Item::Item(int type, QGraphicsItem* parent) :
     connect(this, &Item::yChanged, this, &Item::posChanged);
 }
 
-bool Item::toXml(QXmlStreamWriter& xml) const
-{
-    xml.writeTextElement(QStringLiteral("x"), QString::number(posX()));
-    xml.writeTextElement(QStringLiteral("y"), QString::number(posY()));
-    xml.writeTextElement(QStringLiteral("movable"), BOOL2STR(isMovable()));
-    xml.writeTextElement(QStringLiteral("visible"), BOOL2STR(isVisible()));
-    xml.writeTextElement(QStringLiteral("snap_to_grid"), BOOL2STR(snapToGrid()));
-    xml.writeTextElement(QStringLiteral("highlight"), BOOL2STR(highlightEnabled()));
-
-    return true;
-}
-
-bool Item::fromXml(QXmlStreamReader& reader)
-{
-    while (reader.readNextStartElement()) {
-        if (reader.name() == "x") {
-            setPosX(reader.readElementText().toInt());
-        } else if (reader.name() == "y"){
-            setPosY(reader.readElementText().toInt());
-        } else if (reader.name() == "movable") {
-            setMovable(STR2BOOL(reader.readElementText()));
-        } else if (reader.name() == "visible") {
-            setVisible(STR2BOOL(reader.readElementText()));
-        } else if (reader.name() == "snap_to_grid") {
-            setSnapToGrid(STR2BOOL(reader.readElementText()));
-        } else if (reader.name() == "highlight") {
-            setHighlightEnabled(STR2BOOL(reader.readElementText()));
-        }
-    }
-
-    return true;
-}
-
 Gds::Container Item::toContainer() const
 {
     // Root
@@ -84,7 +48,12 @@ Gds::Container Item::toContainer() const
 
 void Item::fromContainer(const Gds::Container& container)
 {
-
+    setPosX( container.getEntry<int>("x") );
+    setPosY( container.getEntry<int>("y") );
+    setMovable( container.getEntry<bool>("movable") );
+    setVisible( container.getEntry<bool>("visible") );
+    setSnapToGrid( container.getEntry<bool>("snap_to_grid") );
+    setHighlightEnabled( container.getEntry<bool>("highlight") );
 }
 
 void Item::copyAttributes(Item& dest) const
@@ -104,11 +73,6 @@ void Item::copyAttributes(Item& dest) const
 Scene* Item::scene() const
 {
     return qobject_cast<Scene*>(QGraphicsObject::scene());
-}
-
-void Item::addTypeIdentifierToXml(QXmlStreamWriter& xml) const
-{
-    xml.writeAttribute(JSON_ID_STRING, QString::number(type()));
 }
 
 int Item::type() const
