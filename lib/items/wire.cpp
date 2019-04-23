@@ -106,6 +106,31 @@ bool Wire::fromXml(QXmlStreamReader& reader)
     return true;
 }
 
+Gds::Container Wire::toContainer() const
+{
+    // Points
+    Gds::Container pointsContainer;
+    for (int i = 0; i < _points.count(); i++) {
+        Gds::Container pointContainer;
+        pointContainer.addArgument("index", QString::number(i).toStdString());
+        pointContainer.addEntry("x", _points.at(i).x());
+        pointContainer.addEntry("y", _points.at(i).y());
+        pointsContainer.addEntry("point", pointContainer);
+    }
+
+    // Root
+    Gds::Container rootContainer;
+    rootContainer.addEntry("item", Item::toContainer());
+    rootContainer.addEntry("points", pointsContainer);
+
+    return rootContainer;
+}
+
+void Wire::fromContainer(const Gds::Container& container)
+{
+
+}
+
 std::unique_ptr<Item> Wire::deepCopy() const
 {
     auto clone = std::make_unique<Wire>(type(), parentItem());

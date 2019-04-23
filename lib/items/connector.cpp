@@ -1,7 +1,6 @@
 #include <QtMath>
 #include <QPainter>
 #include <QTransform>
-#include <QJsonObject>
 #include "connector.h"
 #include "node.h"
 #include "label.h"
@@ -80,6 +79,24 @@ bool Connector::fromXml(QXmlStreamReader& reader)
     }
 
     return true;
+}
+
+Gds::Container Connector::toContainer() const
+{
+    // Root
+    Gds::Container root;
+    root.addEntry("item", Item::toContainer());
+    root.addEntry("snap_policy", snapPolicy());
+    root.addEntry("force_text_direction", forceTextDirection());
+    root.addEntry("text_direction", textDirection());
+    root.addEntry("label", _label->toContainer());
+
+    return root;
+}
+
+void Connector::fromContainer(const Gds::Container& container)
+{
+
 }
 
 std::unique_ptr<Item> Connector::deepCopy() const

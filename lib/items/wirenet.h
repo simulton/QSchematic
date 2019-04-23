@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QList>
 #include "../interfaces/xml.h"
+#include "../3rdparty/gds/lib/serialize.h"
 #include "line.h"
 
 namespace QSchematic {
@@ -13,7 +14,7 @@ namespace QSchematic {
     class WirePoint;
     class Label;
 
-    class WireNet : public QObject, public Xml
+    class WireNet : public QObject, public Xml, public Gds::Serialize
     {
         Q_OBJECT
         Q_DISABLE_COPY(WireNet)
@@ -23,6 +24,8 @@ namespace QSchematic {
 
         virtual bool toXml(QXmlStreamWriter& xml) const override;
         virtual bool fromXml(QXmlStreamReader& reader) override;
+        virtual Gds::Container toContainer() const override;
+        virtual void fromContainer(const Gds::Container& container) override;
 
         bool addWire(const std::shared_ptr<Wire>& wire);
         bool removeWire(const std::shared_ptr<Wire>& wire);

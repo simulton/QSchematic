@@ -2,7 +2,6 @@
 #include <QPainter>
 #include <QPen>
 #include <QBrush>
-#include <QJsonObject>
 #include "label.h"
 #include "../scene.h"
 
@@ -56,6 +55,28 @@ bool Label::fromXml(QXmlStreamReader& reader)
     }
 
     return true;
+}
+
+Gds::Container Label::toContainer() const
+{
+    // Connection point
+    Gds::Container connectionPoint;
+    connectionPoint.addArgument("enabled", ( _hasConnectionPoint ? "true" : "false" ));
+    connectionPoint.addEntry("x", _connectionPoint.x());
+    connectionPoint.addEntry("y", _connectionPoint.y());
+
+    // Root
+    Gds::Container root;
+    root.addEntry("item", Item::toContainer());
+    root.addEntry("text", text().toStdString());
+    root.addEntry("connection_point", connectionPoint);
+
+    return root;
+}
+
+void Label::fromContainer(const Gds::Container& container)
+{
+
 }
 
 std::unique_ptr<Item> Label::deepCopy() const

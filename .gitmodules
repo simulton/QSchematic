@@ -1,0 +1,3 @@
+[submodule "lib/3rdparty/gds"]
+	path = lib/3rdparty/gds
+	url = git@github.com:simulton/GDS.git

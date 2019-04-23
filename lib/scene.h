@@ -7,6 +7,7 @@
 #include <QGraphicsProxyWidget>
 #include <QUndoStack>
 #include "interfaces/xml.h"
+#include "3rdparty/gds/lib/serialize.h"
 #include "settings.h"
 #include "items/item.h"
 #include "items/wire.h"
@@ -17,7 +18,7 @@ namespace QSchematic {
     class Connector;
     class WireNet;
 
-    class Scene : public QGraphicsScene, public Xml
+    class Scene : public QGraphicsScene, public Xml, public Gds::Serialize
     {
         Q_OBJECT
         Q_DISABLE_COPY(Scene)
@@ -34,6 +35,8 @@ namespace QSchematic {
 
         virtual bool toXml(QXmlStreamWriter& xml) const override;
         virtual bool fromXml(QXmlStreamReader& reader) override;
+        virtual Gds::Container toContainer() const override;
+        virtual void fromContainer(const Gds::Container& container) override;
 
         void setSettings(const Settings& settings);
         void setWireFactory(const std::function<std::unique_ptr<Wire>()>& factory);

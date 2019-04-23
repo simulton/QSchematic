@@ -139,6 +139,47 @@ bool Scene::fromXml(QXmlStreamReader& reader)
     return true;
 }
 
+Gds::Container Scene::toContainer() const
+{
+    // Scene
+    Gds::Container scene;
+    {
+        // Rect
+        Gds::Container r;
+        const QRect& rect = sceneRect().toRect();
+        r.addEntry("x", rect.x());
+        r.addEntry("y", rect.y());
+        r.addEntry("width", rect.width());
+        r.addEntry("height", rect.height());
+        scene.addEntry("rect", r);
+    }
+
+    // Nodes
+    Gds::Container nodesList;
+    for (const auto& node : nodes()) {
+        nodesList.addEntry("node", node->toContainer());
+    }
+
+    // Nets
+    Gds::Container netsList;
+    for (const auto& net : nets()) {
+        netsList.addEntry("net", net->toContainer());
+    }
+
+    // Root
+    Gds::Container c;
+    c.addEntry("scene", scene);
+    c.addEntry("nodes", nodesList);
+    c.addEntry("nets", netsList);
+
+    return c;
+}
+
+void Scene::fromContainer(const Gds::Container& container)
+{
+
+}
+
 void Scene::setSettings(const Settings& settings)
 {
     // Update settings of all items

@@ -1,4 +1,3 @@
-#include <QObject>
 #include <QPainter>
 #include <QVector2D>
 #include <QGraphicsSceneHoverEvent>
@@ -67,6 +66,25 @@ bool Item::fromXml(QXmlStreamReader& reader)
     }
 
     return true;
+}
+
+Gds::Container Item::toContainer() const
+{
+    // Root
+    Gds::Container root;
+    root.addEntry("x", posX());
+    root.addEntry("y", posY());
+    root.addEntry("movable", isMovable());
+    root.addEntry("visible", isVisible());
+    root.addEntry("snap_to_grid", snapToGrid());
+    root.addEntry("highlight", highlightEnabled());
+
+    return root;
+}
+
+void Item::fromContainer(const Gds::Container& container)
+{
+
 }
 
 void Item::copyAttributes(Item& dest) const

@@ -39,8 +39,8 @@ namespace QSchematic {
         Node(int type = Item::NodeType, QGraphicsItem* parent = nullptr);
         virtual ~Node() override = default;
 
-        virtual bool toXml(QXmlStreamWriter& xml) const override;
-        virtual bool fromXml(QXmlStreamReader& reader) override;
+        virtual Gds::Container toContainer() const override;
+        virtual void fromContainer(const Gds::Container& container) override;
         virtual std::unique_ptr<Item> deepCopy() const override;
 
         Mode mode() const;

@@ -1,5 +1,6 @@
 #include <functional>
 #include <memory>
+#include <sstream>
 #include <QToolBar>
 #include <QSlider>
 #include <QLabel>
@@ -27,6 +28,7 @@
 #include "../../../lib/items/itemfactory.h"
 #include "../../../lib/netlist.h"
 #include "../../../lib/netlistgenerator.h"
+#include "../../../lib/3rdparty/gds/lib/archiverxml.h"
 #include "mainwindow.h"
 #include "resources.h"
 #include "items/customitemfactory.h"
@@ -154,16 +156,13 @@ bool MainWindow::save()
         return false;
     }
 
-    QXmlStreamWriter xml(&file);
-    xml.setCodec(QTextCodec::codecForName("UTF-8"));
-    xml.setAutoFormatting(true);
-    xml.setAutoFormattingIndent(4);
-    xml.writeStartDocument();
+    // Archive
+    Gds::ArchiverXml ar;
+    std::stringstream stream;
+    ar.save(stream, *_scene, "qschematic");
 
-    _scene->toXml(xml);
-
-    xml.writeEndDocument();
-
+    // Write file
+    file.write( QByteArray::fromStdString( stream.str() ) );
     file.flush();
     file.close();
 

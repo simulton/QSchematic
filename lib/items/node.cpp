@@ -2,8 +2,6 @@
 #include <QPainter>
 #include <QCursor>
 #include <QtMath>
-#include <QJsonObject>
-#include <QJsonArray>
 #include "node.h"
 #include "label.h"
 #include "itemfactory.h"
@@ -42,78 +40,41 @@ Node::Node(int type, QGraphicsItem* parent) :
     _label->setText(QStringLiteral("Unnamed"));
 }
 
-bool Node::toXml(QXmlStreamWriter& xml) const
+Gds::Container Node::toContainer() const
 {
-    xml.writeTextElement(QStringLiteral("width"), QString::number(size().width()));
-    xml.writeTextElement(QStringLiteral("height"), QString::number(size().height()));
-    xml.writeTextElement(QStringLiteral("resize_policy"), QString::number(mouseResizePolicy()));
-    xml.writeTextElement(QStringLiteral("allow_mouse_resize"), BOOL2STR(allowMouseResize()));
-    xml.writeTextElement(QStringLiteral("connectors_movable"), BOOL2STR(connectorsMovable()));
-    xml.writeTextElement(QStringLiteral("connectors_snap_policy"), QString::number(connectorsSnapPolicy()));
-    xml.writeTextElement(QStringLiteral("connectors_snap_to_grid"), BOOL2STR(connectorsSnapToGrid()));
-    xml.writeStartElement(QStringLiteral("label"));
-        label()->toXml(xml);
-    xml.writeEndElement();
+    // Mouse resize
+    Gds::Container mouseResizeContainer;
+    mouseResizeContainer.addArgument("enabled", ( allowMouseResize() ? "true" : "false" ) );
+    mouseResizeContainer.addEntry("policy", mouseResizePolicy());
 
-    xml.writeStartElement(QStringLiteral("connectors"));
+    // Connectors configuration
+    Gds::Container connectorsConfigurationContainer;
+    connectorsConfigurationContainer.addEntry("connectors_movable", connectorsMovable());
+    connectorsConfigurationContainer.addEntry("connectors_snap_policy", connectorsSnapPolicy());
+    connectorsConfigurationContainer.addEntry("connectors_snap_to_grid", connectorsSnapToGrid());
+
+    // Connectors
+    Gds::Container connectorsContainer;
     for (const auto& connector : connectors()) {
-        xml.writeStartElement(QStringLiteral("connector"));
-        connector->toXml(xml);
-        xml.writeEndElement();
+        connectorsContainer.addEntry("connector", connector->toContainer());
     }
-    xml.writeEndElement();
 
-    xml.writeStartElement(QStringLiteral("item"));
-    addTypeIdentifierToXml(xml);
-    Item::toXml(xml);
-    xml.writeEndElement();
+    // Root
+    Gds::Container root;
+    root.addEntry("item", Item::toContainer());
+    root.addEntry("width", size().width());
+    root.addEntry("height", size().height());
+    root.addEntry("mouse_resize", mouseResizeContainer);
+    root.addEntry("label", _label->toContainer());
+    root.addEntry("connectors_configuration", connectorsConfigurationContainer);
+    root.addEntry("connectors", connectorsContainer);
 
-    return true;
+    return root;
 }
 
-bool Node::fromXml(QXmlStreamReader& reader)
+void Node::fromContainer(const Gds::Container& container)
 {
-    int width = 0;
-    int height = 0;
-    while (reader.readNextStartElement()) {
-        if (reader.name() == "item") {
-            Item::fromXml(reader);
-        } else if (reader.name() == "width") {
-            width = reader.readElementText().toInt();
-        } else if (reader.name() == "height") {
-            height = reader.readElementText().toInt();
-        } else if (reader.name() == "resize_policy") {
-            setMouseResizePolicy(static_cast<ResizePolicy>(reader.readElementText().toInt()));
-        } else if (reader.name() == "allow_mouse_resize") {
-            setAllowMouseResize(STR2BOOL(reader.readElementText()));
-        } else if (reader.name() == "connectors_movable") {
-            setConnectorsMovable(STR2BOOL(reader.readElementText()));
-        } else if (reader.name() == "connectors_snap_policy") {
-            setConnectorsSnapPolicy(static_cast<Connector::SnapPolicy>(reader.readElementText().toInt()));
-        } else if (reader.name() == "connectors_snap_to_grid") {
-            setConnectorsSnapToGrid(STR2BOOL(reader.readElementText()));
-        } else if (reader.name() == "label") {
-            label()->fromXml(reader);
-        } else if (reader.name() == "connectors") {
-            clearConnectors();
-            while (reader.readNextStartElement()) {
-                if (reader.name() != "connector") {
-                    reader.skipCurrentElement();
-                    continue;
-                }
-                Connector* connector = dynamic_cast<Connector*>(ItemFactory::instance().fromXml(reader).release());
-                if (!connector) {
-                    continue;
-                }
-                connector->fromXml(reader);
-                addConnector(std::unique_ptr<Connector>(connector));
-            }
-        }
-    }
 
-    setSize(width, height);
-
-    return true;
 }
 
 std::unique_ptr<Item> Node::deepCopy() const

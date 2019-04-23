@@ -59,6 +59,26 @@ bool WireNet::fromXml(QXmlStreamReader& reader)
     return true;
 }
 
+Gds::Container WireNet::toContainer() const
+{
+    Gds::Container wiresContainer;
+    for (const auto& wire : _wires) {
+        wiresContainer.addEntry("wire", wire->toContainer());
+    }
+
+    // Root
+    Gds::Container root;
+    root.addEntry("name", _name.toStdString());
+    root.addEntry("wires", wiresContainer);
+
+    return root;
+}
+
+void WireNet::fromContainer(const Gds::Container& container)
+{
+
+}
+
 bool WireNet::addWire(const std::shared_ptr<Wire>& wire)
 {
     // Sanity check

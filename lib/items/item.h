@@ -3,6 +3,7 @@
 #include <memory>
 #include <QGraphicsObject>
 #include "../interfaces/xml.h"
+#include "../3rdparty/gds/lib/serialize.h"
 #include "../types.h"
 #include "../settings.h"
 
@@ -10,7 +11,7 @@ namespace QSchematic {
 
     class Scene;
 
-    class Item : public QGraphicsObject, public Xml
+    class Item : public QGraphicsObject, public Xml, public Gds::Serialize
     {
         friend class CommandItemSetVisible;
 
@@ -37,6 +38,8 @@ namespace QSchematic {
 
         virtual bool toXml(QXmlStreamWriter& xml) const override;
         virtual bool fromXml(QXmlStreamReader& reader) override;
+        virtual Gds::Container toContainer() const override;
+        virtual void fromContainer(const Gds::Container& container) override;
         virtual std::unique_ptr<Item> deepCopy() const = 0;
 
         int type() const final;

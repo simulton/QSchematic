@@ -1,3 +1,5 @@
+include(3rdparty/gds/lib/gds.pri)
+
 HEADERS += \
     $$PWD/items/connector.h \
     $$PWD/items/item.h \
