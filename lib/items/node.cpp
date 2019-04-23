@@ -49,9 +49,9 @@ Gds::Container Node::toContainer() const
 
     // Connectors configuration
     Gds::Container connectorsConfigurationContainer;
-    connectorsConfigurationContainer.addEntry("connectors_movable", connectorsMovable());
-    connectorsConfigurationContainer.addEntry("connectors_snap_policy", connectorsSnapPolicy());
-    connectorsConfigurationContainer.addEntry("connectors_snap_to_grid", connectorsSnapToGrid());
+    connectorsConfigurationContainer.addEntry("movable", connectorsMovable());
+    connectorsConfigurationContainer.addEntry("snap_policy", connectorsSnapPolicy());
+    connectorsConfigurationContainer.addEntry("snap_to_grid", connectorsSnapToGrid());
 
     // Connectors
     Gds::Container connectorsContainer;
