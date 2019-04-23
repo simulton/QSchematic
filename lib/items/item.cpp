@@ -49,8 +49,8 @@ Gds::Container Item::toContainer() const
 
 void Item::fromContainer(const Gds::Container& container)
 {
-    setPosX( container.getEntry<int>("x") );
-    setPosY( container.getEntry<int>("y") );
+    setPosX( container.getEntry<double>("x") );
+    setPosY( container.getEntry<double>("y") );
     setMovable( container.getEntry<bool>("movable") );
     setVisible( container.getEntry<bool>("visible") );
     setSnapToGrid( container.getEntry<bool>("snap_to_grid") );
