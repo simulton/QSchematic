@@ -54,6 +54,7 @@ Gds::Container FlowEnd::toContainer() const
 {
     // Root
     Gds::Container root;
+    addItemTypeIdToContainer(root);
     root.addEntry("node", QSchematic::Node::toContainer());
 
     return root;

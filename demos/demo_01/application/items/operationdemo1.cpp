@@ -32,6 +32,7 @@ Gds::Container OperationDemo1::toContainer() const
 {
     // Root
     Gds::Container root;
+    addItemTypeIdToContainer(root);
     root.addEntry("operation", Operation::toContainer());
 
     return root;

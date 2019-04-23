@@ -31,6 +31,7 @@ Gds::Container OperationConnector::toContainer() const
 {
     // Root
     Gds::Container root;
+    addItemTypeIdToContainer(root);
     root.addEntry("connector", QSchematic::Connector::toContainer());
 
     return root;

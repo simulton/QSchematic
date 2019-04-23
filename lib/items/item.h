@@ -85,6 +85,7 @@ namespace QSchematic {
         Settings _settings;
 
         void copyAttributes(Item& dest) const;
+        void addItemTypeIdToContainer(Gds::Container& container) const;
 
         Scene* scene() const;
 

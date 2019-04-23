@@ -58,6 +58,7 @@ Gds::Container Node::toContainer() const
 
     // Root
     Gds::Container root;
+    addItemTypeIdToContainer(root);
     root.addEntry("item", Item::toContainer());
     root.addEntry("width", size().width());
     root.addEntry("height", size().height());

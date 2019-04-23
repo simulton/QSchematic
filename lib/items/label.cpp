@@ -28,6 +28,7 @@ Gds::Container Label::toContainer() const
 
     // Root
     Gds::Container root;
+    addItemTypeIdToContainer(root);
     root.addEntry("item", Item::toContainer());
     root.addEntry("text", text().toStdString());
     root.addEntry("connection_point", connectionPoint);

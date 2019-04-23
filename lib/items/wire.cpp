@@ -57,6 +57,7 @@ Gds::Container Wire::toContainer() const
 
     // Root
     Gds::Container rootContainer;
+    addItemTypeIdToContainer(rootContainer);
     rootContainer.addEntry("item", Item::toContainer());
     rootContainer.addEntry("points", pointsContainer);
 

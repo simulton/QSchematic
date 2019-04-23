@@ -19,6 +19,7 @@ Gds::Container FancyWire::toContainer() const
 {
     // Root
     Gds::Container root;
+    addItemTypeIdToContainer(root);
     root.addEntry("wire", QSchematic::Wire::toContainer());
 
     return root;

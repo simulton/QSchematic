@@ -36,6 +36,7 @@ Gds::Container Item::toContainer() const
 {
     // Root
     Gds::Container root;
+    addItemTypeIdToContainer(root);
     root.addEntry("x", posX());
     root.addEntry("y", posY());
     root.addEntry("movable", isMovable());
@@ -68,6 +69,11 @@ void Item::copyAttributes(Item& dest) const
     dest._highlightEnabled = _highlightEnabled;
     dest._highlighted = _highlighted;
     dest._oldPos = _oldPos;
+}
+
+void Item::addItemTypeIdToContainer(Gds::Container& container) const
+{
+    container.addArgument( "type_id", QString::number(type()).toStdString() );
 }
 
 Scene* Item::scene() const

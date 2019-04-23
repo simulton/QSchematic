@@ -46,6 +46,7 @@ Gds::Container Connector::toContainer() const
 {
     // Root
     Gds::Container root;
+    addItemTypeIdToContainer(root);
     root.addEntry("item", Item::toContainer());
     root.addEntry("snap_policy", snapPolicy());
     root.addEntry("force_text_direction", forceTextDirection());

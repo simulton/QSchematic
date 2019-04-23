@@ -70,6 +70,9 @@ std::unique_ptr<Item> ItemFactory::fromContainer(const Gds::Container& container
 
 Item::ItemType ItemFactory::extractType(const Gds::Container& container)
 {
-#warning ToDo
-    return static_cast<Item::ItemType>( container.getEntry<int>("type_id") );
+    const std::string& attributeString = container.getAttribute( "type_id" );
+
+    Q_ASSERT( !attributeString.empty() );
+
+    return static_cast<Item::ItemType>( std::stoi( attributeString ) );
 }
