@@ -11,8 +11,8 @@ public:
     explicit OperationDemo1(QGraphicsItem* parent = nullptr);
     virtual ~OperationDemo1() override = default;
 
-    virtual Gds::Container toContainer() const override;
-    virtual void fromContainer(const Gds::Container& container) override;
+    virtual Gpds::Container toContainer() const override;
+    virtual void fromContainer(const Gpds::Container& container) override;
     virtual std::unique_ptr<QSchematic::Item> deepCopy() const override;
 
 private:

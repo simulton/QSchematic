@@ -2,7 +2,7 @@
 
 #include <memory>
 #include <QGraphicsObject>
-#include "../3rdparty/gds/lib/serialize.h"
+#include "../3rdparty/gpds/lib/serialize.h"
 #include "../types.h"
 #include "../settings.h"
 
@@ -10,7 +10,7 @@ namespace QSchematic {
 
     class Scene;
 
-    class Item : public QGraphicsObject, public Gds::Serialize
+    class Item : public QGraphicsObject, public Gpds::Serialize
     {
         friend class CommandItemSetVisible;
 
@@ -35,8 +35,8 @@ namespace QSchematic {
         Item(int type, QGraphicsItem* parent = nullptr);
         virtual ~Item() override = default;
 
-        virtual Gds::Container toContainer() const override;
-        virtual void fromContainer(const Gds::Container& container) override;
+        virtual Gpds::Container toContainer() const override;
+        virtual void fromContainer(const Gpds::Container& container) override;
         virtual std::unique_ptr<Item> deepCopy() const = 0;
 
         int type() const final;
@@ -85,7 +85,7 @@ namespace QSchematic {
         Settings _settings;
 
         void copyAttributes(Item& dest) const;
-        void addItemTypeIdToContainer(Gds::Container& container) const;
+        void addItemTypeIdToContainer(Gpds::Container& container) const;
 
         Scene* scene() const;
 

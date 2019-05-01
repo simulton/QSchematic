@@ -15,19 +15,19 @@ FancyWire::FancyWire(QGraphicsItem* parent) :
     setZValue(1);
 }
 
-Gds::Container FancyWire::toContainer() const
+Gpds::Container FancyWire::toContainer() const
 {
     // Root
-    Gds::Container root;
+    Gpds::Container root;
     addItemTypeIdToContainer(root);
     root.addEntry("wire", QSchematic::Wire::toContainer());
 
     return root;
 }
 
-void FancyWire::fromContainer(const Gds::Container& container)
+void FancyWire::fromContainer(const Gpds::Container& container)
 {
-    QSchematic::Wire::fromContainer( container.getEntry<Gds::Container>( "wire" ) );
+    QSchematic::Wire::fromContainer( container.getEntry<Gpds::Container>( "wire" ) );
 }
 
 std::unique_ptr<QSchematic::Item> FancyWire::deepCopy() const

@@ -42,10 +42,10 @@ Connector::Connector(int type, const QPoint& gridPoint, const QString& text, QGr
     calculateTextDirection();
 }
 
-Gds::Container Connector::toContainer() const
+Gpds::Container Connector::toContainer() const
 {
     // Root
-    Gds::Container root;
+    Gpds::Container root;
     addItemTypeIdToContainer(root);
     root.addEntry("item", Item::toContainer());
     root.addEntry("snap_policy", snapPolicy());
@@ -56,13 +56,13 @@ Gds::Container Connector::toContainer() const
     return root;
 }
 
-void Connector::fromContainer(const Gds::Container& container)
+void Connector::fromContainer(const Gpds::Container& container)
 {
-    Item::fromContainer( container.getEntry<Gds::Container>( "item" ) );
+    Item::fromContainer( container.getEntry<Gpds::Container>( "item" ) );
     setSnapPolicy( static_cast<SnapPolicy>( container.getEntry<int>( "snap_policy" ) ) );
     setForceTextDirection( container.getEntry<bool>( "force_text_direction" ) );
     _textDirection = static_cast<Direction>( container.getEntry<int>( "text_direction" ) );
-    _label->fromContainer( container.getEntry<Gds::Container>( "label" ) );
+    _label->fromContainer( container.getEntry<Gpds::Container>( "label" ) );
 }
 
 std::unique_ptr<Item> Connector::deepCopy() const

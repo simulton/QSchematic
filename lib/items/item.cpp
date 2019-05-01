@@ -32,10 +32,10 @@ Item::Item(int type, QGraphicsItem* parent) :
     connect(this, &Item::yChanged, this, &Item::posChanged);
 }
 
-Gds::Container Item::toContainer() const
+Gpds::Container Item::toContainer() const
 {
     // Root
-    Gds::Container root;
+    Gpds::Container root;
     addItemTypeIdToContainer(root);
     root.addEntry("x", posX());
     root.addEntry("y", posY());
@@ -47,7 +47,7 @@ Gds::Container Item::toContainer() const
     return root;
 }
 
-void Item::fromContainer(const Gds::Container& container)
+void Item::fromContainer(const Gpds::Container& container)
 {
     setPosX( container.getEntry<double>("x") );
     setPosY( container.getEntry<double>("y") );
@@ -71,7 +71,7 @@ void Item::copyAttributes(Item& dest) const
     dest._oldPos = _oldPos;
 }
 
-void Item::addItemTypeIdToContainer(Gds::Container& container) const
+void Item::addItemTypeIdToContainer(Gpds::Container& container) const
 {
     container.addArgument( "type_id", QString::number(type()).toStdString() );
 }

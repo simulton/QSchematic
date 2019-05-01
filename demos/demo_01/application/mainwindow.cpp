@@ -28,7 +28,7 @@
 #include "../../../lib/items/itemfactory.h"
 #include "../../../lib/netlist.h"
 #include "../../../lib/netlistgenerator.h"
-#include "../../../lib/3rdparty/gds/lib/archiverxml.h"
+#include "../../../lib/3rdparty/gpds/lib/archiverxml.h"
 #include "mainwindow.h"
 #include "resources.h"
 #include "items/customitemfactory.h"
@@ -157,7 +157,7 @@ bool MainWindow::save()
     }
 
     // Archiver
-    Gds::ArchiverXml ar;
+    Gpds::ArchiverXml ar;
     std::stringstream stream;
     ar.save(stream, *_scene, "qschematic");
 
@@ -188,7 +188,7 @@ bool MainWindow::load()
     }
 
     // Archiver
-    Gds::ArchiverXml ar;
+    Gpds::ArchiverXml ar;
     std::stringstream stream;
     stream << file.readAll().data();
     ar.load(stream, *_scene, "qschematic");

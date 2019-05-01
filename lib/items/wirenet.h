@@ -3,7 +3,7 @@
 #include <memory>
 #include <QObject>
 #include <QList>
-#include "../3rdparty/gds/lib/serialize.h"
+#include "../3rdparty/gpds/lib/serialize.h"
 #include "line.h"
 
 namespace QSchematic {
@@ -13,7 +13,7 @@ namespace QSchematic {
     class WirePoint;
     class Label;
 
-    class WireNet : public QObject, public Gds::Serialize
+    class WireNet : public QObject, public Gpds::Serialize
     {
         Q_OBJECT
         Q_DISABLE_COPY(WireNet)
@@ -21,8 +21,8 @@ namespace QSchematic {
     public:
         WireNet(QObject* parent = nullptr);
 
-        virtual Gds::Container toContainer() const override;
-        virtual void fromContainer(const Gds::Container& container) override;
+        virtual Gpds::Container toContainer() const override;
+        virtual void fromContainer(const Gpds::Container& container) override;
 
         bool addWire(const std::shared_ptr<Wire>& wire);
         bool removeWire(const std::shared_ptr<Wire>& wire);

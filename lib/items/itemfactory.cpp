@@ -15,12 +15,12 @@ ItemFactory& ItemFactory::instance()
     return instance;
 }
 
-void ItemFactory::setCustomItemsFactory(const std::function<std::unique_ptr<Item>(const Gds::Container&)>& factory)
+void ItemFactory::setCustomItemsFactory(const std::function<std::unique_ptr<Item>(const Gpds::Container&)>& factory)
 {
     _customItemFactory = factory;
 }
 
-std::unique_ptr<Item> ItemFactory::fromContainer(const Gds::Container& container) const
+std::unique_ptr<Item> ItemFactory::fromContainer(const Gpds::Container& container) const
 {
     // Extract the type
     Item::ItemType type = ItemFactory::extractType(container);
@@ -68,7 +68,7 @@ std::unique_ptr<Item> ItemFactory::fromContainer(const Gds::Container& container
     return item;
 }
 
-Item::ItemType ItemFactory::extractType(const Gds::Container& container)
+Item::ItemType ItemFactory::extractType(const Gpds::Container& container)
 {
     const std::string& attributeString = container.getAttribute( "type_id" );
 

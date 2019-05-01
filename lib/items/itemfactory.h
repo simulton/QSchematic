@@ -16,16 +16,16 @@ namespace QSchematic
     public:
         static ItemFactory& instance();
 
-        void setCustomItemsFactory(const std::function<std::unique_ptr<Item>(const Gds::Container&)>& factory);
-        std::unique_ptr<Item> fromContainer(const Gds::Container& container) const;
-        static Item::ItemType extractType(const Gds::Container& container);
+        void setCustomItemsFactory(const std::function<std::unique_ptr<Item>(const Gpds::Container&)>& factory);
+        std::unique_ptr<Item> fromContainer(const Gpds::Container& container) const;
+        static Item::ItemType extractType(const Gpds::Container& container);
 
     private:
         ItemFactory() = default;
         ItemFactory(const ItemFactory& other) = default;
         ItemFactory(ItemFactory&& other) = default;
 
-        std::function<std::unique_ptr<Item>(const Gds::Container&)> _customItemFactory;
+        std::function<std::unique_ptr<Item>(const Gpds::Container&)> _customItemFactory;
     };
 
 }

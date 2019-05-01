@@ -1,4 +1,4 @@
-include(3rdparty/gds/lib/gds.pri)
+include(3rdparty/gpds/lib/gpds.pri)
 
 HEADERS += \
     $$PWD/items/connector.h \

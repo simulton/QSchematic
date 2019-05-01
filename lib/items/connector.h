@@ -23,8 +23,8 @@ namespace QSchematic {
         Connector(int type = Item::ConnectorType, const QPoint& gridPos = QPoint(), const QString& text = QString(), QGraphicsItem* parent = nullptr);
         virtual ~Connector() override = default;
 
-        virtual Gds::Container toContainer() const override;
-        virtual void fromContainer(const Gds::Container& container) override;
+        virtual Gpds::Container toContainer() const override;
+        virtual void fromContainer(const Gpds::Container& container) override;
         virtual std::unique_ptr<Item> deepCopy() const override;
 
         void setSnapPolicy(SnapPolicy policy);

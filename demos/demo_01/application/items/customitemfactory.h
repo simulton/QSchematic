@@ -16,7 +16,7 @@ namespace Gds {
 class CustomItemFactory
 {
 public:
-    static std::unique_ptr<QSchematic::Item> fromContainer(const Gds::Container& container);
+    static std::unique_ptr<QSchematic::Item> fromContainer(const Gpds::Container& container);
 
 private:
     CustomItemFactory() = default;

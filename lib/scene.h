@@ -6,7 +6,7 @@
 #include <QScopedPointer>
 #include <QGraphicsProxyWidget>
 #include <QUndoStack>
-#include "3rdparty/gds/lib/serialize.h"
+#include "3rdparty/gpds/lib/serialize.h"
 #include "settings.h"
 #include "items/item.h"
 #include "items/wire.h"
@@ -17,7 +17,7 @@ namespace QSchematic {
     class Connector;
     class WireNet;
 
-    class Scene : public QGraphicsScene, public Gds::Serialize
+    class Scene : public QGraphicsScene, public Gpds::Serialize
     {
         Q_OBJECT
         Q_DISABLE_COPY(Scene)
@@ -32,8 +32,8 @@ namespace QSchematic {
         explicit Scene(QObject* parent = nullptr);
         virtual ~Scene() override = default;
 
-        virtual Gds::Container toContainer() const override;
-        virtual void fromContainer(const Gds::Container& container) override;
+        virtual Gpds::Container toContainer() const override;
+        virtual void fromContainer(const Gpds::Container& container) override;
 
         void setSettings(const Settings& settings);
         void setWireFactory(const std::function<std::unique_ptr<Wire>()>& factory);

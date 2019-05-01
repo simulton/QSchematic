@@ -40,13 +40,13 @@ Scene::Scene(QObject* parent) :
     renderCachedBackground();
 }
 
-Gds::Container Scene::toContainer() const
+Gpds::Container Scene::toContainer() const
 {
     // Scene
-    Gds::Container scene;
+    Gpds::Container scene;
     {
         // Rect
-        Gds::Container r;
+        Gpds::Container r;
         const QRect& rect = sceneRect().toRect();
         r.addEntry("x", rect.x());
         r.addEntry("y", rect.y());
@@ -56,19 +56,19 @@ Gds::Container Scene::toContainer() const
     }
 
     // Nodes
-    Gds::Container nodesList;
+    Gpds::Container nodesList;
     for (const auto& node : nodes()) {
         nodesList.addEntry("node", node->toContainer());
     }
 
     // Nets
-    Gds::Container netsList;
+    Gpds::Container netsList;
     for (const auto& net : nets()) {
         netsList.addEntry("net", net->toContainer());
     }
 
     // Root
-    Gds::Container c;
+    Gpds::Container c;
     c.addEntry("scene", scene);
     c.addEntry("nodes", nodesList);
     c.addEntry("nets", netsList);
@@ -76,14 +76,14 @@ Gds::Container Scene::toContainer() const
     return c;
 }
 
-void Scene::fromContainer(const Gds::Container& container)
+void Scene::fromContainer(const Gpds::Container& container)
 {
     // Scene
     {
-        const auto& sceneContainer = container.getEntry<Gds::Container>("scene");
+        const auto& sceneContainer = container.getEntry<Gpds::Container>("scene");
 
         // Rect
-        const auto& rectContainer = sceneContainer.getEntry<Gds::Container>("rect");
+        const auto& rectContainer = sceneContainer.getEntry<Gpds::Container>("rect");
         QRect rect;
         rect.setX( rectContainer.getEntry<int>("x") );
         rect.setY( rectContainer.getEntry<int>("y") );
@@ -93,8 +93,8 @@ void Scene::fromContainer(const Gds::Container& container)
 
     // Nodes
     {
-        const auto& nodesContainer = container.getEntry<Gds::Container>("nodes");
-        for (const auto& nodeContainer : nodesContainer.getEntries<Gds::Container>("node")) {
+        const auto& nodesContainer = container.getEntry<Gpds::Container>("nodes");
+        for (const auto& nodeContainer : nodesContainer.getEntries<Gpds::Container>("node")) {
             std::unique_ptr<Item> node = ItemFactory::instance().fromContainer(nodeContainer);
             if (!node) {
                 qCritical("Scene::fromContainer(): Couldn't restore node. Skipping.");
@@ -107,8 +107,8 @@ void Scene::fromContainer(const Gds::Container& container)
 
     // Nets
     {
-        const auto& netsContainer = container.getEntry<Gds::Container>("nets");
-        for (const auto& netContainer : netsContainer.getEntries<Gds::Container>("net")) {
+        const auto& netsContainer = container.getEntry<Gpds::Container>("nets");
+        for (const auto& netContainer : netsContainer.getEntries<Gpds::Container>("net")) {
             auto net = std::make_shared<WireNet>();
             net->fromContainer(netContainer);
 

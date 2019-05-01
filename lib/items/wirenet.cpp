@@ -14,31 +14,31 @@ WireNet::WireNet(QObject* parent) :
     connect(_label.get(), &Label::highlightChanged, this, &WireNet::labelHighlightChanged);
 }
 
-Gds::Container WireNet::toContainer() const
+Gpds::Container WireNet::toContainer() const
 {
     // Wires
-    Gds::Container wiresContainer;
+    Gpds::Container wiresContainer;
     for (const auto& wire : _wires) {
         wiresContainer.addEntry("wire", wire->toContainer());
     }
 
     // Root
-    Gds::Container root;
+    Gpds::Container root;
     root.addEntry("name", _name.toStdString());
     root.addEntry("wires", wiresContainer);
 
     return root;
 }
 
-void WireNet::fromContainer(const Gds::Container& container)
+void WireNet::fromContainer(const Gpds::Container& container)
 {
     // Root
     setName( QString::fromStdString( container.getEntry<std::string>( "name" ) ) );
 
     // Wires
     {
-        const Gds::Container& wiresContainer = container.getEntry<Gds::Container>( "wires" );
-        for (const Gds::Container& wireContainer : wiresContainer.getEntries<Gds::Container>( "wire" ) ) {
+        const Gpds::Container& wiresContainer = container.getEntry<Gpds::Container>( "wires" );
+        for (const Gpds::Container& wireContainer : wiresContainer.getEntries<Gpds::Container>( "wire" ) ) {
             auto newWire = ItemFactory::instance().fromContainer(wireContainer);
             auto sharedNewWire = std::dynamic_pointer_cast<Wire>( std::shared_ptr<Item>( std::move(newWire) ) );
             if (!sharedNewWire) {

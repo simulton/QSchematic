@@ -50,19 +50,19 @@ FlowEnd::FlowEnd() :
     setAllowMouseResize(false);
 }
 
-Gds::Container FlowEnd::toContainer() const
+Gpds::Container FlowEnd::toContainer() const
 {
     // Root
-    Gds::Container root;
+    Gpds::Container root;
     addItemTypeIdToContainer(root);
     root.addEntry("node", QSchematic::Node::toContainer());
 
     return root;
 }
 
-void FlowEnd::fromContainer(const Gds::Container& container)
+void FlowEnd::fromContainer(const Gpds::Container& container)
 {
-    QSchematic::Node::fromContainer( container.getEntry<Gds::Container>( "node") );
+    QSchematic::Node::fromContainer( container.getEntry<Gpds::Container>( "node") );
 }
 
 std::unique_ptr<QSchematic::Item> FlowEnd::deepCopy() const

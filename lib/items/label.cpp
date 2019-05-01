@@ -18,16 +18,16 @@ Label::Label(int type, QGraphicsItem* parent) :
     setSnapToGrid(false);
 }
 
-Gds::Container Label::toContainer() const
+Gpds::Container Label::toContainer() const
 {
     // Connection point
-    Gds::Container connectionPoint;
+    Gpds::Container connectionPoint;
     connectionPoint.addArgument("enabled", ( _hasConnectionPoint ? "true" : "false" ));
     connectionPoint.addEntry("x", _connectionPoint.x());
     connectionPoint.addEntry("y", _connectionPoint.y());
 
     // Root
-    Gds::Container root;
+    Gpds::Container root;
     addItemTypeIdToContainer(root);
     root.addEntry("item", Item::toContainer());
     root.addEntry("text", text().toStdString());
@@ -36,14 +36,14 @@ Gds::Container Label::toContainer() const
     return root;
 }
 
-void Label::fromContainer(const Gds::Container& container)
+void Label::fromContainer(const Gpds::Container& container)
 {
-    Item::fromContainer( container.getEntry<Gds::Container>( "item" ) );
+    Item::fromContainer( container.getEntry<Gpds::Container>( "item" ) );
     setText( QString::fromStdString( container.getEntry<std::string>( "text" ) ) );
 
     // Connection point
     {
-        Gds::Container connectionPointContainer = container.getEntry<Gds::Container>( "connection_point" );
+        Gpds::Container connectionPointContainer = container.getEntry<Gpds::Container>( "connection_point" );
 #warning ToDo: Use argument
         _hasConnectionPoint = false;
         _connectionPoint.setX( connectionPointContainer.getEntry<double>( "x" ) );
