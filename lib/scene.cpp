@@ -48,30 +48,30 @@ Gpds::Container Scene::toContainer() const
         // Rect
         Gpds::Container r;
         const QRect& rect = sceneRect().toRect();
-        r.addEntry("x", rect.x());
-        r.addEntry("y", rect.y());
-        r.addEntry("width", rect.width());
-        r.addEntry("height", rect.height());
-        scene.addEntry("rect", r);
+        r.addValue("x", rect.x());
+        r.addValue("y", rect.y());
+        r.addValue("width", rect.width());
+        r.addValue("height", rect.height());
+        scene.addValue("rect", r);
     }
 
     // Nodes
     Gpds::Container nodesList;
     for (const auto& node : nodes()) {
-        nodesList.addEntry("node", node->toContainer());
+        nodesList.addValue("node", node->toContainer());
     }
 
     // Nets
     Gpds::Container netsList;
     for (const auto& net : nets()) {
-        netsList.addEntry("net", net->toContainer());
+        netsList.addValue("net", net->toContainer());
     }
 
     // Root
     Gpds::Container c;
-    c.addEntry("scene", scene);
-    c.addEntry("nodes", nodesList);
-    c.addEntry("nets", netsList);
+    c.addValue("scene", scene);
+    c.addValue("nodes", nodesList);
+    c.addValue("nets", netsList);
 
     return c;
 }
@@ -80,37 +80,48 @@ void Scene::fromContainer(const Gpds::Container& container)
 {
     // Scene
     {
-        const auto& sceneContainer = container.getEntry<Gpds::Container>("scene");
+        const Gpds::Container* sceneContainer = container.getValue<Gpds::Container*>("scene");
+        Q_ASSERT( sceneContainer );
 
         // Rect
-        const auto& rectContainer = sceneContainer.getEntry<Gpds::Container>("rect");
-        QRect rect;
-        rect.setX( rectContainer.getEntry<int>("x") );
-        rect.setY( rectContainer.getEntry<int>("y") );
-        rect.setWidth( rectContainer.getEntry<int>("width") );
-        rect.setHeight( rectContainer.getEntry<int>("height") );
+        const Gpds::Container* rectContainer = sceneContainer->getValue<Gpds::Container*>("rect");
+        if ( rectContainer ) {
+            QRect rect;
+            rect.setX( rectContainer->getValue<int>("x") );
+            rect.setY( rectContainer->getValue<int>("y") );
+            rect.setWidth( rectContainer->getValue<int>("width") );
+            rect.setHeight( rectContainer->getValue<int>("height") );
+
+            setSceneRect( rect );
+        }
     }
 
     // Nodes
-    {
-        const auto& nodesContainer = container.getEntry<Gpds::Container>("nodes");
-        for (const auto& nodeContainer : nodesContainer.getEntries<Gpds::Container>("node")) {
-            std::unique_ptr<Item> node = ItemFactory::instance().fromContainer(nodeContainer);
+    const Gpds::Container* nodesContainer = container.getValue<Gpds::Container*>("nodes");
+    if ( nodesContainer ) {
+        for (const auto& nodeContainer : nodesContainer->getValues<Gpds::Container*>("node")) {
+            Q_ASSERT(nodeContainer);
+
+            std::unique_ptr<Item> node = ItemFactory::instance().fromContainer(*nodeContainer);
             if (!node) {
                 qCritical("Scene::fromContainer(): Couldn't restore node. Skipping.");
                 continue;
             }
-            node->fromContainer(nodeContainer);
+            node->fromContainer(*nodeContainer);
             addItem(std::move(node));
         }
     }
 
     // Nets
-    {
-        const auto& netsContainer = container.getEntry<Gpds::Container>("nets");
-        for (const auto& netContainer : netsContainer.getEntries<Gpds::Container>("net")) {
+    const Gpds::Container* netsContainer = container.getValue<Gpds::Container*>("nets");
+    if ( netsContainer ) {
+        Q_ASSERT( netsContainer );
+
+        for (const Gpds::Container* netContainer : netsContainer->getValues<Gpds::Container*>("net")) {
+            Q_ASSERT( netContainer );
+
             auto net = std::make_shared<WireNet>();
-            net->fromContainer(netContainer);
+            net->fromContainer( *netContainer );
 
             for (auto& wire : net->wires()) {
                 addItem(wire);

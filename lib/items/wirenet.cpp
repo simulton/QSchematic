@@ -19,13 +19,13 @@ Gpds::Container WireNet::toContainer() const
     // Wires
     Gpds::Container wiresContainer;
     for (const auto& wire : _wires) {
-        wiresContainer.addEntry("wire", wire->toContainer());
+        wiresContainer.addValue("wire", wire->toContainer());
     }
 
     // Root
     Gpds::Container root;
-    root.addEntry("name", _name.toStdString());
-    root.addEntry("wires", wiresContainer);
+    root.addValue("name", _name);
+    root.addValue("wires", wiresContainer);
 
     return root;
 }
@@ -33,18 +33,20 @@ Gpds::Container WireNet::toContainer() const
 void WireNet::fromContainer(const Gpds::Container& container)
 {
     // Root
-    setName( QString::fromStdString( container.getEntry<std::string>( "name" ) ) );
+    setName( container.getValue<QString>( "name" ) );
 
     // Wires
     {
-        const Gpds::Container& wiresContainer = container.getEntry<Gpds::Container>( "wires" );
-        for (const Gpds::Container& wireContainer : wiresContainer.getEntries<Gpds::Container>( "wire" ) ) {
-            auto newWire = ItemFactory::instance().fromContainer(wireContainer);
+        const Gpds::Container& wiresContainer = *container.getValue<Gpds::Container*>( "wires" );
+        for (const Gpds::Container* wireContainer : wiresContainer.getValues<Gpds::Container*>( "wire" ) ) {
+            Q_ASSERT(wireContainer);
+
+            auto newWire = ItemFactory::instance().fromContainer(*wireContainer);
             auto sharedNewWire = std::dynamic_pointer_cast<Wire>( std::shared_ptr<Item>( std::move(newWire) ) );
             if (!sharedNewWire) {
                 continue;
             }
-            sharedNewWire->fromContainer(wireContainer);
+            sharedNewWire->fromContainer(*wireContainer);
             addWire(sharedNewWire);
         }
     }

@@ -37,24 +37,24 @@ Gpds::Container Item::toContainer() const
     // Root
     Gpds::Container root;
     addItemTypeIdToContainer(root);
-    root.addEntry("x", posX());
-    root.addEntry("y", posY());
-    root.addEntry("movable", isMovable());
-    root.addEntry("visible", isVisible());
-    root.addEntry("snap_to_grid", snapToGrid());
-    root.addEntry("highlight", highlightEnabled());
+    root.addValue("x", posX());
+    root.addValue("y", posY());
+    root.addValue("movable", isMovable());
+    root.addValue("visible", isVisible());
+    root.addValue("snap_to_grid", snapToGrid());
+    root.addValue("highlight", highlightEnabled());
 
     return root;
 }
 
 void Item::fromContainer(const Gpds::Container& container)
 {
-    setPosX( container.getEntry<double>("x") );
-    setPosY( container.getEntry<double>("y") );
-    setMovable( container.getEntry<bool>("movable") );
-    setVisible( container.getEntry<bool>("visible") );
-    setSnapToGrid( container.getEntry<bool>("snap_to_grid") );
-    setHighlightEnabled( container.getEntry<bool>("highlight") );
+    setPosX( container.getValue<double>("x") );
+    setPosY( container.getValue<double>("y") );
+    setMovable( container.getValue<bool>("movable") );
+    setVisible( container.getValue<bool>("visible") );
+    setSnapToGrid( container.getValue<bool>("snap_to_grid") );
+    setHighlightEnabled( container.getValue<bool>("highlight") );
 }
 
 void Item::copyAttributes(Item& dest) const
@@ -73,7 +73,7 @@ void Item::copyAttributes(Item& dest) const
 
 void Item::addItemTypeIdToContainer(Gpds::Container& container) const
 {
-    container.addArgument( "type_id", QString::number(type()).toStdString() );
+    container.addAttribute( "type_id", QString::number(type()).toStdString() );
 }
 
 Scene* Item::scene() const

@@ -55,14 +55,14 @@ Gpds::Container FlowEnd::toContainer() const
     // Root
     Gpds::Container root;
     addItemTypeIdToContainer(root);
-    root.addEntry("node", QSchematic::Node::toContainer());
+    root.addValue("node", QSchematic::Node::toContainer());
 
     return root;
 }
 
 void FlowEnd::fromContainer(const Gpds::Container& container)
 {
-    QSchematic::Node::fromContainer( container.getEntry<Gpds::Container>( "node") );
+    QSchematic::Node::fromContainer( *container.getValue<Gpds::Container*>( "node") );
 }
 
 std::unique_ptr<QSchematic::Item> FlowEnd::deepCopy() const

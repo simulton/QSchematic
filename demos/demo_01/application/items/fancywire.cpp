@@ -20,14 +20,14 @@ Gpds::Container FancyWire::toContainer() const
     // Root
     Gpds::Container root;
     addItemTypeIdToContainer(root);
-    root.addEntry("wire", QSchematic::Wire::toContainer());
+    root.addValue("wire", QSchematic::Wire::toContainer());
 
     return root;
 }
 
 void FancyWire::fromContainer(const Gpds::Container& container)
 {
-    QSchematic::Wire::fromContainer( container.getEntry<Gpds::Container>( "wire" ) );
+    QSchematic::Wire::fromContainer( *container.getValue<Gpds::Container*>( "wire" ) );
 }
 
 std::unique_ptr<QSchematic::Item> FancyWire::deepCopy() const

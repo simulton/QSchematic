@@ -24,7 +24,7 @@ Gpds::Container WireRoundedCorners::toContainer() const
 {
     // Root
     Gpds::Container root;
-    root.addEntry("wire", Wire::toContainer());
+    root.addValue("wire", Wire::toContainer());
 
     return root;
 }
@@ -32,7 +32,7 @@ Gpds::Container WireRoundedCorners::toContainer() const
 void WireRoundedCorners::fromContainer(const Gpds::Container& container)
 {
     // Root
-    Wire::fromContainer( container.getEntry<Gpds::Container>( "wire" ) );
+    Wire::fromContainer( *container.getValue<Gpds::Container*>( "wire" ) );
 }
 
 void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)

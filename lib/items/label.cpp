@@ -22,32 +22,32 @@ Gpds::Container Label::toContainer() const
 {
     // Connection point
     Gpds::Container connectionPoint;
-    connectionPoint.addArgument("enabled", ( _hasConnectionPoint ? "true" : "false" ));
-    connectionPoint.addEntry("x", _connectionPoint.x());
-    connectionPoint.addEntry("y", _connectionPoint.y());
+    connectionPoint.addAttribute("enabled", ( _hasConnectionPoint ? "true" : "false" ));
+    connectionPoint.addValue("x", _connectionPoint.x());
+    connectionPoint.addValue("y", _connectionPoint.y());
 
     // Root
     Gpds::Container root;
     addItemTypeIdToContainer(root);
-    root.addEntry("item", Item::toContainer());
-    root.addEntry("text", text().toStdString());
-    root.addEntry("connection_point", connectionPoint);
+    root.addValue("item", Item::toContainer());
+    root.addValue("text", text());
+    root.addValue("connection_point", connectionPoint);
 
     return root;
 }
 
 void Label::fromContainer(const Gpds::Container& container)
 {
-    Item::fromContainer( container.getEntry<Gpds::Container>( "item" ) );
-    setText( QString::fromStdString( container.getEntry<std::string>( "text" ) ) );
+    Item::fromContainer( *container.getValue<Gpds::Container*>( "item" ) );
+    setText( container.getValue<QString>( "text" ) );
 
     // Connection point
-    {
-        Gpds::Container connectionPointContainer = container.getEntry<Gpds::Container>( "connection_point" );
+    const Gpds::Container* connectionPointContainer = container.getValue<Gpds::Container*>( "connection_point" );
+    if (connectionPointContainer) {
 #warning ToDo: Use argument
         _hasConnectionPoint = false;
-        _connectionPoint.setX( connectionPointContainer.getEntry<double>( "x" ) );
-        _connectionPoint.setY( connectionPointContainer.getEntry<double>( "y" ) );
+        _connectionPoint.setX( connectionPointContainer->getValue<double>( "x" ) );
+        _connectionPoint.setY( connectionPointContainer->getValue<double>( "y" ) );
     }
 }
 

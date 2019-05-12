@@ -47,22 +47,22 @@ Gpds::Container Connector::toContainer() const
     // Root
     Gpds::Container root;
     addItemTypeIdToContainer(root);
-    root.addEntry("item", Item::toContainer());
-    root.addEntry("snap_policy", snapPolicy());
-    root.addEntry("force_text_direction", forceTextDirection());
-    root.addEntry("text_direction", textDirection());
-    root.addEntry("label", _label->toContainer());
+    root.addValue("item", Item::toContainer());
+    root.addValue("snap_policy", snapPolicy());
+    root.addValue("force_text_direction", forceTextDirection());
+    root.addValue("text_direction", textDirection());
+    root.addValue("label", _label->toContainer());
 
     return root;
 }
 
 void Connector::fromContainer(const Gpds::Container& container)
 {
-    Item::fromContainer( container.getEntry<Gpds::Container>( "item" ) );
-    setSnapPolicy( static_cast<SnapPolicy>( container.getEntry<int>( "snap_policy" ) ) );
-    setForceTextDirection( container.getEntry<bool>( "force_text_direction" ) );
-    _textDirection = static_cast<Direction>( container.getEntry<int>( "text_direction" ) );
-    _label->fromContainer( container.getEntry<Gpds::Container>( "label" ) );
+    Item::fromContainer( *container.getValue<Gpds::Container*>( "item" ) );
+    setSnapPolicy( static_cast<SnapPolicy>( container.getValue<int>( "snap_policy" ) ) );
+    setForceTextDirection( container.getValue<bool>( "force_text_direction" ) );
+    _textDirection = static_cast<Direction>( container.getValue<int>( "text_direction" ) );
+    _label->fromContainer( *container.getValue<Gpds::Container*>( "label" ) );
 }
 
 std::unique_ptr<Item> Connector::deepCopy() const

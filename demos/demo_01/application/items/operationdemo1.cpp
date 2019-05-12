@@ -33,7 +33,7 @@ Gpds::Container OperationDemo1::toContainer() const
     // Root
     Gpds::Container root;
     addItemTypeIdToContainer(root);
-    root.addEntry("operation", Operation::toContainer());
+    root.addValue("operation", Operation::toContainer());
 
     return root;
 }
@@ -41,7 +41,7 @@ Gpds::Container OperationDemo1::toContainer() const
 void OperationDemo1::fromContainer(const Gpds::Container& container)
 {
     // Root
-    Operation::fromContainer( container.getEntry<Gpds::Container>( "operation" ) );
+    Operation::fromContainer( *container.getValue<Gpds::Container*>( "operation" ) );
 }
 
 std::unique_ptr<QSchematic::Item> OperationDemo1::deepCopy() const

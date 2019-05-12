@@ -52,7 +52,7 @@ Gpds::Container Operation::toContainer() const
     // Root
     Gpds::Container root;
     addItemTypeIdToContainer(root);
-    root.addEntry("node", QSchematic::Node::toContainer());
+    root.addValue("node", QSchematic::Node::toContainer());
 
     return root;
 }
@@ -60,7 +60,7 @@ Gpds::Container Operation::toContainer() const
 void Operation::fromContainer(const Gpds::Container& container)
 {
     // Root
-    QSchematic::Node::fromContainer( container.getEntry<Gpds::Container>( "node" ) );
+    QSchematic::Node::fromContainer( *container.getValue<Gpds::Container*>( "node" ) );
 }
 
 std::unique_ptr<QSchematic::Item> Operation::deepCopy() const

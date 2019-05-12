@@ -41,31 +41,31 @@ Gpds::Container Node::toContainer() const
 {
     // Mouse resize
     Gpds::Container mouseResizeContainer;
-    mouseResizeContainer.addArgument("enabled", ( allowMouseResize() ? "true" : "false" ) );
-    mouseResizeContainer.addEntry("policy", mouseResizePolicy());
+    mouseResizeContainer.addAttribute("enabled", ( allowMouseResize() ? "true" : "false" ) );
+    mouseResizeContainer.addValue("policy", mouseResizePolicy());
 
     // Connectors configuration
     Gpds::Container connectorsConfigurationContainer;
-    connectorsConfigurationContainer.addEntry("movable", connectorsMovable());
-    connectorsConfigurationContainer.addEntry("snap_policy", connectorsSnapPolicy());
-    connectorsConfigurationContainer.addEntry("snap_to_grid", connectorsSnapToGrid());
+    connectorsConfigurationContainer.addValue("movable", connectorsMovable());
+    connectorsConfigurationContainer.addValue("snap_policy", connectorsSnapPolicy());
+    connectorsConfigurationContainer.addValue("snap_to_grid", connectorsSnapToGrid());
 
     // Connectors
     Gpds::Container connectorsContainer;
     for (const auto& connector : connectors()) {
-        connectorsContainer.addEntry("connector", connector->toContainer());
+        connectorsContainer.addValue("connector", connector->toContainer());
     }
 
     // Root
     Gpds::Container root;
     addItemTypeIdToContainer(root);
-    root.addEntry("item", Item::toContainer());
-    root.addEntry("width", size().width());
-    root.addEntry("height", size().height());
-    root.addEntry("mouse_resize", mouseResizeContainer);
-    root.addEntry("label", _label->toContainer());
-    root.addEntry("connectors_configuration", connectorsConfigurationContainer);
-    root.addEntry("connectors", connectorsContainer);
+    root.addValue("item", Item::toContainer());
+    root.addValue("width", size().width());
+    root.addValue("height", size().height());
+    root.addValue("mouse_resize", mouseResizeContainer);
+    root.addValue("label", _label->toContainer());
+    root.addValue("connectors_configuration", connectorsConfigurationContainer);
+    root.addValue("connectors", connectorsContainer);
 
     return root;
 }
@@ -73,36 +73,35 @@ Gpds::Container Node::toContainer() const
 void Node::fromContainer(const Gpds::Container& container)
 {
     // Root
-    Item::fromContainer( container.getEntry<Gpds::Container>( "item" ) );
-    setSize( container.getEntry<int>( "width" ), container.getEntry<int>( "height" ) );
-    _label->fromContainer( container.getEntry<Gpds::Container>( "label" ) );
+    Item::fromContainer( *container.getValue<Gpds::Container*>( "item" ) );
+    setSize( container.getValue<int>( "width" ), container.getValue<int>( "height" ) );
+    _label->fromContainer( *container.getValue<Gpds::Container*>( "label" ) );
 
     // Mouse resize
-    {
-        const Gpds::Container& mouseResizeContainer = container.getEntry<Gpds::Container>( "mouse_resize" );
-#warning ToDo: Use argument
-        setAllowMouseResize( true );
-        setMouseResizePolicy( static_cast<ResizePolicy>( mouseResizeContainer.getEntry<int>( "policy" ) ) );
+    const Gpds::Container* mouseResizeContainer = container.getValue<Gpds::Container*>( "mouse_resize" );
+    if (mouseResizeContainer) {
+        setAllowMouseResize( mouseResizeContainer->getAttribute("enabled") == "true" );
+        setMouseResizePolicy( static_cast<ResizePolicy>( mouseResizeContainer->getValue<int>( "policy" ) ) );
     }
 
     // Connectors configuration
-    {
-        const Gpds::Container& connectorsConfigurationContainer = container.getEntry<Gpds::Container>( "connectors_configuration" );
-        setConnectorsMovable( connectorsConfigurationContainer.getEntry<bool>( "movable" ) );
-        setConnectorsSnapPolicy( static_cast<Connector::SnapPolicy>( connectorsConfigurationContainer.getEntry<int>( "snap_policy" ) ) );
-        setConnectorsSnapToGrid( connectorsConfigurationContainer.getEntry<bool>( "snap_to_grid" ) );
+    const Gpds::Container* connectorsConfigurationContainer = container.getValue<Gpds::Container*>( "connectors_configuration" );
+    if (connectorsConfigurationContainer) {
+        setConnectorsMovable( connectorsConfigurationContainer->getValue<bool>( "movable" ) );
+        setConnectorsSnapPolicy( static_cast<Connector::SnapPolicy>( connectorsConfigurationContainer->getValue<int>( "snap_policy" ) ) );
+        setConnectorsSnapToGrid( connectorsConfigurationContainer->getValue<bool>( "snap_to_grid" ) );
     }
 
     // Connectors
-    {
+    const Gpds::Container* connectorsContainer = container.getValue<Gpds::Container*>( "connectors" );
+    if (connectorsContainer) {
         clearConnectors();
-        const Gpds::Container& connectorsContainer = container.getEntry<Gpds::Container>( "connectors" );
-        for (const Gpds::Container& connectorContainer : connectorsContainer.getEntries<Gpds::Container>( "connector" ) ) {
-            Connector* connector = dynamic_cast<Connector*>(ItemFactory::instance().fromContainer(connectorContainer).release());
+        for (const Gpds::Container* connectorContainer : connectorsContainer->getValues<Gpds::Container*>( "connector" ) ) {
+            Connector* connector = dynamic_cast<Connector*>(ItemFactory::instance().fromContainer(*connectorContainer).release());
             if (!connector) {
                 continue;
             }
-            connector->fromContainer(connectorContainer);
+            connector->fromContainer(*connectorContainer);
             addConnector(std::unique_ptr<Connector>(connector));
         }
     }

@@ -32,7 +32,7 @@ Gpds::Container OperationConnector::toContainer() const
     // Root
     Gpds::Container root;
     addItemTypeIdToContainer(root);
-    root.addEntry("connector", QSchematic::Connector::toContainer());
+    root.addValue("connector", QSchematic::Connector::toContainer());
 
     return root;
 }
@@ -40,7 +40,7 @@ Gpds::Container OperationConnector::toContainer() const
 void OperationConnector::fromContainer(const Gpds::Container& container)
 {
     // Root
-    QSchematic::Connector::fromContainer( container.getEntry<Gpds::Container>( "connector" ) );
+    QSchematic::Connector::fromContainer( *container.getValue<Gpds::Container*>( "connector" ) );
 }
 
 std::unique_ptr<QSchematic::Item> OperationConnector::deepCopy() const

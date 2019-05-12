@@ -49,17 +49,17 @@ Gpds::Container Wire::toContainer() const
     Gpds::Container pointsContainer;
     for (int i = 0; i < _points.count(); i++) {
         Gpds::Container pointContainer;
-        pointContainer.addArgument("index", QString::number(i).toStdString());
-        pointContainer.addEntry("x", _points.at(i).x());
-        pointContainer.addEntry("y", _points.at(i).y());
-        pointsContainer.addEntry("point", pointContainer);
+        pointContainer.addAttribute("index", QString::number(i).toStdString());
+        pointContainer.addValue("x", _points.at(i).x());
+        pointContainer.addValue("y", _points.at(i).y());
+        pointsContainer.addValue("point", pointContainer);
     }
 
     // Root
     Gpds::Container rootContainer;
     addItemTypeIdToContainer(rootContainer);
-    rootContainer.addEntry("item", Item::toContainer());
-    rootContainer.addEntry("points", pointsContainer);
+    rootContainer.addValue("item", Item::toContainer());
+    rootContainer.addValue("points", pointsContainer);
 
     return rootContainer;
 }
@@ -67,14 +67,14 @@ Gpds::Container Wire::toContainer() const
 void Wire::fromContainer(const Gpds::Container& container)
 {
     // Root
-    Item::fromContainer( container.getEntry<Gpds::Container>( "item" ) );
+    Item::fromContainer( *container.getValue<Gpds::Container*>( "item" ) );
 
     // Points
-    {
-        const Gpds::Container& pointsContainer = container.getEntry<Gpds::Container>( "points" );
-        for (const Gpds::Container& pointContainer : pointsContainer.getEntries<Gpds::Container>( "point" ) ) {
+    const Gpds::Container* pointsContainer = container.getValue<Gpds::Container*>( "points" );
+    if (pointsContainer) {
+        for (const Gpds::Container* pointContainer : pointsContainer->getValues<Gpds::Container*>( "point" ) ) {
 #warning ToDo: Get index argument
-            _points.append( WirePoint( pointContainer.getEntry<double>("x"), pointContainer.getEntry<double>("y") ) );
+            _points.append( WirePoint( pointContainer->getValue<double>("x"), pointContainer->getValue<double>("y") ) );
         }
     }
 
