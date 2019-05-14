@@ -70,7 +70,7 @@ std::unique_ptr<Item> ItemFactory::fromContainer(const Gpds::Container& containe
 
 Item::ItemType ItemFactory::extractType(const Gpds::Container& container)
 {
-    const std::string& attributeString = container.getAttribute( "type_id" ).value_or( "" );
+    const std::string& attributeString = container.getAttribute( "type_id" ).value_or( "" ).toStdString();
 
     Q_ASSERT( !attributeString.empty() );
 
