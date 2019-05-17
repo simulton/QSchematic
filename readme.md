@@ -9,14 +9,14 @@ Feature overview:
   - Undo/redo
   - Drag'n'Drop
   - Template based netlist generation
-  - Serialization to/from XML
+  - Serialization to/from XML (powered by [GPDS](https://gpds.simulton.com))
   - Completely customizable by inheriting from the provided classes
 
 Technical stuff:
   - Written in C++
   - Everything is contained within the `QSchematic` namespace
   - Tested with Qt5
-  - No dependencies other than Qt5 and a C++14 compatible compiler
+  - No dependencies other than Qt5 and a C++17 compatible compiler
   - BSD 3-clause licensed
 
 # State
@@ -40,7 +40,7 @@ You happy now?
 Did someone say UML?!
 
 The class diagramm below shows the overall architecture of the system:
-![System](https://github.com/simulton/QSchematic/blob/master/docs/uml/export/jpg/Model!SchematicEditor!System_2.jpg?raw=true)
+![System](https://github.com/simulton/QSchematic/blob/master/docs/uml/export/jpg/Model!QSchematic!System_1.jpg?raw=true)
 
 All items that are part of the `Scene` inherit from the `Item` class. There are built-in specialized classes for nodes, wires and so on:
-![Items](https://github.com/simulton/QSchematic/blob/master/docs/uml/export/jpg/Model!SchematicEditor!Items_1.jpg?raw=true)
+![Items](https://github.com/simulton/QSchematic/blob/master/docs/uml/export/jpg/Model!QSchematic!Items_0.jpg?raw=true)
