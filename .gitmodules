@@ -1,3 +1,0 @@
-[submodule "lib\\3rdparty\\gpds"]
-	path = lib\\3rdparty\\gpds
-	url = https://github.com/simulton/GPDS.git
