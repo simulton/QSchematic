@@ -11622,7 +11622,7 @@
 											"visible": false,
 											"font": "Arial;13;0",
 											"left": 817,
-											"top": 147,
+											"top": 139,
 											"height": 13,
 											"alpha": 1.5707963267948966,
 											"distance": 15,
@@ -11643,7 +11643,7 @@
 											"visible": null,
 											"font": "Arial;13;0",
 											"left": 817,
-											"top": 132,
+											"top": 124,
 											"height": 13,
 											"alpha": 1.5707963267948966,
 											"distance": 30,
@@ -11664,7 +11664,7 @@
 											"visible": false,
 											"font": "Arial;13;0",
 											"left": 817,
-											"top": 177,
+											"top": 169,
 											"height": 13,
 											"alpha": -1.5707963267948966,
 											"distance": 15,
@@ -11681,7 +11681,7 @@
 									"tail": {
 										"$ref": "AAAAAAFmuktEzYpJYac="
 									},
-									"points": "771:168;864:168",
+									"points": "771:160;864:160",
 									"showVisibility": true,
 									"nameLabel": {
 										"$ref": "AAAAAAFqxyRjDi4Un1Q="
@@ -13666,7 +13666,7 @@
 													"top": 814,
 													"width": 284.349609375,
 													"height": 13,
-													"text": "-size: QSize",
+													"text": "-size: QSizeF",
 													"horizontalAlignment": 0
 												}
 											],
@@ -13700,7 +13700,7 @@
 													"top": 837,
 													"width": 284.349609375,
 													"height": 13,
-													"text": "+setSize(size: QSize)",
+													"text": "+setSize(size: QSizeF)",
 													"horizontalAlignment": 0
 												},
 												{
@@ -13717,7 +13717,7 @@
 													"top": 852,
 													"width": 284.349609375,
 													"height": 13,
-													"text": "+setSize(width: int, height: int)",
+													"text": "+setSize(width: qreal, height: qreal)",
 													"horizontalAlignment": 0
 												},
 												{
@@ -13734,7 +13734,7 @@
 													"top": 867,
 													"width": 284.349609375,
 													"height": 13,
-													"text": "+size(): QSize",
+													"text": "+size(): QSizeF",
 													"horizontalAlignment": 0
 												},
 												{
@@ -13751,7 +13751,7 @@
 													"top": 882,
 													"width": 284.349609375,
 													"height": 13,
-													"text": "+sizeRect(): QRect",
+													"text": "+sizeRect(): QRectF",
 													"horizontalAlignment": 0
 												},
 												{
@@ -13768,7 +13768,7 @@
 													"top": 897,
 													"width": 284.349609375,
 													"height": 13,
-													"text": "+sizeSceneRect(): QRect",
+													"text": "+sizeSceneRect(): QRectF",
 													"horizontalAlignment": 0
 												},
 												{
