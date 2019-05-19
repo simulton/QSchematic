@@ -28,12 +28,12 @@ Operation::Operation(int type, QGraphicsItem* parent) :
     label()->setVisible(true);
     label()->setGridPos(0, -1);
     connect(this, &QSchematic::Node::sizeChanged, [this]{
-        label()->setConnectionPoint(sizeSceneRect().center());
+        label()->setConnectionPoint(sizeRect().center());
     });
     connect(this, &QSchematic::Item::settingsChanged, [this]{
-        label()->setConnectionPoint(sizeSceneRect().center());
+        label()->setConnectionPoint(sizeRect().center());
     });
-    setSize(8, 4);
+    setSize(160, 80);
     setAllowMouseResize(true);
     setConnectorsMovable(true);
     setConnectorsSnapPolicy(QSchematic::Connector::NodeSizerectOutline);
@@ -80,7 +80,7 @@ QRectF Operation::boundingRect() const
 {
     qreal adj = 1.5;
 
-    return QRectF(sizeSceneRect()).adjusted(-adj, -adj, adj, adj);
+    return QRectF(sizeRect()).adjusted(-adj, -adj, adj, adj);
 }
 
 void Operation::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
@@ -98,7 +98,6 @@ void Operation::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
     // Body
     {
         // Common stuff
-        QRect bodyRect(0, 0, size().width()*_settings.gridSize, size().height()*_settings.gridSize);
         qreal radius = _settings.gridSize/2;
 
         // Body
@@ -117,7 +116,7 @@ void Operation::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
             // Draw the component body
             painter->setPen(pen);
             painter->setBrush(brush);
-            painter->drawRoundedRect(bodyRect, radius, radius);
+            painter->drawRoundedRect(sizeRect(), radius, radius);
         }
     }
 

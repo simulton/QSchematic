@@ -16,14 +16,13 @@ const qreal PEN_WIDTH          = 1.5;
 
 using namespace QSchematic;
 
-const int DEFAULT_WIDTH     = 8;
-const int DEFAULT_HEIGHT    = 12;
+const int DEFAULT_WIDTH     = 160;
+const int DEFAULT_HEIGHT    = 240;
 
 Node::Node(int type, QGraphicsItem* parent) :
     Item(type, parent),
     _mode(None),
     _size(DEFAULT_WIDTH, DEFAULT_HEIGHT),
-    _mouseResizePolicy(static_cast<ResizePolicy>(0)),
     _allowMouseResize(true),
     _connectorsMovable(false),
     _connectorsSnapPolicy(Connector::NodeSizerectOutline),
@@ -39,11 +38,6 @@ Node::Node(int type, QGraphicsItem* parent) :
 
 Gpds::Container Node::toContainer() const
 {
-    // Mouse resize
-    Gpds::Container mouseResizeContainer;
-    mouseResizeContainer.addAttribute("enabled", ( allowMouseResize() ? "true" : "false" ) );
-    mouseResizeContainer.addValue("policy", mouseResizePolicy());
-
     // Connectors configuration
     Gpds::Container connectorsConfigurationContainer;
     connectorsConfigurationContainer.addValue("movable", connectorsMovable());
@@ -62,7 +56,7 @@ Gpds::Container Node::toContainer() const
     root.addValue("item", Item::toContainer());
     root.addValue("width", size().width());
     root.addValue("height", size().height());
-    root.addValue("mouse_resize", mouseResizeContainer);
+    root.addValue("allow_mouse_resize", allowMouseResize());
     root.addValue("label", _label->toContainer());
     root.addValue("connectors_configuration", connectorsConfigurationContainer);
     root.addValue("connectors", connectorsContainer);
@@ -75,14 +69,8 @@ void Node::fromContainer(const Gpds::Container& container)
     // Root
     Item::fromContainer( *container.getValue<Gpds::Container*>( "item" ) );
     setSize( container.getValue<double>( "width" ), container.getValue<double>( "height" ) );
+    setAllowMouseResize( container.getValue<bool>( "allow_mouse_resize", true ) );
     _label->fromContainer( *container.getValue<Gpds::Container*>( "label" ) );
-
-    // Mouse resize
-    const Gpds::Container* mouseResizeContainer = container.getValue<Gpds::Container*>( "mouse_resize" );
-    if (mouseResizeContainer) {
-        setAllowMouseResize( mouseResizeContainer->getAttribute("enabled") == "true" );
-        setMouseResizePolicy( static_cast<ResizePolicy>( mouseResizeContainer->getValue<int>( "policy" ) ) );
-    }
 
     // Connectors configuration
     const Gpds::Container* connectorsConfigurationContainer = container.getValue<Gpds::Container*>( "connectors_configuration" );
@@ -138,7 +126,6 @@ void Node::copyAttributes(Node& dest) const
     dest._lastMousePosWithGridMove = _lastMousePosWithGridMove;
     dest._resizeHandle = _resizeHandle;
     dest._size = _size;
-    dest._mouseResizePolicy = _mouseResizePolicy;
     dest._allowMouseResize = _allowMouseResize;
     dest._connectorsMovable = _connectorsMovable;
     dest._connectorsSnapPolicy = _connectorsSnapPolicy;
@@ -179,21 +166,6 @@ QRectF Node::sizeRect() const
     return QRectF(0, 0, _size.width(), _size.height());
 }
 
-QRectF Node::sizeSceneRect() const
-{
-    return QRectF(0, 0, _size.width()*_settings.gridSize, _size.height()*_settings.gridSize);
-}
-
-void Node::setMouseResizePolicy(ResizePolicy policy)
-{
-    _mouseResizePolicy = policy;
-}
-
-Node::ResizePolicy Node::mouseResizePolicy() const
-{
-    return _mouseResizePolicy;
-}
-
 void Node::setAllowMouseResize(bool enabled)
 {
     _allowMouseResize = enabled;
@@ -209,7 +181,7 @@ QMap<RectanglePoint, QRect> Node::resizeHandles() const
     QMap<RectanglePoint, QRect> map;
     const int& resizeHandleSize = _settings.resizeHandleSize;
 
-    const QRect& r = sizeSceneRect().toRect();
+    const QRect& r = sizeRect().toRect();
 
     // Corners
     map.insert(RectanglePointBottomRight, QRect(r.bottomRight()+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
@@ -387,7 +359,7 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent* event)
         while (it != handles.constEnd()) {
             if (it.value().contains(event->pos().toPoint())) {
                 _mode = Resize;
-                _lastMousePosWithGridMove = _settings.toGridPoint(event->scenePos());
+                _lastMousePosWithGridMove = event->scenePos();
                 _resizeHandle = it.key();
                 break;
             }
@@ -407,9 +379,11 @@ void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 
 void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
+    Q_ASSERT( scene() );
+
     event->accept();
 
-    QPoint newMouseGridPos(_settings.toGridPoint(event->scenePos()));
+    QPointF newMousePos( event->scenePos() );
 
     switch (_mode) {
     case None:
@@ -431,24 +405,17 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
         if (event->buttons() & Qt::LeftButton) {
 
             // Calculate mouse movement in grid units
-            QPoint d = newMouseGridPos - _lastMousePosWithGridMove;
-            int dx = d.x();
-            int dy = d.y();
+            QPointF d( newMousePos - _lastMousePosWithGridMove );
+            qreal dx = d.x();
+            qreal dy = d.y();
 
             // Don't do anything if there's nothing to do
-            if (dx == 0 and dy == 0) {
+            if (qFuzzyIsNull(dx) and qFuzzyIsNull(dy)) {
                 break;
             }
 
-            // Honor mouse resize policy
-            if (_mouseResizePolicy != 0) {
-                if (qAbs(dx % 2) != 0 or qAbs(dy % 2) != 0) {
-                    break;
-                }
-            }
-
             // Track this
-            _lastMousePosWithGridMove = newMouseGridPos;
+            _lastMousePosWithGridMove = newMousePos;
 
             // Perform resizing
             qreal newX = posX();
@@ -499,10 +466,16 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                 break;
             }
 
-            // Apply
-            if (scene()) {
-                scene()->undoStack()->push(new CommandNodeResize(this, QPointF(newX, newY), QSizeF(newWidth, newHeight)));
+            // Snap to grid (if supposed to)
+            QPointF newPos( newX, newY );
+            QSizeF newSize( newWidth, newHeight );
+            if ( snapToGrid() ) {
+                newPos = _settings.snapToGrid( newPos );
+                newSize = _settings.snapToGrid( newSize );
             }
+
+            // Apply
+            scene()->undoStack()->push(new CommandNodeResize(this, newPos, newSize));
         }
 
         break;
@@ -617,7 +590,7 @@ void Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         painter->setBrush(highlightBrush);
         painter->setOpacity(0.5);
         int adj = _settings.highlightRectPadding;
-        painter->drawRoundedRect(sizeSceneRect().adjusted(-adj, -adj, adj, adj), _settings.gridSize/2, _settings.gridSize/2);
+        painter->drawRoundedRect(sizeRect().adjusted(-adj, -adj, adj, adj), _settings.gridSize/2, _settings.gridSize/2);
     }
 
     painter->setOpacity(1.0);
@@ -636,7 +609,7 @@ void Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     // Draw the component body
     painter->setPen(bodyPen);
     painter->setBrush(bodyBrush);
-    painter->drawRoundedRect(sizeSceneRect(), _settings.gridSize/2, _settings.gridSize/2);
+    painter->drawRoundedRect(sizeRect(), _settings.gridSize/2, _settings.gridSize/2);
 
     // Resize handles
     if (isSelected() and allowMouseResize()) {

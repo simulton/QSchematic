@@ -343,7 +343,7 @@ void MainWindow::demo()
     _scene->addItem(o2);
 
     auto o3 = std::make_shared<Operation>();
-    o3->setSize(8, 6);
+    o3->setSize(160, 120);
     o3->addConnector(std::make_shared<OperationConnector>(QPoint(0, 2), QStringLiteral("in 1")));
     o3->addConnector(std::make_shared<OperationConnector>(QPoint(0, 4), QStringLiteral("in 2")));
     o3->addConnector(std::make_shared<OperationConnector>(QPoint(8, 3), QStringLiteral("out")));
@@ -353,7 +353,7 @@ void MainWindow::demo()
     _scene->addItem(o3);
 
     auto o4 = std::make_shared<Operation>();
-    o4->setSize(8, 6);
+    o4->setSize(160, 120);
     o4->addConnector(std::make_shared<OperationConnector>(QPoint(0, 2), QStringLiteral("in 1")));
     o4->addConnector(std::make_shared<OperationConnector>(QPoint(0, 4), QStringLiteral("in 2")));
     o4->addConnector(std::make_shared<OperationConnector>(QPoint(8, 3), QStringLiteral("out")));

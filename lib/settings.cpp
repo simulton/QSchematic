@@ -47,3 +47,11 @@ QVector2D Settings::snapToGrid(const QVector2D& sceneVector) const
 
     return QVector2D(xV, yV);
 }
+
+QSize Settings::snapToGrid(const QSizeF& sceneSize) const
+{
+    int w = qRound(sceneSize.width() / gridSize) * gridSize;
+    int h = qRound(sceneSize.height() / gridSize) * gridSize;
+
+    return QSize(w, h);
+}
