@@ -1450,7 +1450,7 @@
 									},
 									"name": "size",
 									"visibility": "private",
-									"type": "QSize"
+									"type": "QSizeF"
 								}
 							],
 							"operations": [
@@ -1469,7 +1469,7 @@
 												"$ref": "AAAAAAFnUT1JIfCxYxE="
 											},
 											"name": "size",
-											"type": "QSize"
+											"type": "QSizeF"
 										}
 									]
 								},
@@ -1488,7 +1488,7 @@
 												"$ref": "AAAAAAFnUT2RafI3BJg="
 											},
 											"name": "width",
-											"type": "int"
+											"type": "qreal"
 										},
 										{
 											"_type": "UMLParameter",
@@ -1497,7 +1497,7 @@
 												"$ref": "AAAAAAFnUT2RafI3BJg="
 											},
 											"name": "height",
-											"type": "int"
+											"type": "qreal"
 										}
 									]
 								},
@@ -1515,7 +1515,7 @@
 											"_parent": {
 												"$ref": "AAAAAAFnBVyFz4MmOd8="
 											},
-											"type": "QSize",
+											"type": "QSizeF",
 											"direction": "return"
 										}
 									]
@@ -1534,7 +1534,7 @@
 											"_parent": {
 												"$ref": "AAAAAAFnUT3QKPKm58k="
 											},
-											"type": "QRect",
+											"type": "QRectF",
 											"direction": "return"
 										}
 									]
@@ -1553,7 +1553,7 @@
 											"_parent": {
 												"$ref": "AAAAAAFnVpAugOXhdrQ="
 											},
-											"type": "QRect",
+											"type": "QRectF",
 											"direction": "return"
 										}
 									]
@@ -3367,7 +3367,7 @@
 													"top": 910,
 													"width": 284.349609375,
 													"height": 13,
-													"text": "-size: QSize",
+													"text": "-size: QSizeF",
 													"horizontalAlignment": 0
 												}
 											],
@@ -3401,7 +3401,7 @@
 													"top": 933,
 													"width": 284.349609375,
 													"height": 13,
-													"text": "+setSize(size: QSize)",
+													"text": "+setSize(size: QSizeF)",
 													"horizontalAlignment": 0
 												},
 												{
@@ -3418,7 +3418,7 @@
 													"top": 948,
 													"width": 284.349609375,
 													"height": 13,
-													"text": "+setSize(width: int, height: int)",
+													"text": "+setSize(width: qreal, height: qreal)",
 													"horizontalAlignment": 0
 												},
 												{
@@ -3435,7 +3435,7 @@
 													"top": 963,
 													"width": 284.349609375,
 													"height": 13,
-													"text": "+size(): QSize",
+													"text": "+size(): QSizeF",
 													"horizontalAlignment": 0
 												},
 												{
@@ -3452,7 +3452,7 @@
 													"top": 978,
 													"width": 284.349609375,
 													"height": 13,
-													"text": "+sizeRect(): QRect",
+													"text": "+sizeRect(): QRectF",
 													"horizontalAlignment": 0
 												},
 												{
@@ -3469,7 +3469,7 @@
 													"top": 993,
 													"width": 284.349609375,
 													"height": 13,
-													"text": "+sizeSceneRect(): QRect",
+													"text": "+sizeSceneRect(): QRectF",
 													"horizontalAlignment": 0
 												},
 												{

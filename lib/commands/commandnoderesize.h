@@ -12,7 +12,7 @@ namespace QSchematic
     class CommandNodeResize : public QUndoCommand
     {
     public:
-        CommandNodeResize(QPointer<Node> node, const QPoint& newGridPos, const QSize& newSize, QUndoCommand* parent = nullptr);
+        CommandNodeResize(QPointer<Node> node, const QPointF& newPos, const QSizeF& newSize, QUndoCommand* parent = nullptr);
 
         virtual int id() const override;
         virtual bool mergeWith(const QUndoCommand* command) override;
@@ -23,10 +23,10 @@ namespace QSchematic
         void updateText();
 
         QPointer<Node> _node;
-        QPoint _oldGridPos;
-        QPoint _newGridPos;
-        QSize _oldSize;
-        QSize _newSize;
+        QPointF _oldPos;
+        QPointF _newPos;
+        QSizeF _oldSize;
+        QSizeF _newSize;
     };
 
 }

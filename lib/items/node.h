@@ -44,11 +44,11 @@ namespace QSchematic {
         virtual std::unique_ptr<Item> deepCopy() const override;
 
         Mode mode() const;
-        void setSize(const QSize& size);
-        void setSize(int width, int height);
-        QSize size() const;
-        QRect sizeRect() const;
-        QRect sizeSceneRect() const;
+        void setSize(const QSizeF& size);
+        void setSize(qreal width, qreal height);
+        QSizeF size() const;
+        QRectF sizeRect() const;
+        QRectF sizeSceneRect() const;
         void setMouseResizePolicy(ResizePolicy policy);
         ResizePolicy mouseResizePolicy() const;
         void setAllowMouseResize(bool enabled);
@@ -88,7 +88,7 @@ namespace QSchematic {
         Mode _mode;
         QPoint _lastMousePosWithGridMove;
         RectanglePoint _resizeHandle;
-        QSize _size;
+        QSizeF _size;
         ResizePolicy _mouseResizePolicy;
         bool _allowMouseResize;
         bool _connectorsMovable;

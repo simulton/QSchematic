@@ -5,13 +5,13 @@
 
 using namespace QSchematic;
 
-CommandNodeResize::CommandNodeResize(QPointer<Node> node, const QPoint& newGridPos, const QSize& newSize, QUndoCommand* parent) :
+CommandNodeResize::CommandNodeResize(QPointer<Node> node, const QPointF& newPos, const QSizeF& newSize, QUndoCommand* parent) :
     QUndoCommand(parent),
     _node(node),
-    _newGridPos(newGridPos),
+    _newPos(newPos),
     _newSize(newSize)
 {
-    _oldGridPos = node->gridPos();
+    _oldPos = node->pos();
     _oldSize = node->size();
     QObject::connect(_node.data(), &QObject::destroyed, [this]{
         setObsolete(true);
@@ -38,7 +38,7 @@ bool CommandNodeResize::mergeWith(const QUndoCommand* command)
     }
 
     // Merge
-    _newGridPos = myCommand->_newGridPos;
+    _newPos = myCommand->_newPos;
     _newSize = myCommand->_newSize;
 
     return true;
@@ -50,7 +50,7 @@ void CommandNodeResize::undo()
         return;
     }
 
-    _node->setGridPos(_oldGridPos);
+    _node->setPos(_oldPos);
     _node->setSize(_oldSize);
 }
 
@@ -60,6 +60,6 @@ void CommandNodeResize::redo()
         return;
     }
 
-    _node->setGridPos(_newGridPos);
+    _node->setPos(_newPos);
     _node->setSize(_newSize);
 }
