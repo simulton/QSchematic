@@ -172,7 +172,7 @@ QVariant Connector::itemChange(QGraphicsItem::GraphicsItemChange change, const Q
         if (!parentNode) {
             return proposedPos;
         }
-        QRectF parentNodeSizeRect(0, 0, parentNode->size().width()*_settings.gridSize, parentNode->size().height()*_settings.gridSize);
+        QRectF parentNodeSizeRect(0, 0, parentNode->size().width(), parentNode->size().height());
 
         // Honor snap policy
         switch (_snapPolicy) {
