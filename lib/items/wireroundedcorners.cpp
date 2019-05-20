@@ -117,11 +117,7 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                 QuarterCircleSegment segment = None;
                 {
                     int linePointAdjust = _settings.gridSize/2;
-                    bool hasPrevious = true;
                     bool hasNext = true;
-
-                    // Figure out whether we have a previous point
-                    hasPrevious = (i != 0);
 
                     // Figure out whether we have a next point
                     hasNext = (i != scenePoints.count()-3) && !p3.isJunction();
@@ -132,9 +128,6 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                             segment = BottomLeft;
                             line1.setP2(QPointF(p2.x() + linePointAdjust, p2.y()));
                             line2.setP1(QPointF(p2.x(), p2.y() - linePointAdjust));
-                            if (hasPrevious) {
-                                line1.setP1(QPointF(p1.x() - linePointAdjust, p1.y()));
-                            }
                             if (hasNext) {
                                 line2.setP2(QPointF(p3.x(), p3.y() + linePointAdjust));
                             }
@@ -142,9 +135,6 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                             segment = TopRight;
                             line1.setP2(QPointF(p2.x(), p2.y() + linePointAdjust));
                             line2.setP1(QPointF(p2.x() - linePointAdjust, p2.y()));
-                            if (hasPrevious) {
-                                line1.setP1(QPointF(p1.x(), p1.y() - linePointAdjust));
-                            }
                             if (hasNext) {
                                 line2.setP2(QPointF(p3.x() + linePointAdjust, p3.y()));
                             }
@@ -154,9 +144,6 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                             segment = TopLeft;
                             line1.setP2(QPointF(p2.x(), p2.y() + linePointAdjust));
                             line2.setP1(QPointF(p2.x() + linePointAdjust, p2.y()));
-                            if (hasPrevious) {
-                                line1.setP1(QPointF(p1.x(), p1.y() - linePointAdjust));
-                            }
                             if (hasNext) {
                                 line2.setP2(QPointF(p3.x() - linePointAdjust, p3.y()));
                             }
@@ -164,9 +151,6 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                             segment = BottomRight;
                             line1.setP2(QPointF(p2.x() - linePointAdjust, p2.y()));
                             line2.setP1(QPointF(p2.x(), p2.y() - linePointAdjust));
-                            if (hasPrevious) {
-                                line1.setP1(QPointF(p1.x() + linePointAdjust, p1.y()));
-                            }
                             if (hasNext) {
                                 line2.setP2(QPointF(p3.x(), p3.y() + linePointAdjust));
                             }
@@ -176,9 +160,6 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                             segment = TopRight;
                             line1.setP2(QPointF(p2.x() - linePointAdjust, p2.y()));
                             line2.setP1(QPointF(p2.x(), p2.y() + linePointAdjust));
-                            if (hasPrevious) {
-                                line1.setP1(QPointF(p1.x() + linePointAdjust, p1.y()));
-                            }
                             if (hasNext) {
                                 line2.setP2(QPointF(p3.x(), p3.y() - linePointAdjust));
                             }
@@ -186,9 +167,6 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                             segment = BottomLeft;
                             line1.setP2(QPointF(p2.x(), p2.y() - linePointAdjust));
                             line2.setP1(QPointF(p2.x() + linePointAdjust, p2.y()));
-                            if (hasPrevious) {
-                                line1.setP1(QPointF(p1.x(), p1.y() + linePointAdjust));
-                            }
                             if (hasNext) {
                                 line2.setP2(QPointF(p3.x() - linePointAdjust, p3.y()));
                             }
@@ -198,9 +176,6 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                             segment = BottomRight;
                             line1.setP2(QPointF(p2.x(), p2.y() - linePointAdjust));
                             line2.setP1(QPointF(p2.x() - linePointAdjust, p2.y()));
-                            if (hasPrevious) {
-                                line1.setP1(QPointF(p1.x(), p1.y() + linePointAdjust));
-                            }
                             if (hasNext) {
                                 line2.setP2(QPointF(p3.x() + linePointAdjust, p3.y()));
                             }
@@ -208,9 +183,6 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                             segment = TopLeft;
                             line1.setP2(QPointF(p2.x() + linePointAdjust, p2.y()));
                             line2.setP1(QPointF(p2.x(), p2.y() + linePointAdjust));
-                            if (hasPrevious) {
-                                line1.setP1(QPointF(p1.x() - linePointAdjust, p1.y()));
-                            }
                             if (hasNext) {
                                 line2.setP2(QPointF(p3.x(), p3.y() - linePointAdjust));
                             }
