@@ -404,6 +404,10 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
         // Left mouse button to move
         if (event->buttons() & Qt::LeftButton) {
 
+            if ( snapToGrid() ) {
+                newMousePos = _settings.snapToGrid( newMousePos );
+            }
+
             // Calculate mouse movement in grid units
             QPointF d( newMousePos - _lastMousePosWithGridMove );
             qreal dx = d.x();
