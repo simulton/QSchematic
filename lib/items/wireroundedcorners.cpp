@@ -120,17 +120,11 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                     bool hasPrevious = true;
                     bool hasNext = true;
 
-                    // Overwrite line adjust if we're at a junction
-#warning ToDo: This needs fixing. The previous line segment is one grid unit too short
-                    if (p2.isJunction()) {
-                        linePointAdjust = 0;
-                    }
-
                     // Figure out whether we have a previous point
                     hasPrevious = (i != 0);
 
                     // Figure out whether we have a next point
-                    hasNext = (i != scenePoints.count()-3);
+                    hasNext = (i != scenePoints.count()-3) && !p3.isJunction();
 
                     // Oh boy...
                     if (p3.x() < p1.x() and p3.y() < p1.y()) {
@@ -227,6 +221,8 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                 // We certainly don't want an arc if this is a junction
                 if (p2.isJunction()) {
                     segment = None;
+                    line1.setP2(p2.toPointF());
+                    line2.setP1(p2.toPointF());
                 }
 
                 // Render lines
