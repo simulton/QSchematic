@@ -70,7 +70,7 @@ namespace QSchematic {
     protected:
         void copyAttributes(Node& dest) const;
         QMap<RectanglePoint, QRect> resizeHandles() const;
-        void paintResizeHandles(QPainter& painter);
+        virtual void paintResizeHandles(QPainter& painter);
 
     private:
         std::shared_ptr<Label> _label;
