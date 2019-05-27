@@ -478,6 +478,20 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                 newSize = _settings.snapToGrid( newSize );
             }
 
+            // Minimum size
+            if (newSize.height() < 1) {
+                newSize.setHeight(1);
+                if (newPos.ry() != pos().ry()) {
+                    newPos.setY(posY() + _size.height() - 1);
+                }
+            }
+            if (newSize.width() < 1) {
+                newSize.setWidth(1);
+                if (newPos.rx() != pos().rx()) {
+                    newPos.setX(posX() + _size.width() - 1);
+                }
+            }
+
             // Apply
             scene()->undoStack()->push(new CommandNodeResize(this, newPos, newSize));
         }
