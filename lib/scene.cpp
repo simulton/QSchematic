@@ -846,20 +846,20 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 
     case NormalMode:
     {
-        // Move or resize if supposed to
+        // Move, resize or rotate if supposed to
         if (event->buttons() & Qt::LeftButton) {
-            // Figure out if we're currently resizing something
-            bool resizingNode = false;
+            // Figure out if we're currently resizing or rotating something
+            bool modifyingNode = false;
             for (auto item : selectedItems()) {
                 Node* node = qgraphicsitem_cast<Node*>(item.get());
-                if (node && node->mode() == Node::Resize) {
-                    resizingNode = true;
+                if (node && node->mode() != Node::None) {
+                    modifyingNode = true;
                     break;
                 }
             }
 
             // Move
-            if (!resizingNode) {
+            if (!modifyingNode) {
 
                 // Create a list of selected items
                 QVector<QPointer<Item>> itemsToMove;

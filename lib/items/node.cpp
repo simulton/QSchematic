@@ -1,3 +1,4 @@
+#include <QApplication>
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 #include <QCursor>
@@ -6,6 +7,7 @@
 #include "label.h"
 #include "itemfactory.h"
 #include "../commands/commandnoderesize.h"
+#include "../commands/commandnoderotate.h"
 #include "../utils.h"
 #include "../scene.h"
 
@@ -24,6 +26,7 @@ Node::Node(int type, QGraphicsItem* parent) :
     _mode(None),
     _size(DEFAULT_WIDTH, DEFAULT_HEIGHT),
     _allowMouseResize(true),
+    _allowMouseRotate(true),
     _connectorsMovable(false),
     _connectorsSnapPolicy(Connector::NodeSizerectOutline),
     _connectorsSnapToGrid(true)
@@ -125,8 +128,10 @@ void Node::copyAttributes(Node& dest) const
     dest._mode = _mode;
     dest._lastMousePosWithGridMove = _lastMousePosWithGridMove;
     dest._resizeHandle = _resizeHandle;
+    dest.setRotation(rotation());
     dest._size = _size;
     dest._allowMouseResize = _allowMouseResize;
+    dest._allowMouseRotate = _allowMouseRotate;
     dest._connectorsMovable = _connectorsMovable;
     dest._connectorsSnapPolicy = _connectorsSnapPolicy;
     dest._connectorsSnapToGrid = _connectorsSnapToGrid;
@@ -147,6 +152,8 @@ void Node::setSize(const QSizeF& size)
     prepareGeometryChange();
 
     _size = size;
+
+    setTransformOriginPoint(sizeRect().center());
 
     emit sizeChanged();
 }
@@ -171,9 +178,19 @@ void Node::setAllowMouseResize(bool enabled)
     _allowMouseResize = enabled;
 }
 
+void Node::setAllowMouseRotate(bool enabled)
+{
+    _allowMouseRotate = enabled;
+}
+
 bool Node::allowMouseResize() const
 {
     return _allowMouseResize;
+}
+
+bool Node::allowMouseRotate() const
+{
+    return _allowMouseRotate;
 }
 
 QMap<RectanglePoint, QRect> Node::resizeHandles() const
@@ -200,6 +217,13 @@ QMap<RectanglePoint, QRect> Node::resizeHandles() const
     }
 
     return map;
+}
+
+QRect Node::rotationHandle() const
+{
+    const QRect& r = sizeRect().toRect();
+    const int& resizeHandleSize = _settings.resizeHandleSize;
+    return QRect(Utils::centerPoint(r.topRight(), r.topLeft())+QPoint(1,-resizeHandleSize*3)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize));
 }
 
 bool Node::addConnector(const std::shared_ptr<Connector>& connector)
@@ -366,6 +390,13 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent* event)
             it++;
         }
     }
+
+    // Rotation
+    if (isSelected() && _allowMouseRotate) {
+        if (rotationHandle().contains(event->pos().toPoint())) {
+            _mode = Rotate;
+        }
+    }
 }
 
 void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
@@ -410,6 +441,15 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 
             // Calculate mouse movement in grid units
             QPointF d( newMousePos - _lastMousePosWithGridMove );
+
+            // Rotate mouse movement
+            {
+                qreal angle = 2*M_PI - rotation() * M_PI / 180;
+                qreal x = qCos(angle) * d.rx() - qSin(angle) * d.ry();
+                qreal y = qSin(angle) * d.rx() + qCos(angle) * d.ry();
+                d = QPointF(x, y);
+            }
+
             qreal dx = d.x();
             qreal dy = d.y();
 
@@ -474,15 +514,38 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             QPointF newPos( newX, newY );
             QSizeF newSize( newWidth, newHeight );
             if ( snapToGrid() ) {
-                newPos = _settings.snapToGrid( newPos );
                 newSize = _settings.snapToGrid( newSize );
             }
+
+            // Correct origin
+            auto newOrigin = QPointF(newSize.width()/2, newSize.height()/2)+newPos - pos();
+            auto angle = rotation() * M_PI / 180;
+            auto offset = newOrigin - transformOriginPoint();
+            auto newOriginRotated = QPointF(qCos(angle) * offset.rx() - qSin(angle) * offset.ry(), qSin(angle) * offset.rx() + qCos(angle) * offset.ry());
+            auto correction = newOriginRotated - offset;
+            newPos += correction;
 
             // Apply
             scene()->undoStack()->push(new CommandNodeResize(this, newPos, newSize));
         }
 
         break;
+    }
+    case Rotate:
+    {
+        // Sanity check
+        if (!_allowMouseRotate) {
+            qFatal("Node::mouseMoveEvent(): _mode is 'Rotate' although _allowMouseRotate is false");
+            break;
+        }
+
+        auto center = sizeRect().center() + pos();
+        auto delta = center - newMousePos;
+        auto angle = qAtan2(delta.ry(), delta.rx())*180/M_PI - 90;
+        if (QApplication::keyboardModifiers() == Qt::ShiftModifier) {
+            angle = qRound(angle/15)*15;
+        }
+        scene()->undoStack()->push(new CommandNodeRotate(this, angle));
     }
     }
 }
@@ -539,6 +602,11 @@ void Node::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
                 it++;
             }
         }
+        if (isSelected() and _allowMouseRotate) {
+            if (rotationHandle().contains(event->pos().toPoint())) {
+                setCursor(Qt::SizeAllCursor);
+            }
+        }
     }
 }
 
@@ -548,7 +616,7 @@ QRectF Node::boundingRect() const
     qreal adj = 0.0;
 
     // Body rect
-    rect = rect.united(QRectF(QPoint(0, 0), _size*_settings.gridSize));
+    rect = rect.united(QRectF(QPoint(0, 0), _size));
 
     // Add half the pen width
     adj = qMax(adj, PEN_WIDTH / 2.0);
@@ -561,6 +629,11 @@ QRectF Node::boundingRect() const
     // Add highlight rect
     if (isHighlighted()) {
         adj = qMax(adj, static_cast<qreal>(_settings.highlightRectPadding));
+    }
+
+    // Rotate handle
+    if (isSelected() and _allowMouseRotate) {
+        rect = rect.united(rotationHandle());
     }
 
     return rect.adjusted(-adj, -adj, adj, adj);
@@ -619,6 +692,54 @@ void Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     if (isSelected() and allowMouseResize()) {
         paintResizeHandles(*painter);
     }
+
+    // Rotate handle
+    if (isSelected() and allowMouseRotate()) {
+        paintRotateHandle(*painter);
+    }
+}
+
+void Node::update()
+{
+    // The item class sets the origin to the center of the bounding box
+    // but in this case we want to rotate around the center of the body
+    setTransformOriginPoint(sizeRect().center());
+    QGraphicsObject::update();
+}
+
+bool Node::snapToGrid() const
+{
+    // Only snap when the rotation is a multiple of 90
+    return Item::snapToGrid() and fmod(rotation(), 90) == 0;
+}
+
+QVariant Node::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
+{
+    switch (change)
+    {
+    case QGraphicsItem::ItemPositionChange:
+    {
+        QPointF newPos = value.toPointF();
+        if (snapToGrid()) {
+            // If it is rotated 90 or 270 degrees and the difference between
+            // the height and width is odd then the position needs to be
+            // offset by half a grid unit vertically and horizontally.
+            if ((qAbs(rotation()) == 90 or qAbs(rotation()) == 270) and
+                (fmod(_size.width()/_settings.gridSize - _size.height()/_settings.gridSize, 2) != 0))
+            {
+                newPos.setX(qCeil(newPos.rx()/_settings.gridSize)*_settings.gridSize);
+                newPos.setY(qCeil(newPos.ry()/_settings.gridSize)*_settings.gridSize);
+                newPos -= QPointF(_settings.gridSize/2, _settings.gridSize/2);
+            } else {
+                newPos = _settings.snapToGrid(newPos);
+            }
+        }
+        return newPos;
+    }
+
+    default:
+        return Item::itemChange(change, value);
+    }
 }
 
 void Node::paintResizeHandles(QPainter& painter)
@@ -645,4 +766,30 @@ void Node::paintResizeHandles(QPainter& painter)
         painter.setBrush(handleBrush);
         painter.drawRect(rect.adjusted(-handlePen.width()+adj, -handlePen.width()+adj, (handlePen.width()/2)-adj, (handlePen.width()/2)-adj));
     }
+}
+
+void Node::paintRotateHandle(QPainter& painter)
+{
+    auto rect = rotationHandle();
+
+    // Handle pen
+    QPen handlePen;
+    handlePen.setStyle(Qt::NoPen);
+    painter.setPen(handlePen);
+
+    // Handle Brush
+    QBrush handleBrush;
+    handleBrush.setStyle(Qt::SolidPattern);
+    painter.setBrush(handleBrush);
+
+    // Draw the outer handle
+    handleBrush.setColor("#3fa9f5");
+    painter.setBrush(handleBrush);
+    painter.drawEllipse(rect.adjusted(-handlePen.width(), -handlePen.width(), handlePen.width()/2, handlePen.width()/2));
+
+    // Draw the inner handle
+    int adj = _settings.resizeHandleSize/2;
+    handleBrush.setColor(Qt::white);
+    painter.setBrush(handleBrush);
+    painter.drawEllipse(rect.adjusted(-handlePen.width()+adj, -handlePen.width()+adj, (handlePen.width()/2)-adj, (handlePen.width()/2)-adj));
 }

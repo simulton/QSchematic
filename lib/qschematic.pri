@@ -26,7 +26,8 @@ HEADERS += \
     $$PWD/commands/commandlabelrename.h \
     $$PWD/commands/commandnoderesize.h \
     $$PWD/commands/commands.h \
-    $$PWD/items/splinewire.h
+    $$PWD/items/splinewire.h \
+    $$PWD/commands/commandnoderotate.h
 
 SOURCES += \
     $$PWD/items/connector.cpp \
@@ -50,4 +51,5 @@ SOURCES += \
     $$PWD/commands/commanditemvisibility.cpp \
     $$PWD/commands/commandlabelrename.cpp \
     $$PWD/commands/commandnoderesize.cpp \
-    $$PWD/items/splinewire.cpp
+    $$PWD/items/splinewire.cpp \
+    $$PWD/commands/commandnoderotate.cpp

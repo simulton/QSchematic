@@ -9,6 +9,7 @@ namespace QSchematic
         ItemVisibilityCommandType,
         NodeResizeCommandType,
         LabelRenameCommandType,
+        NodeRotateCommandType,
 
         QSchematicCommandUserType = 1000
     };

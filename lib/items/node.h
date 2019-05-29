@@ -24,7 +24,8 @@ namespace QSchematic {
     public:
         enum Mode {
             None,
-            Resize
+            Resize,
+            Rotate,
         };
         Q_ENUM(Mode)
 
@@ -41,7 +42,9 @@ namespace QSchematic {
         QSizeF size() const;
         QRectF sizeRect() const;
         void setAllowMouseResize(bool enabled);
+        void setAllowMouseRotate(bool enabled);
         bool allowMouseResize() const;
+        bool allowMouseRotate() const;
         bool addConnector(const std::shared_ptr<Connector>& connector);
         bool removeConnector(const std::shared_ptr<Connector>& connector);
         void clearConnectors();
@@ -65,12 +68,17 @@ namespace QSchematic {
         virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;
         virtual void hoverMoveEvent(QGraphicsSceneHoverEvent* event) override;
         virtual QRectF boundingRect() const override;
+        QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value) override;
         virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
+        virtual bool snapToGrid() const;
+        virtual void update();
 
     protected:
         void copyAttributes(Node& dest) const;
         QMap<RectanglePoint, QRect> resizeHandles() const;
+        QRect rotationHandle() const;
         virtual void paintResizeHandles(QPainter& painter);
+        virtual void paintRotateHandle(QPainter& painter);
 
     private:
         std::shared_ptr<Label> _label;
@@ -79,6 +87,7 @@ namespace QSchematic {
         RectanglePoint _resizeHandle;
         QSizeF _size;
         bool _allowMouseResize;
+        bool _allowMouseRotate;
         bool _connectorsMovable;
         Connector::SnapPolicy _connectorsSnapPolicy;
         bool _connectorsSnapToGrid;
