@@ -481,13 +481,13 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             // Minimum size
             if (newSize.height() < 1) {
                 newSize.setHeight(1);
-                if (newPos.ry() != pos().ry()) {
+                if (not qFuzzyCompare(newPos.ry(), pos().ry())) {
                     newPos.setY(posY() + _size.height() - 1);
                 }
             }
             if (newSize.width() < 1) {
                 newSize.setWidth(1);
-                if (newPos.rx() != pos().rx()) {
+                if (not qFuzzyCompare(newPos.rx(), pos().rx())) {
                     newPos.setX(posX() + _size.width() - 1);
                 }
             }

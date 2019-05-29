@@ -124,14 +124,14 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
 
                     // Oh boy...
                     if (p3.x() < p1.x() and p3.y() < p1.y()) {
-                        if (p2.x() == p3.x() and p2.y() == p1.y()) {
+                        if (qFuzzyCompare(p2.x(), p3.x()) and qFuzzyCompare(p2.y(), p1.y())) {
                             segment = BottomLeft;
                             line1.setP2(QPointF(p2.x() + linePointAdjust, p2.y()));
                             line2.setP1(QPointF(p2.x(), p2.y() - linePointAdjust));
                             if (hasNext) {
                                 line2.setP2(QPointF(p3.x(), p3.y() + linePointAdjust));
                             }
-                        } else if (p2.x() == p1.x() and p2.y() == p3.y()) {
+                        } else if (qFuzzyCompare(p2.x(), p1.x()) and qFuzzyCompare(p2.y(), p3.y())) {
                             segment = TopRight;
                             line1.setP2(QPointF(p2.x(), p2.y() + linePointAdjust));
                             line2.setP1(QPointF(p2.x() - linePointAdjust, p2.y()));
@@ -140,14 +140,14 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                             }
                         }
                     } else if (p3.x() > p1.x() and p3.y() < p1.y()) {
-                        if (p2.x() == p1.x() and p2.y() == p3.y()) {
+                        if (qFuzzyCompare(p2.x(), p1.x()) and qFuzzyCompare(p2.y(), p3.y())) {
                             segment = TopLeft;
                             line1.setP2(QPointF(p2.x(), p2.y() + linePointAdjust));
                             line2.setP1(QPointF(p2.x() + linePointAdjust, p2.y()));
                             if (hasNext) {
                                 line2.setP2(QPointF(p3.x() - linePointAdjust, p3.y()));
                             }
-                        } else if (p2.x() == p3.x() and p2.y() == p1.y()) {
+                        } else if (qFuzzyCompare(p2.x(),p3.x()) and qFuzzyCompare(p2.y(), p1.y())) {
                             segment = BottomRight;
                             line1.setP2(QPointF(p2.x() - linePointAdjust, p2.y()));
                             line2.setP1(QPointF(p2.x(), p2.y() - linePointAdjust));
@@ -156,14 +156,14 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                             }
                         }
                     } else if (p3.x() > p1.x() and p3.y() > p1.y()) {
-                        if (p2.x() == p3.x() and p2.y() == p1.y()) {
+                        if (qFuzzyCompare(p2.x(), p3.x()) and qFuzzyCompare(p2.y(), p1.y())) {
                             segment = TopRight;
                             line1.setP2(QPointF(p2.x() - linePointAdjust, p2.y()));
                             line2.setP1(QPointF(p2.x(), p2.y() + linePointAdjust));
                             if (hasNext) {
                                 line2.setP2(QPointF(p3.x(), p3.y() - linePointAdjust));
                             }
-                        } else if (p2.x() == p1.x() and p2.y() == p3.y()) {
+                        } else if (qFuzzyCompare(p2.x(), p1.x()) and qFuzzyCompare(p2.y(), p3.y())) {
                             segment = BottomLeft;
                             line1.setP2(QPointF(p2.x(), p2.y() - linePointAdjust));
                             line2.setP1(QPointF(p2.x() + linePointAdjust, p2.y()));
@@ -172,14 +172,14 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                             }
                         }
                     } else if (p3.x() < p1.x() and p3.y() > p1.y()) {
-                        if (p2.x() == p1.x() and p2.y() == p3.y()) {
+                        if (qFuzzyCompare(p2.x(), p1.x()) and qFuzzyCompare(p2.y(), p3.y())) {
                             segment = BottomRight;
                             line1.setP2(QPointF(p2.x(), p2.y() - linePointAdjust));
                             line2.setP1(QPointF(p2.x() - linePointAdjust, p2.y()));
                             if (hasNext) {
                                 line2.setP2(QPointF(p3.x() + linePointAdjust, p3.y()));
                             }
-                        } else if (p2.x() == p3.x() and p2.y() == p1.y()) {
+                        } else if (qFuzzyCompare(p2.x(), p3.x()) and qFuzzyCompare(p2.y(), p1.y())) {
                             segment = TopLeft;
                             line1.setP2(QPointF(p2.x() + linePointAdjust, p2.y()));
                             line2.setP1(QPointF(p2.x(), p2.y() + linePointAdjust));
