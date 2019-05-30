@@ -724,7 +724,7 @@ QVariant Node::itemChange(QGraphicsItem::GraphicsItemChange change, const QVaria
             // If it is rotated 90 or 270 degrees and the difference between
             // the height and width is odd then the position needs to be
             // offset by half a grid unit vertically and horizontally.
-            if ((qAbs(rotation()) == 90 or qAbs(rotation()) == 270) and
+            if ((qFuzzyCompare(qAbs(rotation()), 90) or qFuzzyCompare(qAbs(rotation()), 270)) and
                 (fmod(_size.width()/_settings.gridSize - _size.height()/_settings.gridSize, 2) != 0))
             {
                 newPos.setX(qCeil(newPos.rx()/_settings.gridSize)*_settings.gridSize);
