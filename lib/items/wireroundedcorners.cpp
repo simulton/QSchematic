@@ -205,7 +205,7 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
 
                 // Calculate arc parameters
                 int rectSize = _settings.gridSize;
-                QRect rect(0, 0, rectSize, rectSize);
+                QRectF rect(0, 0, rectSize, rectSize);
                 int angleStart = 0;
                 int angleSpan = 90;
                 switch (segment)
