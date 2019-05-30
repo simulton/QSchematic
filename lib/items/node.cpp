@@ -31,12 +31,6 @@ Node::Node(int type, QGraphicsItem* parent) :
     _connectorsSnapPolicy(Connector::NodeSizerectOutline),
     _connectorsSnapToGrid(true)
 {
-    // Label
-    _label = std::make_shared<QSchematic::Label>();
-    _label->setParentItem(this);
-    _label->setVisible(false);
-    _label->setMovable(true);
-    _label->setText(QStringLiteral("Unnamed"));
 }
 
 Gpds::Container Node::toContainer() const
@@ -61,7 +55,6 @@ Gpds::Container Node::toContainer() const
     root.addValue("height", size().height());
     root.addValue("allow_mouse_resize", allowMouseResize());
     root.addValue("allow_mouse_rotate", allowMouseRotate());
-    root.addValue("label", _label->toContainer());
     root.addValue("connectors_configuration", connectorsConfigurationContainer);
     root.addValue("connectors", connectorsContainer);
 
@@ -75,7 +68,6 @@ void Node::fromContainer(const Gpds::Container& container)
     setSize( container.getValue<double>( "width" ), container.getValue<double>( "height" ) );
     setAllowMouseResize( container.getValue<bool>( "allow_mouse_resize", true ) );
     setAllowMouseRotate( container.getValue<bool>( "allow_mouse_rotate", true ) );
-    _label->fromContainer( *container.getValue<Gpds::Container*>( "label" ) );
 
     // Connectors configuration
     const Gpds::Container* connectorsConfigurationContainer = container.getValue<Gpds::Container*>( "connectors_configuration" );
@@ -112,11 +104,6 @@ void Node::copyAttributes(Node& dest) const
 {
     // Base class
     Item::copyAttributes(dest);
-
-    // Label
-    auto labelClone = qgraphicsitem_cast<Label*>(_label->deepCopy().release());
-    dest._label = std::shared_ptr<Label>(labelClone);
-    dest._label->setParentItem(&dest);
 
     // Connectors
     dest.clearConnectors();
@@ -345,26 +332,6 @@ void Node::setConnectorsSnapToGrid(bool enabled)
 bool Node::connectorsSnapToGrid() const
 {
     return _connectorsSnapToGrid;
-}
-
-std::shared_ptr<Label> Node::label() const
-{
-    return _label;
-}
-
-
-void Node::setText(const QString& text)
-{
-    Q_ASSERT(_label);
-
-    _label->setText(text);
-}
-
-QString Node::text() const
-{
-    Q_ASSERT(_label);
-
-    return _label->text();
 }
 
 void Node::mousePressEvent(QGraphicsSceneMouseEvent* event)

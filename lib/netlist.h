@@ -50,13 +50,6 @@ namespace QSchematic
                 // Net name
                 netObject.insert("name", net.name);
 
-                // Nodes
-                QJsonArray nodesArray;
-                for (const auto& node : net.nodes) {
-                    nodesArray.append(node->label()->text());
-                }
-                netObject.insert("nodes", nodesArray);
-
                 // Connectors
                 QJsonArray connectorsArray;
                 for (const auto& connector : net.connectors) {
@@ -68,7 +61,6 @@ namespace QSchematic
                 QJsonArray netConnectionsArray;
                 for (auto it = net.connectorNodePairs.cbegin(); it != net.connectorNodePairs.cend(); it++) {
                     QJsonObject connection;
-                    connection.insert("node text", it->second->label()->text());
                     connection.insert("connector text", it->first->text());
                     netConnectionsArray.append(connection);
                 }

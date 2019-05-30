@@ -33,11 +33,6 @@ FlowEnd::FlowEnd() :
     connector->setGridPosY(1);
     addConnector(connector);
 
-    // Label
-    label()->setText("End");
-    label()->setVisible(true);
-    label()->setPos(1.0 * sz, 3.5 * sz);
-
     // Drop shadow
     auto graphicsEffect = new QGraphicsDropShadowEffect(this);
     graphicsEffect->setOffset(SHADOW_OFFSET);

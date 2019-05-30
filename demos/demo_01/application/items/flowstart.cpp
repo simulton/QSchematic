@@ -32,11 +32,6 @@ FlowStart::FlowStart() :
     connector->setGridPos(1, 0);
     addConnector(connector);
 
-    // Label
-    label()->setText("Start");
-    label()->setVisible(true);
-    label()->setPos(-1.0 * sz, 2.5 * sz);
-
     // Drop shadow
     auto graphicsEffect = new QGraphicsDropShadowEffect(this);
     graphicsEffect->setOffset(SHADOW_OFFSET);

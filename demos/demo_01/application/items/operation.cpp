@@ -22,17 +22,21 @@ const qreal SHADOW_BLUR_RADIUS = 10;
 Operation::Operation(int type, QGraphicsItem* parent) :
     QSchematic::Node(type, parent)
 {
-    // Misc
-    label()->setText(QStringLiteral("Generic"));
-    label()->setMovable(true);
-    label()->setVisible(true);
-    label()->setGridPos(0, -1);
+    // Label
+    _label = std::make_shared<QSchematic::Label>();
+    _label->setParentItem(this);
+    _label->setVisible(true);
+    _label->setMovable(true);
+    _label->setGridPos(0, -1);
+    _label->setText(QStringLiteral("Generic"));
     connect(this, &QSchematic::Node::sizeChanged, [this]{
         label()->setConnectionPoint(sizeRect().center());
     });
     connect(this, &QSchematic::Item::settingsChanged, [this]{
         label()->setConnectionPoint(sizeRect().center());
     });
+
+    // Misc
     setSize(160, 80);
     setAllowMouseResize(true);
     setConnectorsMovable(true);
@@ -53,6 +57,7 @@ Gpds::Container Operation::toContainer() const
     Gpds::Container root;
     addItemTypeIdToContainer(root);
     root.addValue("node", QSchematic::Node::toContainer());
+    root.addValue("label", _label->toContainer());
 
     return root;
 }
@@ -61,6 +66,7 @@ void Operation::fromContainer(const Gpds::Container& container)
 {
     // Root
     QSchematic::Node::fromContainer( *container.getValue<Gpds::Container*>( "node" ) );
+    _label->fromContainer(*container.getValue<Gpds::Container*>("label"));
 }
 
 std::unique_ptr<QSchematic::Item> Operation::deepCopy() const
@@ -74,6 +80,31 @@ std::unique_ptr<QSchematic::Item> Operation::deepCopy() const
 void Operation::copyAttributes(Operation& dest) const
 {
     QSchematic::Node::copyAttributes(dest);
+
+    // Label
+    auto labelClone = qgraphicsitem_cast<QSchematic::Label*>(_label->deepCopy().release());
+    dest._label = std::shared_ptr<QSchematic::Label>(labelClone);
+    dest._label->setParentItem(&dest);
+}
+
+std::shared_ptr<QSchematic::Label> Operation::label() const
+{
+    return _label;
+}
+
+
+void Operation::setText(const QString& text)
+{
+    Q_ASSERT(_label);
+
+    _label->setText(text);
+}
+
+QString Operation::text() const
+{
+    Q_ASSERT(_label);
+
+    return _label->text();
 }
 
 void Operation::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)

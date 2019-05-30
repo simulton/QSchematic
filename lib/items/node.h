@@ -57,9 +57,6 @@ namespace QSchematic {
         Connector::SnapPolicy connectorsSnapPolicy() const;
         void setConnectorsSnapToGrid(bool enabled);
         bool connectorsSnapToGrid() const;
-        std::shared_ptr<QSchematic::Label> label() const;
-        void setText(const QString& text);
-        QString text() const;
 
         virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
         virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
@@ -81,7 +78,6 @@ namespace QSchematic {
         virtual void paintRotateHandle(QPainter& painter);
 
     private:
-        std::shared_ptr<Label> _label;
         Mode _mode;
         QPointF _lastMousePosWithGridMove;
         RectanglePoint _resizeHandle;
