@@ -76,13 +76,6 @@ void Operation::copyAttributes(Operation& dest) const
     QSchematic::Node::copyAttributes(dest);
 }
 
-QRectF Operation::boundingRect() const
-{
-    qreal adj = 1.5;
-
-    return QRectF(sizeRect()).adjusted(-adj, -adj, adj, adj);
-}
-
 void Operation::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     Q_UNUSED(option)
@@ -123,6 +116,11 @@ void Operation::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
     // Resize handles
     if (isSelected() and allowMouseResize()) {
         paintResizeHandles(*painter);
+    }
+
+    // Rotate handle
+    if (isSelected() and allowMouseRotate()) {
+        paintRotateHandle(*painter);
     }
 }
 

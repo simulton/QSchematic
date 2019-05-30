@@ -50,8 +50,8 @@ void CommandNodeResize::undo()
         return;
     }
 
-    _node->setPos(_oldPos);
     _node->setSize(_oldSize);
+    _node->setPos(_oldPos);
 }
 
 void CommandNodeResize::redo()
@@ -60,6 +60,6 @@ void CommandNodeResize::redo()
         return;
     }
 
-    _node->setPos(_newPos);
     _node->setSize(_newSize);
+    _node->setPos(_newPos);
 }
