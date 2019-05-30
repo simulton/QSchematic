@@ -70,7 +70,7 @@ namespace QSchematic {
         virtual QRectF boundingRect() const override;
         QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value) override;
         virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
-        virtual bool snapToGrid() const;
+        virtual bool canSnapToGrid() const;
         virtual void update() override;
 
     protected:

@@ -49,7 +49,7 @@ void CommandNodeRotate::undo()
 
     _node->setRotation(_oldAngle);
     // Recalculate position
-    if (_node->snapToGrid()) {
+    if (_node->canSnapToGrid()) {
         _node->setPos(_node->itemChange(QGraphicsItem::ItemPositionChange, _node->pos()).toPointF());
     }
 }
@@ -62,7 +62,7 @@ void CommandNodeRotate::redo()
 
     _node->setRotation(_newAngle);
     // Recalculate position
-    if (_node->snapToGrid()) {
+    if (_node->canSnapToGrid()) {
         _node->setPos(_node->itemChange(QGraphicsItem::ItemPositionChange, _node->pos()).toPointF());
     }
 }

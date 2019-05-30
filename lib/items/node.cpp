@@ -436,7 +436,7 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
         // Left mouse button to move
         if (event->buttons() & Qt::LeftButton) {
 
-            if ( snapToGrid() ) {
+            if ( canSnapToGrid() ) {
                 newMousePos = _settings.snapToGrid( newMousePos );
             }
 
@@ -514,7 +514,7 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             // Snap to grid (if supposed to)
             QPointF newPos( newX, newY );
             QSizeF newSize( newWidth, newHeight );
-            if ( snapToGrid() ) {
+            if ( canSnapToGrid() ) {
                 newSize = _settings.snapToGrid( newSize );
             }
 
@@ -708,7 +708,7 @@ void Node::update()
     QGraphicsObject::update();
 }
 
-bool Node::snapToGrid() const
+bool Node::canSnapToGrid() const
 {
     // Only snap when the rotation is a multiple of 90
     return Item::snapToGrid() and fmod(rotation(), 90) == 0;
@@ -721,7 +721,7 @@ QVariant Node::itemChange(QGraphicsItem::GraphicsItemChange change, const QVaria
     case QGraphicsItem::ItemPositionChange:
     {
         QPointF newPos = value.toPointF();
-        if (snapToGrid()) {
+        if (canSnapToGrid()) {
             // If it is rotated 90 or 270 degrees and the difference between
             // the height and width is odd then the position needs to be
             // offset by half a grid unit vertically and horizontally.
