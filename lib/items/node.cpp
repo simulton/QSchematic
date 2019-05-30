@@ -60,6 +60,7 @@ Gpds::Container Node::toContainer() const
     root.addValue("width", size().width());
     root.addValue("height", size().height());
     root.addValue("allow_mouse_resize", allowMouseResize());
+    root.addValue("allow_mouse_rotate", allowMouseRotate());
     root.addValue("label", _label->toContainer());
     root.addValue("connectors_configuration", connectorsConfigurationContainer);
     root.addValue("connectors", connectorsContainer);
@@ -73,6 +74,7 @@ void Node::fromContainer(const Gpds::Container& container)
     Item::fromContainer( *container.getValue<Gpds::Container*>( "item" ) );
     setSize( container.getValue<double>( "width" ), container.getValue<double>( "height" ) );
     setAllowMouseResize( container.getValue<bool>( "allow_mouse_resize", true ) );
+    setAllowMouseRotate( container.getValue<bool>( "allow_mouse_rotate", true ) );
     _label->fromContainer( *container.getValue<Gpds::Container*>( "label" ) );
 
     // Connectors configuration
