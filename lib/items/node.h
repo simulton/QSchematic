@@ -71,7 +71,7 @@ namespace QSchematic {
         QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value) override;
         virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
         virtual bool snapToGrid() const;
-        virtual void update();
+        virtual void update() override;
 
     protected:
         void copyAttributes(Node& dest) const;
