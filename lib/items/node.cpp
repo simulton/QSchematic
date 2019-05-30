@@ -130,7 +130,6 @@ void Node::copyAttributes(Node& dest) const
     dest._mode = _mode;
     dest._lastMousePosWithGridMove = _lastMousePosWithGridMove;
     dest._resizeHandle = _resizeHandle;
-    dest.setRotation(rotation());
     dest._size = _size;
     dest._allowMouseResize = _allowMouseResize;
     dest._allowMouseRotate = _allowMouseRotate;
