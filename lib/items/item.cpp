@@ -39,6 +39,7 @@ Gpds::Container Item::toContainer() const
     addItemTypeIdToContainer(root);
     root.addValue("x", posX());
     root.addValue("y", posY());
+    root.addValue("rotation", rotation()).addAttribute("unit", "degrees").addAttribute("direction", "cw");
     root.addValue("movable", isMovable());
     root.addValue("visible", isVisible());
     root.addValue("snap_to_grid", snapToGrid());
@@ -51,6 +52,7 @@ void Item::fromContainer(const Gpds::Container& container)
 {
     setPosX( container.getValue<double>("x") );
     setPosY( container.getValue<double>("y") );
+    setRotation( container.getValue<double>("rotation") );
     setMovable( container.getValue<bool>("movable") );
     setVisible( container.getValue<bool>("visible") );
     setSnapToGrid( container.getValue<bool>("snap_to_grid") );
