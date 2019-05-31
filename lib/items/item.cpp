@@ -241,7 +241,7 @@ bool Item::snapToGrid() const
 
 bool Item::isHighlighted() const
 {
-    return (_highlighted || isSelected()) && _highlightEnabled;
+    return ( ( _highlighted or isSelected() ) and _highlightEnabled );
 }
 
 void Item::setHighlighted(bool highlighted)
@@ -260,6 +260,7 @@ void Item::setHighlighted(bool highlighted)
 void Item::setHighlightEnabled(bool enabled)
 {
     _highlightEnabled = enabled;
+    _highlighted = false;
 }
 
 bool Item::highlightEnabled() const
