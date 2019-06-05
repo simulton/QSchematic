@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
 #include <QMessageBox>
@@ -767,6 +768,15 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
         // Handle selections
         QGraphicsScene::mousePressEvent(event);
 
+        // Store the initial position of all the selected items
+        _initialItemPositions.clear();
+        for (auto& item: selectedItems()) {
+            _initialItemPositions.insert(item, item->pos());
+        }
+
+        // Store the initial cursor position
+        _initialCursorPosition = event->scenePos();
+
         break;
     }
 
@@ -807,6 +817,33 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
     case NormalMode:
     {
         QGraphicsScene::mouseReleaseEvent(event);
+        // Move if none of the items is being resized or rotated
+        bool moving = true;
+        for (auto item : selectedItems()) {
+            Node* node = qgraphicsitem_cast<Node*>(item.get());
+            if (node && node->mode() != Node::None) {
+                moving = false;
+                break;
+            }
+        }
+
+        // Reset the position for every selected item and
+        // apply the translation through the undostack
+        if (moving) {
+            for (auto& i: selectedItems()) {
+                Item* item = qgraphicsitem_cast<Item*>(i.get());
+                // Move the item if it is movable and it was previously registered by the mousePressEvent
+                if (item and item->isMovable() and _initialItemPositions.contains(i)) {
+                    QVector2D moveBy(item->pos() - _initialItemPositions.value(i));
+                    if (!moveBy.isNull()) {
+                        // Move the item to its initial position
+                        item->setPos(_initialItemPositions.value(i));
+                        // Apply the translation
+                        _undoStack->push(new CommandItemMove(QVector<std::shared_ptr<Item>>() << i, moveBy));
+                    }
+                }
+            }
+        }
         break;
     }
 
@@ -858,22 +895,18 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                 }
             }
 
-            // Move
+            // Move all selected items
             if (!modifyingNode) {
-
-                // Create a list of selected items
-                QVector<QPointer<Item>> itemsToMove;
                 for (auto& i : selectedItems()) {
                     Item* item = qgraphicsitem_cast<Item*>(i.get());
                     if (item and item->isMovable()) {
-                        itemsToMove << item;
+                        // Calculate by how much the item was moved
+                        QPointF moveBy = _initialItemPositions.value(i) + newMousePos - _initialCursorPosition - item->pos();
+                        // Apply the custom scene snapping
+                        moveBy = itemsMoveSnap(i, QVector2D(moveBy)).toPointF();
+                        // Move the item
+                        item->setPos(item->pos() + moveBy);
                     }
-                }
-
-                // Perform the move
-                if (!itemsToMove.isEmpty()) {
-                    QVector2D moveBy(event->scenePos() - event->lastScenePos());
-                    _undoStack->push(new CommandItemMove(itemsToMove, moveBy));
                 }
 
             // Resize (and everything else)
@@ -883,8 +916,6 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 
             }
         }
-
-        QGraphicsScene::mouseMoveEvent(event);
 
         break;
     }
@@ -1084,6 +1115,13 @@ void Scene::drawBackground(QPainter* painter, const QRectF& rect)
     const QPointF& pixmapTopleft = rect.topLeft() - sceneRect().topLeft();
 
     painter->drawPixmap(rect, _backgroundPixmap, QRectF(pixmapTopleft.x(), pixmapTopleft.y(), rect.width(), rect.height()));
+}
+
+QVector2D Scene::itemsMoveSnap(const std::shared_ptr<Item>& items, const QVector2D& moveBy) const
+{
+    Q_UNUSED(items);
+
+    return moveBy;
 }
 
 void Scene::renderCachedBackground()
