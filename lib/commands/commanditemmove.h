@@ -1,8 +1,8 @@
 #pragma once
 
+#include <memory>
 #include <QUndoCommand>
 #include <QVector>
-#include <QPointer>
 #include <QVector2D>
 
 class QVector2D;
@@ -14,7 +14,7 @@ namespace QSchematic
     class CommandItemMove : public QUndoCommand
     {
     public:
-        CommandItemMove(const QVector<QPointer<Item>>& item, const QVector2D& moveBy, QUndoCommand* parent = nullptr);
+        CommandItemMove(const QVector<std::shared_ptr<Item>>& item, const QVector2D& moveBy, QUndoCommand* parent = nullptr);
 
         virtual int id() const override;
         virtual bool mergeWith(const QUndoCommand* command) override;
@@ -22,7 +22,7 @@ namespace QSchematic
         virtual void redo() override;
 
     private:
-        QVector<QPointer<Item>> _items;
+        QVector<std::shared_ptr<Item>> _items;
         QVector2D _moveBy;
     };
 

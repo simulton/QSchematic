@@ -80,6 +80,11 @@ namespace QSchematic {
         virtual void dropEvent(QGraphicsSceneDragDropEvent* event) override;
         virtual void drawBackground(QPainter* painter, const QRectF& rect) override;
 
+        /* This gets called just before the item is actually being moved by moveBy. Subclasses may
+         * implement this to implement snapping to elements other than the grid
+         */
+        virtual QVector2D itemsMoveSnap(const std::shared_ptr<Item>& item, const QVector2D& moveBy) const;
+
     private:
         void renderCachedBackground();
         void setupNewItem(Item& item);
@@ -97,6 +102,8 @@ namespace QSchematic {
         bool _invertWirePosture;
         QPointF _lastMousePos;
         QList<std::shared_ptr<Item>> _selectedItems;
+        QMap<std::shared_ptr<Item>, QPointF> _initialItemPositions;
+        QPointF _initialCursorPosition;
         std::unique_ptr<QGraphicsProxyWidget> _popupInfobox;
         QUndoStack* _undoStack;
 
