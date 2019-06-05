@@ -181,37 +181,37 @@ bool Node::allowMouseRotate() const
     return _allowMouseRotate;
 }
 
-QMap<RectanglePoint, QRect> Node::resizeHandles() const
+QMap<RectanglePoint, QRectF> Node::resizeHandles() const
 {
-    QMap<RectanglePoint, QRect> map;
+    QMap<RectanglePoint, QRectF> map;
     const int& resizeHandleSize = _settings.resizeHandleSize;
 
-    const QRect& r = sizeRect().toRect();
+    const QRectF& r = sizeRect();
 
     // Corners
-    map.insert(RectanglePointBottomRight, QRect(r.bottomRight()+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
-    map.insert(RectanglePointBottomLeft, QRect(r.bottomLeft()+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
-    map.insert(RectanglePointTopRight, QRect(r.topRight()+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
-    map.insert(RectanglePointTopLeft, QRect(r.topLeft()+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+    map.insert(RectanglePointBottomRight, QRectF(r.bottomRight()+QPointF(1,1)-QPointF(resizeHandleSize, resizeHandleSize), QSizeF(2*resizeHandleSize, 2*resizeHandleSize)));
+    map.insert(RectanglePointBottomLeft, QRectF(r.bottomLeft()+QPointF(1,1)-QPointF(resizeHandleSize, resizeHandleSize), QSizeF(2*resizeHandleSize, 2*resizeHandleSize)));
+    map.insert(RectanglePointTopRight, QRectF(r.topRight()+QPointF(1,1)-QPointF(resizeHandleSize, resizeHandleSize), QSizeF(2*resizeHandleSize, 2*resizeHandleSize)));
+    map.insert(RectanglePointTopLeft, QRectF(r.topLeft()+QPointF(1,1)-QPointF(resizeHandleSize, resizeHandleSize), QSizeF(2*resizeHandleSize, 2*resizeHandleSize)));
 
     // Sides
     if (r.topRight().x() - r.topLeft().x() > 7*resizeHandleSize) {
-        map.insert(RectanglePointTop, QRect(Utils::centerPoint(r.topRight(), r.topLeft())+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
-        map.insert(RectanglePointBottom, QRect(Utils::centerPoint(r.bottomRight(), r.bottomLeft())+QPoint(1,1)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+        map.insert(RectanglePointTop, QRectF(Utils::centerPoint(r.topRight(), r.topLeft())+QPointF(1,1)-QPointF(resizeHandleSize, resizeHandleSize), QSizeF(2*resizeHandleSize, 2*resizeHandleSize)));
+        map.insert(RectanglePointBottom, QRectF(Utils::centerPoint(r.bottomRight(), r.bottomLeft())+QPointF(1,1)-QPointF(resizeHandleSize, resizeHandleSize), QSizeF(2*resizeHandleSize, 2*resizeHandleSize)));
     }
     if (r.bottomLeft().y() - r.topLeft().y() > 7*resizeHandleSize) {
-        map.insert(RectanglePointRight, QRect(Utils::centerPoint(r.topRight(), r.bottomRight())+QPoint(1,0)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
-        map.insert(RectanglePointLeft, QRect(Utils::centerPoint(r.bottomLeft(), r.topLeft())+QPoint(1,0)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+        map.insert(RectanglePointRight, QRectF(Utils::centerPoint(r.topRight(), r.bottomRight())+QPointF(1,0)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
+        map.insert(RectanglePointLeft, QRectF(Utils::centerPoint(r.bottomLeft(), r.topLeft())+QPointF(1,0)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize)));
     }
 
     return map;
 }
 
-QRect Node::rotationHandle() const
+QRectF Node::rotationHandle() const
 {
-    const QRect& r = sizeRect().toRect();
+    const QRectF& r = sizeRect();
     const int& resizeHandleSize = _settings.resizeHandleSize;
-    return QRect(Utils::centerPoint(r.topRight(), r.topLeft())+QPoint(1,-resizeHandleSize*3)-QPoint(resizeHandleSize, resizeHandleSize), QSize(2*resizeHandleSize, 2*resizeHandleSize));
+    return QRectF(Utils::centerPoint(r.topRight(), r.topLeft())+QPointF(1,-resizeHandleSize*3)-QPointF(resizeHandleSize, resizeHandleSize), QSizeF(2*resizeHandleSize, 2*resizeHandleSize));
 }
 
 bool Node::addConnector(const std::shared_ptr<Connector>& connector)
@@ -726,7 +726,7 @@ QVariant Node::itemChange(QGraphicsItem::GraphicsItemChange change, const QVaria
 
 void Node::paintResizeHandles(QPainter& painter)
 {
-    for (const QRect& rect : resizeHandles()) {
+    for (const QRectF& rect : resizeHandles()) {
         // Handle pen
         QPen handlePen;
         handlePen.setStyle(Qt::NoPen);

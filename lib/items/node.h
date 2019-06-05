@@ -72,8 +72,8 @@ namespace QSchematic {
 
     protected:
         void copyAttributes(Node& dest) const;
-        QMap<RectanglePoint, QRect> resizeHandles() const;
-        QRect rotationHandle() const;
+        QMap<RectanglePoint, QRectF> resizeHandles() const;
+        QRectF rotationHandle() const;
         virtual void paintResizeHandles(QPainter& painter);
         virtual void paintRotateHandle(QPainter& painter);
 
