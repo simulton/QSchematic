@@ -109,6 +109,7 @@ namespace QSchematic {
 
     private slots:
         void itemMoved(const Item& item, const QVector2D& movedBy);
+        void itemRotated(const Item& item, const qreal rotation);
         void wireNetHighlightChanged(bool highlighted);
         void wirePointMoved(Wire& wire, WirePoint& point);
         void wireMovePoint(const QPointF& point, Wire& wire, const QVector2D& movedBy) const;

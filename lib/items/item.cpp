@@ -30,6 +30,7 @@ Item::Item(int type, QGraphicsItem* parent) :
     setFlag(QGraphicsItem::ItemIsMovable, true);
     connect(this, &Item::xChanged, this, &Item::posChanged);
     connect(this, &Item::yChanged, this, &Item::posChanged);
+    connect(this, &Item::rotationChanged, this, &Item::rotChanged);
 }
 
 Gpds::Container Item::toContainer() const
@@ -72,6 +73,7 @@ void Item::copyAttributes(Item& dest) const
     dest._highlightEnabled = _highlightEnabled;
     dest._highlighted = _highlighted;
     dest._oldPos = _oldPos;
+    dest._oldRot = _oldRot;
 }
 
 void Item::addItemTypeIdToContainer(Gpds::Container& container) const
@@ -363,6 +365,17 @@ void Item::posChanged()
     }
 
     _oldPos = newPos;
+}
+
+void Item::rotChanged()
+{
+    const qreal newRot = rotation();
+    qreal rotationChange = newRot - _oldRot;
+    if (!qFuzzyIsNull(rotationChange)) {
+        emit rotated(*this, rotationChange);
+    }
+
+    _oldRot = newRot;
 }
 
 void Item::update()
