@@ -523,7 +523,7 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 
         auto center = sizeRect().center() + pos();
         auto delta = center - newMousePos;
-        auto angle = qAtan2(delta.ry(), delta.rx())*180/M_PI - 90;
+        auto angle = fmod(qAtan2(delta.ry(), delta.rx())*180/M_PI + 270, 360);
         if (QApplication::keyboardModifiers() == Qt::ShiftModifier) {
             angle = qRound(angle/15)*15;
         }
