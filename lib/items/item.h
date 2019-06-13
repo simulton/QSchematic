@@ -77,6 +77,7 @@ namespace QSchematic {
 
     signals:
         void moved(Item& item, const QVector2D& movedBy);
+        void rotated(Item& item, const qreal rotation);
         void showPopup(const Item& item);
         void highlightChanged(const Item& item, bool isHighlighted);
         void settingsChanged();
@@ -97,6 +98,7 @@ namespace QSchematic {
 
     private slots:
         void posChanged();
+        void rotChanged();
 
     private:
         int _type;
@@ -104,6 +106,7 @@ namespace QSchematic {
         bool _highlightEnabled;
         bool _highlighted;
         QPointF _oldPos;
+        qreal _oldRot;
         QTimer* _hoverTimer;
     };
 

@@ -269,7 +269,17 @@ QList<QPointF> Node::connectionPointsRelative() const
     QList<QPointF> list;
 
     for (const auto& connector : _connectors) {
-        list << connector->connectionPoint() + connector->pos();
+        QPointF pos = connector->pos();
+        // Rotate the position around to the node's origin
+        {
+            QPointF d = transformOriginPoint() - pos;
+            qreal angle = rotation() * M_PI / 180;
+            QPointF rotated;
+            rotated.setX(qCos(angle) * d.rx() - qSin(angle) * d.ry());
+            rotated.setY(qSin(angle) * d.rx() + qCos(angle) * d.ry());
+            pos = transformOriginPoint() - rotated;
+        }
+        list << connector->connectionPoint() + pos;
     }
 
     return list;

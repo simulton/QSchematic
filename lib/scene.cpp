@@ -6,6 +6,7 @@
 #include <QUndoStack>
 #include <QPixmap>
 #include <QMimeData>
+#include <QtMath>
 #include "scene.h"
 #include "settings.h"
 #include "commands/commanditemmove.h"
@@ -515,6 +516,48 @@ void Scene::itemMoved(const Item& item, const QVector2D& movedBy)
     }
 }
 
+void Scene::itemRotated(const Item& item, const qreal rotation)
+{
+    QList<std::shared_ptr<Wire>> wiresConnectedToRotatingObjects;
+    // If this is a Node class, move wires with it
+    const Node* node = dynamic_cast<const Node*>(&item);
+    if (node) {
+        // Move all the wires attached to the node
+        for (auto& wire : wires()) {
+            for (const WirePoint& wirePoint : wire->wirePointsAbsolute()) {
+                for (const QPointF& connectionPoint : node->connectionPointsAbsolute()) {
+                    // Calculate the point's previous position
+                    QPointF pos = connectionPoint;
+                    {
+                        QPointF d = node->transformOriginPoint() + node->pos() - pos;
+                        qreal angle = -rotation * M_PI / 180;
+                        QPointF rotated;
+                        rotated.setX(qCos(angle) * d.rx() - qSin(angle) * d.ry());
+                        rotated.setY(qSin(angle) * d.rx() + qCos(angle) * d.ry());
+                        pos = node->transformOriginPoint() + node->pos() - rotated;
+                    }
+                    if (QVector2D(wirePoint.toPointF() - pos).length() < 0.001f) {
+                        QVector2D movedBy = QVector2D(connectionPoint - pos);
+                        wireMovePoint(connectionPoint, *wire, movedBy);
+                        wiresConnectedToRotatingObjects << wire;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Clean up the wires
+        for (const auto& wire : wiresConnectedToRotatingObjects) {
+            auto wireNet = net(wire);
+            if (!wireNet) {
+                continue;
+            }
+
+            wireNet->simplify();
+        }
+    }
+}
+
 void Scene::wireNetHighlightChanged(bool highlighted)
 {
     auto rawPointer = qobject_cast<WireNet*>(sender());
@@ -637,7 +680,7 @@ void Scene::wireMovePoint(const QPointF& point, Wire& wire, const QVector2D& mov
     // Move the points
     for (int i = 0; i < wire.pointsRelative().count(); i++) {
         QPointF currPoint = wire.pointsRelative().at(i);
-        if (currPoint == point-movedBy.toPoint()) {
+        if (qFuzzyCompare(QVector2D(currPoint), QVector2D(point) - movedBy)) {
 
             // Preserve straight angles (if supposed to)
             if (_settings.preserveStraightAngles) {
@@ -700,7 +743,7 @@ QList<std::shared_ptr<Wire>> Scene::wiresConnectedTo(const Node& node, const QVe
     for (auto& wire : wires()) {
         for (const WirePoint& wirePoint : wire->wirePointsAbsolute()) {
             for (const QPointF& connectionPoint : node.connectionPointsAbsolute()) {
-                if (wirePoint == connectionPoint+offset.toPointF()) {
+                if (QVector2D(wirePoint.toPointF() - (connectionPoint + offset.toPointF())).length() < 0.001f) {
                     list.append(wire);
                     break;
                 }
@@ -1192,6 +1235,7 @@ void Scene::setupNewItem(Item& item)
     // Connections
     connect(&item, &Item::moved, this, &Scene::itemMoved);
     connect(&item, &Item::showPopup, this, &Scene::showPopup);
+    connect(&item, &Item::rotated, this, &Scene::itemRotated);
 }
 
 QList<QPointF> Scene::connectionPoints() const

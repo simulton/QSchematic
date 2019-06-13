@@ -148,7 +148,7 @@ QVector<QPointF> Wire::pointsRelative() const
     QVector<QPointF> points;
 
     for (const WirePoint& point : _points) {
-        points << point.toPoint();
+        points << point.toPointF();
     }
 
     return points;
@@ -287,9 +287,9 @@ void Wire::removeObsoletePoints(QVector<WirePoint>& points)
     // Compile a list of obsolete points
     auto it = points.begin()+2;
     while (it != points.end()) {
-        QPoint p1 = (*(it - 2)).toPoint();
-        QPoint p2 = (*(it - 1)).toPoint();
-        QPoint p3 = (*it).toPoint();
+        QPointF p1 = (*(it - 2)).toPointF();
+        QPointF p2 = (*(it - 1)).toPointF();
+        QPointF p3 = (*it).toPointF();
 
         // Check if p2 is on the line created by p1 and p3
         if (Utils::pointIsOnLine(QLineF(p1, p2), p3)) {
@@ -307,7 +307,7 @@ void Wire::movePointBy(int index, const QVector2D& moveBy)
     }
 
     prepareGeometryChange();
-    _points[index] = WirePoint(_points.at(index).toPoint() + moveBy.toPoint());
+    _points[index] = WirePoint(_points.at(index).toPointF() + moveBy.toPointF());
     calculateBoundingRect();
     update();
 
@@ -370,7 +370,7 @@ QList<Line> Wire::lineSegments() const
 
     QList<Line> ret;
     for (int i = 0; i < _points.count()-1; i++) {
-        ret.append(Line(gridPos() + _points.at(i).toPoint(), gridPos() + _points.at(i+1).toPoint()));
+        ret.append(Line(QPointF(gridPos()) + _points.at(i).toPointF(), QPointF(gridPos()) + _points.at(i+1).toPointF()));
     }
 
     return ret;
@@ -584,7 +584,7 @@ void Wire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         if (wirePoint.isJunction()) {
             painter->setPen(penJunction);
             painter->setBrush(brushJunction);
-            painter->drawEllipse(wirePoint.toPoint(), junctionRadius, junctionRadius);
+            painter->drawEllipse(wirePoint.toPointF(), junctionRadius, junctionRadius);
         }
     }
 
