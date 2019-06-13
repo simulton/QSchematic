@@ -771,7 +771,9 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
         // Store the initial position of all the selected items
         _initialItemPositions.clear();
         for (auto& item: selectedItems()) {
-            _initialItemPositions.insert(item, item->pos());
+            if (item) {
+                _initialItemPositions.insert(item, item->pos());
+            }
         }
 
         // Store the initial cursor position
@@ -885,18 +887,18 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
     {
         // Move, resize or rotate if supposed to
         if (event->buttons() & Qt::LeftButton) {
-            // Figure out if we're currently resizing or rotating something
-            bool modifyingNode = false;
+            // Figure out if we're moving a node
+            bool movingNode = false;
             for (auto item : selectedItems()) {
                 Node* node = qgraphicsitem_cast<Node*>(item.get());
-                if (node && node->mode() != Node::None) {
-                    modifyingNode = true;
+                if (node && node->mode() == Node::None) {
+                    movingNode = true;
                     break;
                 }
             }
 
             // Move all selected items
-            if (!modifyingNode) {
+            if (movingNode) {
                 for (auto& i : selectedItems()) {
                     Item* item = qgraphicsitem_cast<Item*>(i.get());
                     if (item and item->isMovable()) {
