@@ -39,8 +39,12 @@ namespace QSchematic {
         Mode mode() const;
         void setSize(const QSizeF& size);
         void setSize(qreal width, qreal height);
+        void setWidth(qreal width);
+        void setHeight(qreal height);
         QSizeF size() const;
         QRectF sizeRect() const;
+        qreal width() const;
+        qreal height() const;
         void setAllowMouseResize(bool enabled);
         void setAllowMouseRotate(bool enabled);
         bool allowMouseResize() const;

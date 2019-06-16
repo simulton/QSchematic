@@ -151,6 +151,16 @@ void Node::setSize(qreal width, qreal height)
     return setSize(QSizeF(width, height));
 }
 
+void Node::setWidth(qreal width)
+{
+    setSize( width, size().height() );
+}
+
+void Node::setHeight(qreal height)
+{
+    setSize( size().width(), height );
+}
+
 QSizeF Node::size() const
 {
     return _size;
@@ -159,6 +169,16 @@ QSizeF Node::size() const
 QRectF Node::sizeRect() const
 {
     return QRectF(0, 0, _size.width(), _size.height());
+}
+
+qreal Node::width() const
+{
+    return _size.width();
+}
+
+qreal Node::height() const
+{
+    return _size.height();
 }
 
 void Node::setAllowMouseResize(bool enabled)
