@@ -330,16 +330,20 @@ void MainWindow::demo()
     o1->addConnector(std::make_shared<OperationConnector>(QPoint(0, 2), QStringLiteral("in")));
     o1->addConnector(std::make_shared<OperationConnector>(QPoint(8, 2), QStringLiteral("out")));
     o1->setGridPos(0, 0);
+    o1->setSize(160, 80);
     o1->setConnectorsMovable(true);
     o1->setText(QStringLiteral("Operation 1"));
+    o1->label()->setPos(0, 110);
     _scene->addItem(o1);
 
     auto o2 = std::make_shared<Operation>();
     o2->addConnector(std::make_shared<OperationConnector>(QPoint(0, 2), QStringLiteral("in")));
     o2->addConnector(std::make_shared<OperationConnector>(QPoint(8, 2), QStringLiteral("out")));
     o2->setGridPos(-14, 9);
+    o2->setSize(160, 80);
     o2->setConnectorsMovable(true);
     o2->setText(QStringLiteral("Operation 2"));
+    o2->label()->setPos(0, 110);
     _scene->addItem(o2);
 
     auto o3 = std::make_shared<Operation>();
@@ -350,6 +354,7 @@ void MainWindow::demo()
     o3->setGridPos(18, -8);
     o3->setConnectorsMovable(true);
     o3->setText(QStringLiteral("Operation 3"));
+    o3->label()->setPos(0, 150);
     _scene->addItem(o3);
 
     auto o4 = std::make_shared<Operation>();
@@ -360,6 +365,7 @@ void MainWindow::demo()
     o4->setGridPos(18, 10);
     o4->setConnectorsMovable(true);
     o4->setText(QStringLiteral("Operation 4"));
+    o4->label()->setPos(0, 150);
     _scene->addItem(o4);
 
     _scene->undoStack()->clear();

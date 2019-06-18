@@ -27,7 +27,7 @@ Operation::Operation(int type, QGraphicsItem* parent) :
     _label->setParentItem(this);
     _label->setVisible(true);
     _label->setMovable(true);
-    _label->setGridPos(0, -1);
+    _label->setPos(0, 120);
     _label->setText(QStringLiteral("Generic"));
     connect(this, &QSchematic::Node::sizeChanged, [this]{
         label()->setConnectionPoint(sizeRect().center());
@@ -39,6 +39,7 @@ Operation::Operation(int type, QGraphicsItem* parent) :
     // Misc
     setSize(160, 80);
     setAllowMouseResize(true);
+    setAllowMouseRotate(true);
     setConnectorsMovable(true);
     setConnectorsSnapPolicy(QSchematic::Connector::NodeSizerectOutline);
     setConnectorsSnapToGrid(true);

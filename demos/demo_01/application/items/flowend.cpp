@@ -41,7 +41,7 @@ FlowEnd::FlowEnd() :
     setGraphicsEffect(graphicsEffect);
 
     // Misc
-    setSize(3, 2);
+    setSize(60, 40);
     setAllowMouseResize(false);
 }
 
