@@ -11,7 +11,7 @@ struct ConnectorAttribute {
 OperationDemo1::OperationDemo1(QGraphicsItem* parent) :
     Operation(::ItemType::OperationDemo1Type, parent)
 {
-    setSize(8, 8);
+    setSize(160, 160);
     label()->setText(QStringLiteral("Demo 1"));
 
     QVector<ConnectorAttribute> connectorAttributes = {
