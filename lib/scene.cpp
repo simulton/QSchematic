@@ -928,6 +928,11 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 
     case NormalMode:
     {
+        // Let the base class handle the basic stuff
+        // Note that we DO NOT want this in WireMode to prevent highlighting of the wires
+        // during placing a new wire.
+        QGraphicsScene::mouseMoveEvent(event);
+
         // Move, resize or rotate if supposed to
         if (event->buttons() & Qt::LeftButton) {
             // Figure out if we're moving a node
@@ -953,12 +958,6 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                         item->setPos(item->pos() + moveBy);
                     }
                 }
-
-            // Resize (and everything else)
-            } else {
-
-                QGraphicsScene::mouseMoveEvent(event);
-
             }
         }
 
