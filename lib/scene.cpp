@@ -338,7 +338,7 @@ bool Scene::addWire(const std::shared_ptr<Wire>& wire)
     // If yes, add to that net. Otherwise, create a new one
     for (auto& net : _nets) {
         for (const Line& line : net->lineSegments()) {
-            for (const WirePoint& point : wire->pointsRelative()) {
+            for (const QPointF& point : wire->pointsRelative()) {
                 if (line.containsPoint(point.toPoint(), 0)) {
                     net->addWire(wire);
                     return true;
