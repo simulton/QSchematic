@@ -34,9 +34,12 @@ namespace QSchematic
         {
         }
 
+        Netlist( ) = default;
         Netlist(const Netlist& other) = default;
         Netlist(Netlist&& other) = default;
         virtual ~Netlist() = default;
+
+        Netlist<TNode, TConnector>& operator=(const Netlist<TNode, TConnector>& rhs) = default;
 
         QJsonObject toJson() const
         {
