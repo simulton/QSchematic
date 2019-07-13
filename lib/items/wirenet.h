@@ -3,7 +3,7 @@
 #include <memory>
 #include <QObject>
 #include <QList>
-#include "../3rdparty/gpds/lib/serialize.h"
+#include "serialize.h"
 #include "line.h"
 
 namespace QSchematic {

@@ -28,7 +28,7 @@
 #include "../../../lib/items/itemfactory.h"
 #include "../../../lib/netlist.h"
 #include "../../../lib/netlistgenerator.h"
-#include "../../../lib/3rdparty/gpds/lib/archiverxml.h"
+#include "archiverxml.h"
 #include "mainwindow.h"
 #include "resources.h"
 #include "items/customitemfactory.h"
