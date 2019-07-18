@@ -14,8 +14,8 @@ namespace QSchematic
     class NetlistGenerator
     {
     public:
-        template<typename TNode = Node*, typename TConnector = Connector*>
-        static Netlist<TNode, TConnector> generate(const Scene& scene)
+        template<typename TNode = Node*, typename TConnector = Connector*, typename TNet = Net<TNode, TConnector>>
+        static Netlist<TNode, TConnector, TNet> generate(const Scene& scene)
         {
             struct GlobalNet
             {
@@ -62,10 +62,10 @@ namespace QSchematic
             }
 
             // Export nets
-            QVector<Net<TNode, TConnector>> nets;
+            QVector<TNet> nets;
             for (const auto& globalNet : globalNets) {
                 // Create the new Net
-                Net<TNode, TConnector> net;
+                TNet net;
                 net.name = globalNet.name;
 
                 // Build a list of all wire net points in scene coordinates
@@ -109,7 +109,7 @@ namespace QSchematic
                 nets << net;
             }
 
-            return Netlist<TNode, TConnector>(nets);
+            return Netlist<TNode, TConnector, TNet>(nets);
         }
 
     private:

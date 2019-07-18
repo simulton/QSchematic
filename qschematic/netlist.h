@@ -25,11 +25,11 @@ namespace QSchematic
         std::map<TConnector, TNode> connectorNodePairs;
     };
 
-    template<typename TNode, typename TConnector>
+    template<typename TNode, typename TConnector, typename TNet>
     class Netlist
     {
     public:
-        Netlist(const QVector<Net<TNode, TConnector>>& nets) :
+        Netlist(const QVector<TNet>& nets) :
             _nets(nets)
         {
         }
@@ -39,7 +39,7 @@ namespace QSchematic
         Netlist(Netlist&& other) = default;
         virtual ~Netlist() = default;
 
-        Netlist<TNode, TConnector>& operator=(const Netlist<TNode, TConnector>& rhs) = default;
+        Netlist<TNode, TConnector, TNet>& operator=(const Netlist<TNode, TConnector, TNet>& rhs) = default;
 
         QJsonObject toJson() const
         {
@@ -76,12 +76,12 @@ namespace QSchematic
             return object;
         }
 
-        QVector<Net<TNode, TConnector>> nets() const
+        QVector<TNet> nets() const
         {
             return _nets;
         }
 
-        QList<Net<TNode, TConnector>> netsWithNode(const TNode node) const
+        QList<TNet> netsWithNode(const TNode node) const
         {
             // Sanity check
             if (!node) {
@@ -89,7 +89,7 @@ namespace QSchematic
             }
 
             // Loop
-            QList<Net<TNode, TConnector>> nets;
+            QList<TNet> nets;
             for (auto& net : _nets) {
                 for (auto& connectorWithNode : net.connectorWithNodes) {
                     if (connectorWithNode._node == node) {
@@ -103,6 +103,6 @@ namespace QSchematic
         }
 
     private:
-        QVector<Net<TNode, TConnector>> _nets;
+        QVector<TNet> _nets;
     };
 }
