@@ -558,6 +558,18 @@ void Scene::itemRotated(const Item& item, const qreal rotation)
     }
 }
 
+void Scene::itemHighlightChanged(const Item& item, bool isHighlighted)
+{
+    // Retrieve the corresponding smart pointer
+    auto sharedPointer = sharedItemPointer(item);
+    if (not sharedPointer) {
+        return;
+    }
+
+    // Let the world know
+    emit itemHighlightChanged(sharedPointer, isHighlighted);
+}
+
 void Scene::wireNetHighlightChanged(bool highlighted)
 {
     auto rawPointer = qobject_cast<WireNet*>(sender());
@@ -796,6 +808,17 @@ QList<Item*> Scene::itemsAt(const QPointF& scenePos, Qt::SortOrder order) const
     }
 
     return list;
+}
+
+std::shared_ptr<Item> Scene::sharedItemPointer(const Item& item) const
+{
+    for (const auto& sharedPointer : _items) {
+        if (sharedPointer.get() == &item) {
+            return sharedPointer;
+        }
+    }
+
+    return nullptr;
 }
 
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)

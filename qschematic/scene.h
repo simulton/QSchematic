@@ -68,6 +68,7 @@ namespace QSchematic {
         void isDirtyChanged(bool isDirty);
         void itemAdded(const std::shared_ptr<Item>& item);
         void itemRemoved(const std::shared_ptr<Item>& item);
+        void itemHighlightChanged(const std::shared_ptr<Item>& item, bool isHighlighted);
 
     protected:
         virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
@@ -90,6 +91,7 @@ namespace QSchematic {
         void setupNewItem(Item& item);
         void addWireNet(const std::shared_ptr<WireNet>& wireNet);
         QList<Item*> itemsAt(const QPointF& scenePos, Qt::SortOrder order = Qt::DescendingOrder) const;
+        std::shared_ptr<Item> sharedItemPointer(const Item& item) const;
 
         QList<std::shared_ptr<Item>> _items;
         QList<std::shared_ptr<WireNet>> _nets;
@@ -110,6 +112,7 @@ namespace QSchematic {
     private slots:
         void itemMoved(const Item& item, const QVector2D& movedBy);
         void itemRotated(const Item& item, const qreal rotation);
+        void itemHighlightChanged(const Item& item, bool isHighlighted);
         void wireNetHighlightChanged(bool highlighted);
         void wirePointMoved(Wire& wire, WirePoint& point);
         void wireMovePoint(const QPointF& point, Wire& wire, const QVector2D& movedBy) const;
