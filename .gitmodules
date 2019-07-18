@@ -1,3 +1,3 @@
-[submodule "lib/3rdparty/gpds"]
-	path = lib/3rdparty/gpds
+[submodule "qschematic/3rdparty/gpds"]
+	path = qschematic/3rdparty/gpds
 	url = https://github.com/simulton/gpds
