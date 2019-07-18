@@ -6,7 +6,7 @@
 #include <QScopedPointer>
 #include <QGraphicsProxyWidget>
 #include <QUndoStack>
-#include "serialize.h"
+#include <gpds/serialize.h>
 #include "settings.h"
 #include "items/item.h"
 #include "items/wire.h"
