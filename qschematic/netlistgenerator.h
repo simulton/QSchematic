@@ -7,6 +7,7 @@
 
 namespace QSchematic
 {
+    class Wire;
     class Node;
     class Connector;
     class Scene;
@@ -14,7 +15,7 @@ namespace QSchematic
     class NetlistGenerator
     {
     public:
-        template<typename TNode = Node*, typename TConnector = Connector*, typename TNet = Net<TNode, TConnector>>
+        template<typename TWire = Wire*, typename TNode = Node*, typename TConnector = Connector*, typename TNet = Net<TWire, TNode, TConnector>>
         static Netlist<TNode, TConnector, TNet> generate(const Scene& scene)
         {
             struct GlobalNet
@@ -72,6 +73,14 @@ namespace QSchematic
                 QList<QPointF> wireScenePoints;
                 for (const auto& wireNet : globalNet.wireNets) {
                     wireScenePoints << wireNet->points();
+
+                    // Store wires
+                    for ( const auto& wire : wireNet->wires()) {
+                        TWire w = qobject_cast<TWire>( wire.get() );
+                        if ( w ) {
+                            net.wires.push_back( w );
+                        }
+                    }
                 }
 
                 // Build a list of all connectors

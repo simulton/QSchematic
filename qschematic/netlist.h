@@ -16,10 +16,11 @@ namespace QSchematic
     class Node;
     class Connector;
 
-    template<typename TNode, typename TConnector>
+    template<typename TWire, typename TNode, typename TConnector>
     struct Net
     {
         QString name;
+        std::vector<TWire> wires;
         std::vector<TNode> nodes;
         std::vector<TConnector> connectors;
         std::map<TConnector, TNode> connectorNodePairs;
