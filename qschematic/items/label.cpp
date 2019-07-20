@@ -44,8 +44,10 @@ void Label::fromContainer(const Gpds::Container& container)
     // Connection point
     const Gpds::Container* connectionPointContainer = container.getValue<Gpds::Container*>( "connection_point" );
     if (connectionPointContainer) {
-#warning ToDo: Use argument
-        _hasConnectionPoint = false;
+        auto attributeString = connectionPointContainer->getAttribute( "enabled" );
+        if ( attributeString.has_value() ) {
+            _hasConnectionPoint = ( attributeString.value() == "true" );
+        }
         _connectionPoint.setX( connectionPointContainer->getValue<double>( "x" ) );
         _connectionPoint.setY( connectionPointContainer->getValue<double>( "y" ) );
     }
