@@ -1,7 +1,9 @@
 #pragma once
 
 #include <vector>
+#include <forward_list>
 #include <map>
+#include <optional>
 #include <QJsonObject>
 #include <QJsonArray>
 #include "items/wire.h"
@@ -30,8 +32,9 @@ namespace QSchematic
     class Netlist
     {
     public:
-        Netlist(const QVector<TNet>& nets) :
-            _nets(nets)
+        Netlist(std::vector<TNode>&& nodes, std::vector<TNet>&& nets) :
+            _nodes( std::move( nodes ) ),
+            _nets( std::move( nets ) )
         {
         }
 
@@ -77,12 +80,12 @@ namespace QSchematic
             return object;
         }
 
-        QVector<TNet> nets() const
+        std::vector<TNet> nets() const
         {
             return _nets;
         }
 
-        QList<TNet> netsWithNode(const TNode node) const
+        std::forward_list<TNet> netsWithNode(const TNode node) const
         {
             // Sanity check
             if (!node) {
@@ -90,7 +93,7 @@ namespace QSchematic
             }
 
             // Loop
-            QList<TNet> nets;
+            std::forward_list<TNet> nets;
             for (auto& net : _nets) {
                 for (auto& connectorWithNode : net.connectorWithNodes) {
                     if (connectorWithNode._node == node) {
@@ -103,7 +106,32 @@ namespace QSchematic
             return nets;
         }
 
+        std::optional<TNet> netFromConnector(const TConnector connector) const
+        {
+            // Sanity check
+            if (not connector) {
+                return std::nullopt;
+            }
+
+            // Loop
+            for (auto& net : _nets) {
+                for (auto& c : net.connectors) {
+                    if (c == connector) {
+                        return net;
+                    }
+                }
+            }
+
+            return std::nullopt;
+        }
+
+        std::vector<TNode> nodes() const
+        {
+            return _nodes;
+        }
+
     private:
-        QVector<TNet> _nets;
+        std::vector<TNode> _nodes;
+        std::vector<TNet> _nets;
     };
 }

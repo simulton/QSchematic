@@ -24,8 +24,19 @@ namespace QSchematic
                 QList<std::shared_ptr<WireNet>> wireNets;
             };
 
+            // Add all nodes
+            std::vector<TNode> nodes;
+            for ( const auto& node : scene.nodes() ) {
+                // Sanity check
+                if ( not node ) {
+                    continue;
+                }
+
+                nodes.push_back( static_cast<TNode>( node.get() ) );
+            }
+
             // Create a list of global nets (WireNets that share the same net name)
-            QList<GlobalNet> globalNets;
+            std::vector<GlobalNet> globalNets;
             unsigned anonNetCounter = 0;
             for (const auto& wireNet : scene.nets()) {
                 // Sanity check
@@ -58,12 +69,12 @@ namespace QSchematic
                         newGlobalNet.name = QString("N%1").arg(anonNetCounter++, 3, 10, QChar('0'));
                     }
 
-                    globalNets.append(newGlobalNet);
+                    globalNets.push_back(newGlobalNet);
                 }
             }
 
             // Export nets
-            QVector<TNet> nets;
+            std::vector<TNet> nets;
             for (const auto& globalNet : globalNets) {
                 // Create the new Net
                 TNet net;
@@ -115,10 +126,10 @@ namespace QSchematic
                     }
                 }
 
-                nets << net;
+                nets.push_back( net );
             }
 
-            return Netlist<TNode, TConnector, TNet>(nets);
+            return Netlist<TNode, TConnector, TNet>( std::move( nodes ), std::move( nets ) );
         }
 
     private:
