@@ -28,22 +28,16 @@ namespace QSchematic
         std::map<TConnector, TNode> connectorNodePairs;
     };
 
-    template<typename TNode, typename TConnector, typename TNet>
+    template<typename TNode, typename TConnector, typename TWire, typename TNet>
     class Netlist
     {
     public:
-        Netlist(std::vector<TNode>&& nodes, std::vector<TNet>&& nets) :
-            _nodes( std::move( nodes ) ),
-            _nets( std::move( nets ) )
-        {
-        }
-
         Netlist( ) = default;
         Netlist(const Netlist& other) = default;
         Netlist(Netlist&& other) = default;
         virtual ~Netlist() = default;
 
-        Netlist<TNode, TConnector, TNet>& operator=(const Netlist<TNode, TConnector, TNet>& rhs) = default;
+        Netlist<TNode, TConnector, TWire, TNet>& operator=(const Netlist<TNode, TConnector, TWire, TNet>& rhs) = default;
 
         QJsonObject toJson() const
         {
@@ -78,6 +72,12 @@ namespace QSchematic
             object.insert("nets", netsArray);
 
             return object;
+        }
+
+        void set( std::vector<TNode>&& nodes, std::vector<TNet>&& nets )
+        {
+            _nodes = std::move( nodes );
+            _nets = std::move( nets );
         }
 
         std::vector<TNet> nets() const

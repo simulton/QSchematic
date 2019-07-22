@@ -15,8 +15,8 @@ namespace QSchematic
     class NetlistGenerator
     {
     public:
-        template<typename TWire = Wire*, typename TNode = Node*, typename TConnector = Connector*, typename TNet = Net<TWire, TNode, TConnector>>
-        static Netlist<TNode, TConnector, TNet> generate(const Scene& scene)
+        template<typename TNode = Node*, typename TConnector = Connector*, typename TWire = Wire*, typename TNet = Net<TWire, TNode, TConnector>>
+        static bool generate(Netlist<TNode, TConnector, TWire, TNet>& netlist, const Scene& scene)
         {
             struct GlobalNet
             {
@@ -129,7 +129,10 @@ namespace QSchematic
                 nets.push_back( net );
             }
 
-            return Netlist<TNode, TConnector, TNet>( std::move( nodes ), std::move( nets ) );
+            // Set the netlist
+            netlist.set( std::move( nodes ), std::move( nets ) );
+
+            return true;
         }
 
     private:
