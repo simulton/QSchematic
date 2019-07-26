@@ -6,3 +6,6 @@ build-*
 
 qschematic/*.a
 qschematic/*.dll
+
+# IDE stuff
+.idea
