@@ -24,7 +24,7 @@ Gpds::Container WireNet::toContainer() const
 
     // Root
     Gpds::Container root;
-    root.addValue("name", _name);
+    root.addValue("name", std::move( _name.toStdString() ) );
     root.addValue("wires", wiresContainer);
 
     return root;
@@ -33,7 +33,7 @@ Gpds::Container WireNet::toContainer() const
 void WireNet::fromContainer(const Gpds::Container& container)
 {
     // Root
-    setName( container.getValue<QString>( "name" ) );
+    setName( QString::fromStdString( container.getValue<std::string>( "name" ) ) );
 
     // Wires
     {
@@ -121,6 +121,11 @@ void WireNet::simplify()
     for (auto& wire : _wires) {
         wire->simplify();
     }
+}
+
+void WireNet::setName(const std::string& name)
+{
+    setName( QString::fromStdString( name ) );
 }
 
 void WireNet::setName(const QString& name)

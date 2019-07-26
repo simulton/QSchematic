@@ -28,6 +28,7 @@ namespace QSchematic {
         bool removeWire(const std::shared_ptr<Wire>& wire);
         bool contains(const std::shared_ptr<Wire>& wire) const;
         void simplify();
+        void setName(const std::string& name);
         void setName(const QString& name);
         void setHighlighted(bool highlighted);
 

@@ -49,7 +49,7 @@ Gpds::Container Wire::toContainer() const
     Gpds::Container pointsContainer;
     for (int i = 0; i < _points.count(); i++) {
         Gpds::Container pointContainer;
-        pointContainer.addAttribute("index", QString::number(i));
+        pointContainer.addAttribute("index", i);
         pointContainer.addValue("x", _points.at(i).x());
         pointContainer.addValue("y", _points.at(i).y());
         pointsContainer.addValue("point", pointContainer);

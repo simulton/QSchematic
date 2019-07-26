@@ -30,7 +30,7 @@ Gpds::Container Label::toContainer() const
     Gpds::Container root;
     addItemTypeIdToContainer(root);
     root.addValue("item", Item::toContainer());
-    root.addValue("text", text());
+    root.addValue("text", std::move( text().toStdString() ) );
     root.addValue("connection_point", connectionPoint);
 
     return root;
@@ -39,12 +39,12 @@ Gpds::Container Label::toContainer() const
 void Label::fromContainer(const Gpds::Container& container)
 {
     Item::fromContainer( *container.getValue<Gpds::Container*>( "item" ) );
-    setText( container.getValue<QString>( "text" ) );
+    setText( QString::fromStdString( container.getValue<std::string>( "text" ) ) );
 
     // Connection point
     const Gpds::Container* connectionPointContainer = container.getValue<Gpds::Container*>( "connection_point" );
     if (connectionPointContainer) {
-        auto attributeString = connectionPointContainer->getAttribute( "enabled" );
+        auto attributeString = connectionPointContainer->getAttribute<std::string>( "enabled" );
         if ( attributeString.has_value() ) {
             _hasConnectionPoint = ( attributeString.value() == "true" );
         }
