@@ -9,7 +9,7 @@ isEmpty(GPDS_PATH) {
     GPDS_PATH = 3rdparty/gpds
 }
 
-include($${GPDS_PATH}/src/gpds.pri)
+include($${GPDS_PATH}/lib/gpds.pri)
 
 INCLUDEPATH += $$_PRO_FILE_PWD_
 
