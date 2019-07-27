@@ -18,7 +18,7 @@ namespace QSchematic
     class Node;
     class Connector;
 
-    template<typename TWire, typename TNode, typename TConnector>
+    template<typename TWire = Wire*, typename TNode = Node*, typename TConnector = Connector*>
     struct Net
     {
         QString name;
@@ -28,7 +28,7 @@ namespace QSchematic
         std::map<TConnector, TNode> connectorNodePairs;
     };
 
-    template<typename TNode, typename TConnector, typename TWire, typename TNet>
+    template<typename TNode = Node*, typename TConnector = Connector*, typename TWire = Wire*, typename TNet = Net<TWire, TNode, TConnector>>
     class Netlist
     {
     public:
