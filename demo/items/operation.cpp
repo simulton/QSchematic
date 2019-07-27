@@ -12,7 +12,7 @@
 #include "operationconnector.h"
 #include "../commands/commandnodeaddconnector.h"
 
-const QColor COLOR_BODY_FILL   = QColor(Qt::gray).lighter(140);
+const QColor COLOR_BODY_FILL   = QColor( QStringLiteral( "#e0e0e0" ) );
 const QColor COLOR_BODY_BORDER = QColor(Qt::black);
 const QColor SHADOW_COLOR      = QColor(63, 63, 63, 100);
 const qreal PEN_WIDTH          = 1.5;
