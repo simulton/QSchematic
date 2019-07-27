@@ -284,7 +284,8 @@ void MainWindow::createActions()
 
     _actionGenerateNetlist = new QAction("Generate netlist");
     connect(_actionGenerateNetlist, &QAction::triggered, [this]{
-        auto netlist = QSchematic::NetlistGenerator::generate(*_scene);
+        QSchematic::Netlist<> netlist;
+        QSchematic::NetlistGenerator::generate(netlist, *_scene);
         QJsonDocument document(netlist.toJson());
 
         QInputDialog::getMultiLineText(this, "Netlist", "Generated netlist", document.toJson(QJsonDocument::Indented));
