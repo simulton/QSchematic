@@ -1,3 +1,11 @@
+# Project settings
+project(qschematic
+    VERSION 0.1.0)
+
+# CMake settings
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
+
 include_directories(
     .
     3rdparty/gpds/src
@@ -61,32 +69,33 @@ set(HEADERS
     view.h
 )
 
-# List of source and header files
-set(FILES ${SOURCES} ${HEADERS})
-
+# Include Qt5 packages
 find_package(Qt5
-        COMPONENTS
+    REQUIRED
+    COMPONENTS
         Core
         Gui
         Widgets)
 
+# Include GPDS packages
+find_package(Gpds 0.1.0 REQUIRED)
+
 # Generate objects library
-add_library(qschematic-objs OBJECT ${FILES})
-# this is only needed for older compilers but doesn't hurt either to have it
+add_library(qschematic-objs OBJECT ${HEADERS} ${SOURCES})
 set_target_properties(qschematic-objs
     PROPERTIES
         POSITION_INDEPENDENT_CODE 1)
-
-qt5_use_modules(qschematic-objs Core Widgets Gui)
-
-# Generate shared library
-add_library(qschematic-shared SHARED $<TARGET_OBJECTS:qschematic-objs>)
-set_target_properties(qschematic-shared
-    PROPERTIES
-        OUTPUT_NAME "qschematic")
+target_link_libraries(qschematic-objs Qt5::Core Qt5::Widgets Qt5::Gui)
+target_link_libraries(qschematic-objs Gpds::gpds-static)
 
 # Generate static library
 add_library(qschematic-static STATIC $<TARGET_OBJECTS:qschematic-objs>)
 set_target_properties(qschematic-static
     PROPERTIES
         OUTPUT_NAME "qschematic")
+
+add_library(qschematic-shared SHARED $<TARGET_OBJECTS:qschematic-objs>)
+set_target_properties(qschematic-shared
+        PROPERTIES
+        OUTPUT_NAME "qschematic")
+qt5_use_modules(qschematic-shared Core Widgets Gui)

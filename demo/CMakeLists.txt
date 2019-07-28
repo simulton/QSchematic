@@ -1,13 +1,21 @@
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
+
 include_directories(.)
 include_directories(commands)
 include_directories(items)
 include_directories(itemslibrary)
 
 find_package(Qt5
-        COMPONENTS
+    REQUIRED
+    COMPONENTS
         Core
         Gui
-        Widgets)
+        Widgets
+        PrintSupport)
+
+find_package(Gpds 0.1.0
+    REQUIRED)
 
 # Header files
 set(HEADERS
@@ -46,7 +54,13 @@ set(SOURCES
     mainwindow.cpp
     resources.cpp)
 
+# Resource files
+set(RESOURCES
+    resources/resources.qrc)
+
 # Compile executable
-add_executable(qschematic-demo ${HEADERS} ${SOURCES})
-qt5_use_modules(qschematic-demo Widgets Gui)
+add_executable(qschematic-demo ${HEADERS} ${SOURCES} ${RESOURCES})
+target_link_libraries(qschematic-demo Qt5::Core Qt5::Widgets Qt5::Gui Qt5::PrintSupport)
 target_link_libraries(qschematic-demo qschematic-static)
+target_link_libraries(qschematic-demo Gpds::gpds-static)
+

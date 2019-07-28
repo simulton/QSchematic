@@ -15,6 +15,7 @@ set(Qt5_DIR "C:/Qt/5.13.0/mingw73_64/lib/cmake/Qt5")
 # Qt5 stuff
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
 
 # Include the library
 add_subdirectory(qschematic)
