@@ -6,11 +6,6 @@ project(qschematic
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
 
-include_directories(
-    .
-    3rdparty/gpds/src
-)
-
 # List of source files
 set(SOURCES
     commands/commanditemadd.cpp
@@ -80,22 +75,11 @@ find_package(Qt5
 # Include GPDS packages
 find_package(Gpds 0.1.0 REQUIRED)
 
-# Generate objects library
-add_library(qschematic-objs OBJECT ${HEADERS} ${SOURCES})
-set_target_properties(qschematic-objs
-    PROPERTIES
-        POSITION_INDEPENDENT_CODE 1)
-target_link_libraries(qschematic-objs Qt5::Core Qt5::Widgets Qt5::Gui)
-target_link_libraries(qschematic-objs Gpds::gpds-static)
-
 # Generate static library
-add_library(qschematic-static STATIC $<TARGET_OBJECTS:qschematic-objs>)
+add_library(qschematic-static STATIC ${HEADERS} ${SOURCES})
 set_target_properties(qschematic-static
     PROPERTIES
-        OUTPUT_NAME "qschematic")
-
-add_library(qschematic-shared SHARED $<TARGET_OBJECTS:qschematic-objs>)
-set_target_properties(qschematic-shared
-        PROPERTIES
-        OUTPUT_NAME "qschematic")
-qt5_use_modules(qschematic-shared Core Widgets Gui)
+        OUTPUT_NAME "qschematic"
+        POSITION_INDEPENDENT_CODE 1)
+target_link_libraries(qschematic-static Qt5::Core Qt5::Widgets Qt5::Gui)
+target_link_libraries(qschematic-static Gpds::gpds-static)

@@ -1,11 +1,6 @@
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
 
-include_directories(.)
-include_directories(commands)
-include_directories(items)
-include_directories(itemslibrary)
-
 find_package(Qt5
     REQUIRED
     COMPONENTS
