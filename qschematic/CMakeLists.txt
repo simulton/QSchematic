@@ -1,6 +1,7 @@
 # Project settings
 project(qschematic
-    VERSION 0.1.0)
+    VERSION 0.1.0
+    LANGUAGES CXX)
 
 # CMake settings
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
