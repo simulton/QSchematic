@@ -49,10 +49,6 @@ set(SOURCES
     mainwindow.cpp
     resources.cpp)
 
-# Resource files
-set(RESOURCES
-    resources/resources.qrc)
-
 # Compile executable
 add_executable(qschematic-demo ${HEADERS} ${SOURCES} ${RESOURCES})
 target_link_libraries(qschematic-demo Qt5::Core Qt5::Widgets Qt5::Gui Qt5::PrintSupport)

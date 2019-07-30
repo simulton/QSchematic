@@ -258,7 +258,6 @@ void MainWindow::createActions()
     _actionShowGrid->setCheckable(true);
     _actionShowGrid->setChecked(_settings.showGrid);
     _actionShowGrid->setToolTip("Toggle grid visibility");
-    _actionShowGrid->setIcon(Resources::icon(Resources::ToggleGridIcon));
     connect(_actionShowGrid, &QAction::toggled, [this](bool checked){
         _settings.showGrid = checked;
         settingsChanged();
