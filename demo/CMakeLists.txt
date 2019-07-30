@@ -13,7 +13,7 @@ find_package(Gpds 0.1.0
     REQUIRED)
 
 # Header files
-set(HEADERS
+set(HEADERS_PRIVATE
     commands/commandnodeaddconnector.h
     commands/commands.h
     items/customitemfactory.h
@@ -33,7 +33,7 @@ set(HEADERS
     resources.h)
 
 # Source files
-set(SOURCES
+set(SOURCES_PRIVATE
     commands/commandnodeaddconnector.cpp
     items/customitemfactory.cpp
     items/fancywire.cpp
@@ -50,7 +50,12 @@ set(SOURCES
     resources.cpp)
 
 # Compile executable
-add_executable(qschematic-demo ${HEADERS} ${SOURCES} ${RESOURCES})
+add_executable(qschematic-demo)
+target_sources(qschematic-demo
+    PRIVATE
+        ${HEADERS_PRIVATE}
+        ${SOURCES_PRIVATE}
+)
 target_link_libraries(qschematic-demo Qt5::Core Qt5::Widgets Qt5::Gui Qt5::PrintSupport)
 target_link_libraries(qschematic-demo qschematic-static)
 target_link_libraries(qschematic-demo Gpds::gpds-static)

@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.12)
 project(qschematic)
 
 # User options
-option(BUILD_DEMO "Whether to build the demo project" on)
+option(BUILD_DEMO "Whether to build the demo project" OFF)
 
 # C++ options
 set(CMAKE_CXX_STANDARD 17)
@@ -20,5 +20,5 @@ add_subdirectory(qschematic)
 
 # Include the example(s)
 if ( BUILD_DEMO )
-    #add_subdirectory(demo)
+    add_subdirectory(demo)
 endif()
