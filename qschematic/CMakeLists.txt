@@ -84,3 +84,101 @@ set_target_properties(qschematic-static
         POSITION_INDEPENDENT_CODE 1)
 target_link_libraries(qschematic-static Qt5::Core Qt5::Widgets Qt5::Gui)
 target_link_libraries(qschematic-static Gpds::gpds-static)
+
+
+################################################################################
+# Common library properties                                                    #
+################################################################################
+
+set_target_properties(
+    qschematic-static
+    PROPERTIES
+        OUTPUT_NAME "qschematic"
+        ARCHIVE_OUTPUT_NAME "qschematic"
+        VERSION ${PROJECT_VERSION}
+        POSITION_INDEPENDENT_CODE 1
+)
+
+
+
+################################################################################
+# Export header                                                                #
+################################################################################
+
+include(GenerateExportHeader)
+generate_export_header(qschematic-static
+    BASE_NAME qschematic
+    DEPRECATED_MACRO_NAME "QSCHEMATIC_DEPRECATED"
+    NO_DEPRECATED_MACRO_NAME "QSCHEMATIC_NO_DEPRECATED"
+    EXPORT_MACRO_NAME "QSCHEMATIC_EXPORT"
+    NO_EXPORT_MACRO_NAME "QSCHEMATIC_NO_EXPORT"
+    STATIC_DEFINE "QSCHEMATIC_STATIC_DEFINE"
+    DEFINE_NO_DEPRECATED
+)
+
+
+
+################################################################################
+# Install                                                                      #
+################################################################################
+
+# Some basic stuff we'll need in this section
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
+set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/cmake/QSchematic)
+
+# Install export header
+install(
+    FILES ${PROJECT_BINARY_DIR}/qschematic_export.h
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/qschematic
+)
+
+# Targets
+install(
+    TARGETS
+        qschematic-static
+    EXPORT QSchematicTargets
+    LIBRARY
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        COMPONENT lib
+    ARCHIVE
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        COMPONENT lib
+    RUNTIME
+        DESTINATION ${CMAKE_INSTALL_BINDIR}
+        COMPONENT bin
+    INCLUDES
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/qschematic
+)
+
+# Package version
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/QSchematic/QSchematicConfigVersion.cmake"
+    VERSION ${QSchematic_VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
+install(
+    FILES
+        QSchematicConfig.cmake
+        "${CMAKE_CURRENT_BINARY_DIR}/QSchematic/QSchematicConfigVersion.cmake"
+    DESTINATION ${ConfigPackageLocation}
+)
+
+# Package configuration
+configure_file(QSchematicConfig.cmake
+    "${CMAKE_CURRENT_BINARY_DIR}/QSchematic/QSchematicConfig.cmake"
+    COPYONLY
+)
+
+# Package export targets
+export(
+    EXPORT QSchematicTargets
+    FILE "${CMAKE_CURRENT_BINARY_DIR}/QSchematic/QSchematicTargets.cmake"
+    NAMESPACE QSchematic::
+)
+install(
+    EXPORT QSchematicTargets
+    FILE QSchematicTargets.cmake
+    NAMESPACE QSchematic::
+    DESTINATION ${ConfigPackageLocation}
+)

@@ -8,6 +8,7 @@ option(BUILD_DEMO "Whether to build the demo project" on)
 # C++ options
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Qt5 stuff
 set(CMAKE_AUTOMOC ON)
