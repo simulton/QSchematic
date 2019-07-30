@@ -8,7 +8,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
 
 # List of source files
-set(SOURCES
+set(SOURCES_PRIVATE
     commands/commanditemadd.cpp
     commands/commanditemmove.cpp
     commands/commanditemremove.cpp
@@ -35,7 +35,7 @@ set(SOURCES
 )
 
 # List of header files
-set(HEADERS
+set(HEADERS_PUBLIC
     commands/commanditemadd.h
     commands/commanditemmove.h
     commands/commanditemremove.h
@@ -73,16 +73,67 @@ find_package(Qt5
         Gui
         Widgets)
 
-# Include GPDS packages
+# Include GPDS package
 find_package(Gpds 0.1.0 REQUIRED)
 
-# Generate static library
-add_library(qschematic-static STATIC ${HEADERS} ${SOURCES})
-set_target_properties(qschematic-static
-    PROPERTIES
-        OUTPUT_NAME "qschematic"
-        POSITION_INDEPENDENT_CODE 1)
-target_link_libraries(qschematic-static Qt5::Core Qt5::Widgets Qt5::Gui)
+
+
+################################################################################
+# Object library                                                               #
+################################################################################
+
+add_library(qschematic-objs OBJECT "")
+target_compile_features(qschematic-objs
+    PUBLIC
+        cxx_std_17)
+target_sources(qschematic-objs
+    PUBLIC
+        ${HEADERS_PUBLIC}
+    PRIVATE
+        ${SOURCES_PRIVATE})
+target_include_directories(qschematic-objs
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    INTERFACE
+        $<INSTALL_INTERFACE:include>)
+target_link_libraries(qschematic-objs Qt5::Core Qt5::Gui Qt5::Widgets)
+target_link_libraries(qschematic-objs Gpds::gpds-static)
+
+
+################################################################################
+# Shared library                                                               #
+################################################################################
+
+add_library(qschematic-shared SHARED $<TARGET_OBJECTS:qschematic-objs>)
+target_include_directories(
+    qschematic-shared
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    INTERFACE
+        $<INSTALL_INTERFACE:include>
+)
+target_link_libraries(qschematic-shared Qt5::Core Qt5::Gui Qt5::Widgets)
+target_link_libraries(qschematic-shared Gpds::gpds-static)
+
+
+################################################################################
+# Static library                                                               #
+################################################################################
+
+add_library(qschematic-static STATIC $<TARGET_OBJECTS:qschematic-objs>)
+target_compile_definitions(
+    qschematic-static
+    PUBLIC
+        QSCHEMATIC_STATIC_DEFINE
+)
+target_include_directories(
+    qschematic-static
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    INTERFACE
+        $<INSTALL_INTERFACE:include>
+)
+target_link_libraries(qschematic-static Qt5::Core Qt5::Gui Qt5::Widgets)
 target_link_libraries(qschematic-static Gpds::gpds-static)
 
 
@@ -91,7 +142,9 @@ target_link_libraries(qschematic-static Gpds::gpds-static)
 ################################################################################
 
 set_target_properties(
+    qschematic-objs
     qschematic-static
+    qschematic-shared
     PROPERTIES
         OUTPUT_NAME "qschematic"
         ARCHIVE_OUTPUT_NAME "qschematic"
@@ -106,7 +159,7 @@ set_target_properties(
 ################################################################################
 
 include(GenerateExportHeader)
-generate_export_header(qschematic-static
+generate_export_header(qschematic-shared
     BASE_NAME qschematic
     DEPRECATED_MACRO_NAME "QSCHEMATIC_DEPRECATED"
     NO_DEPRECATED_MACRO_NAME "QSCHEMATIC_NO_DEPRECATED"
@@ -136,6 +189,7 @@ install(
 # Targets
 install(
     TARGETS
+        qschematic-shared
         qschematic-static
     EXPORT QSchematicTargets
     LIBRARY

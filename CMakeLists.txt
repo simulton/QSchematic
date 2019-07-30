@@ -20,5 +20,5 @@ add_subdirectory(qschematic)
 
 # Include the example(s)
 if ( BUILD_DEMO )
-    add_subdirectory(demo)
+    #add_subdirectory(demo)
 endif()
