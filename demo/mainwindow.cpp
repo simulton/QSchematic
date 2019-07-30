@@ -202,6 +202,7 @@ void MainWindow::createActions()
     // Open
     _actionOpen = new QAction;
     _actionOpen->setText("Open");
+    _actionOpen->setIcon( QIcon( ":/folder_open.svg" ) );
     _actionOpen->setToolTip("Open a file");
     connect(_actionOpen, &QAction::triggered, [this]{
         load();
@@ -211,6 +212,7 @@ void MainWindow::createActions()
     _actionSave = new QAction;
     _actionSave->setText("Save");
     _actionSave->setToolTip("Save to a file");
+    _actionSave->setIcon( QIcon( ":/save.svg" ) );
     connect(_actionSave, &QAction::triggered, [this]{
         save();
     });
@@ -219,6 +221,7 @@ void MainWindow::createActions()
     _actionPrint = new QAction;
     _actionPrint->setText("Print");
     _actionPrint->setShortcut(QKeySequence::Print);
+    _actionPrint->setIcon( QIcon( ":/print.svg" ) );
     connect(_actionPrint, &QAction::triggered, [this]{
         print();
     });
@@ -279,7 +282,7 @@ void MainWindow::createActions()
 
     // Generate netlist
     _actionGenerateNetlist = new QAction("Generate netlist");
-    _actionGenerateNetlist->setIcon( QIcon( ":/generate_netlist.svg" ) );
+    _actionGenerateNetlist->setIcon( QIcon( ":/netlist.svg" ) );
     connect(_actionGenerateNetlist, &QAction::triggered, [this]{
         QSchematic::Netlist<> netlist;
         QSchematic::NetlistGenerator::generate(netlist, *_scene);

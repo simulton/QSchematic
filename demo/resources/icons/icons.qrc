@@ -7,6 +7,9 @@
         <file alias="mode_normal.svg">svg/mode_normal.svg</file>
         <file alias="mode_wire.svg">svg/mode_wire.svg</file>
         <file alias="wire_rightangle.svg">svg/wire_rightangle.svg</file>
-        <file alias="generate_netlist.svg">svg/generate_netlist.svg</file>
+        <file alias="netlist.svg">svg/netlist.svg</file>
+        <file alias="folder_open.svg">svg/folder_open1.svg</file>
+        <file alias="save.svg">svg/save.svg</file>
+        <file alias="print.svg">svg/print.svg</file>
     </qresource>
 </RCC>
