@@ -1,0 +1,15 @@
+<svg id="Ebene_1" data-name="Ebene 1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #454545;
+      }
+    </style>
+  </defs>
+  <title>bug</title>
+  <g>
+    <path class="cls-1" d="M8,6h8a4.5,4.5,0,0,0-1.32-2l1.67-1.68-.7-.7-1.81,1.8a4,4,0,0,0-3.68,0L8.35,1.65l-.7.7L9.32,4A4.5,4.5,0,0,0,8,6Z"/>
+    <path class="cls-1" d="M18,10.5h2V9H18a2,2,0,0,0-2-2H13V21c2.49,0,4.29-2.09,4.83-4.5H20V15H18V13.5h2V12H18V10.5Z"/>
+    <path class="cls-1" d="M6,9H4v1.5H6V12H4v1.5H6V15H4v1.5H6.17C6.71,18.91,8.51,21,11,21V7H8A2,2,0,0,0,6,9Z"/>
+  </g>
+</svg>

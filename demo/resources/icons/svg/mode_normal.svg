@@ -1,0 +1,16 @@
+<svg id="Ebene_1" data-name="Ebene 1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #454545;
+      }
+    </style>
+  </defs>
+  <title>mode_normal</title>
+  <g id="Icons_Material" data-name="Icons Material">
+    <polygon class="cls-1" points="2 15 2 20 2 21 2 22 9 22 9 19 5 19 5 15 2 15"/>
+    <polygon class="cls-1" points="9 2 4 2 3 2 2 2 2 9 5 9 5 5 9 5 9 2"/>
+    <polygon class="cls-1" points="22 9 22 4 22 3 22 2 15 2 15 5 19 5 19 9 22 9"/>
+    <polygon class="cls-1" points="14 9 14 22 18 18 23 18 14 9"/>
+  </g>
+</svg>

@@ -30,7 +30,7 @@ set(HEADERS_PRIVATE
     itemslibrary/itemslibraryview.h
     itemslibrary/itemsslibrarywidget.h
     mainwindow.h
-    resources.h)
+)
 
 # Source files
 set(SOURCES_PRIVATE
@@ -47,7 +47,12 @@ set(SOURCES_PRIVATE
     itemslibrary/itemsslibrarywidget.cpp
     main.cpp
     mainwindow.cpp
-    resources.cpp)
+)
+
+# Resources files
+set(RESOURCES
+    resources/icons/icons.qrc
+)
 
 # Compile executable
 add_executable(qschematic-demo)
@@ -55,6 +60,7 @@ target_sources(qschematic-demo
     PRIVATE
         ${HEADERS_PRIVATE}
         ${SOURCES_PRIVATE}
+        ${RESOURCES}
 )
 target_link_libraries(qschematic-demo Qt5::Core Qt5::Widgets Qt5::Gui Qt5::PrintSupport)
 target_link_libraries(qschematic-demo qschematic-static)

@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="undo.svg">svg/undo.svg</file>
+        <file alias="redo.svg">svg/redo.svg</file>
+        <file alias="grid.svg">svg/grid.svg</file>
+        <file alias="bug.svg">svg/bug.svg</file>
+        <file alias="mode_normal.svg">svg/mode_normal.svg</file>
+        <file alias="mode_wire.svg">svg/mode_wire.svg</file>
+        <file alias="wire_rightangle.svg">svg/wire_rightangle.svg</file>
+        <file alias="generate_netlist.svg">svg/generate_netlist.svg</file>
+    </qresource>
+</RCC>

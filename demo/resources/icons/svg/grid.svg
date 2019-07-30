@@ -1,0 +1,13 @@
+<svg id="Ebene_1" data-name="Ebene 1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #454545;
+      }
+    </style>
+  </defs>
+  <title>grid</title>
+  <g id="Icons_Material" data-name="Icons Material">
+    <path class="cls-1" d="M4,8H8V4H4Zm6,12h4V16H10ZM4,20H8V16H4Zm0-6H8V10H4Zm6,0h4V10H10Zm6-6h4V4H16ZM10,8h4V4H10Zm6,6h4V10H16Zm0,6h4V16H16Z"/>
+  </g>
+</svg>

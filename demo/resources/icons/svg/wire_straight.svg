@@ -1,0 +1,30 @@
+<svg id="Ebene_1" data-name="Ebene 1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #454545;
+        stroke-miterlimit: 10;
+        stroke-width: 2px;
+      }
+
+      .cls-2 {
+        fill: #fff;
+      }
+
+      .cls-3 {
+        fill: #454545;
+      }
+    </style>
+  </defs>
+  <title>wire_straight</title>
+  <line class="cls-1" x1="4" y1="20" x2="20" y2="4"/>
+  <g>
+    <rect class="cls-2" x="3" y="17" width="4" height="4"/>
+    <path class="cls-3" d="M6,18v2H4V18H6m2-2H2v6H8V16Z"/>
+  </g>
+  <g>
+    <rect class="cls-2" x="17" y="3" width="4" height="4"/>
+    <path class="cls-3" d="M20,4V6H18V4h2m2-2H16V8h6V2Z"/>
+  </g>
+</svg>

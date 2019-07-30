@@ -24,13 +24,11 @@
 #endif
 #include "../qschematic/scene.h"
 #include "../qschematic/view.h"
-#include "../qschematic/settings.h"
 #include "../qschematic/items/node.h"
 #include "../qschematic/items/itemfactory.h"
 #include "../qschematic/netlist.h"
 #include "../qschematic/netlistgenerator.h"
 #include "mainwindow.h"
-#include "resources.h"
 #include "items/customitemfactory.h"
 #include "items/operation.h"
 #include "items/operationconnector.h"
@@ -111,11 +109,11 @@ MainWindow::MainWindow(QWidget *parent)
     QToolBar* editorToolbar = new QToolBar;
     editorToolbar->addAction(_actionUndo);
     editorToolbar->addAction(_actionRedo);
+    editorToolbar->addSeparator();
     editorToolbar->addAction(_actionModeNormal);
     editorToolbar->addAction(_actionModeWire);
     editorToolbar->addSeparator();
     editorToolbar->addAction(_actionRouteStraightAngles);
-    editorToolbar->addAction(_actionPreserveStraightAngles);
     editorToolbar->addSeparator();
     editorToolbar->addAction(_actionGenerateNetlist);
     addToolBar(editorToolbar);
@@ -227,16 +225,19 @@ void MainWindow::createActions()
 
     // Undo
     _actionUndo = _scene->undoStack()->createUndoAction(this, QStringLiteral("Undo"));
+    _actionUndo->setIcon( QIcon( ":/undo.svg") );
     _actionUndo->setText("Undo");
     _actionUndo->setShortcut(QKeySequence::Undo);
 
     // Redo
     _actionRedo = _scene->undoStack()->createRedoAction(this, QStringLiteral("Redo"));
+    _actionRedo->setIcon( QIcon( ":/redo.svg") );
     _actionRedo->setText("Redo");
     _actionRedo->setShortcut(QKeySequence::Redo);
 
     // Mode: Normal
     _actionModeNormal = new QAction("Normal Mode", this);
+    _actionModeNormal->setIcon( QIcon( ":/mode_normal.svg") );
     _actionModeNormal->setToolTip("Change to the normal mode (allows to move components).");
     _actionModeNormal->setCheckable(true);
     _actionModeNormal->setChecked(true);
@@ -244,6 +245,7 @@ void MainWindow::createActions()
 
     // Mode: Wire
     _actionModeWire = new QAction("Wire Mode", this);
+    _actionModeWire->setIcon( QIcon( ":/mode_wire.svg") );
     _actionModeWire->setToolTip("Change to the wire mode (allows to draw wires).");
     _actionModeWire->setCheckable(true);
     connect(_actionModeWire, &QAction::triggered, [this]{ _scene->setMode(QSchematic::Scene::WireMode); });
@@ -254,7 +256,8 @@ void MainWindow::createActions()
     actionGroupMode->addAction(_actionModeWire);
 
     // Show grid
-    _actionShowGrid = new QAction;
+    _actionShowGrid = new QAction("Toggle Grid");
+    _actionShowGrid->setIcon( QIcon( ":/grid.svg") );
     _actionShowGrid->setCheckable(true);
     _actionShowGrid->setChecked(_settings.showGrid);
     _actionShowGrid->setToolTip("Toggle grid visibility");
@@ -265,23 +268,18 @@ void MainWindow::createActions()
 
     // Route straight angles
     _actionRouteStraightAngles = new QAction("Wire angles");
+    _actionRouteStraightAngles->setIcon( QIcon( ":/wire_rightangle.svg") );
     _actionRouteStraightAngles->setCheckable(true);
     _actionRouteStraightAngles->setChecked(_settings.routeStraightAngles);
     connect(_actionRouteStraightAngles, &QAction::toggled, [this](bool checked){
         _settings.routeStraightAngles = checked;
-        settingsChanged();
-    });
-
-    // Preserve straight angles
-    _actionPreserveStraightAngles = new QAction("Preserve angles");
-    _actionPreserveStraightAngles->setCheckable(true);
-    _actionPreserveStraightAngles->setChecked(_settings.preserveStraightAngles);
-    connect(_actionPreserveStraightAngles, &QAction::toggled, [this](bool checked){
         _settings.preserveStraightAngles = checked;
         settingsChanged();
     });
 
+    // Generate netlist
     _actionGenerateNetlist = new QAction("Generate netlist");
+    _actionGenerateNetlist->setIcon( QIcon( ":/generate_netlist.svg" ) );
     connect(_actionGenerateNetlist, &QAction::triggered, [this]{
         QSchematic::Netlist<> netlist;
         QSchematic::NetlistGenerator::generate(netlist, *_scene);
@@ -293,6 +291,7 @@ void MainWindow::createActions()
     // Debug mode
     _actionDebugMode = new QAction("Debug");
     _actionDebugMode->setCheckable(true);
+    _actionDebugMode->setIcon( QIcon( ":/bug.svg") );
     _actionDebugMode->setChecked(_settings.debug);
     connect(_actionDebugMode, &QAction::toggled, [this](bool checked){
         _settings.debug = checked;
