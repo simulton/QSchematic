@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.12)
 project(qschematic)
 
 # User options
-option(BUILD_DEMO "Whether to build the demo project" OFF)
+option(BUILD_DEMO "Whether to build the demo project" ON)
 
 # C++ options
 set(CMAKE_CXX_STANDARD 17)
