@@ -703,7 +703,7 @@ void Scene::wireMovePoint(const QPointF& point, Wire& wire, const QVector2D& mov
                     Line line(prevPoint, currPoint);
 
                     // Make sure that two wire points never collide
-                    if (i >= 2 && Line(currPoint+movedBy.toPointF(), prevPoint).lenght() <= 2) {
+                    if (wire.pointsRelative().count() > 3 and i >= 2 and Line(currPoint+movedBy.toPointF(), prevPoint).lenght() <= 2) {
                         wire.moveLineSegmentBy(i-2, movedBy);
                     }
 
@@ -724,7 +724,7 @@ void Scene::wireMovePoint(const QPointF& point, Wire& wire, const QVector2D& mov
                     Line line(currPoint, nextPoint);
 
                     // Make sure that two wire points never collide
-                    if (Line(currPoint+movedBy.toPointF(), nextPoint).lenght() <= 2) {
+                    if (wire.pointsRelative().count() > 3 and Line(currPoint+movedBy.toPointF(), nextPoint).lenght() <= 2) {
                         wire.moveLineSegmentBy(i+1, movedBy);
                     }
 
