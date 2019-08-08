@@ -78,7 +78,7 @@ void Item::copyAttributes(Item& dest) const
 
 void Item::addItemTypeIdToContainer(Gpds::Container& container) const
 {
-    container.addAttribute( "type_id", QString::number(type()) );
+    container.addAttribute( "type_id", type() );
 }
 
 Scene* Item::scene() const
