@@ -5,6 +5,9 @@ project(qschematic)
 # User options
 option(BUILD_DEMO "Whether to build the demo project" ON)
 
+# User settings
+set(CMAKE_DEBUG_POSTFIX d)
+
 # C++ options
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
