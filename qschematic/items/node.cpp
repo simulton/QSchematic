@@ -44,6 +44,10 @@ Gpds::Container Node::toContainer() const
     // Connectors
     Gpds::Container connectorsContainer;
     for (const auto& connector : connectors()) {
+        if ( _specialConnectors.contains( connector.get() ) ) {
+            continue;
+        }
+
         connectorsContainer.addValue("connector", connector->toContainer());
     }
 
@@ -108,6 +112,10 @@ void Node::copyAttributes(Node& dest) const
     // Connectors
     dest.clearConnectors();
     for (const auto& connector : _connectors) {
+        if ( _specialConnectors.contains( connector.get() ) ) {
+            continue;
+        }
+
         auto connectorClone = qgraphicsitem_cast<Connector*>(connector->deepCopy().release());
         connectorClone->setParentItem(&dest);
         dest._connectors << std::shared_ptr<Connector>(connectorClone);
@@ -123,6 +131,7 @@ void Node::copyAttributes(Node& dest) const
     dest._connectorsMovable = _connectorsMovable;
     dest._connectorsSnapPolicy = _connectorsSnapPolicy;
     dest._connectorsSnapToGrid = _connectorsSnapToGrid;
+    dest._specialConnectors = _specialConnectors;
 }
 
 Node::Mode Node::mode() const
@@ -199,6 +208,16 @@ bool Node::allowMouseResize() const
 bool Node::allowMouseRotate() const
 {
     return _allowMouseRotate;
+}
+
+void Node::addSpecialConnector(const Connector* connector)
+{
+    _specialConnectors.push_back( connector );
+}
+
+void Node::setSpecialConnectors(QVector<const Connector*>&& connectors)
+{
+    _specialConnectors = std::move( connectors );
 }
 
 QMap<RectanglePoint, QRectF> Node::resizeHandles() const
