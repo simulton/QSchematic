@@ -44,7 +44,7 @@ Gpds::Container Node::toContainer() const
     // Connectors
     Gpds::Container connectorsContainer;
     for (const auto& connector : connectors()) {
-        if ( _specialConnectors.contains( connector.get() ) ) {
+        if ( _specialConnectors.contains( connector ) ) {
             continue;
         }
 
@@ -112,7 +112,7 @@ void Node::copyAttributes(Node& dest) const
     // Connectors
     dest.clearConnectors();
     for (const auto& connector : _connectors) {
-        if ( _specialConnectors.contains( connector.get() ) ) {
+        if ( _specialConnectors.contains( connector ) ) {
             continue;
         }
 
@@ -210,14 +210,11 @@ bool Node::allowMouseRotate() const
     return _allowMouseRotate;
 }
 
-void Node::addSpecialConnector(const Connector* connector)
+void Node::addSpecialConnector(const std::shared_ptr<Connector>& connector)
 {
     _specialConnectors.push_back( connector );
-}
 
-void Node::setSpecialConnectors(QVector<const Connector*>&& connectors)
-{
-    _specialConnectors = std::move( connectors );
+    addConnector( connector );
 }
 
 QMap<RectanglePoint, QRectF> Node::resizeHandles() const
@@ -260,7 +257,6 @@ bool Node::addConnector(const std::shared_ptr<Connector>& connector)
     }
 
     connector->setParentItem(this);
-    connector->setVisible(true);
     connector->setMovable(_connectorsMovable);
     connector->setSnapPolicy(_connectorsSnapPolicy);
     connector->setSnapToGrid(_connectorsSnapToGrid);
@@ -277,9 +273,9 @@ bool Node::removeConnector(const std::shared_ptr<Connector>& connector)
     }
 
     connector->setParentItem(nullptr);
-    connector->setVisible(false);
 
     _connectors.removeAll(connector);
+    _specialConnectors.removeAll(connector);
 
     return true;
 }

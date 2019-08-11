@@ -76,8 +76,7 @@ namespace QSchematic {
 
     protected:
         void copyAttributes(Node& dest) const;
-        void addSpecialConnector(const Connector* connectors);
-        void setSpecialConnectors(QVector<const Connector*>&& connectors);
+        void addSpecialConnector(const std::shared_ptr<Connector>& connectors);
         QMap<RectanglePoint, QRectF> resizeHandles() const;
         QRectF rotationHandle() const;
         virtual void paintResizeHandles(QPainter& painter);
@@ -94,7 +93,7 @@ namespace QSchematic {
         Connector::SnapPolicy _connectorsSnapPolicy;
         bool _connectorsSnapToGrid;
         QList<std::shared_ptr<Connector>> _connectors;
-        QVector<const Connector*> _specialConnectors;  // Ignored in serialization and deep-copy
+        QList<std::shared_ptr<Connector>> _specialConnectors;  // Ignored in serialization and deep-copy
     };
 
 }
