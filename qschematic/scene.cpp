@@ -8,14 +8,12 @@
 #include <QMimeData>
 #include <QtMath>
 #include "scene.h"
-#include "settings.h"
 #include "commands/commanditemmove.h"
 #include "commands/commanditemadd.h"
 #include "items/itemfactory.h"
 #include "items/item.h"
 #include "items/itemmimedata.h"
 #include "items/node.h"
-#include "items/connector.h"
 #include "items/wire.h"
 #include "items/wirenet.h"
 
@@ -766,21 +764,6 @@ QList<std::shared_ptr<Wire>> Scene::wiresConnectedTo(const Node& node, const QVe
     return list;
 }
 
-void Scene::showPopup(const Item& item)
-{
-    // Retrieve widget
-    auto widget = item.popupInfobox();
-
-    // Create proxy
-    if (widget) {
-        _popupInfobox = std::make_unique<QGraphicsProxyWidget>();
-        _popupInfobox->setWidget(widget.release());
-        QGraphicsScene::addItem(_popupInfobox.get());
-        _popupInfobox->setPos(_lastMousePos + QPointF(5, 5));
-        _popupInfobox->setZValue(100);
-    }
-}
-
 void Scene::addWireNet(const std::shared_ptr<WireNet>& wireNet)
 {
     // Sanity check
@@ -939,9 +922,6 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
     event->accept();
-
-    // Get rid of any popup infobox
-    _popupInfobox.reset();
 
     // Retrieve the new mouse position
     QPointF newMousePos = event->scenePos();
@@ -1106,7 +1086,6 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
             _newWire->setAcceptHoverEvents(true);
             _newWire->setFlag(QGraphicsItem::ItemIsSelectable, true);
             _newWire->simplify();
-            connect(_newWire.get(), &Wire::showPopup, this, &Scene::showPopup);
             _newWire.reset();
 
             return;
@@ -1258,7 +1237,6 @@ void Scene::setupNewItem(Item& item)
 
     // Connections
     connect(&item, &Item::moved, this, &Scene::itemMoved);
-    connect(&item, &Item::showPopup, this, &Scene::showPopup);
     connect(&item, &Item::rotated, this, &Scene::itemRotated);
 }
 

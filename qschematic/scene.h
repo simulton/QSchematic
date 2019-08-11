@@ -3,8 +3,6 @@
 #include <memory>
 #include <functional>
 #include <QGraphicsScene>
-#include <QScopedPointer>
-#include <QGraphicsProxyWidget>
 #include <QUndoStack>
 #include <gpds/serialize.h>
 #include "settings.h"
@@ -106,7 +104,6 @@ namespace QSchematic {
         QList<std::shared_ptr<Item>> _selectedItems;
         QMap<std::shared_ptr<Item>, QPointF> _initialItemPositions;
         QPointF _initialCursorPosition;
-        std::unique_ptr<QGraphicsProxyWidget> _popupInfobox;
         QUndoStack* _undoStack;
 
     private slots:
@@ -117,7 +114,6 @@ namespace QSchematic {
         void wirePointMoved(Wire& wire, WirePoint& point);
         void wireMovePoint(const QPointF& point, Wire& wire, const QVector2D& movedBy) const;
         QList<std::shared_ptr<Wire>> wiresConnectedTo(const Node& node, const QVector2D& offset) const;
-        void showPopup(const Item& item);
     };
 
 }

@@ -1,6 +1,7 @@
 #include <QPen>
 #include <QBrush>
 #include <QPainter>
+#include <QVector2D>
 #include "../qschematic/items/wirepoint.h"
 #include "../qschematic/scene.h"
 #include "../qschematic/settings.h"

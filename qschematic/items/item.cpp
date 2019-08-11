@@ -386,8 +386,3 @@ void Item::update()
     // Base class
     QGraphicsObject::update();
 }
-
-std::unique_ptr<QWidget> Item::popupInfobox() const
-{
-    return nullptr;
-}
