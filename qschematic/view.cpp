@@ -153,7 +153,7 @@ void View::mouseReleaseEvent(QMouseEvent *event)
 void View::setScene(Scene* scene)
 {
     if (scene) {
-        connect(scene, &Scene::modeChanged, [this](Scene::Mode newMode){
+        connect(scene, &Scene::modeChanged, [this](int newMode){
             switch (newMode) {
             case Scene::NormalMode:
                 viewport()->setCursor(Qt::ArrowCursor);
@@ -161,6 +161,9 @@ void View::setScene(Scene* scene)
 
             case Scene::WireMode:
                 viewport()->setCursor(Qt::CrossCursor);
+                break;
+
+            default:
                 break;
             }
         });

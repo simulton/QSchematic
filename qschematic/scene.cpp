@@ -155,7 +155,7 @@ void Scene::setWireFactory(const std::function<std::unique_ptr<Wire>()>& factory
     _wireFactory = factory;
 }
 
-void Scene::setMode(Scene::Mode mode)
+void Scene::setMode(int mode)
 {
     // Dont do anything unnecessary
     if (mode == _mode) {
@@ -185,7 +185,7 @@ void Scene::setMode(Scene::Mode mode)
     emit modeChanged(_mode);
 }
 
-Scene::Mode Scene::mode() const
+int Scene::mode() const
 {
     return _mode;
 }

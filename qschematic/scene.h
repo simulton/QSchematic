@@ -37,8 +37,8 @@ namespace QSchematic {
 
         void setSettings(const Settings& settings);
         void setWireFactory(const std::function<std::unique_ptr<Wire>()>& factory);
-        void setMode(Mode mode);
-        Mode mode() const;
+        void setMode(int mode);
+        int mode() const;
         void toggleWirePosture();
 
         bool isDirty() const;
@@ -65,7 +65,7 @@ namespace QSchematic {
         QUndoStack* undoStack() const;
 
     signals:
-        void modeChanged(Mode newMode);
+        void modeChanged(int newMode);
         void isDirtyChanged(bool isDirty);
         void itemAdded(const std::shared_ptr<Item>& item);
         void itemRemoved(const std::shared_ptr<Item>& item);
@@ -99,7 +99,7 @@ namespace QSchematic {
         Settings _settings;
         QPixmap _backgroundPixmap;
         std::function<std::unique_ptr<Wire>()> _wireFactory;
-        Mode _mode;
+        int _mode;
         std::shared_ptr<Wire> _newWire;
         bool _newWireSegment;
         bool _invertWirePosture;

@@ -58,7 +58,7 @@ MainWindow::MainWindow(QWidget *parent)
     // Scene
     _scene->setSettings(_settings);
     _scene->setWireFactory([]{ return std::make_unique<FancyWire>(); });
-    connect(_scene, &QSchematic::Scene::modeChanged, [this](QSchematic::Scene::Mode mode){
+    connect(_scene, &QSchematic::Scene::modeChanged, [this](int mode){
         switch (mode) {
         case QSchematic::Scene::NormalMode:
             _actionModeNormal->setChecked(true);
@@ -66,6 +66,9 @@ MainWindow::MainWindow(QWidget *parent)
 
         case QSchematic::Scene::WireMode:
             _actionModeWire->setChecked(true);
+            break;
+
+        default:
             break;
         }
     });
