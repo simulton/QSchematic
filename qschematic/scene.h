@@ -23,7 +23,9 @@ namespace QSchematic {
     public:
         enum Mode {
             NormalMode,
-            WireMode
+            WireMode,
+
+            UserMode = 1023
         };
         Q_ENUM(Mode)
 
@@ -36,6 +38,7 @@ namespace QSchematic {
         void setSettings(const Settings& settings);
         void setWireFactory(const std::function<std::unique_ptr<Wire>()>& factory);
         void setMode(Mode mode);
+        Mode mode() const;
         void toggleWirePosture();
 
         bool isDirty() const;

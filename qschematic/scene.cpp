@@ -184,6 +184,12 @@ void Scene::setMode(Scene::Mode mode)
     // Let the world know
     emit modeChanged(_mode);
 }
+
+Scene::Mode Scene::mode() const
+{
+    return _mode;
+}
+
 void Scene::toggleWirePosture()
 {
     _invertWirePosture = !_invertWirePosture;
