@@ -283,6 +283,21 @@ QList<std::shared_ptr<Item>> Scene::items() const
     return _items;
 }
 
+QList<std::shared_ptr<Item>> Scene::itemsAt(const QPointF &scenePos, Qt::SortOrder order) const
+{
+    QList<std::shared_ptr<Item>> items;
+
+    for (auto& graphicsItem : QGraphicsScene::items(scenePos, Qt::IntersectsItemShape, order)) {
+        Item* item = qgraphicsitem_cast<Item*>(graphicsItem);
+        if (item) {
+            auto sharedItem = sharedItemPointer( *item );
+            items << sharedItem;
+        }
+    }
+
+    return items;
+}
+
 QList<std::shared_ptr<Item>> Scene::items(int itemType) const
 {
     QList<std::shared_ptr<Item>> items;
@@ -783,20 +798,6 @@ void Scene::addWireNet(const std::shared_ptr<WireNet>& wireNet)
 
     // Keep track of stuff
     _nets.append(wireNet);
-}
-
-QList<Item*> Scene::itemsAt(const QPointF& scenePos, Qt::SortOrder order) const
-{
-    QList<Item*> list;
-
-    for (auto& graphicsItem : QGraphicsScene::items(scenePos, Qt::IntersectsItemShape, order)) {
-        Item* item = qgraphicsitem_cast<Item*>(graphicsItem);
-        if (item) {
-            list << item;
-        }
-    }
-
-    return list;
 }
 
 std::shared_ptr<Item> Scene::sharedItemPointer(const Item& item) const

@@ -49,6 +49,7 @@ namespace QSchematic {
         bool removeItem(const std::shared_ptr<Item>& item);
         QList<std::shared_ptr<Item>> items() const;
         QList<std::shared_ptr<Item>> items(int itemType) const;
+        QList<std::shared_ptr<Item>> itemsAt(const QPointF& scenePos, Qt::SortOrder order = Qt::DescendingOrder) const;
         QVector<std::shared_ptr<Item>> selectedItems() const;
         QList<std::shared_ptr<Node>> nodes() const;
         bool addWire(const std::shared_ptr<Wire>& wire);
@@ -91,7 +92,6 @@ namespace QSchematic {
         void renderCachedBackground();
         void setupNewItem(Item& item);
         void addWireNet(const std::shared_ptr<WireNet>& wireNet);
-        QList<Item*> itemsAt(const QPointF& scenePos, Qt::SortOrder order = Qt::DescendingOrder) const;
         std::shared_ptr<Item> sharedItemPointer(const Item& item) const;
 
         QList<std::shared_ptr<Item>> _items;
