@@ -1,10 +1,12 @@
 #include <QtMath>
 #include <QPainter>
 #include <QTransform>
+#include <QVector2D>
 #include "connector.h"
 #include "node.h"
 #include "label.h"
 #include "../utils.h"
+#include "wire.h"
 
 const qreal SIZE               = 1;
 const QColor COLOR_BODY_FILL   = QColor(Qt::green);
@@ -18,7 +20,9 @@ Connector::Connector(int type, const QPoint& gridPoint, const QString& text, QGr
     Item(type, parent),
     _snapPolicy(NodeSizerectOutline),
     _forceTextDirection(false),
-    _textDirection(Direction::LeftToRight)
+    _textDirection(Direction::LeftToRight),
+    _wire(nullptr),
+    _wirePointIndex(-1)
 {
     // Label
     _label = std::make_shared<Label>();
@@ -35,6 +39,12 @@ Connector::Connector(int type, const QPoint& gridPoint, const QString& text, QGr
 
     // Connections
     connect(this, &Connector::moved, [this]{ calculateTextDirection(); });
+    connect(this, &Connector::moved, this, &Connector::moveWirePoint);
+    Node* node = static_cast<Node*>(parentItem());
+    if (node) {
+        connect(node, &Item::moved, this, &Connector::moveWirePoint);
+        connect(node, &Item::rotated, this, &Connector::moveWirePoint);
+    }
 
     // Misc
     setGridPos(gridPoint);
@@ -193,11 +203,19 @@ QVariant Connector::itemChange(QGraphicsItem::GraphicsItemChange change, const Q
         }
 
         // Honor snap-to-grid
-        if (snapToGrid()) {
+        if (parentNode->canSnapToGrid() and snapToGrid()) {
             proposedPos = _settings.snapToGrid(proposedPos);
         }
 
         return proposedPos;
+    }
+    case QGraphicsItem::ItemParentHasChanged:
+    {
+        Node* node = static_cast<Node*>(parentItem());
+        if (node) {
+            connect(node, &Item::moved, this, &Connector::moveWirePoint);
+            connect(node, &Item::rotated, this, &Connector::moveWirePoint);
+        }
     }
 
     default:
@@ -334,4 +352,44 @@ void Connector::calculateTextDirection()
         _label->setPos(labelNewPos);
         _label->setTransform(t);
     }
+}
+
+void Connector::moveWirePoint() const
+{
+    if (not _wire) {
+        return;
+    }
+
+    if (_wirePointIndex < -1 or _wire->wirePointsRelative().count() < _wirePointIndex) {
+        return;
+    }
+
+    QPointF oldPos = _wire->wirePointsRelative().at(_wirePointIndex).toPointF();
+    QVector2D moveBy = QVector2D(scenePos() - (_wire->pos() + oldPos));
+    _wire->movePointBy(_wirePointIndex, moveBy);
+}
+
+void Connector::attachWire(Wire* wire, int index)
+{
+    if (not wire) {
+        return;
+    }
+
+    if (_wirePointIndex < -1 or wire->wirePointsRelative().count() < _wirePointIndex) {
+        return;
+    }
+
+    _wire = wire;
+    _wirePointIndex = index;
+}
+
+void Connector::detachWire()
+{
+    _wire = nullptr;
+    _wirePointIndex = -1;
+}
+
+const Wire* Connector::attachedWire() const
+{
+    return _wire;
 }

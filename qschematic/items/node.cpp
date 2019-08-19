@@ -146,9 +146,25 @@ void Node::setSize(const QSizeF& size)
         return;
     }
 
+    QSizeF oldSize = _size;
+
     prepareGeometryChange();
 
     _size = size;
+
+    // Move connectors
+    for (const auto& connector: connectors()) {
+        if (qFuzzyCompare(connector->posX(), oldSize.width()) or
+            connector->posX() > size.width())
+        {
+            connector->setX(size.width());
+        }
+        if (qFuzzyCompare(connector->posY(), oldSize.height()) or
+            connector->posY() > size.height())
+        {
+            connector->setY(size.height());
+        }
+    }
 
     setTransformOriginPoint(sizeRect().center());
 

@@ -256,6 +256,7 @@ void Wire::simplify()
     prepareGeometryChange();
     simplify(_points);
     calculateBoundingRect();
+    emit simplified();
 }
 
 void Wire::simplify(QVector<WirePoint>& points)
@@ -306,12 +307,103 @@ void Wire::movePointBy(int index, const QVector2D& moveBy)
         return;
     }
 
-    prepareGeometryChange();
-    _points[index] = WirePoint(_points.at(index).toPointF() + moveBy.toPointF());
-    calculateBoundingRect();
-    update();
+    // If there are only two points (one line segment) and we are supposed to preserve
+    // straight angles, we need to insert two additional points if we are not moving in
+    // the direction of the line.
+    if (pointsRelative().count() == 2 && _settings.preserveStraightAngles) {
+        const Line line = lineSegments().first();
 
-    emit pointMoved(*this, _points[index]);
+        // Only do this if we're not moving in the direction of the line. Because in that case
+        // this is unnecessary as we're just moving one of the two points.
+        if ((line.isHorizontal() && !qFuzzyIsNull(moveBy.y())) || (line.isVertical() && !qFuzzyIsNull(moveBy.x()))) {
+            qreal lineLength = line.lenght();
+            QPointF p;
+
+            // The line is horizontal
+            if (line.isHorizontal()) {
+                QPointF leftPoint = line.p1();
+                if (line.p2().x() < line.p1().x()) {
+                    leftPoint = line.p2();
+                }
+
+                p.rx() = leftPoint.x() + static_cast<int>(lineLength/2);
+                p.ry() = leftPoint.y();
+
+            // The line is vertical
+            } else {
+                QPointF upperPoint = line.p1();
+                if (line.p2().x() < line.p1().x()) {
+                    upperPoint = line.p2();
+                }
+
+                p.rx() = upperPoint.x();
+                p.ry() = upperPoint.y() + static_cast<int>(lineLength/2);
+            }
+
+            // Insert twice as these two points will form the new additional vertical or
+            // horizontal line segment that is required to preserver straight angles.
+            insertPoint(1, p);
+            insertPoint(1, p);
+
+            // Account for inserted points
+            if (index == 1) {
+                index += 2;
+            }
+        }
+    }
+
+    // Move the points
+    QPointF currPoint = pointsRelative().at(index);
+    // Preserve straight angles (if supposed to)
+    if (_settings.preserveStraightAngles) {
+
+        // Move previous point
+        if (index >= 1) {
+            QPointF prevPoint = pointsRelative().at(index-1);
+            Line line(prevPoint, currPoint);
+
+            // Make sure that two wire points never collide
+            if (pointsRelative().count() > 3 and index >= 2 and Line(currPoint+moveBy.toPointF(), prevPoint).lenght() <= 2) {
+                moveLineSegmentBy(index-2, moveBy);
+            }
+
+            // The line is horizontal
+            if (line.isHorizontal()) {
+                movePointTo(index-1, prevPoint + QPointF(0, moveBy.toPointF().y()));
+            }
+
+            // The line is vertical
+            else if (line.isVertical()) {
+                movePointTo(index-1, prevPoint + QPointF(moveBy.toPointF().x(), 0));
+            }
+        }
+
+        // Move next point
+        if (index < pointsRelative().count()-1) {
+            QPointF nextPoint = pointsRelative().at(index+1);
+            Line line(currPoint, nextPoint);
+
+            // Make sure that two wire points never collide
+            if (pointsRelative().count() > 3 and Line(currPoint+moveBy.toPointF(), nextPoint).lenght() <= 2) {
+                moveLineSegmentBy(index+1, moveBy);
+            }
+
+            // The line is horizontal
+            if (line.isHorizontal()) {
+                movePointTo(index+1, nextPoint + QPointF(0, moveBy.toPointF().y()));
+            }
+
+            // The line is vertical
+            else if (line.isVertical()) {
+                movePointTo(index+1, nextPoint + QPointF(moveBy.toPointF().x(), 0));
+            }
+        }
+    }
+
+    // Move the actual point itself
+    movePointTo(index, currPoint + moveBy.toPointF());
+
+    simplify();
 }
 
 void Wire::movePointTo(int index, const QPointF& moveTo)
@@ -322,7 +414,7 @@ void Wire::movePointTo(int index, const QPointF& moveTo)
 
     prepareGeometryChange();
     _points[index] = WirePoint(moveTo - gridPos());
-    calculateBoundingRect();    
+    calculateBoundingRect();
     update();
 
     emit pointMoved(*this, _points[index]);

@@ -5,6 +5,7 @@
 namespace QSchematic {
 
     class Label;
+    class Wire;
 
     class Connector : public Item
     {
@@ -43,18 +44,25 @@ namespace QSchematic {
         virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value) override;
         virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
+        void attachWire(Wire* wire, int index);
+        void detachWire();
+        const Wire* attachedWire() const;
+
     protected:
         void copyAttributes(Connector& dest) const;
 
     private:
         void calculateSymbolRect();
         void calculateTextDirection();
+        void moveWirePoint() const;
 
         SnapPolicy _snapPolicy;
         QRectF _symbolRect;
         bool _forceTextDirection;
         Direction _textDirection;
         std::shared_ptr<Label> _label;
+        Wire* _wire;
+        int _wirePointIndex;
     };
 
 }

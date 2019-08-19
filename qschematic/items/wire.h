@@ -50,6 +50,7 @@ namespace QSchematic {
 
     signals:
         void pointMoved(Wire& wire, WirePoint& point);
+        void simplified();
 
     protected:
         void copyAttributes(Wire& dest) const;
