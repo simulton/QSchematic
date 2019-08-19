@@ -34,6 +34,7 @@ Operation::Operation(int type, QGraphicsItem* parent) :
     });
     connect(this, &QSchematic::Item::settingsChanged, [this]{
         label()->setConnectionPoint(sizeRect().center());
+        label()->setSettings(_settings);
     });
 
     // Misc

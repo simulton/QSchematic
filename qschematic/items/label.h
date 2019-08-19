@@ -25,6 +25,7 @@ namespace QSchematic {
         virtual std::unique_ptr<Item> deepCopy() const override;
 
         virtual QRectF boundingRect() const final;
+        virtual QPainterPath shape() const final;
 
         void setText(const QString& text);
         QString text() const;

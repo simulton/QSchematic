@@ -76,7 +76,18 @@ void Label::copyAttributes(Label& dest) const
 
 QRectF Label::boundingRect() const
 {
-    return _textRect;
+    QRectF rect = _textRect;
+    if(isHighlighted()) {
+        rect = rect.united(QRectF(_textRect.center(), mapFromParent(_connectionPoint)));
+    }
+    return rect;
+}
+
+QPainterPath Label::shape() const
+{
+    QPainterPath path;
+    path.addRect(_textRect);
+    return path;
 }
 
 void Label::setText(const QString& text)
@@ -181,4 +192,13 @@ void Label::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWi
     painter->setBrush(Qt::NoBrush);
     painter->setFont(_font);
     painter->drawText(_textRect, _text, textOption);
+
+    // Draw the bounding rect if debug mode is enabled
+    if (_settings.debug) {
+        painter->setPen(Qt::red);
+        painter->setBrush(Qt::NoBrush);
+        painter->drawRect(boundingRect());
+        painter->setPen(Qt::blue);
+        painter->drawPath(shape());
+    }
 }
