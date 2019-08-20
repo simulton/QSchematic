@@ -217,7 +217,7 @@ void Wire::insertPoint(int index, const QPointF& point)
     }
 
     prepareGeometryChange();
-    _points.insert(index, WirePoint(point - gridPos()));
+    _points.insert(index, WirePoint(_settings.snapToGrid(point - gridPos())));
     calculateBoundingRect();
 
     emit pointMoved(*this, _points[index]);
@@ -332,7 +332,7 @@ void Wire::movePointBy(int index, const QVector2D& moveBy)
             // The line is vertical
             } else {
                 QPointF upperPoint = line.p1();
-                if (line.p2().x() < line.p1().x()) {
+                if (line.p2().y() < line.p1().y()) {
                     upperPoint = line.p2();
                 }
 
@@ -368,12 +368,12 @@ void Wire::movePointBy(int index, const QVector2D& moveBy)
             }
 
             // The line is horizontal
-            if (line.isHorizontal()) {
+            if (line.isHorizontal() and !qFuzzyIsNull(moveBy.y())) {
                 movePointTo(index-1, prevPoint + QPointF(0, moveBy.toPointF().y()));
             }
 
             // The line is vertical
-            else if (line.isVertical()) {
+            else if (line.isVertical() and !qFuzzyIsNull(moveBy.x())) {
                 movePointTo(index-1, prevPoint + QPointF(moveBy.toPointF().x(), 0));
             }
         }
@@ -389,12 +389,12 @@ void Wire::movePointBy(int index, const QVector2D& moveBy)
             }
 
             // The line is horizontal
-            if (line.isHorizontal()) {
+            if (line.isHorizontal() and !qFuzzyIsNull(moveBy.y())) {
                 movePointTo(index+1, nextPoint + QPointF(0, moveBy.toPointF().y()));
             }
 
             // The line is vertical
-            else if (line.isVertical()) {
+            else if (line.isVertical() and !qFuzzyIsNull(moveBy.x())) {
                 movePointTo(index+1, nextPoint + QPointF(moveBy.toPointF().x(), 0));
             }
         }
@@ -427,8 +427,8 @@ void Wire::moveLineSegmentBy(int index, const QVector2D& moveBy)
     }
 
     // Move the line segment
-    movePointBy(index, moveBy);
-    movePointBy(index+1, moveBy);
+    movePointTo(index, _points[index].toPointF() + moveBy.toPointF());
+    movePointTo(index+1, _points[index+1].toPointF() + moveBy.toPointF());
 }
 
 void Wire::setPointIsJunction(int index, bool isJunction)
@@ -541,7 +541,7 @@ void Wire::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
         event->accept();
 
         // Determine movement vector
-        const Line& line = lineSegments().at(_lineSegmentToMoveIndex);
+        const Line line = lineSegments().at(_lineSegmentToMoveIndex);
         QVector2D moveLineBy(0, 0);
         if (line.isHorizontal()) {
             moveLineBy = QVector2D(0, static_cast<float>(curPos.y() - _prevMousePos.y()));
@@ -557,7 +557,7 @@ void Wire::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
         }
 
         // Move line segment
-        moveLineSegmentBy(_lineSegmentToMoveIndex, moveLineBy/2);
+        moveLineSegmentBy(_lineSegmentToMoveIndex, moveLineBy);
     }
 
     // Nothing interesting for us to do
