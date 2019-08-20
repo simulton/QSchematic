@@ -557,8 +557,7 @@ void Wire::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
         }
 
         // Move line segment
-        moveLineSegmentBy(_lineSegmentToMoveIndex, moveLineBy);
-
+        moveLineSegmentBy(_lineSegmentToMoveIndex, moveLineBy/2);
     }
 
     // Nothing interesting for us to do
@@ -569,7 +568,7 @@ void Wire::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
     }
 
     // Store last known mouse pos
-    _prevMousePos = event->scenePos();
+    _prevMousePos = curPos;
 }
 
 void Wire::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
