@@ -662,6 +662,20 @@ void Scene::addWireNet(const std::shared_ptr<WireNet>& wireNet)
 
     // Keep track of stuff
     _nets.append(wireNet);
+
+    // Attach the wires to the nodes
+    for (const auto& wire: wireNet->wires()) {
+        for (const auto& node: nodes()) {
+            for (const auto& connector: node->connectors()) {
+                for (const auto& point: wire->wirePointsAbsolute()) {
+                    if (QVector2D(connector->scenePos() - point.toPointF()).length() < 1) {
+                        connector->attachWire(wire.get(), wire->wirePointsAbsolute().indexOf(point));
+                        break;
+                    }
+                }
+            }
+        }
+    }
 }
 
 std::shared_ptr<Item> Scene::sharedItemPointer(const Item& item) const
