@@ -299,7 +299,7 @@ void Connector::calculateTextDirection()
 
             // Create list of edges
             QVector<QLineF> edges(4);
-            const QRect& rect = QRect(0, 0, parentNode->size().width()*_settings.gridSize, parentNode->size().height()*_settings.gridSize);
+            const QRectF& rect = parentNode->sizeRect();
             edges[0] = QLineF(rect.topLeft(), rect.topRight());
             edges[1] = QLineF(rect.topRight(), rect.bottomRight());
             edges[2] = QLineF(rect.bottomRight(), rect.bottomLeft());
