@@ -40,6 +40,7 @@ namespace QSchematic {
 
         QPointF connectionPoint() const;
         std::shared_ptr<Label> label() const;
+        void alignLabel();
         virtual QRectF boundingRect() const override;
         virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value) override;
         virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;

@@ -23,8 +23,8 @@ const qreal PEN_WIDTH          = 1.5;
 OperationConnector::OperationConnector(const QPoint& gridPoint, const QString& text, QGraphicsItem* parent) :
     QSchematic::Connector(::ItemType::OperationConnectorType, gridPoint, text, parent)
 {
-    label()->setVisible(false);
-    setForceTextDirection(true);
+    label()->setVisible(true);
+    setForceTextDirection(false);
 }
 
 Gpds::Container OperationConnector::toContainer() const
@@ -123,6 +123,13 @@ void OperationConnector::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
             }
         });
 
+        // Align label
+        QAction* alignLabel = new QAction;
+        alignLabel->setText("Align Label");
+        connect(alignLabel, &QAction::triggered, [this] {
+            this->alignLabel();
+        });
+
         // Delete
         QAction* deleteFromModel = new QAction;
         deleteFromModel->setText("Delete");
@@ -157,6 +164,7 @@ void OperationConnector::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         // Assemble
         menu.addAction(labelVisibility);
         menu.addAction(text);
+        menu.addAction(alignLabel);
         menu.addAction(deleteFromModel);
     }
 

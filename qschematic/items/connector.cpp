@@ -12,7 +12,7 @@ const qreal SIZE               = 1;
 const QColor COLOR_BODY_FILL   = QColor(Qt::green);
 const QColor COLOR_BODY_BORDER = QColor(Qt::black);
 const qreal PEN_WIDTH          = 1.5;
-const int TEXT_PADDING         = 8;
+const int TEXT_PADDING         = 15;
 
 using namespace QSchematic;
 
@@ -273,6 +273,42 @@ std::shared_ptr<Label> Connector::label() const
     return _label;
 }
 
+void Connector::alignLabel()
+{
+    QPointF labelNewPos = _label->pos();
+    QTransform t;
+    const QRectF& textRect = _label->textRect();
+
+    switch (_textDirection) {
+        case LeftToRight:
+            labelNewPos.rx() = TEXT_PADDING;
+            labelNewPos.ry() = textRect.height()/4;
+            t.rotate(0);
+            break;
+
+        case RightToLeft:
+            labelNewPos.rx() = -textRect.width() - TEXT_PADDING;
+            labelNewPos.ry() = textRect.height()/4;
+            t.rotate(0);
+            break;
+
+        case TopToBottom:
+            labelNewPos.rx() = textRect.height()/4;
+            labelNewPos.ry() = textRect.width() + TEXT_PADDING;
+            t.rotate(-90);
+            break;
+
+        case BottomToTop:
+            labelNewPos.rx() = textRect.height()/4;
+            labelNewPos.ry() = - TEXT_PADDING;
+            t.rotate(-90);
+            break;
+    }
+
+    _label->setPos(labelNewPos);
+    _label->setTransform(t);
+}
+
 void Connector::calculateSymbolRect()
 {
     _symbolRect = QRectF(-SIZE*_settings.gridSize/2.0, -SIZE*_settings.gridSize/2.0, SIZE*_settings.gridSize, SIZE*_settings.gridSize);
@@ -329,42 +365,6 @@ void Connector::calculateTextDirection()
                 break;
             }
         }
-    }
-
-    // Place the label accordingly
-    {
-        QPointF labelNewPos = _label->pos();
-        QTransform t;
-        const QRectF& textRect = _label->textRect();
-
-        switch (_textDirection) {
-        case LeftToRight:
-            labelNewPos.rx() = _symbolRect.x() + _symbolRect.width() + TEXT_PADDING;
-            labelNewPos.ry() = _symbolRect.height() - textRect.height() / 2;
-            t.rotate(0);
-            break;
-
-        case RightToLeft:
-            labelNewPos.rx() = _symbolRect.x() - TEXT_PADDING - textRect.width();
-            labelNewPos.ry() = _symbolRect.height() - textRect.height() / 2;
-            t.rotate(0);
-            break;
-
-        case TopToBottom:
-            labelNewPos.rx() = _symbolRect.width() - textRect.width() / 2;
-            labelNewPos.ry() = _symbolRect.y() + _symbolRect.height() + TEXT_PADDING;
-            t.rotate(-90);
-            break;
-
-        case BottomToTop:
-            labelNewPos.rx() = _symbolRect.width() - textRect.width() / 2;
-            labelNewPos.ry() = _symbolRect.y() - TEXT_PADDING;
-            t.rotate(-90);
-            break;
-        }
-
-        _label->setPos(labelNewPos);
-        _label->setTransform(t);
     }
 }
 
