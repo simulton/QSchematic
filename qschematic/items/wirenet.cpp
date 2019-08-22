@@ -89,6 +89,7 @@ bool WireNet::addWire(const std::shared_ptr<Wire>& wire)
 
     // Add the wire
     connect(wire.get(), &Wire::pointMoved, this, &WireNet::wirePointMoved);
+    connect(wire.get(), &Wire::pointMovedByUser, this, &WireNet::wirePointMovedByUser);
     connect(wire.get(), &Wire::highlightChanged, this, &WireNet::wireHighlightChanged);
     _wires.append(wire);
 
@@ -201,6 +202,11 @@ void WireNet::wirePointMoved(Wire& wire, WirePoint& point)
 
     // Let the others know too
     emit pointMoved(wire, point);
+}
+
+void WireNet::wirePointMovedByUser(Wire& wire, WirePoint& point)
+{
+    emit pointMovedByUser(wire, point);
 }
 
 void WireNet::labelHighlightChanged(const Item& item, bool highlighted)

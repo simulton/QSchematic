@@ -115,6 +115,7 @@ namespace QSchematic {
         void itemHighlightChanged(const Item& item, bool isHighlighted);
         void wireNetHighlightChanged(bool highlighted);
         void wirePointMoved(Wire& wire, WirePoint& point);
+        void wirePointMovedByUser(Wire& wire, WirePoint& point);
     };
 
 }

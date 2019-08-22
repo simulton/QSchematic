@@ -220,6 +220,7 @@ void Wire::insertPoint(int index, const QPointF& point)
     _points.insert(index, WirePoint(_settings.snapToGrid(point - gridPos())));
     calculateBoundingRect();
 
+    emit pointInserted(index);
     emit pointMoved(*this, _points[index]);
 }
 
@@ -254,47 +255,51 @@ void Wire::removePoint(const QPointF& point)
 void Wire::simplify()
 {
     prepareGeometryChange();
-    simplify(_points);
+    removeDuplicatePoints();
+    removeObsoletePoints();
     calculateBoundingRect();
-    emit simplified();
 }
 
-void Wire::simplify(QVector<WirePoint>& points)
+void Wire::removeDuplicatePoints()
 {
-    removeDuplicatePoints(points);
-    removeObsoletePoints(points);
-}
-
-void Wire::removeDuplicatePoints(QVector<WirePoint>& points)
-{
-    QVector<WirePoint> newList;
-
-    for (auto it = points.begin(); it != points.end(); it++) {
-        if (!newList.contains(*it)) {
-            newList << *it;
-        }
+    // A wire needs at least two points
+    if (_points.count() == 2) {
+        return;
     }
 
-    points = std::move(newList);
+    int i = 0;
+    while (i < _points.count()-1) {
+        WirePoint p1 = _points.at(i);
+        WirePoint p2 = _points.at(i+1);
+
+        // Check if p2 is the same as p1
+        if (p1 == p2) {
+            emit pointRemoved(i+1);
+            _points.removeAt(i+1);
+        } else {
+            i++;
+        }
+    }
 }
 
-void Wire::removeObsoletePoints(QVector<WirePoint>& points)
+void Wire::removeObsoletePoints()
 {
     // Don't do anything if there are not at least three line segments
-    if (points.count() < 3) {
+    if (_points.count() < 3) {
         return;
     }
 
     // Compile a list of obsolete points
-    auto it = points.begin()+2;
-    while (it != points.end()) {
+    auto it = _points.begin()+2;
+    while (it != _points.end()) {
         QPointF p1 = (*(it - 2)).toPointF();
         QPointF p2 = (*(it - 1)).toPointF();
         QPointF p3 = (*it).toPointF();
 
         // Check if p2 is on the line created by p1 and p3
         if (Utils::pointIsOnLine(QLineF(p1, p2), p3)) {
-            it = points.erase(it-1);
+            emit pointRemoved(_points.indexOf(*(it-1)));
+            it = _points.erase(it-1);
         } else {
             it++;
         }
@@ -532,7 +537,7 @@ void Wire::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 
         // Move
         movePointTo(_pointToMoveIndex, curPos);
-
+        emit pointMovedByUser(*this, _points[_pointToMoveIndex]);
     }
 
     // Move a line segment?

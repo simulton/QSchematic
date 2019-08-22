@@ -102,6 +102,20 @@ void Connector::copyAttributes(Connector& dest) const
     dest._textDirection = _textDirection;
 }
 
+void Connector::pointInserted(int index)
+{
+    if (_wirePointIndex >= index) {
+        _wirePointIndex++;
+    }
+}
+
+void Connector::pointRemoved(int index)
+{
+    if (_wirePointIndex >= index) {
+        _wirePointIndex--;
+    }
+}
+
 void Connector::setSnapPolicy(Connector::SnapPolicy policy)
 {
     _snapPolicy = policy;
@@ -360,7 +374,7 @@ void Connector::moveWirePoint() const
         return;
     }
 
-    if (_wirePointIndex < -1 or _wire->wirePointsRelative().count() < _wirePointIndex) {
+    if (_wirePointIndex < -1 or _wire->wirePointsRelative().count() <= _wirePointIndex) {
         return;
     }
 
@@ -375,16 +389,23 @@ void Connector::attachWire(Wire* wire, int index)
         return;
     }
 
-    if (_wirePointIndex < -1 or wire->wirePointsRelative().count() < _wirePointIndex) {
+    if (index < -1 or wire->wirePointsRelative().count() < index) {
         return;
     }
 
+    detachWire();
+
     _wire = wire;
     _wirePointIndex = index;
+
+    // Update index when points are inserted/removed
+    connect(wire, &Wire::pointInserted, this, &Connector::pointInserted);
+    connect(wire, &Wire::pointRemoved, this, &Connector::pointRemoved);
 }
 
 void Connector::detachWire()
 {
+    disconnect(_wire, nullptr, this, nullptr);
     _wire = nullptr;
     _wirePointIndex = -1;
 }
@@ -392,4 +413,9 @@ void Connector::detachWire()
 const Wire* Connector::attachedWire() const
 {
     return _wire;
+}
+
+int Connector::attachedWirepoint() const
+{
+    return _wirePointIndex;
 }

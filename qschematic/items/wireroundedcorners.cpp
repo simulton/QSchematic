@@ -51,7 +51,6 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
 
     // Retrieve the scene points as we'll need them a lot
     auto sceneWirePoints(wirePointsRelative());
-    simplify(sceneWirePoints);
     QVector<WirePoint> scenePoints;
     for (const auto& wirePoint : sceneWirePoints) {
         scenePoints << wirePoint;

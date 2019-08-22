@@ -47,9 +47,14 @@ namespace QSchematic {
         void attachWire(Wire* wire, int index);
         void detachWire();
         const Wire* attachedWire() const;
+        int attachedWirepoint() const;
 
     protected:
         void copyAttributes(Connector& dest) const;
+
+    private slots:
+        void pointInserted(int index);
+        void pointRemoved(int index);
 
     private:
         void calculateSymbolRect();

@@ -131,6 +131,22 @@ void Scene::fromContainer(const Gpds::Container& container)
         }
     }
 
+    // Attach the wires to the nodes
+    for (const auto& net: _nets) {
+        for (const auto& wire: net->wires()) {
+            for (const auto& node: nodes()) {
+                for (const auto& connector: node->connectors()) {
+                    for (const auto& point: wire->wirePointsAbsolute()) {
+                        if (QVector2D(connector->scenePos() - point.toPointF()).length() < 1) {
+                            connector->attachWire(wire.get(), wire->wirePointsAbsolute().indexOf(point));
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     // Clear the undo history
     _undoStack->clear();
 }
@@ -351,42 +367,6 @@ bool Scene::addWire(const std::shared_ptr<Wire>& wire)
     // Sanity check
     if (!wire) {
         return false;
-    }
-
-    // Reattach connector when simplifing
-    connect(wire.get(), &Wire::simplified, this, [=]{
-        for (const auto& node: nodes()) {
-            for (const auto& connector: node->connectors()) {
-                const Wire* attachedWire = connector->attachedWire();
-                if (not attachedWire) {
-                    break;
-                }
-
-                if (attachedWire == wire.get()) {
-                    // Detach
-                    connector->detachWire();
-                    // Attach
-                    for (const auto& point: wire->wirePointsRelative()) {
-                        if (QVector2D(connector->scenePos() - (wire->pos() + point.toPointF())).length() < 1) {
-                            connector->attachWire(wire.get(), wire->wirePointsRelative().indexOf(point));
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-    });
-
-    // Attach wire to connector if needed
-    for (const auto& node: nodes()) {
-        for (const auto& connector: node->connectors()) {
-            for (const auto& point: wire->wirePointsRelative()) {
-                if (QVector2D(connector->scenePos() - (wire->pos() + point.toPointF())).length() < 1) {
-                    connector->attachWire(wire.get(), wire->wirePointsRelative().indexOf(point));
-                    break;
-                }
-            }
-        }
     }
 
     // Check if any point of the wire lies on any line segment of all existing line segments.
@@ -632,21 +612,42 @@ void Scene::wirePointMoved(Wire& rawWire, WirePoint& point)
         }
     }
 
+    // Add the wire
+    addWire(wire);
+}
+
+void Scene::wirePointMovedByUser(Wire& rawWire, WirePoint& point)
+{
+    int index = rawWire.wirePointsRelative().indexOf(point);
     // Detach from connector
     for (const auto& node: nodes()) {
         for (const auto& connector: node->connectors()) {
             const Wire* attachedWire = connector->attachedWire();
-            if (not attachedWire)
-                break;
+            if (not attachedWire) {
+                continue;
+            }
 
-            if (attachedWire == wire.get()) {
-                connector->detachWire();
+            if (attachedWire != &rawWire) {
+                continue;
+            }
+
+            if (connector->attachedWirepoint() == index) {
+                if (connector->scenePos().toPoint() != rawWire.pointsAbsolute().at(index).toPoint()) {
+                    connector->detachWire();
+                }
+                return;
             }
         }
     }
 
-    // Add the wire
-    addWire(wire);
+    // Attach to connector
+    for (const auto& node: nodes()) {
+        for (const auto& connector: node->connectors()) {
+            if (connector->scenePos().toPoint() == (rawWire.pos() + point.toPointF()).toPoint()) {
+                connector->attachWire(&rawWire, rawWire.wirePointsRelative().indexOf(point));
+            }
+        }
+    }
 }
 
 void Scene::addWireNet(const std::shared_ptr<WireNet>& wireNet)
@@ -658,24 +659,11 @@ void Scene::addWireNet(const std::shared_ptr<WireNet>& wireNet)
 
     // Setup
     connect(wireNet.get(), &WireNet::pointMoved, this, &Scene::wirePointMoved);
+    connect(wireNet.get(), &WireNet::pointMovedByUser, this, &Scene::wirePointMovedByUser);
     connect(wireNet.get(), &WireNet::highlightChanged, this, &Scene::wireNetHighlightChanged);
 
     // Keep track of stuff
     _nets.append(wireNet);
-
-    // Attach the wires to the nodes
-    for (const auto& wire: wireNet->wires()) {
-        for (const auto& node: nodes()) {
-            for (const auto& connector: node->connectors()) {
-                for (const auto& point: wire->wirePointsAbsolute()) {
-                    if (QVector2D(connector->scenePos() - point.toPointF()).length() < 1) {
-                        connector->attachWire(wire.get(), wire->wirePointsAbsolute().indexOf(point));
-                        break;
-                    }
-                }
-            }
-        }
-    }
 }
 
 std::shared_ptr<Item> Scene::sharedItemPointer(const Item& item) const
@@ -731,11 +719,20 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
                 }
                 _undoStack->push(new CommandItemAdd(this, _newWire));
             }
-
             // Snap to grid
             const QPointF& snappedPos = _settings.snapToGrid(event->scenePos());
             _newWire->appendPoint(snappedPos);
             _newWireSegment = true;
+
+            // Attach point to connector if needed
+            for (const auto& node: nodes()) {
+                for (const auto& connector: node->connectors()) {
+                    if (QVector2D(connector->scenePos() - snappedPos).length() < 1) {
+                        connector->attachWire(_newWire.get(), _newWire->pointsAbsolute().indexOf(snappedPos));
+                        break;
+                    }
+                }
+            }
         }
 
         break;

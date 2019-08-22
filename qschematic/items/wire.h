@@ -50,11 +50,12 @@ namespace QSchematic {
 
     signals:
         void pointMoved(Wire& wire, WirePoint& point);
-        void simplified();
+        void pointMovedByUser(Wire& wire, WirePoint& point);
+        void pointInserted(int index);
+        void pointRemoved(int index);
 
     protected:
         void copyAttributes(Wire& dest) const;
-        static void simplify(QVector<WirePoint>& points);
         void calculateBoundingRect();
 
         virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
@@ -68,8 +69,8 @@ namespace QSchematic {
     private:
         Q_DISABLE_COPY(Wire)
 
-        static void removeDuplicatePoints(QVector<WirePoint>& pointsRelative);
-        static void removeObsoletePoints(QVector<WirePoint>& pointsRelative);
+        void removeDuplicatePoints();
+        void removeObsoletePoints();
 
         QVector<WirePoint> _points;
         QRectF _rect;

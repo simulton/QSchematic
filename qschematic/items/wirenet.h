@@ -40,10 +40,12 @@ namespace QSchematic {
 
     signals:
         void pointMoved(Wire& wire, WirePoint& point);
+        void pointMovedByUser(Wire& wire, WirePoint& point);
         void highlightChanged(bool highlighted);
 
     private slots:
         void wirePointMoved(Wire& wire, WirePoint& point);
+        void wirePointMovedByUser(Wire& wire, WirePoint& point);
         void labelHighlightChanged(const Item& item, bool highlighted);
         void wireHighlightChanged(const Item& item, bool highlighted);
 
