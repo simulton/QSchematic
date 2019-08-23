@@ -61,6 +61,7 @@ namespace QSchematic {
         Connector::SnapPolicy connectorsSnapPolicy() const;
         void setConnectorsSnapToGrid(bool enabled);
         bool connectorsSnapToGrid() const;
+        void alignConnectorLabels() const;
 
         virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
         virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;

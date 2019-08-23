@@ -395,6 +395,14 @@ bool Node::connectorsSnapToGrid() const
     return _connectorsSnapToGrid;
 }
 
+void Node::alignConnectorLabels() const
+{
+    for (auto connector : _connectors) {
+        Q_ASSERT(connector);
+        connector->alignLabel();
+    }
+}
+
 void Node::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     event->accept();
