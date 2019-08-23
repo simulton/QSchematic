@@ -188,6 +188,13 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
             }
         });
 
+        // Align label
+        QAction* alignConnectorLabels = new QAction;
+        alignConnectorLabels->setText("Align connector labels");
+        connect(alignConnectorLabels, &QAction::triggered, [this] {
+            this->alignConnectorLabels();
+        });
+
         // Add connector
         QAction* newConnector = new QAction;
         newConnector->setText("Add connector");
@@ -241,6 +248,7 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         menu.addAction(labelVisibility);
         menu.addSeparator();
         menu.addAction(newConnector);
+        menu.addAction(alignConnectorLabels);
         menu.addSeparator();
         menu.addAction(duplicate);
         menu.addAction(deleteFromModel);
