@@ -228,6 +228,7 @@ QVariant Connector::itemChange(QGraphicsItem::GraphicsItemChange change, const Q
     {
         calculateTextDirection();
         alignLabel();
+        break;
     }
 
     case QGraphicsItem::ItemParentHasChanged:
@@ -239,6 +240,7 @@ QVariant Connector::itemChange(QGraphicsItem::GraphicsItemChange change, const Q
         }
         calculateTextDirection();
         alignLabel();
+        break;
     }
 
     default:
