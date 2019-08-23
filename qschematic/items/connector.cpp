@@ -223,6 +223,13 @@ QVariant Connector::itemChange(QGraphicsItem::GraphicsItemChange change, const Q
 
         return proposedPos;
     }
+
+    case QGraphicsItem::ItemPositionHasChanged:
+    {
+        calculateTextDirection();
+        alignLabel();
+    }
+
     case QGraphicsItem::ItemParentHasChanged:
     {
         Node* node = static_cast<Node*>(parentItem());
@@ -230,6 +237,8 @@ QVariant Connector::itemChange(QGraphicsItem::GraphicsItemChange change, const Q
             connect(node, &Item::moved, this, &Connector::moveWirePoint);
             connect(node, &Item::rotated, this, &Connector::moveWirePoint);
         }
+        calculateTextDirection();
+        alignLabel();
     }
 
     default:
