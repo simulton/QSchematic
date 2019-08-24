@@ -668,9 +668,22 @@ void Scene::addWireNet(const std::shared_ptr<WireNet>& wireNet)
 
 std::shared_ptr<Item> Scene::sharedItemPointer(const Item& item) const
 {
+    // Check for all known _items
     for (const auto& sharedPointer : _items) {
         if (sharedPointer.get() == &item) {
             return sharedPointer;
+        }
+    }
+
+    // Check for connectors
+    if (item.parentItem()) {
+        const Node* node = qgraphicsitem_cast<const Node*>( item.parentItem() );
+        if ( node ) {
+            for ( const auto& connector : node->connectors() ) {
+                if ( connector.get() == &item ) {
+                    return connector;
+                }
+            }
         }
     }
 
