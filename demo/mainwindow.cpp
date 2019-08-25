@@ -2,11 +2,7 @@
 #include <memory>
 #include <sstream>
 #include <QToolBar>
-#include <QSlider>
-#include <QLabel>
 #include <QAction>
-#include <QJsonObject>
-#include <QJsonDocument>
 #include <QFile>
 #include <QDir>
 #include <QMenuBar>
@@ -34,6 +30,7 @@
 #include "items/operationconnector.h"
 #include "items/fancywire.h"
 #include "itemslibrary/itemsslibrarywidget.h"
+#include "netlistviewer/netlistviewer.h"
 
 const QString FILE_FILTERS = "XML (*.xml)";
 
@@ -92,6 +89,13 @@ MainWindow::MainWindow(QWidget *parent)
     undoDockWiget->setWindowTitle("Command histoy");
     undoDockWiget->setWidget(_undoView);
     addDockWidget(Qt::LeftDockWidgetArea, undoDockWiget);
+
+    // Netlist viewer
+    _netlistViewer = new NetlistViewer();
+    QDockWidget* netlistviewerDockWidget = new QDockWidget;
+    netlistviewerDockWidget->setWindowTitle(QStringLiteral("Netlist Viewer"));
+    netlistviewerDockWidget->setWidget(_netlistViewer);
+    addDockWidget(Qt::LeftDockWidgetArea, netlistviewerDockWidget);
 
     // Menus
     {
@@ -287,11 +291,11 @@ void MainWindow::createActions()
     _actionGenerateNetlist = new QAction("Generate netlist");
     _actionGenerateNetlist->setIcon( QIcon( ":/netlist.svg" ) );
     connect(_actionGenerateNetlist, &QAction::triggered, [this]{
-        QSchematic::Netlist<> netlist;
+        QSchematic::Netlist<Operation*, OperationConnector*> netlist;
         QSchematic::NetlistGenerator::generate(netlist, *_scene);
-        QJsonDocument document(netlist.toJson());
 
-        QInputDialog::getMultiLineText(this, "Netlist", "Generated netlist", document.toJson(QJsonDocument::Indented));
+        Q_ASSERT( _netlistViewer );
+        _netlistViewer->setNetlist( netlist );
     });
 
     // Debug mode

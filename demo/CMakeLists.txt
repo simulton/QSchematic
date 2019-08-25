@@ -14,6 +14,8 @@ find_package(Gpds 0.1.0
 
 # Header files
 set(HEADERS_PRIVATE
+    common/treeitem.h
+    common/treemodel.h
     commands/commandnodeaddconnector.h
     commands/commands.h
     items/customitemfactory.h
@@ -29,11 +31,16 @@ set(HEADERS_PRIVATE
     itemslibrary/itemslibrarymodelitem.h
     itemslibrary/itemslibraryview.h
     itemslibrary/itemsslibrarywidget.h
+    netlistviewer/netlistviewer.h
+    netlistviewer/netlistviewermodel.h
+    netlistviewer/netlistviewerview.h
     mainwindow.h
 )
 
 # Source files
 set(SOURCES_PRIVATE
+    common/treeitem.cpp
+    common/treemodel.cpp
     commands/commandnodeaddconnector.cpp
     items/customitemfactory.cpp
     items/fancywire.cpp
@@ -45,6 +52,9 @@ set(SOURCES_PRIVATE
     itemslibrary/itemslibrarymodel.cpp
     itemslibrary/itemslibraryview.cpp
     itemslibrary/itemsslibrarywidget.cpp
+    netlistviewer/netlistviewer.cpp
+    netlistviewer/netlistviewermodel.cpp
+    netlistviewer/netlistviewerview.cpp
     main.cpp
     mainwindow.cpp
 )

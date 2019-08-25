@@ -15,6 +15,7 @@ namespace QSchematic {
 }
 
 class ItemsLibraryWidget;
+class NetlistViewer;
 
 class MainWindow : public QMainWindow
 {
@@ -40,6 +41,7 @@ private:
     QSchematic::Settings _settings;
     ItemsLibraryWidget* _itemLibraryWidget;
     QUndoView* _undoView;
+    NetlistViewer* _netlistViewer;
     QAction* _actionOpen;
     QAction* _actionSave;
     QAction* _actionPrint;
