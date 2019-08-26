@@ -72,6 +72,10 @@ target_sources(qschematic-demo
         ${SOURCES_PRIVATE}
         ${RESOURCES}
 )
+target_include_directories(qschematic-demo
+    PRIVATE
+        ..
+)
 target_link_libraries(qschematic-demo Qt5::Core Qt5::Widgets Qt5::Gui Qt5::PrintSupport)
 target_link_libraries(qschematic-demo qschematic-static)
 target_link_libraries(qschematic-demo Gpds::gpds-static)
