@@ -72,8 +72,18 @@ void Wire::fromContainer(const Gpds::Container& container)
     // Points
     const Gpds::Container* pointsContainer = container.getValue<Gpds::Container*>( "points" );
     if (pointsContainer) {
-        for (const Gpds::Container* pointContainer : pointsContainer->getValues<Gpds::Container*>( "point" ) ) {
-#warning ToDo: Get index argument
+        auto points =  pointsContainer->getValues<Gpds::Container*>( "point" );
+        // Sort points by index
+        std::sort(points.begin(), points.end(), [](Gpds::Container* a, Gpds::Container* b) {
+            std::optional<int> index1 = a->getAttribute<int>("index");
+            std::optional<int> index2 = b->getAttribute<int>("index");
+            if (!index1.has_value() || !index2.has_value()) {
+                qCritical("Wire::fromContainer(): Point has no index.");
+                return false;
+            }
+            return index1.value() < index2.value();
+        });
+        for (const Gpds::Container* pointContainer : points ) {
             _points.append( WirePoint( pointContainer->getValue<double>("x"), pointContainer->getValue<double>("y") ) );
         }
     }
