@@ -708,7 +708,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
         QGraphicsItem* item = itemAt(event->scenePos(), QTransform());
         if (item){
             Node* node = dynamic_cast<Node*>(item);
-            if (node && node->mode() != Node::None) {
+            if (node and node->mode() != Node::None) {
                 _movingNodes = false;
             } else {
                 _movingNodes = true;
