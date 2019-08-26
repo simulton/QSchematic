@@ -91,7 +91,6 @@ namespace QSchematic {
 
         bool isHighlighted() const;
         virtual void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
-        virtual void hoverMoveEvent(QGraphicsSceneHoverEvent* event) override;
         virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;
         virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value) override;
 
@@ -106,7 +105,6 @@ namespace QSchematic {
         bool _highlighted;
         QPointF _oldPos;
         qreal _oldRot;
-        QTimer* _hoverTimer;
     };
 
 }

@@ -1,7 +1,6 @@
 #include <QPainter>
 #include <QVector2D>
 #include <QGraphicsSceneHoverEvent>
-#include <QTimer>
 #include <QWidget>
 #include "item.h"
 #include "../scene.h"
@@ -16,13 +15,6 @@ Item::Item(int type, QGraphicsItem* parent) :
     _highlightEnabled(true),
     _highlighted(false)
 {
-    // Highlight timer
-    _hoverTimer = new QTimer(this);
-    _hoverTimer->setSingleShot(true);
-    connect(_hoverTimer, &QTimer::timeout, [this]{
-        emit showPopup(*this);
-    });
-
     // Misc
     setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
@@ -320,18 +312,10 @@ void Item::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
     update();
 }
 
-void Item::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
-{
-    Q_UNUSED(event)
-
-    _hoverTimer->start(_settings.popupDelay);
-}
-
 void Item::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
 {
     Q_UNUSED(event)
 
-    _hoverTimer->stop();
     setHighlighted(false);
     emit highlightChanged(*this, false);
 

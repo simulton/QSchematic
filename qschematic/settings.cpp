@@ -14,8 +14,7 @@ Settings::Settings() :
     resizeHandleSize(9),
     routeStraightAngles(true),
     preserveStraightAngles(true),
-    antialiasing(true),
-    popupDelay(600)
+    antialiasing(true)
 {
 }
 

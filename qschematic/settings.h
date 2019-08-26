@@ -32,7 +32,6 @@ namespace QSchematic {
         bool routeStraightAngles;
         bool preserveStraightAngles;
         bool antialiasing;
-        std::chrono::milliseconds popupDelay;
     };
 
 }
