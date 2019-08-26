@@ -88,12 +88,7 @@ const QSchematic::Item* ItemsLibraryModel::itemFromIndex(const QModelIndex& inde
     }
 
     // Retrieve the QSchematic::Item
-    auto item = static_cast<const QSchematic::Item*>(itemInfo->item);
-    if (!item) {
-        return nullptr;
-    }
-
-    return item;
+    return itemInfo->item;
 }
 
 QModelIndex ItemsLibraryModel::index(int row, int column, const QModelIndex& parent) const
@@ -292,7 +287,6 @@ QMimeData* ItemsLibraryModel::mimeData(const QModelIndexList& indexes) const
 
         return new QSchematic::ItemMimeData(std::move(itemClone));
     }
-        break;
 
     default:
         break;
