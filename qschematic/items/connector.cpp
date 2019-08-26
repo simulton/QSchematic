@@ -210,10 +210,6 @@ QVariant Connector::itemChange(QGraphicsItem::GraphicsItemChange change, const Q
         case NodeSizerectOutline:
             proposedPos = Utils::clipPointToRectOutline(proposedPos, parentNodeSizeRect);
             break;
-
-        case NodeShape:
-            proposedPos = Utils::clipPointToPath(proposedPos, QPainterPath());
-            break;
         }
 
         // Honor snap-to-grid

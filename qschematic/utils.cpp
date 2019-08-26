@@ -49,14 +49,6 @@ QPointF Utils::clipPointToRectOutline(QPointF point, const QRectF& rect)
     return point;
 }
 
-QPointF Utils::clipPointToPath(const QPointF& point, const QPainterPath& path)
-{
-    Q_UNUSED(path);
-#warning ToDo: Implement me
-
-    return point;
-}
-
 QPointF Utils::pointOnLineClosestToPoint(const QPointF& p1, const QPointF& p2, const QPointF& point)
 {
     // Algorithm based on: http://nic-gamedev.blogspot.ch/2011/11/using-vector-mathematics-and-bit-of_08.html

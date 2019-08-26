@@ -16,8 +16,7 @@ namespace QSchematic {
         enum SnapPolicy {
             Anywhere,
             NodeSizerect,
-            NodeSizerectOutline,
-            NodeShape
+            NodeSizerectOutline
         };
         Q_ENUM(SnapPolicy)
 
