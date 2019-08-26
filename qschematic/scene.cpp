@@ -23,7 +23,8 @@ Scene::Scene(QObject* parent) :
     QGraphicsScene(parent),
     _mode(NormalMode),
     _newWireSegment(false),
-    _invertWirePosture(true)
+    _invertWirePosture(true),
+    _movingNodes(false)
 {
     // Undo stack
     _undoStack = new QUndoStack;
@@ -703,6 +704,19 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
         // Handle selections
         QGraphicsScene::mousePressEvent(event);
 
+        // Check if moving nodes
+        QGraphicsItem* item = itemAt(event->scenePos(), QTransform());
+        if (item){
+            Node* node = dynamic_cast<Node*>(item);
+            if (node && node->mode() != Node::None) {
+                _movingNodes = false;
+            } else {
+                _movingNodes = true;
+            }
+        } else {
+            _movingNodes = false;
+        }
+
         // Store the initial position of all the selected items
         _initialItemPositions.clear();
         for (auto& item: selectedItems()) {
@@ -763,19 +777,10 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
     case NormalMode:
     {
         QGraphicsScene::mouseReleaseEvent(event);
-        // Move if none of the items is being resized or rotated
-        bool moving = true;
-        for (auto item : selectedItems()) {
-            Node* node = qgraphicsitem_cast<Node*>(item.get());
-            if (node && node->mode() != Node::None) {
-                moving = false;
-                break;
-            }
-        }
 
         // Reset the position for every selected item and
         // apply the translation through the undostack
-        if (moving) {
+        if (_movingNodes) {
             for (auto& i: selectedItems()) {
                 Item* item = qgraphicsitem_cast<Item*>(i.get());
                 // Move the item if it is movable and it was previously registered by the mousePressEvent
@@ -833,18 +838,8 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 
         // Move, resize or rotate if supposed to
         if (event->buttons() & Qt::LeftButton) {
-            // Figure out if we're moving a node
-            bool movingNode = false;
-            for (auto item : selectedItems()) {
-                Node* node = qgraphicsitem_cast<Node*>(item.get());
-                if (node && node->mode() == Node::None) {
-                    movingNode = true;
-                    break;
-                }
-            }
-
             // Move all selected items
-            if (movingNode) {
+            if (_movingNodes) {
                 for (auto& i : selectedItems()) {
                     Item* item = qgraphicsitem_cast<Item*>(i.get());
                     if (item and item->isMovable()) {

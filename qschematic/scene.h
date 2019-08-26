@@ -103,6 +103,7 @@ namespace QSchematic {
         std::shared_ptr<Wire> _newWire;
         bool _newWireSegment;
         bool _invertWirePosture;
+        bool _movingNodes;
         QPointF _lastMousePos;
         QList<std::shared_ptr<Item>> _selectedItems;
         QMap<std::shared_ptr<Item>, QPointF> _initialItemPositions;

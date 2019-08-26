@@ -27,7 +27,7 @@ View::View(QWidget* parent) :
     // Interaction stuff
     setMouseTracking(true);
     setAcceptDrops(true);
-    setDragMode(QGraphicsView::NoDrag);
+    setDragMode(QGraphicsView::RubberBandDrag);
 
     // Rendering options
     setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
