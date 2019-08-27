@@ -383,13 +383,13 @@ void Wire::movePointBy(int index, const QVector2D& moveBy)
             }
 
             // The line is horizontal
-            if (line.isHorizontal() and !qFuzzyIsNull(moveBy.y())) {
-                movePointTo(index-1, prevPoint + QPointF(0, moveBy.toPointF().y()));
+            if (line.isHorizontal()) {
+                movePointTo(index-1, pointsRelative().at(index-1) + QPointF(0, moveBy.toPointF().y()));
             }
 
             // The line is vertical
-            else if (line.isVertical() and !qFuzzyIsNull(moveBy.x())) {
-                movePointTo(index-1, prevPoint + QPointF(moveBy.toPointF().x(), 0));
+            else if (line.isVertical()) {
+                movePointTo(index-1, pointsRelative().at(index-1) + QPointF(moveBy.toPointF().x(), 0));
             }
         }
 
@@ -404,13 +404,13 @@ void Wire::movePointBy(int index, const QVector2D& moveBy)
             }
 
             // The line is horizontal
-            if (line.isHorizontal() and !qFuzzyIsNull(moveBy.y())) {
-                movePointTo(index+1, nextPoint + QPointF(0, moveBy.toPointF().y()));
+            if (line.isHorizontal()) {
+                movePointTo(index+1, pointsRelative().at(index+1) + QPointF(0, moveBy.toPointF().y()));
             }
 
             // The line is vertical
-            else if (line.isVertical() and !qFuzzyIsNull(moveBy.x())) {
-                movePointTo(index+1, nextPoint + QPointF(moveBy.toPointF().x(), 0));
+            else if (line.isVertical()) {
+                movePointTo(index+1, pointsRelative().at(index+1) + QPointF(moveBy.toPointF().x(), 0));
             }
         }
     }
