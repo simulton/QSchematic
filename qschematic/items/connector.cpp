@@ -400,6 +400,7 @@ void Connector::attachWire(Wire* wire, int index)
         return;
     }
 
+    // Detach wire if there is already one attached
     detachWire();
 
     _wire = wire;
@@ -408,10 +409,15 @@ void Connector::attachWire(Wire* wire, int index)
     // Update index when points are inserted/removed
     connect(wire, &Wire::pointInserted, this, &Connector::pointInserted);
     connect(wire, &Wire::pointRemoved, this, &Connector::pointRemoved);
+    connect(wire, &QObject::destroyed, this, &Connector::detachWire);
 }
 
 void Connector::detachWire()
 {
+    if (!_wire) {
+        return;
+    }
+
     disconnect(_wire, nullptr, this, nullptr);
     _wire = nullptr;
     _wirePointIndex = -1;
