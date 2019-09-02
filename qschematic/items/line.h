@@ -22,10 +22,10 @@ namespace QSchematic {
         bool isVertical() const;
         qreal lenght() const;
         QPointF midPoint() const;
-        bool containsPoint(const QPointF& point, unsigned tolerance = 0) const;
+        bool containsPoint(const QPointF& point, qreal tolerance = 0) const;
         QPointF pointOnLineClosestToPoint(const QPointF& point);
 
-        static bool containsPoint(const QLineF& line, const QPointF& point, unsigned tolerance = 0);
+        static bool containsPoint(const QLineF& line, const QPointF& point, qreal tolerance = 0);
 
     private:
         QPointF _p1;

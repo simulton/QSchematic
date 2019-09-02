@@ -1,5 +1,6 @@
 #include <QtGlobal>
 #include <QLineF>
+#include <QVector2D>
 #include "line.h"
 #include "../utils.h"
 
@@ -64,7 +65,7 @@ QPointF Line::midPoint() const
     return (_p1 + _p2) / 2;
 }
 
-bool Line::containsPoint(const QPointF& point, unsigned tolerance) const
+bool Line::containsPoint(const QPointF& point, qreal tolerance) const
 {
     return containsPoint(QLineF(_p1, _p2), point, tolerance);
 }
@@ -74,12 +75,25 @@ QPointF Line::pointOnLineClosestToPoint(const QPointF& point)
     return Utils::pointOnLineClosestToPoint(_p1, _p2, point);
 }
 
-bool Line::containsPoint(const QLineF& line, const QPointF& point, unsigned tolerance)
+bool Line::containsPoint(const QLineF& line, const QPointF& point, qreal tolerance)
 {
     const qreal MIN_LENGTH = 0.01;
-    QLineF imaginaryLine(point.x()-tolerance-MIN_LENGTH, point.y()-tolerance-MIN_LENGTH, point.x()+tolerance+MIN_LENGTH, point.y()+tolerance+MIN_LENGTH);
+    tolerance = qMax(static_cast<qreal>(tolerance), MIN_LENGTH);
 
-    if (line.intersect(imaginaryLine, nullptr) == QLineF::BoundedIntersection) {
+    // Find perpendicular line
+    QLineF normal = line.normalVector();
+    // Move line to point
+    QPointF offset = point - normal.p1();
+    normal.translate(offset);
+    // Set length to double the tolerance
+    normal.setLength(2*tolerance);
+    // Move line so that the center lays on the point
+    QVector2D unit(normal.unitVector().dx(), normal.unitVector().dy());
+    offset = (unit * -tolerance).toPointF();
+    normal.translate(offset);
+
+    // Check if the lines are intersecting
+    if (line.intersect(normal, nullptr) == QLineF::BoundedIntersection) {
         return true;
     }
 
