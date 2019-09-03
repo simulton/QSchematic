@@ -24,6 +24,7 @@ namespace QSchematic {
         QPointF midPoint() const;
         bool containsPoint(const QPointF& point, qreal tolerance = 0) const;
         QPointF pointOnLineClosestToPoint(const QPointF& point);
+        QLineF toLineF() const;
 
         static bool containsPoint(const QLineF& line, const QPointF& point, qreal tolerance = 0);
 

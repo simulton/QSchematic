@@ -50,7 +50,6 @@ namespace QSchematic {
         void wireHighlightChanged(const Item& item, bool highlighted);
 
     private:
-        void updateWireJunctions();
 
         QList<std::shared_ptr<Wire>> _wires;
         QString _name;

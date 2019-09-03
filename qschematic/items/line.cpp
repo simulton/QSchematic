@@ -75,6 +75,11 @@ QPointF Line::pointOnLineClosestToPoint(const QPointF& point)
     return Utils::pointOnLineClosestToPoint(_p1, _p2, point);
 }
 
+QLineF Line::toLineF() const
+{
+    return QLineF(_p1, _p2);
+}
+
 bool Line::containsPoint(const QLineF& line, const QPointF& point, qreal tolerance)
 {
     const qreal MIN_LENGTH = 0.01;

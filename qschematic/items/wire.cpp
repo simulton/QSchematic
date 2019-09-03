@@ -6,6 +6,7 @@
 #include <QApplication>
 #include <QMetaEnum>
 #include <QVector2D>
+#include <QtMath>
 #include "wire.h"
 #include "../utils.h"
 
@@ -147,7 +148,9 @@ QVector<WirePoint> Wire::wirePointsAbsolute() const
     QVector<WirePoint> absolutePoints(_points);
 
     for (WirePoint& point : absolutePoints) {
+        bool isJunction = point.isJunction();
         point = point + pos();
+        point.setIsJunction(isJunction);
     }
 
     return absolutePoints;
@@ -284,6 +287,10 @@ void Wire::removeDuplicatePoints()
 
         // Check if p2 is the same as p1
         if (p1 == p2) {
+            // If p1 is not a junction itself then inherit from p2
+            if (!p1.isJunction()) {
+                setPointIsJunction(i, p2.isJunction());
+            }
             emit pointRemoved(i+1);
             _points.removeAt(i+1);
         } else {
@@ -382,6 +389,26 @@ void Wire::movePointBy(int index, const QVector2D& moveBy)
                 moveLineSegmentBy(index-2, moveBy);
             }
 
+            // Move junctions before the points are moved
+            if (line.isHorizontal() or line.isVertical()) {
+                // Move connected junctions
+                for (const auto& wire: _connectedWires) {
+                    for (const auto& point: wire->junctions()) {
+                        if (line.containsPoint(point.toPointF())) {
+                            // Don't move it if it is on one of the points
+                            if (line.p1().toPoint() == point.toPoint() or line.p2().toPoint() == point.toPoint()) {
+                                continue;
+                            }
+                            if (line.isHorizontal()) {
+                                wire->movePointBy(wire->wirePointsAbsolute().indexOf(point), QVector2D(0, moveBy.y()));
+                            } else {
+                                wire->movePointBy(wire->wirePointsAbsolute().indexOf(point), QVector2D(moveBy.x(), 0));
+                            }
+                        }
+                    }
+                }
+            }
+
             // The line is horizontal
             if (line.isHorizontal()) {
                 movePointTo(index-1, pointsRelative().at(index-1) + QPointF(0, moveBy.toPointF().y()));
@@ -401,6 +428,26 @@ void Wire::movePointBy(int index, const QVector2D& moveBy)
             // Make sure that two wire points never collide
             if (pointsRelative().count() > 3 and Line(currPoint+moveBy.toPointF(), nextPoint).lenght() <= 2) {
                 moveLineSegmentBy(index+1, moveBy);
+            }
+
+            // Move junctions before the points are moved
+            if (line.isHorizontal() or line.isVertical()) {
+                // Move connected junctions
+                for (const auto& wire: _connectedWires) {
+                    for (const auto& point: wire->junctions()) {
+                        if (line.containsPoint(point.toPointF())) {
+                            // Don't move it if it is on one of the points
+                            if (line.p1().toPoint() == point.toPoint() or line.p2().toPoint() == point.toPoint()) {
+                                continue;
+                            }
+                            if (line.isHorizontal()) {
+                                wire->movePointBy(wire->wirePointsAbsolute().indexOf(point), QVector2D(0, moveBy.y()));
+                            } else {
+                                wire->movePointBy(wire->wirePointsAbsolute().indexOf(point), QVector2D(moveBy.x(), 0));
+                            }
+                        }
+                    }
+                }
             }
 
             // The line is horizontal
@@ -427,18 +474,109 @@ void Wire::movePointTo(int index, const QPointF& moveTo)
         return;
     }
 
+    // Do nothing if it already is at that position
+    if (_points[index] == moveTo) {
+        return;
+    }
+
+    // Move junctions that are on the point
+    for (const auto& wire: _connectedWires) {
+        for (const auto& point: wire->junctions()) {
+            if (_points[index].toPoint() == point.toPoint()) {
+                wire->movePointBy(wire->wirePointsAbsolute().indexOf(point), QVector2D(moveTo - _points[index].toPointF()));
+            }
+        }
+    }
+
+    // Move junctions on the next segment
+    if (index < _points.count()-1) {
+        Line segment = lineSegments().at(index);
+        Line newSegment(moveTo, pointsAbsolute().at(index+1));
+        moveJunctionsToNewSegment(segment, newSegment);
+    }
+
+    // Move junctions on the previous segment
+    if (index > 0) {
+        Line segment = lineSegments().at(index-1);
+        Line newSegment(pointsAbsolute().at(index-1), moveTo);
+        moveJunctionsToNewSegment(segment, newSegment);
+    }
+
     prepareGeometryChange();
-    _points[index] = WirePoint(moveTo - gridPos());
+    WirePoint wirepoint = (moveTo - gridPos());
+    wirepoint.setIsJunction(_points[index].isJunction());
+    _points[index] = wirepoint;
     calculateBoundingRect();
     update();
 
     emit pointMoved(*this, _points[index]);
 }
 
+void Wire::moveJunctionsToNewSegment(const Line& oldSegment, const Line& newSegment)
+{
+    // Do nothing if the segment was just resized
+    if (qFuzzyCompare(oldSegment.toLineF().angle(), newSegment.toLineF().angle())) {
+        return;
+    }
+
+    // Move connected junctions
+    for (const auto& wire: _connectedWires) {
+        for (const auto& point: wire->junctions()) {
+            // Check if the point is on the old segment
+            if (oldSegment.containsPoint(point.toPoint(), 5)) {
+                int jIndex = wire->wirePointsAbsolute().indexOf(point);
+                Line junctionSeg;
+                // Find out if one of the segments is horizontal or vertical
+                if (jIndex < wire->wirePointsAbsolute().count() - 1) {
+                    Line seg = wire->lineSegments().at(jIndex);
+                    if (seg.isHorizontal() or seg.isVertical()) {
+                        junctionSeg = seg;
+                    }
+                }
+                if (jIndex > 0) {
+                    Line seg = wire->lineSegments().at(jIndex-1);
+                    if (seg.isHorizontal() or seg.isVertical()) {
+                        junctionSeg = seg;
+                    }
+                }
+                // Only move in the direction of the segment if it is hor. or vert.
+                if (!junctionSeg.isNull()) {
+                    QPointF intersection;
+                    auto type = junctionSeg.toLineF().intersect(newSegment.toLineF(), &intersection);
+                    if (type != QLineF::NoIntersection) {
+                        wire->movePointBy(wire->wirePointsAbsolute().indexOf(point), QVector2D(intersection - point.toPointF()));
+                    }
+                }
+                // Move the point along the segment so that it stays at the same proportional distance from the two points
+                else {
+                    QPointF d =  point.toPointF() - oldSegment.p1();
+                    qreal ratio = QVector2D(d).length() / oldSegment.lenght();
+                    QPointF pos = newSegment.toLineF().pointAt(ratio);
+                    wire->movePointBy(wire->wirePointsAbsolute().indexOf(point), QVector2D(pos - point.toPointF()));
+                }
+            }
+        }
+    }
+}
+
 void Wire::moveLineSegmentBy(int index, const QVector2D& moveBy)
 {
     if (index < 0 or index > _points.count()-1) {
         return;
+    }
+
+    // Move connected junctions
+    for (const auto& wire: _connectedWires) {
+        for (const auto& point: wire->junctions()) {
+            Line segment = lineSegments().at(index);
+            if (segment.containsPoint(point.toPointF())) {
+                // Don't move it if it is on one of the points
+                if (segment.p1().toPoint() == point.toPoint() or segment.p2().toPoint() == point.toPoint()) {
+                    continue;
+                }
+                wire->movePointBy(wire->wirePointsAbsolute().indexOf(point), moveBy);
+            }
+        }
     }
 
     // Move the line segment
@@ -466,6 +604,33 @@ bool Wire::pointIsOnWire(const QPointF& point) const
     }
 
     return false;
+}
+
+void Wire::connectWire(Wire* wire)
+{
+    _connectedWires.append(wire);
+}
+
+QList<Wire*> Wire::connectedWires()
+{
+    return _connectedWires;
+}
+
+void Wire::disconnectWire(Wire* wire)
+{
+    _connectedWires.removeAll(wire);
+}
+
+QVector<WirePoint> Wire::junctions() const
+{
+    QVector<WirePoint> junctions;
+    if (_points.first().isJunction()) {
+        junctions.append(_points.first());
+    }
+    if (_points.last().isJunction()) {
+        junctions.append(_points.last());
+    }
+    return junctions;
 }
 
 QList<Line> Wire::lineSegments() const

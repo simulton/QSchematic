@@ -45,6 +45,10 @@ namespace QSchematic {
         void moveLineSegmentBy(int index, const QVector2D& moveBy);
         void setPointIsJunction(int index, bool isJunction);
         bool pointIsOnWire(const QPointF& point) const;
+        void connectWire(Wire* wire);
+        QList<Wire*> connectedWires();
+        void disconnectWire(Wire* wire);
+        QVector<WirePoint> junctions() const;
 
         QList<QSchematic::Line> lineSegments() const;
 
@@ -73,10 +77,12 @@ namespace QSchematic {
         void removeObsoletePoints();
 
         QVector<WirePoint> _points;
+        QList<Wire*> _connectedWires;
         QRectF _rect;
         int _pointToMoveIndex;
         int _lineSegmentToMoveIndex;
         QPointF _prevMousePos;
+        void moveJunctionsToNewSegment(const Line& oldSegment, const Line& newSegment);
     };
 
 }

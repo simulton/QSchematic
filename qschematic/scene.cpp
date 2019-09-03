@@ -148,6 +148,25 @@ void Scene::fromContainer(const Gpds::Container& container)
         }
     }
 
+    // Find junctions
+    for (const auto& net: _nets) {
+        for (const auto& wire: net->wires()) {
+            for (const auto& otherWire: net->wires()) {
+                if (wire == otherWire) {
+                    continue;
+                }
+                if (wire->pointIsOnWire(otherWire->wirePointsAbsolute().first().toPointF())) {
+                    wire->connectWire(otherWire.get());
+                    otherWire->setPointIsJunction(0, true);
+                }
+                if (wire->pointIsOnWire(otherWire->wirePointsAbsolute().last().toPointF())) {
+                    wire->connectWire(otherWire.get());
+                    otherWire->setPointIsJunction(otherWire->wirePointsAbsolute().count()-1, true);
+                }
+            }
+        }
+    }
+
     // Clear the undo history
     _undoStack->clear();
 }
@@ -649,6 +668,58 @@ void Scene::wirePointMovedByUser(Wire& rawWire, WirePoint& point)
             }
         }
     }
+
+    // Detach wires
+    if (index == 0 or index == rawWire.pointsAbsolute().count()-1){
+        if (point.isJunction()) {
+            for (const auto& net: _nets) {
+                for (const auto& wire: net->wires()) {
+                    // Skip current wire
+                    if (wire.get() == &rawWire) {
+                        continue;
+                    }
+                    // If is connected
+                    if (wire->connectedWires().contains(&rawWire)) {
+                        bool shouldDisconnect = true;
+                        // Keep the wires connected if there is another junction
+                        for (const auto& point : rawWire.junctions()) {
+                            // Ignore the point that moved
+                            if (rawWire.wirePointsAbsolute().indexOf(point) == index) {
+                                continue;
+                            }
+                            // If the point is on the line stay connected
+                            if (wire->contains(point.toPointF())) {
+                                shouldDisconnect = false;
+                                break;
+                            }
+                        }
+                        if (shouldDisconnect) {
+                            wire->disconnectWire(&rawWire);
+                        }
+                        rawWire.setPointIsJunction(index, false);
+                    }
+                }
+            }
+        }
+    }
+
+    // Attach point to wire if needed
+    if (index == 0 or index == rawWire.wirePointsAbsolute().count()-1) {
+        for (const auto& net: _nets) {
+            for (const auto& wire: net->wires()) {
+                // Skip current wire
+                if (wire.get() == &rawWire) {
+                    continue;
+                }
+                if (wire->pointIsOnWire(point.toPointF())) {
+                    if (!rawWire.connectedWires().contains(wire.get())) {
+                        wire->connectWire(&rawWire);
+                        rawWire.setPointIsJunction(index, true);
+                    }
+                }
+            }
+        }
+    }
 }
 
 void Scene::addWireNet(const std::shared_ptr<WireNet>& wireNet)
@@ -760,6 +831,22 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
                     }
                 }
             }
+
+            // Attach point to wire if needed
+            if (_newWire->pointsAbsolute().count() == 1) {
+                for (const auto& wire: wires()) {
+                    // Skip current wire
+                    if (wire == _newWire) {
+                        continue;
+                    }
+                    if (wire->pointIsOnWire(_newWire->pointsRelative().first())) {
+                        wire->connectWire(_newWire.get());
+                        _newWire->setPointIsJunction(0, true);
+                        break;
+                    }
+                }
+            }
+
         }
 
         break;
@@ -949,11 +1036,16 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                 }
             }
 
-            // Check wether the wire was connected to another wire
-            for (const auto& wire : wires()) {
+            // Attach point to wire if needed
+            for (const auto& wire: wires()) {
+                // Skip current wire
+                if (wire == _newWire) {
+                    continue;
+                }
                 if (wire->pointIsOnWire(_newWire->pointsRelative().last())) {
+                    wire->connectWire(_newWire.get());
+                    _newWire->setPointIsJunction(_newWire->pointsAbsolute().count()-1, true);
                     wireIsFloating = false;
-                    break;
                 }
             }
 
