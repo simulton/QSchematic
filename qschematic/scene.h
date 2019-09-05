@@ -60,6 +60,7 @@ namespace QSchematic {
         std::shared_ptr<WireNet> net(const std::shared_ptr<Wire>& wire) const;
         QList<std::shared_ptr<WireNet>> netsAt(const QPoint& point);
         QList<QPointF> connectionPoints() const;
+        QList<std::shared_ptr<Connector>> connectors() const;
 
         void undo();
         void redo();

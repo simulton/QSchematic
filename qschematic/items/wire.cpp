@@ -8,6 +8,8 @@
 #include <QVector2D>
 #include <QtMath>
 #include "wire.h"
+#include "connector.h"
+#include "scene.h"
 #include "../utils.h"
 
 const qreal BOUNDING_RECT_PADDING = 6.0;
@@ -210,6 +212,13 @@ void Wire::prependPoint(const QPointF& point)
     _points.prepend(WirePoint(point - gridPos()));
     calculateBoundingRect();
 
+    // Update junction
+    if (_points.count() >= 2) {
+        setPointIsJunction(0, _points.at(1).isJunction());
+        setPointIsJunction(1, false);
+    }
+
+    emit pointInserted(0);
     emit pointMoved(*this, _points.first());
 }
 
@@ -219,6 +228,13 @@ void Wire::appendPoint(const QPointF& point)
     _points.append(WirePoint(point - gridPos()));
     calculateBoundingRect();
 
+    // Update junction
+    if (_points.count() > 2) {
+        setPointIsJunction(_points.count() - 1, _points.at(_points.count() - 2).isJunction());
+        setPointIsJunction(_points.count() - 2, false);
+    }
+
+    emit pointInserted(_points.count()-1);
     emit pointMoved(*this, _points.last());
 }
 
@@ -561,6 +577,11 @@ void Wire::moveJunctionsToNewSegment(const Line& oldSegment, const Line& newSegm
 
 void Wire::moveLineSegmentBy(int index, const QVector2D& moveBy)
 {
+    // Do nothing if not moving
+    if (moveBy.isNull()) {
+        return;
+    }
+
     if (index < 0 or index > _points.count()-1) {
         return;
     }
@@ -575,6 +596,46 @@ void Wire::moveLineSegmentBy(int index, const QVector2D& moveBy)
                     continue;
                 }
                 wire->movePointBy(wire->wirePointsAbsolute().indexOf(point), moveBy);
+            }
+        }
+    }
+
+    // If this is the first or last segment we might need to add a new segment
+    if (index == 0 or index == lineSegments().count() - 1) {
+        // Get the correct point
+        WirePoint point;
+        if (index == 0) {
+            point = wirePointsAbsolute().first();
+        } else {
+            point = wirePointsAbsolute().last();
+        }
+
+        bool isConnected = false;
+        // Check if the segment is connected to a node
+        for (const auto& connector : scene()->connectors()) {
+            if (connector->attachedWire() == this and
+                connector->attachedWirepoint() == pointsAbsolute().indexOf(point.toPointF())) {
+                isConnected = true;
+                break;
+            }
+        }
+
+        // Check if it's connected to a wire
+        if (not isConnected and point.isJunction()) {
+            isConnected = true;
+        }
+
+        // Add segment if it is connected
+        if (isConnected) {
+            if (index == 0) {
+                // Add a point
+                prependPoint(_points.first().toPointF());
+                // Increment indices to account for inserted point
+                index++;
+                _lineSegmentToMoveIndex++;
+            } else {
+                // Add a point
+                appendPoint(_points.last().toPointF());
             }
         }
     }

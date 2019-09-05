@@ -1232,3 +1232,14 @@ QList<QPointF> Scene::connectionPoints() const
 
     return list;
 }
+
+QList<std::shared_ptr<Connector>> Scene::connectors() const
+{
+    QList<std::shared_ptr<Connector>> list;
+
+    for (const auto& node : nodes()) {
+        list << node->connectors();
+    }
+
+    return list;
+}

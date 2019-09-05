@@ -104,7 +104,12 @@ void Connector::copyAttributes(Connector& dest) const
 
 void Connector::pointInserted(int index)
 {
-    if (_wirePointIndex >= index) {
+    // Do nothing if the connected point is the first
+    if (_wirePointIndex == 0) {
+        return;
+    }
+    // Inserted point comes before the connected point or the last point is connected
+    else if (_wirePointIndex >= index or _wirePointIndex == _wire->pointsAbsolute().count()-2) {
         _wirePointIndex++;
     }
 }
