@@ -180,6 +180,12 @@ include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/cmake/QSchematic)
 
+# Install headers
+foreach( file ${HEADERS_PUBLIC} )
+    get_filename_component( dir ${file} DIRECTORY )
+    install( FILES ${file} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/qschematic/${dir} )
+endforeach()
+
 # Install export header
 install(
     FILES ${PROJECT_BINARY_DIR}/qschematic_export.h
