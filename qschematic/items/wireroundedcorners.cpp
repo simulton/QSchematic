@@ -189,8 +189,22 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                     }
                 }
 
+                // Find if there is a junction on this point
+                bool hasJunction = false;
+                for (const auto& wire: connectedWires()) {
+                    for (const auto& junction: wire->junctions()) {
+                        if (junction.toPoint() == p2.toPoint()) {
+                            hasJunction = true;
+                            break;
+                        }
+                    }
+                    if (hasJunction) {
+                        break;
+                    }
+                }
+
                 // We certainly don't want an arc if this is a junction
-                if (p2.isJunction()) {
+                if (hasJunction or p2.isJunction()) {
                     segment = None;
                     line1.setP2(p2.toPointF());
                     line2.setP1(p2.toPointF());
