@@ -37,15 +37,6 @@ void WireRoundedCorners::fromContainer(const Gpds::Container& container)
 
 void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    // Don't try to understand this without pen & paper.                                           //
-    // Seriously.                                                                                  //
-    // It took me four days and lots of drugs to get through this. I hope that no other human ever //
-    // has to write this again. If you need something like this, take this code. Copy it, paste it //
-    // in your own software, make a small donation to any open source project of your choosing and //
-    // never look at it again.                                                                     //
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-
     Q_UNUSED(option);
     Q_UNUSED(widget);
 
@@ -70,6 +61,7 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
 
     // Draw the actual line
     {
+        QPainterPath path;
         // Pen
         QPen penLine;
         penLine.setStyle(Qt::SolidLine);
@@ -94,106 +86,31 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
         painter->setBrush(brushLine);
 
         // Render
-        for (int i = 0; i <= scenePoints.count()-2; i++) {
-            // Retrieve points
-            WirePoint p1 = scenePoints.at(i);
-            WirePoint p2 = scenePoints.at(i+1);
+        for (int i = 0; i < scenePoints.count(); i++) {
+            // Retrieve point
+            WirePoint point = scenePoints.at(i);
 
-            // If there are just two points we need to render the line just like this and we're done
-            if (scenePoints.count() == 2) {
-                painter->drawLine(p1.toPoint(), p2.toPoint());
-                break;
-
-            // If we have two line segments we want to render an arc connecting them
-            } else if (i < scenePoints.count()-2) {
-                // Retrieve the third point (now we have two wire segments defined by p1, p2 and p3)
-                WirePoint p3 = scenePoints.at(i+2);
-
-                // Determine arc position/direction
-                // Also determine the actual line segments
-                QLineF line1(p1.toPoint(), p2.toPoint());
-                QLineF line2(p2.toPoint(), p3.toPoint());
-                QuarterCircleSegment segment = None;
-                {
-                    int linePointAdjust = _settings.gridSize/2;
-                    bool hasNext = true;
-
-                    // Figure out whether we have a next point
-                    hasNext = (i != scenePoints.count()-3) && !p3.isJunction();
-
-                    // Oh boy...
-                    if (p3.x() < p1.x() and p3.y() < p1.y()) {
-                        if (qFuzzyCompare(p2.x(), p3.x()) and qFuzzyCompare(p2.y(), p1.y())) {
-                            segment = BottomLeft;
-                            line1.setP2(QPointF(p2.x() + linePointAdjust, p2.y()));
-                            line2.setP1(QPointF(p2.x(), p2.y() - linePointAdjust));
-                            if (hasNext) {
-                                line2.setP2(QPointF(p3.x(), p3.y() + linePointAdjust));
-                            }
-                        } else if (qFuzzyCompare(p2.x(), p1.x()) and qFuzzyCompare(p2.y(), p3.y())) {
-                            segment = TopRight;
-                            line1.setP2(QPointF(p2.x(), p2.y() + linePointAdjust));
-                            line2.setP1(QPointF(p2.x() - linePointAdjust, p2.y()));
-                            if (hasNext) {
-                                line2.setP2(QPointF(p3.x() + linePointAdjust, p3.y()));
-                            }
-                        }
-                    } else if (p3.x() > p1.x() and p3.y() < p1.y()) {
-                        if (qFuzzyCompare(p2.x(), p1.x()) and qFuzzyCompare(p2.y(), p3.y())) {
-                            segment = TopLeft;
-                            line1.setP2(QPointF(p2.x(), p2.y() + linePointAdjust));
-                            line2.setP1(QPointF(p2.x() + linePointAdjust, p2.y()));
-                            if (hasNext) {
-                                line2.setP2(QPointF(p3.x() - linePointAdjust, p3.y()));
-                            }
-                        } else if (qFuzzyCompare(p2.x(),p3.x()) and qFuzzyCompare(p2.y(), p1.y())) {
-                            segment = BottomRight;
-                            line1.setP2(QPointF(p2.x() - linePointAdjust, p2.y()));
-                            line2.setP1(QPointF(p2.x(), p2.y() - linePointAdjust));
-                            if (hasNext) {
-                                line2.setP2(QPointF(p3.x(), p3.y() + linePointAdjust));
-                            }
-                        }
-                    } else if (p3.x() > p1.x() and p3.y() > p1.y()) {
-                        if (qFuzzyCompare(p2.x(), p3.x()) and qFuzzyCompare(p2.y(), p1.y())) {
-                            segment = TopRight;
-                            line1.setP2(QPointF(p2.x() - linePointAdjust, p2.y()));
-                            line2.setP1(QPointF(p2.x(), p2.y() + linePointAdjust));
-                            if (hasNext) {
-                                line2.setP2(QPointF(p3.x(), p3.y() - linePointAdjust));
-                            }
-                        } else if (qFuzzyCompare(p2.x(), p1.x()) and qFuzzyCompare(p2.y(), p3.y())) {
-                            segment = BottomLeft;
-                            line1.setP2(QPointF(p2.x(), p2.y() - linePointAdjust));
-                            line2.setP1(QPointF(p2.x() + linePointAdjust, p2.y()));
-                            if (hasNext) {
-                                line2.setP2(QPointF(p3.x() - linePointAdjust, p3.y()));
-                            }
-                        }
-                    } else if (p3.x() < p1.x() and p3.y() > p1.y()) {
-                        if (qFuzzyCompare(p2.x(), p1.x()) and qFuzzyCompare(p2.y(), p3.y())) {
-                            segment = BottomRight;
-                            line1.setP2(QPointF(p2.x(), p2.y() - linePointAdjust));
-                            line2.setP1(QPointF(p2.x() - linePointAdjust, p2.y()));
-                            if (hasNext) {
-                                line2.setP2(QPointF(p3.x() + linePointAdjust, p3.y()));
-                            }
-                        } else if (qFuzzyCompare(p2.x(), p3.x()) and qFuzzyCompare(p2.y(), p1.y())) {
-                            segment = TopLeft;
-                            line1.setP2(QPointF(p2.x() + linePointAdjust, p2.y()));
-                            line2.setP1(QPointF(p2.x(), p2.y() + linePointAdjust));
-                            if (hasNext) {
-                                line2.setP2(QPointF(p3.x(), p3.y() - linePointAdjust));
-                            }
-                        }
-                    }
-                }
+            // If it's the last point
+            if (i == scenePoints.count()-1) {
+                path.lineTo(point.toPointF());
+            }
+            // If it's the first point
+            else if (i == 0) {
+                WirePoint nPoint = scenePoints.at(i+1);
+                path.moveTo(point.toPointF());
+                path.lineTo(Utils::centerPoint(point.toPointF(), nPoint.toPointF()));
+            }
+            // It's a point in the middle of the wire
+            else {
+                // Get the previous and next points
+                WirePoint pPoint = scenePoints.at(i-1);
+                WirePoint nPoint = scenePoints.at(i+1);
 
                 // Find if there is a junction on this point
                 bool hasJunction = false;
                 for (const auto& wire: connectedWires()) {
                     for (const auto& junction: wire->junctions()) {
-                        if (junction.toPoint() == p2.toPoint()) {
+                        if (junction.toPoint() == point.toPoint()) {
                             hasJunction = true;
                             break;
                         }
@@ -203,65 +120,31 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                     }
                 }
 
+                // Lines form the current point up to half way to the next/previous point
+                QLineF line1(Utils::centerPoint(pPoint.toPoint(), point.toPoint()), point.toPoint());
+                QLineF line2(Utils::centerPoint(point.toPoint(), nPoint.toPoint()), point.toPoint());
+
+                // Shorten lines if there is a rounded corner
+                int linePointAdjust = _settings.gridSize/2;
                 // We certainly don't want an arc if this is a junction
-                if (hasJunction or p2.isJunction()) {
-                    segment = None;
-                    line1.setP2(p2.toPointF());
-                    line2.setP1(p2.toPointF());
+                if (not hasJunction and not point.isJunction()) {
+                    line1.setLength(line1.length() - linePointAdjust);
+                    line2.setLength(line2.length() - linePointAdjust);
                 }
 
                 // Render lines
-                if (i == 0) {
-                    painter->drawLine(line1);
+                path.lineTo(line1.p2());
+                // Render the arc if there is no junction
+                if (not hasJunction and not point.isJunction()) {
+                    path.quadTo(point.toPointF(), line2.p2());
                 }
-                painter->drawLine(line2);
-
-                // Calculate arc parameters
-                int rectSize = _settings.gridSize;
-                QRectF rect(0, 0, rectSize, rectSize);
-                int angleStart = 0;
-                int angleSpan = 90;
-                switch (segment)
-                {
-                case None:
-                    angleStart = 0;
-                    angleSpan = 0;
-                    break;
-
-                case TopLeft:
-                    rect.setX(p2.x());
-                    rect.setY(p2.y());
-                    angleStart = 90;
-                    break;
-
-                case TopRight:
-                    rect.setX(p2.x() - rectSize);
-                    rect.setY(p2.y());
-                    angleStart = 0;
-                    break;
-
-                case BottomLeft:
-                    rect.setX(p2.x());
-                    rect.setY(p2.y() - rectSize);
-                    angleStart = 180;
-                    break;
-
-                case BottomRight:
-                    rect.setX(p2.x() - rectSize);
-                    rect.setY(p2.y() - rectSize);
-                    angleStart = 270;
-                    break;
-                }
-                rect.setWidth(rectSize);
-                rect.setHeight(rectSize);
-
-                // Render the arc
-                painter->drawArc(rect, 16*angleStart, 16*angleSpan);
+                path.lineTo(line2.p2());
             }
         }
+        painter->drawPath(path);
     }
 
-    // Draw the junction poins
+    // Draw the junction points
     int junctionRadius = 4;
     for (const QSchematic::WirePoint& wirePoint : wirePointsRelative()) {
         if (wirePoint.isJunction()) {
