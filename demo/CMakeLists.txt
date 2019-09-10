@@ -80,3 +80,15 @@ target_link_libraries(qschematic-demo Qt5::Core Qt5::Widgets Qt5::Gui Qt5::Print
 target_link_libraries(qschematic-demo qschematic-static)
 target_link_libraries(qschematic-demo Gpds::gpds-static)
 
+# Set window settings
+# Usage: Add -DWINDOW_{dimension}={size} to the cmake options
+if (WINDOW_WIDTH)
+    add_compile_definitions(WINDOW_WIDTH=${WINDOW_WIDTH})
+endif()
+if (WINDOW_HEIGHT)
+    add_compile_definitions(WINDOW_HEIGHT=${WINDOW_HEIGHT})
+endif()
+# Usage: Add -DWINDOW_MAXIMIZED=ON to the cmake options
+if (WINDOW_MAXIMIZED)
+    add_compile_definitions(WINDOW_MAXIMIZE)
+endif()

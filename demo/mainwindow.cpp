@@ -140,7 +140,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Misc
     setWindowTitle("Schematic Editor");
-    resize(2800, 1500);
+    resize( WINDOW_WIDTH, WINDOW_HEIGHT );
+#ifdef WINDOW_MAXIMIZE
+    setWindowState(Qt::WindowMaximized);
+#endif
     _view->setZoomValue(1.5);
 
     demo();

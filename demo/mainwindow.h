@@ -4,6 +4,13 @@
 #include <QMainWindow>
 #include "../qschematic/settings.h"
 
+#ifndef WINDOW_WIDTH
+    #define WINDOW_WIDTH 2800
+#endif
+#ifndef WINDOW_HEIGHT
+    #define WINDOW_HEIGHT 1500
+#endif
+
 class QUndoView;
 class QGraphicsSceneContextMenuEvent;
 
