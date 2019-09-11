@@ -124,10 +124,17 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                 QLineF line1(Utils::centerPoint(pPoint.toPoint(), point.toPoint()), point.toPoint());
                 QLineF line2(Utils::centerPoint(point.toPoint(), nPoint.toPoint()), point.toPoint());
 
-                // Shorten lines if there is a rounded corner
                 int linePointAdjust = _settings.gridSize/2;
+                // If one of the lines is smaller that linePointAdjust make its length the new linePointAdjust
+                if (line1.length() < linePointAdjust) {
+                    linePointAdjust = line1.length();
+                }
+                if (line2.length() < linePointAdjust) {
+                    linePointAdjust = line2.length();
+                }
                 // We certainly don't want an arc if this is a junction
                 if (not hasJunction and not point.isJunction()) {
+                    // Shorten lines if there is a rounded corner
                     line1.setLength(line1.length() - linePointAdjust);
                     line2.setLength(line2.length() - linePointAdjust);
                 }
