@@ -28,6 +28,6 @@ set(CMAKE_AUTOUIC ON)
 add_subdirectory(qschematic)
 
 # Include the example(s)
-if ( BUILD_DEMO )
-    add_subdirectory(demo)
+if (BUILD_DEMO)
+    add_subdirectory(demo EXCLUDE_FROM_ALL)
 endif()
