@@ -86,19 +86,19 @@ void Node::fromContainer(const Gpds::Container& container)
     if (connectorsContainer) {
         clearConnectors();
         for (const Gpds::Container* connectorContainer : connectorsContainer->getValues<Gpds::Container*>( "connector" ) ) {
-            Connector* connector = dynamic_cast<Connector*>(ItemFactory::instance().fromContainer(*connectorContainer).release());
+            auto connector = std::dynamic_pointer_cast<Connector>(ItemFactory::instance().fromContainer(*connectorContainer));
             if (!connector) {
                 continue;
             }
             connector->fromContainer(*connectorContainer);
-            addConnector(std::unique_ptr<Connector>(connector));
+            addConnector(connector);
         }
     }
 }
 
-std::unique_ptr<Item> Node::deepCopy() const
+std::shared_ptr<Item> Node::deepCopy() const
 {
-    auto clone = std::make_unique<Node>(type(), parentItem());
+    auto clone = std::make_shared<Node>(type(), parentItem());
     copyAttributes(*(clone.get()));
 
     return clone;
@@ -116,9 +116,9 @@ void Node::copyAttributes(Node& dest) const
             continue;
         }
 
-        auto connectorClone = qgraphicsitem_cast<Connector*>(connector->deepCopy().release());
+        auto connectorClone = std::dynamic_pointer_cast<Connector>(connector->deepCopy());
         connectorClone->setParentItem(&dest);
-        dest._connectors << std::shared_ptr<Connector>(connectorClone);
+        dest._connectors << connectorClone;
     }
 
     // Attributes

@@ -59,9 +59,9 @@ void FlowStart::fromContainer(const Gpds::Container& container)
     QSchematic::Node::fromContainer( *container.getValue<Gpds::Container*>( "node") );
 }
 
-std::unique_ptr<QSchematic::Item> FlowStart::deepCopy() const
+std::shared_ptr<QSchematic::Item> FlowStart::deepCopy() const
 {
-    auto clone = std::make_unique<FlowStart>();
+    auto clone = std::make_shared<FlowStart>();
     copyAttributes(*(clone.get()));
 
     return clone;

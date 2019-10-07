@@ -9,14 +9,14 @@ namespace QSchematic {
     class Item;
 }
 
-namespace Gds {
+namespace Gpds {
     class Container;
 }
 
 class CustomItemFactory
 {
 public:
-    static std::unique_ptr<QSchematic::Item> fromContainer(const Gpds::Container& container);
+    static std::shared_ptr<QSchematic::Item> fromContainer(const Gpds::Container& container);
 
 private:
     CustomItemFactory() = default;

@@ -75,9 +75,9 @@ void Connector::fromContainer(const Gpds::Container& container)
     _label->fromContainer( *container.getValue<Gpds::Container*>( "label" ) );
 }
 
-std::unique_ptr<Item> Connector::deepCopy() const
+std::shared_ptr<Item> Connector::deepCopy() const
 {
-    auto clone = std::make_unique<Connector>(type(), gridPos(), text(), parentItem());
+    auto clone = std::make_shared<Connector>(type(), gridPos(), text(), parentItem());
     copyAttributes(*(clone.get()));
 
     return clone;
@@ -91,8 +91,7 @@ void Connector::copyAttributes(Connector& dest) const
     Item::copyAttributes(dest);
 
     // Label
-    auto labelClone = qgraphicsitem_cast<Label*>(_label->deepCopy().release());
-    dest._label = std::shared_ptr<Label>(labelClone);
+    dest._label = std::dynamic_pointer_cast<Label>(_label->deepCopy());
     dest._label->setParentItem(&dest);
 
     // Attributes

@@ -8,6 +8,49 @@
 
 using namespace QSchematic;
 
+
+// Shim functions to simplify specific type shared-ptr member functions, derived
+// from publicly available grunt work
+
+template <typename BaseT>
+inline std::shared_ptr<BaseT>
+shared_from_base(std::enable_shared_from_this<BaseT>* base)
+{
+    return base->shared_from_this();
+}
+template <typename BaseT>
+inline std::shared_ptr<const BaseT>
+shared_from_base(std::enable_shared_from_this<BaseT> const* base)
+{
+    return base->shared_from_this();
+}
+template <typename ThatT>
+inline std::shared_ptr<ThatT>
+shared_from(ThatT* that)
+{
+    return std::static_pointer_cast<ThatT>(shared_from_base(that));
+}
+
+//template <typename BaseT>
+//inline std::weak_ptr<BaseT>
+//weak_from_base(std::enable_shared_from_this<BaseT>* base)
+//{
+//    return base->weak_from_this();
+//}
+//template <typename BaseT>
+//inline std::weak_ptr<const BaseT>
+//weak_from_base(std::enable_shared_from_this<BaseT> const* base)
+//{
+//    return base->weak_from_this();
+//}
+//template <typename ThatT>
+//inline std::weak_ptr<ThatT>
+//weak_from(ThatT* that)
+//{
+//    return std::static_pointer_cast<ThatT, std::weak_ptr>(weak_from_base(that));
+//}
+
+
 Item::Item(int type, QGraphicsItem* parent) :
     QGraphicsObject(parent),
     _type(type),
@@ -23,6 +66,25 @@ Item::Item(int type, QGraphicsItem* parent) :
     connect(this, &Item::xChanged, this, &Item::posChanged);
     connect(this, &Item::yChanged, this, &Item::posChanged);
     connect(this, &Item::rotationChanged, this, &Item::rotChanged);
+}
+
+auto Item::sharedPtr() const -> std::shared_ptr<const Item>
+{
+//    return shared_from(this);
+    return shared_from_this();
+}
+
+auto Item::sharedPtr() -> std::shared_ptr<Item>
+{
+    //    return shared_from(this);
+    return shared_from_this();
+}
+
+auto Item::weakPtr() -> std::weak_ptr<Item>
+{
+    // TODO: remove inefficiancy after PoC confirmation
+    //    return weak_from(this);
+    return std::weak_ptr{shared_from_this()};
 }
 
 Gpds::Container Item::toContainer() const

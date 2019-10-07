@@ -10,7 +10,10 @@ namespace QSchematic {
 
     class Scene;
 
-    class Item : public QGraphicsObject, public Gpds::Serialize
+    class Item :
+        public QGraphicsObject,
+        public Gpds::Serialize,
+        public std::enable_shared_from_this<Item>
     {
         friend class CommandItemSetVisible;
 
@@ -35,9 +38,13 @@ namespace QSchematic {
         Item(int type, QGraphicsItem* parent = nullptr);
         virtual ~Item() override = default;
 
+        auto sharedPtr() const -> std::shared_ptr<const Item>;
+        auto sharedPtr() -> std::shared_ptr<Item>;
+        auto weakPtr() -> std::weak_ptr<Item>;
+
         virtual Gpds::Container toContainer() const override;
         virtual void fromContainer(const Gpds::Container& container) override;
-        virtual std::unique_ptr<Item> deepCopy() const = 0;
+        virtual std::shared_ptr<Item> deepCopy() const = 0;
 
         int type() const final;
         void setGridPos(const QPoint& gridPos);

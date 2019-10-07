@@ -3,8 +3,8 @@
 
 using namespace QSchematic;
 
-ItemMimeData::ItemMimeData(std::unique_ptr<Item> item) :
-    _item(std::move(item))
+ItemMimeData::ItemMimeData(std::shared_ptr<Item> item) :
+    _item(item)
 {
 }
 QStringList ItemMimeData::formats() const
@@ -17,7 +17,7 @@ bool ItemMimeData::hasFormat(const QString& mimetype) const
     return formats().contains(mimetype);
 }
 
-std::unique_ptr<QSchematic::Item> ItemMimeData::item() const
+std::shared_ptr<QSchematic::Item> ItemMimeData::item() const
 {
     return _item->deepCopy();
 }

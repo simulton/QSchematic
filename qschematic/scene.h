@@ -8,6 +8,7 @@
 #include "settings.h"
 #include "items/item.h"
 #include "items/wire.h"
+//#include "utils/itemscustodian.h"
 
 namespace QSchematic {
 
@@ -36,7 +37,7 @@ namespace QSchematic {
         virtual void fromContainer(const Gpds::Container& container) override;
 
         void setSettings(const Settings& settings);
-        void setWireFactory(const std::function<std::unique_ptr<Wire>()>& factory);
+        void setWireFactory(const std::function<std::shared_ptr<Wire>()>& factory);
         void setMode(int mode);
         int mode() const;
         void toggleWirePosture();
@@ -45,19 +46,19 @@ namespace QSchematic {
         void clearIsDirty();
 
         void clear();
-        bool addItem(const std::shared_ptr<Item>& item);
-        bool removeItem(const std::shared_ptr<Item>& item);
+        bool addItem(const std::shared_ptr<Item> item);
+        bool removeItem(const std::shared_ptr<Item> item);
         QList<std::shared_ptr<Item>> items() const;
         QList<std::shared_ptr<Item>> items(int itemType) const;
         QList<std::shared_ptr<Item>> itemsAt(const QPointF& scenePos, Qt::SortOrder order = Qt::DescendingOrder) const;
-        QVector<std::shared_ptr<Item>> selectedItems() const;
+        std::vector<std::shared_ptr<Item>> selectedItems() const;
         QList<std::shared_ptr<Node>> nodes() const;
-        bool addWire(const std::shared_ptr<Wire>& wire);
-        bool removeWire(const std::shared_ptr<Wire>& wire);
+        bool addWire(const std::shared_ptr<Wire> wire);
+        bool removeWire(const std::shared_ptr<Wire> wire);
         QList<std::shared_ptr<Wire>> wires() const;
         QList<std::shared_ptr<WireNet>> nets() const;
-        QList<std::shared_ptr<WireNet>> nets(const std::shared_ptr<WireNet>& wireNet) const;
-        std::shared_ptr<WireNet> net(const std::shared_ptr<Wire>& wire) const;
+        QList<std::shared_ptr<WireNet>> nets(const std::shared_ptr<WireNet> wireNet) const;
+        std::shared_ptr<WireNet> net(const std::shared_ptr<Wire> wire) const;
         QList<std::shared_ptr<WireNet>> netsAt(const QPoint& point);
         QList<QPointF> connectionPoints() const;
         QList<std::shared_ptr<Connector>> connectors() const;
@@ -69,9 +70,9 @@ namespace QSchematic {
     signals:
         void modeChanged(int newMode);
         void isDirtyChanged(bool isDirty);
-        void itemAdded(const std::shared_ptr<Item>& item);
-        void itemRemoved(const std::shared_ptr<Item>& item);
-        void itemHighlightChanged(const std::shared_ptr<Item>& item, bool isHighlighted);
+        void itemAdded(const std::shared_ptr<const Item> item);
+        void itemRemoved(const std::shared_ptr<const Item> item);
+        void itemHighlightChanged(const std::shared_ptr<const Item> item, bool isHighlighted);
 
     protected:
         virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
@@ -92,21 +93,31 @@ namespace QSchematic {
     private:
         void renderCachedBackground();
         void setupNewItem(Item& item);
-        void addWireNet(const std::shared_ptr<WireNet>& wireNet);
+        void addWireNet(const std::shared_ptr<WireNet> wireNet);
         std::shared_ptr<Item> sharedItemPointer(const Item& item) const;
 
         QList<std::shared_ptr<Item>> _items;
         QList<std::shared_ptr<WireNet>> _nets;
+
+        // Note: haven't investigated destructor specification, but it seems
+        // this can be skipped, although it would be: explicit, more efficient,
+        // and possibly required in more complex destruction scenarios — but
+        // we're skipping that extra work now / ozra
+        //
+        // ItemUtils::ItemsCustodian<Item> _items;
+        // ItemUtils::ItemsCustodian<WireNet> _nets;
+
         Settings _settings;
         QPixmap _backgroundPixmap;
-        std::function<std::unique_ptr<Wire>()> _wireFactory;
+        std::function<std::shared_ptr<Wire>()> _wireFactory;
         int _mode;
         std::shared_ptr<Wire> _newWire;
         bool _newWireSegment;
         bool _invertWirePosture;
         bool _movingNodes;
         QPointF _lastMousePos;
-        QList<std::shared_ptr<Item>> _selectedItems;
+        // unused
+        // QList<std::shared_ptr<Item>> _selectedItems;
         QMap<std::shared_ptr<Item>, QPointF> _initialItemPositions;
         QPointF _initialCursorPosition;
         QUndoStack* _undoStack;

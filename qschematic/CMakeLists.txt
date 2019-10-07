@@ -56,6 +56,8 @@ set(HEADERS_PUBLIC
     items/wirenet.h
     items/wirepoint.h
     items/wireroundedcorners.h
+    utils/itemscontainerutils.h
+    utils/itemscustodian.h
     netlist.h
     netlistgenerator.h
     scene.h

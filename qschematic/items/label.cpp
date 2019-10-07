@@ -30,7 +30,7 @@ Gpds::Container Label::toContainer() const
     Gpds::Container root;
     addItemTypeIdToContainer(root);
     root.addValue("item", Item::toContainer());
-    root.addValue("text", std::move( text().toStdString() ) );
+    root.addValue("text", text().toStdString());
     root.addValue("connection_point", connectionPoint);
 
     return root;
@@ -53,9 +53,9 @@ void Label::fromContainer(const Gpds::Container& container)
     }
 }
 
-std::unique_ptr<Item> Label::deepCopy() const
+std::shared_ptr<Item> Label::deepCopy() const
 {
-    auto clone = std::make_unique<Label>(type(), parentItem());
+    auto clone = std::make_shared<Label>(type(), parentItem());
     copyAttributes(*(clone.get()));
 
     return clone;

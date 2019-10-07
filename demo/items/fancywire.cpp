@@ -31,9 +31,9 @@ void FancyWire::fromContainer(const Gpds::Container& container)
     QSchematic::Wire::fromContainer( *container.getValue<Gpds::Container*>( "wire" ) );
 }
 
-std::unique_ptr<QSchematic::Item> FancyWire::deepCopy() const
+std::shared_ptr<QSchematic::Item> FancyWire::deepCopy() const
 {
-    auto clone = std::make_unique<FancyWire>(parentItem());
+    auto clone = std::make_shared<FancyWire>(parentItem());
     copyAttributes(*(clone.get()));
 
     return clone;
@@ -66,7 +66,7 @@ void FancyWire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
     // Make points fancy if they are on top of one of our connectors
     painter->setPen(pen);
     painter->setBrush(brush);
-    const auto& points = pointsAbsolute();
+
     for (const auto& point: pointsAbsolute()) {
         for (const auto& connector: connectionPoints) {
             if (qFuzzyCompare(QVector2D(connector), QVector2D(point))) {

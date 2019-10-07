@@ -6,7 +6,7 @@
 
 namespace QSchematic {
 
-    class Label : public Item
+class Label : public Item
     {
         Q_OBJECT
         Q_DISABLE_COPY(Label)
@@ -22,7 +22,7 @@ namespace QSchematic {
 
         virtual Gpds::Container toContainer() const override;
         virtual void fromContainer(const Gpds::Container& container) override;
-        virtual std::unique_ptr<Item> deepCopy() const override;
+        virtual std::shared_ptr<Item> deepCopy() const override;
 
         virtual QRectF boundingRect() const final;
         virtual QPainterPath shape() const final;

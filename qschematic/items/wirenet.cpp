@@ -24,7 +24,7 @@ Gpds::Container WireNet::toContainer() const
 
     // Root
     Gpds::Container root;
-    root.addValue("name", std::move( _name.toStdString() ) );
+    root.addValue("name", _name.toStdString() );
     root.addValue("wires", wiresContainer);
 
     return root;
@@ -42,7 +42,7 @@ void WireNet::fromContainer(const Gpds::Container& container)
             Q_ASSERT(wireContainer);
 
             auto newWire = ItemFactory::instance().fromContainer(*wireContainer);
-            auto sharedNewWire = std::dynamic_pointer_cast<Wire>( std::shared_ptr<Item>( std::move(newWire) ) );
+            auto sharedNewWire = std::dynamic_pointer_cast<Wire>( newWire );
             if (!sharedNewWire) {
                 continue;
             }

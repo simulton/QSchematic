@@ -94,9 +94,9 @@ void Wire::fromContainer(const Gpds::Container& container)
     update();
 }
 
-std::unique_ptr<Item> Wire::deepCopy() const
+std::shared_ptr<Item> Wire::deepCopy() const
 {
-    auto clone = std::make_unique<Wire>(type(), parentItem());
+    auto clone = std::make_shared<Wire>(type(), parentItem());
     copyAttributes(*(clone.get()));
 
     return clone;

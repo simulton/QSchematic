@@ -9,38 +9,31 @@
 #include "flowstart.h"
 #include "flowend.h"
 
-std::unique_ptr<QSchematic::Item> CustomItemFactory::fromContainer(const Gpds::Container& container)
+std::shared_ptr<QSchematic::Item> CustomItemFactory::fromContainer(const Gpds::Container& container)
 {
     // Extract the type
     QSchematic::Item::ItemType type = QSchematic::ItemFactory::extractType(container);
 
     // Create the item
-    std::unique_ptr<QSchematic::Item> item;
     switch (static_cast<ItemType>(type)) {
     case ItemType::OperationType:
-        item.reset(new Operation);
-        break;
+        return std::make_shared<Operation>();
 
     case ItemType::OperationConnectorType:
-        item.reset(new OperationConnector);
-        break;
+        return std::make_shared<OperationConnector>();
 
     case ItemType::OperationDemo1Type:
-        item.reset(new OperationDemo1);
-        break;
+        return std::make_shared<OperationDemo1>();
 
     case ItemType::FancyWireType:
-        item.reset(new FancyWire);
-        break;
+        return std::make_shared<FancyWire>();
 
     case ItemType::FlowStartType:
-        item.reset(new FlowStart);
-        break;
+        return std::make_shared<FlowStart>();
 
     case ItemType::FlowEndType:
-        item.reset(new FlowEnd);
-        break;
+        return std::make_shared<FlowEnd>();
     }
 
-    return item;
+    return {};
 }
