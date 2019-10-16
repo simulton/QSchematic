@@ -9,6 +9,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
 
 # List of source files
 set(SOURCES_PRIVATE
+    commands/commandbase.cpp
     commands/commanditemadd.cpp
     commands/commanditemmove.cpp
     commands/commanditemremove.cpp
@@ -36,6 +37,7 @@ set(SOURCES_PRIVATE
 
 # List of header files
 set(HEADERS_PUBLIC
+    commands/commandbase.h
     commands/commanditemadd.h
     commands/commanditemmove.h
     commands/commanditemremove.h

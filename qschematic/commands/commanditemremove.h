@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <QUndoCommand>
+#include "commandbase.h"
 #include <QPointer>
 
 class QGraphicsItem;
@@ -11,7 +11,7 @@ namespace QSchematic
     class Scene;
     class Item;
 
-    class CommandItemRemove : public QUndoCommand
+    class CommandItemRemove : public UndoCommand
     {
     public:
         CommandItemRemove(const QPointer<Scene>& scene, const std::shared_ptr<Item>& item, QUndoCommand* parent = nullptr);

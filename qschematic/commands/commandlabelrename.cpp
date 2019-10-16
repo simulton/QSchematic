@@ -5,12 +5,12 @@
 using namespace QSchematic;
 
 CommandLabelRename::CommandLabelRename(const QPointer<Label>& label, const QString& newText, QUndoCommand* parent) :
-    QUndoCommand(parent),
+    UndoCommand(parent),
     _label(label),
     _newText(newText)
 {
     _oldText = _label->text();
-
+    // TODO: is there a reason for no destruction tracking here? (leaves it alone for now / Oscar)
     setText(QStringLiteral("Rename label"));
 }
 

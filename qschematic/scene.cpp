@@ -18,6 +18,8 @@
 #include "items/wirenet.h"
 #include "utils/itemscontainerutils.h"
 
+#include <QDebug>
+
 using namespace QSchematic;
 
 Scene::Scene(QObject* parent) :
@@ -27,6 +29,18 @@ Scene::Scene(QObject* parent) :
     _invertWirePosture(true),
     _movingNodes(false)
 {
+
+#warning crash-patterns test clutter crap — will be removed in next commit
+    // NOTE: a last resort way for solving missing `prepareGeometryChange()`
+    // calls that apparently is devestating to the indexing algo... If indexing
+    // is beneficial overall to QS (which is uncertain in itself) the "Correct"
+    // fix would be to identify the specific missing points in items
+    // Have worked to find a fix that solves it at application level without
+    // this resort despite that, to verify actual execution patterns causing it.
+    //
+    // setItemIndexMethod(ItemIndexMethod::NoIndex);
+
+
     // Undo stack
     _undoStack = new QUndoStack;
     connect(_undoStack, &QUndoStack::cleanChanged, [this](bool isClean) {
@@ -248,30 +262,25 @@ void Scene::clearIsDirty()
 
 void Scene::clear()
 {
+    // Ensure no lingering lifespans kept in map-keys, selections or undocommands
+    _initialItemPositions.clear();
+    clearSelection();
+    _undoStack->clear();
+
     // Remove from scene
     // Do not use QGraphicsScene::clear() as that would also delete the items. However,
     // we still need them as we manage them via smart pointers (eg. in commands)
-//    while (!_items.isEmpty()) {
-//        removeItem(_items.first());
-//    }
-//    Q_ASSERT(_items.isEmpty());
-    _items.clear();
+    while (!_items.isEmpty()) {
+        removeItem(_items.first());
+    }
 
     // Nets
     _nets.clear();
-//    Q_ASSERT(_nets.isEmpty());
 
-// Unused
-//    // Selected items
-//    _selectedItems.clear();
-//    Q_ASSERT(_selectedItems.isEmpty());
-
-    // Undo stack
-    _undoStack->clear();
     clearIsDirty();
 
     // Update
-    update();
+    update(); // Note, should not be needed, and not recommended according to input, but avoid adding yet a permutation to the investigation
 }
 
 bool Scene::addItem(const std::shared_ptr<Item> item)
@@ -303,16 +312,29 @@ bool Scene::removeItem(const std::shared_ptr<Item> item)
         return false;
     }
 
+#warning crash-patterns test clutter crap — will be removed in next commit
+    // NOTE: Skipping explicit removal is the cleanest way to avoid crashes.
+    // Items will be removed from scene by their destructors when their life is
+    // over, so that has to be maintained consistently (a good thing TM)
+    // - Oscar C
+    //
     // Remove from scene (if necessary)
-    if (item->QGraphicsItem::scene()) {
-        QGraphicsScene::removeItem(item.get());
-    }
+//    if (item->QGraphicsItem::scene()) {
+//        // NOTE: This solution _almost_ solves the crash problem, but not all
+//        // cases, so avoiding active removal completely is the final strategy
+//        // Calling this on all wires too might be viable.
 
-    // Remove shared pointer from local list to reduce instance count
-    _items.removeAll(item);
+//        item->validateCrashTheoriesPrepareGeometryChange();
+//        QGraphicsScene::removeItem(item.get());
+//    }
 
+    // NOTE: because of above workaround solution the item will still exist in
+    // scene when below signal is sent
     // Let the world know
     emit itemRemoved(item);
+
+    // Remove keep-alive reference
+    _items.removeAll(item);
 
     return true;
 }
@@ -535,13 +557,10 @@ void Scene::itemRotated(const Item& item, const qreal rotation)
 void Scene::itemHighlightChanged(const Item& item, bool isHighlighted)
 {
     // Retrieve the corresponding smart pointer
-    auto sharedPointer = item.sharedPtr();
-    if (not sharedPointer) {
-        return;
+    if (auto sharedPointer = item.sharedPtr()) {
+        // Let the world know
+        emit itemHighlightChanged(sharedPointer, isHighlighted);
     }
-
-    // Let the world know
-    emit itemHighlightChanged(sharedPointer, isHighlighted);
 }
 
 void Scene::wireNetHighlightChanged(bool highlighted)
@@ -573,18 +592,6 @@ void Scene::wireNetHighlightChanged(bool highlighted)
     }
 }
 
-//    std::remove_if(_nets.begin(), _nets.end(), [](auto& net){
-//        if (net->contains(wire)) {
-//            net->removeWire(wire);
-//            net->setHighlighted(false);
-
-//            // Remove the WireNet if it has no more Wires
-//            if (net->wires().isEmpty()) {
-//                it = _nets.erase(it);
-//            }
-//        }
-//    });
-
 void Scene::wirePointMoved(Wire& rawWire, WirePoint& point)
 {
     Q_UNUSED(point)
@@ -611,9 +618,7 @@ void Scene::wirePointMoved(Wire& rawWire, WirePoint& point)
             break;
 
         } else {
-
             it++;
-
         }
     }
 
@@ -722,30 +727,6 @@ void Scene::addWireNet(const std::shared_ptr<WireNet> wireNet)
     // Keep track of stuff
     _nets.append(wireNet);
 }
-
-//std::shared_ptr<Item> Scene::sharedItemPointer(const Item& item) const
-//{
-//    // Check for all known _items
-//    for (const auto& sharedPointer : _items) {
-//        if (sharedPointer.get() == &item) {
-//            return sharedPointer;
-//        }
-//    }
-
-//    // Check for connectors
-//    if (item.parentItem()) {
-//        const Node* node = qgraphicsitem_cast<const Node*>( item.parentItem() );
-//        if ( node ) {
-//            for ( const auto& connector : node->connectors() ) {
-//                if ( connector.get() == &item ) {
-//                    return connector;
-//                }
-//            }
-//        }
-//    }
-
-//    return nullptr;
-//}
 
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {

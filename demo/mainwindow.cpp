@@ -32,6 +32,8 @@
 #include "itemslibrary/itemsslibrarywidget.h"
 #include "netlistviewer/netlistviewer.h"
 
+#include <QDebug>
+
 const QString FILE_FILTERS = "XML (*.xml)";
 
 MainWindow::MainWindow(QWidget *parent)
@@ -188,6 +190,8 @@ bool MainWindow::load()
     // Get rid of everything existing
     _scene->clear();
 
+    qDebug() << "load file";
+
     // Open the file
     QFile file(path);
     file.open(QFile::ReadOnly);
@@ -203,6 +207,8 @@ bool MainWindow::load()
 
     // Clean up
     file.close();
+
+    qDebug() << "loaded file";
 
     return true;
 }

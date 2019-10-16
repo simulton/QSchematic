@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QUndoCommand>
+#include "commandbase.h"
 #include <QPointer>
 
 namespace QSchematic
@@ -8,7 +8,7 @@ namespace QSchematic
 
     class Label;
 
-    class CommandLabelRename : public QUndoCommand
+    class CommandLabelRename : public UndoCommand
     {
     public:
         CommandLabelRename(const QPointer<Label>& label, const QString& newText, QUndoCommand* parent = nullptr);
