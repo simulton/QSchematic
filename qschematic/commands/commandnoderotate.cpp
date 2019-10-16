@@ -3,17 +3,17 @@
 #include "commands.h"
 #include "commandnoderotate.h"
 
+#include <QDebug>
+
 using namespace QSchematic;
 
 CommandNodeRotate::CommandNodeRotate(QPointer<Node> node, qreal newAngle, QUndoCommand* parent) :
-    QUndoCommand(parent),
+    UndoCommand(parent),
     _node(node),
     _newAngle(newAngle)
 {
     _oldAngle = node->rotation();
-    QObject::connect(_node.data(), &QObject::destroyed, [this]{
-        setObsolete(true);
-    });
+    connectDependencyDestroySignal(_node.data());
     setText(QStringLiteral("Node rotate"));
 }
 

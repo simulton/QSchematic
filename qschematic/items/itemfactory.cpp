@@ -53,9 +53,11 @@ std::shared_ptr<Item> ItemFactory::fromContainer(const Gpds::Container& containe
         return std::make_shared<Label>();
 
     case Item::QSchematicItemUserType:
+#warning TODO — discuss intended behaviour here!
         return {};
     }
 
+#warning TODO — discuss intended behaviour here!
     return {};
 }
 

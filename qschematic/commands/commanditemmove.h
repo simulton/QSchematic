@@ -1,9 +1,10 @@
 #pragma once
 
 #include <memory>
-#include <QUndoCommand>
+#include "commandbase.h"
 #include <QVector>
 #include <QVector2D>
+#include "commandbase.h"
 
 class QVector2D;
 
@@ -11,7 +12,7 @@ namespace QSchematic
 {
     class Item;
 
-    class CommandItemMove : public QUndoCommand
+    class CommandItemMove : public UndoCommand
     {
     public:
         CommandItemMove(const QVector<std::shared_ptr<Item>>& item, const QVector2D& moveBy, QUndoCommand* parent = nullptr);

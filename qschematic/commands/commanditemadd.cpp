@@ -7,13 +7,11 @@
 using namespace QSchematic;
 
 CommandItemAdd::CommandItemAdd(const QPointer<Scene>& scene, const std::shared_ptr<Item>& item, QUndoCommand* parent) :
-    QUndoCommand(parent),
+    UndoCommand(parent),
     _scene(scene),
     _item(item)
 {
-    QObject::connect(_scene.data(), &QObject::destroyed, [this]{
-        setObsolete(true);
-    });
+    connectDependencyDestroySignal(_scene.data());
     setText(QStringLiteral("Add item"));
 }
 

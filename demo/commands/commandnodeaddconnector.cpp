@@ -4,13 +4,11 @@
 #include "commandnodeaddconnector.h"
 
 CommandNodeAddConnector::CommandNodeAddConnector(const QPointer<QSchematic::Node>& node, const std::shared_ptr<QSchematic::Connector>& connector, QUndoCommand* parent) :
-    QUndoCommand(parent),
+    UndoCommand(parent),
     _node(node),
     _connector(connector)
 {
-    QObject::connect(_node.data(), &QObject::destroyed, [this]{
-        setObsolete(true);
-    });
+    connect(_node.data(), &QObject::destroyed, this, &UndoCommand::handleDependencyDestruction);
     setText(QStringLiteral("Add connector"));
 }
 

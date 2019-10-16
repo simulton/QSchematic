@@ -6,7 +6,7 @@
 using namespace QSchematic;
 
 CommandItemMove::CommandItemMove(const QVector<std::shared_ptr<Item>>& items, const QVector2D& moveBy, QUndoCommand* parent) :
-    QUndoCommand(parent),
+    UndoCommand(parent),
     _items(items),
     _moveBy(moveBy)
 {

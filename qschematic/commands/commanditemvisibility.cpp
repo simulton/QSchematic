@@ -5,16 +5,13 @@
 using namespace QSchematic;
 
 CommandItemVisibility::CommandItemVisibility(const std::shared_ptr<Item>& item, bool newVisibility, QUndoCommand* parent) :
-    QUndoCommand(parent),
+    UndoCommand(parent),
     _item(item),
     _newVisibility(newVisibility)
 {
     _oldVisibility = _item->isVisible();
-
-    QObject::connect(_item.get(), &QObject::destroyed, [this]{
-        setObsolete(true);
-    });
-
+    // can't happen since we keep it alive
+    // connect(_item.get(), &QObject::destroyed, this, &CommandBase::handleDependencyDestruction);
     setText(QStringLiteral("Change visibility"));
 }
 

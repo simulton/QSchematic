@@ -3,7 +3,7 @@
 *.user
 *-Debug
 build-*
-build/
+build/*
 
 qschematic/*.a
 qschematic/*.dll

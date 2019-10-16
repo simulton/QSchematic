@@ -642,7 +642,11 @@ void Wire::moveLineSegmentBy(int index, const QVector2D& moveBy)
 
     // Move the line segment
     movePointTo(index, _points[index].toPointF() + moveBy.toPointF());
-    movePointTo(index+1, _points[index+1].toPointF() + moveBy.toPointF());
+
+    // TODO: I have not looked into code logic at all here — simply added to avoid fail from overflows if unchecked /Oscar C
+    if (index + 1 < _points.size()) {
+        movePointTo(index+1, _points[index+1].toPointF() + moveBy.toPointF());
+    }
 }
 
 void Wire::setPointIsJunction(int index, bool isJunction)
