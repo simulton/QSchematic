@@ -3,8 +3,6 @@
 #include "commands.h"
 #include "commandnoderotate.h"
 
-#include <QDebug>
-
 using namespace QSchematic;
 
 CommandNodeRotate::CommandNodeRotate(QPointer<Node> node, qreal newAngle, QUndoCommand* parent) :

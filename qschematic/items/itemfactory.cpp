@@ -24,7 +24,7 @@ std::shared_ptr<Item> ItemFactory::fromContainer(const Gpds::Container& containe
 {
     // First, try custom types
     if (_customItemFactory) {
-        if (auto item = _customItemFactory(container)) { //.release();
+        if (auto item = _customItemFactory(container)) {
             return item;
         }
     }
@@ -53,11 +53,11 @@ std::shared_ptr<Item> ItemFactory::fromContainer(const Gpds::Container& containe
         return std::make_shared<Label>();
 
     case Item::QSchematicItemUserType:
-#warning TODO — discuss intended behaviour here!
+        // TODO: discuss intended behaviour here!
         return {};
     }
 
-#warning TODO — discuss intended behaviour here!
+    // TODO: discuss intended behaviour here!
     return {};
 }
 

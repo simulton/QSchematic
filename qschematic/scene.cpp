@@ -18,8 +18,6 @@
 #include "items/wirenet.h"
 #include "utils/itemscontainerutils.h"
 
-#include <QDebug>
-
 using namespace QSchematic;
 
 Scene::Scene(QObject* parent) :
@@ -29,17 +27,8 @@ Scene::Scene(QObject* parent) :
     _invertWirePosture(true),
     _movingNodes(false)
 {
-
-#warning crash-patterns test clutter crap — will be removed in next commit
-    // NOTE: a last resort way for solving missing `prepareGeometryChange()`
-    // calls that apparently is devestating to the indexing algo... If indexing
-    // is beneficial overall to QS (which is uncertain in itself) the "Correct"
-    // fix would be to identify the specific missing points in items
-    // Have worked to find a fix that solves it at application level without
-    // this resort despite that, to verify actual execution patterns causing it.
-    //
+    // NOTE: See #T1517
     // setItemIndexMethod(ItemIndexMethod::NoIndex);
-
 
     // Undo stack
     _undoStack = new QUndoStack;
@@ -307,30 +296,18 @@ bool Scene::addItem(const std::shared_ptr<Item> item)
 
 bool Scene::removeItem(const std::shared_ptr<Item> item)
 {
-    // Sanity check
     if (!item) {
         return false;
     }
 
-#warning crash-patterns test clutter crap — will be removed in next commit
-    // NOTE: Skipping explicit removal is the cleanest way to avoid crashes.
-    // Items will be removed from scene by their destructors when their life is
-    // over, so that has to be maintained consistently (a good thing TM)
-    // - Oscar C
-    //
+    // NOTE: Call removed because of #T1517
     // Remove from scene (if necessary)
-//    if (item->QGraphicsItem::scene()) {
-//        // NOTE: This solution _almost_ solves the crash problem, but not all
-//        // cases, so avoiding active removal completely is the final strategy
-//        // Calling this on all wires too might be viable.
+    // if (item->QGraphicsItem::scene()) {
+    //     QGraphicsScene::removeItem(item.get());
+    // }
 
-//        item->validateCrashTheoriesPrepareGeometryChange();
-//        QGraphicsScene::removeItem(item.get());
-//    }
-
-    // NOTE: because of above workaround solution the item will still exist in
-    // scene when below signal is sent
-    // Let the world know
+    // NOTE: because of #T1517 workaround the item will still exist in scene
+    // when below signal is sent
     emit itemRemoved(item);
 
     // Remove keep-alive reference

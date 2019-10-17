@@ -3,8 +3,6 @@
 #include "commands.h"
 #include "commandnoderesize.h"
 
-#include <QDebug>
-
 using namespace QSchematic;
 
 CommandNodeResize::CommandNodeResize(QPointer<Node> node, const QPointF& newPos, const QSizeF& newSize, QUndoCommand* parent) :

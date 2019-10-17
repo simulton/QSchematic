@@ -37,14 +37,11 @@ namespace QSchematic {
 
         Item(int type, QGraphicsItem* parent = nullptr);
 
-#warning crash-patterns test clutter crap — will be removed in next commit
-        virtual ~Item() override; //  = default;
-
         /**
          * These funcs should be the only source for obtaining a canonical
-         * shared-/weak-ptr to the item. It _must_ be allocated with make_shared 
+         * shared-/weak-ptr to the item. It _must_ be allocated with make_shared
          * or shared-constructor — ,no compile time check validates that.
-         * For convenience it's also possible to cast by simply explicitly 
+         * For convenience it's also possible to cast by simply explicitly
          * passing a template arg
          */
 
@@ -130,9 +127,6 @@ namespace QSchematic {
         bool highlightEnabled() const;
         QPixmap toPixmap(QPointF& hotSpot, qreal scale = 1.0);
         virtual void update();
-
-        #warning crash-patterns test clutter crap — will be removed in next commit
-        void validateCrashTheoriesPrepareGeometryChange();
 
     signals:
         void moved(Item& item, const QVector2D& movedBy);

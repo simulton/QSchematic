@@ -6,8 +6,6 @@
 #include "../scene.h"
 #include "../commands/commanditemmove.h"
 
-#include <QDebug>
-
 using namespace QSchematic;
 
 Item::Item(int type, QGraphicsItem* parent) :
@@ -26,13 +24,6 @@ Item::Item(int type, QGraphicsItem* parent) :
     connect(this, &Item::xChanged, this, &Item::posChanged);
     connect(this, &Item::yChanged, this, &Item::posChanged);
     connect(this, &Item::rotationChanged, this, &Item::rotChanged);
-}
-
-Item::~Item()
-{
-#warning crash-patterns test clutter crap — will be removed in next commit
-//    validateCrashTheoriesPrepareGeometryChange();
-    qDebug() << "Item::~Item -> " << this;
 }
 
 Gpds::Container Item::toContainer() const
@@ -379,15 +370,4 @@ void Item::update()
 
     // Base class
     QGraphicsObject::update();
-}
-
-#warning crash-patterns test clutter crap — will be removed in next commit
-void Item::validateCrashTheoriesPrepareGeometryChange()
-{
-    prepareGeometryChange();
-    for (auto it : childItems()) {
-        if (auto item = dynamic_cast<Item*>(it)) {
-            item->validateCrashTheoriesPrepareGeometryChange();
-        }
-    }
 }
