@@ -663,11 +663,9 @@ void Node::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
 
 QRectF Node::boundingRect() const
 {
-    QRectF rect;
-    qreal adj = 0.0;
-
     // Body rect
-    rect = rect.united(QRectF(QPoint(0, 0), _size));
+    QRectF rect = QRectF(QPoint(0, 0), _size);
+    qreal adj = 0.0;
 
     // Add half the pen width
     adj = qMax(adj, PEN_WIDTH / 2.0);
@@ -682,12 +680,16 @@ QRectF Node::boundingRect() const
         adj = qMax(adj, static_cast<qreal>(_settings.highlightRectPadding));
     }
 
+    // adjustment should be done before union with other rects, otherwise the
+    // relative increase is added to outliers too
+    rect = rect.adjusted(-adj, -adj, adj, adj);
+
     // Rotate handle
     if (isSelected() and _allowMouseRotate) {
         rect = rect.united(rotationHandle());
     }
 
-    return rect.adjusted(-adj, -adj, adj, adj);
+    return rect;
 }
 
 void Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)

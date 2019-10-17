@@ -27,6 +27,9 @@ Scene::Scene(QObject* parent) :
     _invertWirePosture(true),
     _movingNodes(false)
 {
+    // NOTE: See #T1517
+    // setItemIndexMethod(ItemIndexMethod::NoIndex);
+
     // Undo stack
     _undoStack = new QUndoStack;
     connect(_undoStack, &QUndoStack::cleanChanged, [this](bool isClean) {
@@ -248,30 +251,25 @@ void Scene::clearIsDirty()
 
 void Scene::clear()
 {
+    // Ensure no lingering lifespans kept in map-keys, selections or undocommands
+    _initialItemPositions.clear();
+    clearSelection();
+    _undoStack->clear();
+
     // Remove from scene
     // Do not use QGraphicsScene::clear() as that would also delete the items. However,
     // we still need them as we manage them via smart pointers (eg. in commands)
-//    while (!_items.isEmpty()) {
-//        removeItem(_items.first());
-//    }
-//    Q_ASSERT(_items.isEmpty());
-    _items.clear();
+    while (!_items.isEmpty()) {
+        removeItem(_items.first());
+    }
 
     // Nets
     _nets.clear();
-//    Q_ASSERT(_nets.isEmpty());
 
-// Unused
-//    // Selected items
-//    _selectedItems.clear();
-//    Q_ASSERT(_selectedItems.isEmpty());
-
-    // Undo stack
-    _undoStack->clear();
     clearIsDirty();
 
     // Update
-    update();
+    update(); // Note, should not be needed, and not recommended according to input, but avoid adding yet a permutation to the investigation
 }
 
 bool Scene::addItem(const std::shared_ptr<Item> item)
@@ -298,21 +296,22 @@ bool Scene::addItem(const std::shared_ptr<Item> item)
 
 bool Scene::removeItem(const std::shared_ptr<Item> item)
 {
-    // Sanity check
     if (!item) {
         return false;
     }
 
+    // NOTE: Call removed because of #T1517
     // Remove from scene (if necessary)
-    if (item->QGraphicsItem::scene()) {
-        QGraphicsScene::removeItem(item.get());
-    }
+    // if (item->QGraphicsItem::scene()) {
+    //     QGraphicsScene::removeItem(item.get());
+    // }
 
-    // Remove shared pointer from local list to reduce instance count
-    _items.removeAll(item);
-
-    // Let the world know
+    // NOTE: because of #T1517 workaround the item will still exist in scene
+    // when below signal is sent
     emit itemRemoved(item);
+
+    // Remove keep-alive reference
+    _items.removeAll(item);
 
     return true;
 }
@@ -535,13 +534,10 @@ void Scene::itemRotated(const Item& item, const qreal rotation)
 void Scene::itemHighlightChanged(const Item& item, bool isHighlighted)
 {
     // Retrieve the corresponding smart pointer
-    auto sharedPointer = item.sharedPtr();
-    if (not sharedPointer) {
-        return;
+    if (auto sharedPointer = item.sharedPtr()) {
+        // Let the world know
+        emit itemHighlightChanged(sharedPointer, isHighlighted);
     }
-
-    // Let the world know
-    emit itemHighlightChanged(sharedPointer, isHighlighted);
 }
 
 void Scene::wireNetHighlightChanged(bool highlighted)
@@ -573,18 +569,6 @@ void Scene::wireNetHighlightChanged(bool highlighted)
     }
 }
 
-//    std::remove_if(_nets.begin(), _nets.end(), [](auto& net){
-//        if (net->contains(wire)) {
-//            net->removeWire(wire);
-//            net->setHighlighted(false);
-
-//            // Remove the WireNet if it has no more Wires
-//            if (net->wires().isEmpty()) {
-//                it = _nets.erase(it);
-//            }
-//        }
-//    });
-
 void Scene::wirePointMoved(Wire& rawWire, WirePoint& point)
 {
     Q_UNUSED(point)
@@ -611,9 +595,7 @@ void Scene::wirePointMoved(Wire& rawWire, WirePoint& point)
             break;
 
         } else {
-
             it++;
-
         }
     }
 
@@ -722,30 +704,6 @@ void Scene::addWireNet(const std::shared_ptr<WireNet> wireNet)
     // Keep track of stuff
     _nets.append(wireNet);
 }
-
-//std::shared_ptr<Item> Scene::sharedItemPointer(const Item& item) const
-//{
-//    // Check for all known _items
-//    for (const auto& sharedPointer : _items) {
-//        if (sharedPointer.get() == &item) {
-//            return sharedPointer;
-//        }
-//    }
-
-//    // Check for connectors
-//    if (item.parentItem()) {
-//        const Node* node = qgraphicsitem_cast<const Node*>( item.parentItem() );
-//        if ( node ) {
-//            for ( const auto& connector : node->connectors() ) {
-//                if ( connector.get() == &item ) {
-//                    return connector;
-//                }
-//            }
-//        }
-//    }
-
-//    return nullptr;
-//}
 
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {

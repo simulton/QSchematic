@@ -7,17 +7,12 @@
 using namespace QSchematic;
 
 CommandItemRemove::CommandItemRemove(const QPointer<Scene>& scene, const std::shared_ptr<Item>& item, QUndoCommand* parent) :
-    QUndoCommand(parent),
+    UndoCommand(parent),
     _scene(scene),
     _item(item)
 {
     Q_ASSERT(scene);
-
-    // Keep an eye on the scene
-    QObject::connect(_scene.data(), &QObject::destroyed, [this]{
-        setObsolete(true);
-    });
-
+    connectDependencyDestroySignal(_scene.data());
     // Everything needs a text, right?
     setText(QStringLiteral("Remove item"));
 }

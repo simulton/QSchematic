@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QUndoCommand>
+#include "commands/commandbase.h"
 #include <QPointer>
 #include <memory>
 
@@ -10,7 +10,7 @@ namespace QSchematic
     class Connector;
 }
 
-class CommandNodeAddConnector : public QUndoCommand
+class CommandNodeAddConnector : public QSchematic::UndoCommand
 {
 public:
     CommandNodeAddConnector(const QPointer<QSchematic::Node>& node, const std::shared_ptr<QSchematic::Connector>& connector, QUndoCommand* parent = nullptr);

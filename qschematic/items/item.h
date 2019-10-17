@@ -36,11 +36,58 @@ namespace QSchematic {
         const QString JSON_ID_STRING = QStringLiteral("type_id");
 
         Item(int type, QGraphicsItem* parent = nullptr);
-        virtual ~Item() override = default;
 
-        auto sharedPtr() const -> std::shared_ptr<const Item>;
-        auto sharedPtr() -> std::shared_ptr<Item>;
-        auto weakPtr() -> std::weak_ptr<Item>;
+        /**
+         * These funcs should be the only source for obtaining a canonical
+         * shared-/weak-ptr to the item. It _must_ be allocated with make_shared
+         * or shared-constructor — ,no compile time check validates that.
+         * For convenience it's also possible to cast by simply explicitly
+         * passing a template arg
+         */
+
+        template <typename RetT = Item>
+        auto sharedPtr() const -> std::shared_ptr<const RetT>
+        {
+            if constexpr (std::is_same_v<RetT, Item>) {
+                return shared_from_this();
+            }
+            else {
+                return std::dynamic_pointer_cast<const RetT>(shared_from_this());
+            }
+        }
+
+        template <typename RetT = Item>
+        auto sharedPtr() -> std::shared_ptr<RetT>
+        {
+            if constexpr (std::is_same_v<RetT, Item>) {
+                return shared_from_this();
+            }
+            else {
+                return std::dynamic_pointer_cast<RetT>(shared_from_this());
+            }
+        }
+
+        template <typename RetT = Item>
+        auto weakPtr() const -> std::weak_ptr<const RetT>
+        {
+            if constexpr (std::is_same_v<RetT, Item>) {
+                return weak_from_this();
+            }
+            else {
+                return std::dynamic_pointer_cast<const RetT>(weak_from_this());
+            }
+        }
+
+        template <typename RetT = Item>
+        auto weakPtr() -> std::weak_ptr<RetT>
+        {
+            if constexpr (std::is_same_v<RetT, Item>) {
+                return weak_from_this();
+            }
+            else {
+                return std::dynamic_pointer_cast<RetT>(weak_from_this());
+            }
+        }
 
         virtual Gpds::Container toContainer() const override;
         virtual void fromContainer(const Gpds::Container& container) override;
