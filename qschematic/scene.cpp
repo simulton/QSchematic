@@ -28,7 +28,7 @@ Scene::Scene(QObject* parent) :
     _movingNodes(false)
 {
     // NOTE: See #T1517
-     setItemIndexMethod(ItemIndexMethod::NoIndex);
+    setItemIndexMethod(ItemIndexMethod::NoIndex);
 
     // Undo stack
     _undoStack = new QUndoStack;
@@ -301,8 +301,8 @@ bool Scene::removeItem(const std::shared_ptr<Item> item)
     }
 
     // NOTE: Call removed because of #T1517
-    // NOTE2: When items deleted by user (not clear!), it's retained in
-    //  DeleteCommand — therefore remains in scene. Returns to explicit remove,
+    // NOTE2: When items deleted by _user_ (_not clear!_) — it's retained in
+    //  DeleteCommand and therefore remains in scene. Returns to explicit remove,
     //  workarounds crash by disabling index instead as compensation.
     //
     // Remove from scene (if necessary)
