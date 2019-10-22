@@ -63,6 +63,13 @@ namespace QSchematic {
         bool connectorsSnapToGrid() const;
         void alignConnectorLabels() const;
 
+        /**
+         * @brief not really an event per se, but this seems the best way to
+         * name it, all things considered. There are many items currently
+         * that need to react to size-change and signal to self is boilerplaty
+         */
+        virtual auto sizeChangedEvent() -> void;
+
         virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
         virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
         virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;

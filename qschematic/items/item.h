@@ -44,7 +44,7 @@ namespace QSchematic {
          * For convenience it's also possible to cast by simply explicitly
          * passing a template arg
          */
-
+        /// @{
         template <typename RetT = Item>
         auto sharedPtr() const -> std::shared_ptr<const RetT>
         {
@@ -88,6 +88,7 @@ namespace QSchematic {
                 return std::dynamic_pointer_cast<RetT>(weak_from_this());
             }
         }
+        /// @}
 
         virtual Gpds::Container toContainer() const override;
         virtual void fromContainer(const Gpds::Container& container) override;
