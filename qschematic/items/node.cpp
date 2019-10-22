@@ -141,6 +141,11 @@ Node::Mode Node::mode() const
 
 void Node::setSize(const QSizeF& size)
 {
+    // short circuit when no effective change at all times as a manner of policy
+    if (size == _size) {
+        return;
+    }
+
     // Boundary checks
     if (size.width() < 1 or size.height() < 1) {
         return;
@@ -168,6 +173,7 @@ void Node::setSize(const QSizeF& size)
 
     setTransformOriginPoint(sizeRect().center());
 
+    sizeChangedEvent();
     emit sizeChanged();
 }
 
@@ -401,6 +407,11 @@ void Node::alignConnectorLabels() const
         Q_ASSERT(connector);
         connector->alignLabel();
     }
+}
+
+auto Node::sizeChangedEvent() -> void
+{
+    // default implementation is noop
 }
 
 void Node::mousePressEvent(QGraphicsSceneMouseEvent* event)
