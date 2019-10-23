@@ -874,7 +874,22 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
         if (event->buttons() & Qt::LeftButton) {
             // Move all selected items
             if (_movingNodes) {
-                for (auto& i : selectedItems()) {
+                const auto& items = selectedItems();
+                for (const auto& i : items) {
+                    // Do not move the item if it's parent is also selected
+                    bool parentIsSelected = false;
+                    QGraphicsItem* parent = i->parentItem();
+                    if (parent) {
+                        for (const auto& item: items) {
+                            if (item.get() == parent) {
+                                parentIsSelected = true;
+                                break;
+                            }
+                        }
+                        if (parentIsSelected) {
+                            continue;
+                        }
+                    }
                     Item* item = qgraphicsitem_cast<Item*>(i.get());
                     if (item and item->isMovable()) {
                         // Calculate by how much the item was moved
