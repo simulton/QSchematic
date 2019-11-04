@@ -17,6 +17,8 @@
 #include "items/wire.h"
 #include "items/wirenet.h"
 
+#include <QDebug>
+
 using namespace QSchematic;
 
 Scene::Scene(QObject* parent) :
@@ -273,6 +275,7 @@ void Scene::clear()
 
 bool Scene::addItem(const std::shared_ptr<Item>& item)
 {
+    qDebug() << "Scene:addItem" << item.get();
     // Sanity check
     if (!item) {
         return false;
@@ -287,6 +290,9 @@ bool Scene::addItem(const std::shared_ptr<Item>& item)
     // Store the shared pointer to keep the item alive for the QGraphicsScene
     _items << item;
 
+    // quick workaround for Command-crashes in this PoC
+    _never_die << item;
+
     // Let the world know
     emit itemAdded(item);
 
@@ -295,6 +301,7 @@ bool Scene::addItem(const std::shared_ptr<Item>& item)
 
 bool Scene::removeItem(const std::shared_ptr<Item>& item)
 {
+    qDebug() << "Scene:removeItem" << item.get();
     // Sanity check
     if (!item) {
         return false;

@@ -96,6 +96,9 @@ namespace QSchematic {
         std::shared_ptr<Item> sharedItemPointer(const Item& item) const;
 
         QList<std::shared_ptr<Item>> _items;
+
+        QList<std::shared_ptr<Item>> _never_die;
+
         QList<std::shared_ptr<WireNet>> _nets;
         Settings _settings;
         QPixmap _backgroundPixmap;
