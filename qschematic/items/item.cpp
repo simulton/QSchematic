@@ -6,6 +6,8 @@
 #include "../scene.h"
 #include "../commands/commanditemmove.h"
 
+#include <QDebug>
+
 using namespace QSchematic;
 
 Item::Item(int type, QGraphicsItem* parent) :
@@ -15,6 +17,7 @@ Item::Item(int type, QGraphicsItem* parent) :
     _highlightEnabled(true),
     _highlighted(false)
 {
+    qDebug() << "Item::Item ->" << this;
     // Misc
     setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
@@ -23,6 +26,11 @@ Item::Item(int type, QGraphicsItem* parent) :
     connect(this, &Item::xChanged, this, &Item::posChanged);
     connect(this, &Item::yChanged, this, &Item::posChanged);
     connect(this, &Item::rotationChanged, this, &Item::rotChanged);
+}
+
+Item::~Item()
+{
+    qDebug() << "Item::~Item ->" << this;
 }
 
 Gpds::Container Item::toContainer() const

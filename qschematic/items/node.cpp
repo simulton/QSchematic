@@ -11,6 +11,10 @@
 #include "../utils.h"
 #include "../scene.h"
 
+
+#include <QDebug>
+
+
 const QColor COLOR_HIGHLIGHTED = QColor(Qt::blue);
 const QColor COLOR_BODY_FILL   = QColor(Qt::green);
 const QColor COLOR_BODY_BORDER = QColor(Qt::black);
@@ -405,6 +409,8 @@ void Node::alignConnectorLabels() const
 
 void Node::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
+    qDebug() << "Node::mousePressEvent ->" << event;
+
     event->accept();
 
     // Let the base class handle selection and so on
@@ -434,15 +440,19 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent* event)
             _mode = Rotate;
         }
     }
+    qDebug() << "Node::mousePressEvent -> /";
 }
 
 void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
+    qDebug() << "Node::mouseReleaseEvent ->" << event;
+
     event->accept();
 
     Item::mouseReleaseEvent(event);
 
     _mode = None;
+    qDebug() << "Node::mouseReleaseEvent -> /";
 }
 
 void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)

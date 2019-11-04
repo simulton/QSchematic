@@ -33,7 +33,7 @@ namespace QSchematic {
         const QString JSON_ID_STRING = QStringLiteral("type_id");
 
         Item(int type, QGraphicsItem* parent = nullptr);
-        virtual ~Item() override = default;
+        virtual ~Item() override;
 
         virtual Gpds::Container toContainer() const override;
         virtual void fromContainer(const Gpds::Container& container) override;
