@@ -385,12 +385,17 @@ void Connector::moveWirePoint() const
         return;
     }
 
+    // If the wire is also moving the connector must not update the wire
+    if (_wire->isSelected()) {
+        return;
+    }
+
     if (_wirePointIndex < -1 or _wire->wirePointsRelative().count() <= _wirePointIndex) {
         return;
     }
 
-    QPointF oldPos = _wire->wirePointsRelative().at(_wirePointIndex).toPointF();
-    QVector2D moveBy = QVector2D(scenePos() - (_wire->pos() + oldPos));
+    QPointF oldPos = _wire->wirePointsAbsolute().at(_wirePointIndex).toPointF();
+    QVector2D moveBy = QVector2D(scenePos() - oldPos);
     _wire->movePointBy(_wirePointIndex, moveBy);
 }
 

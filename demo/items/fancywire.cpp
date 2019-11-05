@@ -67,9 +67,9 @@ void FancyWire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
     painter->setPen(pen);
     painter->setBrush(brush);
 
-    for (const auto& point: pointsAbsolute()) {
+    for (const auto& point: pointsRelative()) {
         for (const auto& connector: connectionPoints) {
-            if (qFuzzyCompare(QVector2D(connector), QVector2D(point))) {
+            if (qFuzzyCompare(QVector2D(connector), QVector2D(point + pos()))) {
                 painter->drawEllipse(point, SIZE, SIZE);
                 break;
             }

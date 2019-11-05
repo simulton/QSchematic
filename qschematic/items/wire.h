@@ -69,6 +69,7 @@ namespace QSchematic {
         virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;
         virtual void hoverMoveEvent(QGraphicsSceneHoverEvent* event) override;
         virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
+        virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value) override;
 
     private:
         Q_DISABLE_COPY(Wire)
@@ -82,6 +83,7 @@ namespace QSchematic {
         int _pointToMoveIndex;
         int _lineSegmentToMoveIndex;
         QPointF _prevMousePos;
+        QPointF _offset;
         void moveJunctionsToNewSegment(const Line& oldSegment, const Line& newSegment);
     };
 

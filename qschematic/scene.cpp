@@ -347,7 +347,19 @@ QList<std::shared_ptr<Item>> Scene::items(int itemType) const
 
 std::vector<std::shared_ptr<Item>> Scene::selectedItems() const
 {
-    return ItemUtils::mapItemListToSharedPtrList<std::vector>(QGraphicsScene::selectedItems());
+    const auto& rawItems = QGraphicsScene::selectedItems();
+
+    // Retrieve corresponding smart pointers
+    auto items = ItemUtils::mapItemListToSharedPtrList<std::vector>(QGraphicsScene::selectedItems());
+    int i = 0;
+    for (auto it = items.begin(); it != items.end();) {
+        if (not _items.contains(*it)) {
+            it = items.erase(it);
+        } else {
+            it++;
+        }
+    }
+    return items;
 }
 
 QList<std::shared_ptr<Node>> Scene::nodes() const
@@ -377,7 +389,7 @@ bool Scene::addWire(const std::shared_ptr<Wire> wire)
     // If yes, add to that net. Otherwise, create a new one
     for (auto& net : _nets) {
         for (const Line& line : net->lineSegments()) {
-            for (const QPointF& point : wire->pointsRelative()) {
+            for (const QPointF& point : wire->pointsAbsolute()) {
                 if (line.containsPoint(point.toPoint(), 0)) {
                     net->addWire(wire);
                     return true;
@@ -390,7 +402,7 @@ bool Scene::addWire(const std::shared_ptr<Wire> wire)
     // If yes, add to that net. Otherwise, create a new one
     for (auto& net : _nets) {
         for (const auto& otherWire : net->wires()) {
-            for (const WirePoint& otherPoint : otherWire->wirePointsRelative()) {
+            for (const WirePoint& otherPoint : otherWire->wirePointsAbsolute()) {
                 for (const Line& line : wire->lineSegments()) {
                     if (line.containsPoint(otherPoint.toPoint())) {
                         net->addWire(wire);
@@ -682,7 +694,7 @@ void Scene::wirePointMovedByUser(Wire& rawWire, WirePoint& point)
                 if (wire.get() == &rawWire) {
                     continue;
                 }
-                if (wire->pointIsOnWire(point.toPointF())) {
+                if (wire->pointIsOnWire(rawWire.wirePointsAbsolute().at(index).toPointF())) {
                     if (!rawWire.connectedWires().contains(wire.get())) {
                         wire->connectWire(&rawWire);
                         rawWire.setPointIsJunction(index, true);
@@ -763,6 +775,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
                     _newWire = std::make_shared<Wire>();
                 }
                 _undoStack->push(new CommandItemAdd(this, _newWire));
+                _newWire->setPos(_settings.snapToGrid(event->scenePos()));
             }
             // Snap to grid
             const QPointF& snappedPos = _settings.snapToGrid(event->scenePos());
@@ -810,22 +823,45 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
     switch (_mode) {
     case NormalMode:
     {
+        auto items = selectedItems();
+        for (auto& item: items) {
+            Wire* wire = dynamic_cast<Wire*>(item.get());
+            if (wire) {
+                for (auto& otherWire: wire->connectedWires()) {
+                    wirePointMovedByUser(*otherWire, otherWire->wirePointsRelative().first());
+                    wirePointMovedByUser(*otherWire, otherWire->wirePointsRelative().last());
+                }
+                for (auto& wirepoint: wire->wirePointsRelative()) {
+                    wirePointMovedByUser(*wire, wirepoint);
+                }
+            }
+        }
         QGraphicsScene::mouseReleaseEvent(event);
 
         // Reset the position for every selected item and
         // apply the translation through the undostack
         if (_movingNodes) {
-            for (auto& i: selectedItems()) {
-                Item* item = qgraphicsitem_cast<Item*>(i.get());
-                // Move the item if it is movable and it was previously registered by the mousePressEvent
-                if (item and item->isMovable() and _initialItemPositions.contains(i)) {
-                    QVector2D moveBy(item->pos() - _initialItemPositions.value(i));
-                    if (!moveBy.isNull()) {
-                        // Move the item to its initial position
-                        item->setPos(_initialItemPositions.value(i));
-                        // Apply the translation
-                        _undoStack->push(new CommandItemMove(QVector<std::shared_ptr<Item>>() << i, moveBy));
+            QVector<std::shared_ptr<Item>> wiresToMove;
+            QVector<std::shared_ptr<Item>> itemsToMove;
+            for (const auto& item : selectedItems()) {
+                if (item->isMovable() and _initialItemPositions.contains(item)) {
+                    Wire* wire = dynamic_cast<Wire*>(item.get());
+                    if (wire) {
+                        wiresToMove << item;
+                    } else {
+                        itemsToMove << item;
                     }
+                }
+            }
+            itemsToMove = wiresToMove << itemsToMove;
+            for (const auto& item : itemsToMove) {
+                // Move the item if it is movable and it was previously registered by the mousePressEvent
+                QVector2D moveBy(item->pos() - _initialItemPositions.value(item));
+                if (!moveBy.isNull()) {
+                    // Move the item to its initial position
+                    item->setPos(_initialItemPositions.value(item));
+                    // Apply the translation
+                    _undoStack->push(new CommandItemMove(QVector<std::shared_ptr<Item>>() << item, moveBy));
                 }
             }
         }
@@ -874,31 +910,25 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
         if (event->buttons() & Qt::LeftButton) {
             // Move all selected items
             if (_movingNodes) {
-                const auto& items = selectedItems();
-                for (const auto& i : items) {
-                    // Do not move the item if it's parent is also selected
-                    bool parentIsSelected = false;
-                    QGraphicsItem* parent = i->parentItem();
-                    if (parent) {
-                        for (const auto& item: items) {
-                            if (item.get() == parent) {
-                                parentIsSelected = true;
-                                break;
-                            }
-                        }
-                        if (parentIsSelected) {
-                            continue;
+                QVector<std::shared_ptr<Item>> wiresToMove;
+                QVector<std::shared_ptr<Item>> itemsToMove;
+                for (const auto& item : selectedItems()) {
+                    if (item->isMovable()) {
+                        Wire* wire = dynamic_cast<Wire*>(item.get());
+                        if (wire) {
+                            wiresToMove << item;
+                        } else {
+                            itemsToMove << item;
                         }
                     }
-                    Item* item = qgraphicsitem_cast<Item*>(i.get());
-                    if (item and item->isMovable()) {
-                        // Calculate by how much the item was moved
-                        QPointF moveBy = _initialItemPositions.value(i) + newMousePos - _initialCursorPosition - item->pos();
-                        // Apply the custom scene snapping
-                        moveBy = itemsMoveSnap(i, QVector2D(moveBy)).toPointF();
-                        // Move the item
-                        item->setPos(item->pos() + moveBy);
-                    }
+                }
+                itemsToMove = wiresToMove << itemsToMove;
+                for (const auto& item : itemsToMove) {
+                    // Calculate by how much the item was moved
+                    QPointF moveBy = _initialItemPositions.value(item) + newMousePos - _initialCursorPosition - item->pos();
+                    // Apply the custom scene snapping
+                    moveBy = itemsMoveSnap(item, QVector2D(moveBy)).toPointF();
+                    item->setPos(item->pos() + moveBy);
                 }
             }
         }
@@ -925,7 +955,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                 }
 
                 // Create the intermediate point that creates the straight angle
-                WirePoint prevNode(_newWire->pointsRelative().at(_newWire->pointsRelative().count()-1));
+                WirePoint prevNode(_newWire->pointsAbsolute().at(_newWire->pointsAbsolute().count()-1));
                 QPointF corner(prevNode.x(), snappedPos.y());
                 if (_invertWirePosture) {
                     corner.setX(snappedPos.x());
@@ -939,7 +969,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                 _newWireSegment = false;
             } else {
                 // Create the intermediate point that creates the straight angle
-                WirePoint p1(_newWire->pointsRelative().at(_newWire->pointsRelative().count()-3));
+                WirePoint p1(_newWire->pointsAbsolute().at(_newWire->pointsAbsolute().count()-3));
                 QPointF p2(p1.x(), snappedPos.y());
                 QPointF p3(snappedPos);
                 if (_invertWirePosture) {
@@ -948,13 +978,13 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                 }
 
                 // Modify the actual wire
-                _newWire->movePointTo(_newWire->pointsRelative().count()-2, p2);
-                _newWire->movePointTo(_newWire->pointsRelative().count()-1, p3);
+                _newWire->movePointTo(_newWire->pointsAbsolute().count()-2, p2);
+                _newWire->movePointTo(_newWire->pointsAbsolute().count()-1, p3);
             }
         } else {
             // Don't care about angles and stuff. Fuck geometry, right?
-            if (_newWire->pointsRelative().count() > 1) {
-                _newWire->movePointTo(_newWire->pointsRelative().count()-1, snappedPos);
+            if (_newWire->pointsAbsolute().count() > 1) {
+                _newWire->movePointTo(_newWire->pointsAbsolute().count()-1, snappedPos);
             } else {
                 _newWire->appendPoint(snappedPos);
             }
@@ -992,7 +1022,7 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 
             // Check whether the wire was connected to a connector
             for (const QPointF& connectionPoint : connectionPoints()) {
-                if (connectionPoint == _newWire->pointsRelative().last()) {
+                if (connectionPoint == _newWire->pointsAbsolute().last()) {
                     wireIsFloating = false;
                     break;
                 }
@@ -1004,7 +1034,7 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                 if (wire == _newWire) {
                     continue;
                 }
-                if (wire->pointIsOnWire(_newWire->pointsRelative().last())) {
+                if (wire->pointIsOnWire(_newWire->pointsAbsolute().last())) {
                     wire->connectWire(_newWire.get());
                     _newWire->setPointIsJunction(_newWire->pointsAbsolute().count()-1, true);
                     wireIsFloating = false;
