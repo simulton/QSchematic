@@ -25,7 +25,7 @@ namespace QSchematic {
         virtual void fromContainer(const Gpds::Container& container) override;
 
         bool addWire(const std::shared_ptr<Wire>& wire);
-        bool removeWire(const std::shared_ptr<Wire>& wire);
+        bool removeWire(const std::shared_ptr<Wire> wire);
         bool contains(const std::shared_ptr<Wire>& wire) const;
         void simplify();
         void setName(const std::string& name);

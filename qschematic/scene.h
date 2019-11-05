@@ -36,7 +36,7 @@ namespace QSchematic {
         virtual void fromContainer(const Gpds::Container& container) override;
 
         void setSettings(const Settings& settings);
-        void setWireFactory(const std::function<std::unique_ptr<Wire>()>& factory);
+        void setWireFactory(const std::function<OriginMgrT<Wire>()>& factory);
         void setMode(int mode);
         int mode() const;
         void toggleWirePosture();
@@ -46,14 +46,14 @@ namespace QSchematic {
 
         void clear();
         bool addItem(const std::shared_ptr<Item>& item);
-        bool removeItem(const std::shared_ptr<Item>& item);
+        bool removeItem(const std::shared_ptr<Item> item);
         QList<std::shared_ptr<Item>> items() const;
         QList<std::shared_ptr<Item>> items(int itemType) const;
         QList<std::shared_ptr<Item>> itemsAt(const QPointF& scenePos, Qt::SortOrder order = Qt::DescendingOrder) const;
         QVector<std::shared_ptr<Item>> selectedItems() const;
         QList<std::shared_ptr<Node>> nodes() const;
         bool addWire(const std::shared_ptr<Wire>& wire);
-        bool removeWire(const std::shared_ptr<Wire>& wire);
+        bool removeWire(const std::shared_ptr<Wire> wire);
         QList<std::shared_ptr<Wire>> wires() const;
         QList<std::shared_ptr<WireNet>> nets() const;
         QList<std::shared_ptr<WireNet>> nets(const std::shared_ptr<WireNet>& wireNet) const;
@@ -69,9 +69,9 @@ namespace QSchematic {
     signals:
         void modeChanged(int newMode);
         void isDirtyChanged(bool isDirty);
-        void itemAdded(const std::shared_ptr<Item>& item);
-        void itemRemoved(const std::shared_ptr<Item>& item);
-        void itemHighlightChanged(const std::shared_ptr<Item>& item, bool isHighlighted);
+        void itemAdded(const std::shared_ptr<Item> item);
+        void itemRemoved(const std::shared_ptr<Item> item);
+        void itemHighlightChanged(const std::shared_ptr<Item> item, bool isHighlighted);
 
     protected:
         virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
@@ -97,12 +97,12 @@ namespace QSchematic {
 
         QList<std::shared_ptr<Item>> _items;
 
-        QList<std::shared_ptr<Item>> _never_die;
+        QList<std::shared_ptr<Item>> _keep_alive_an_event_loop;
 
         QList<std::shared_ptr<WireNet>> _nets;
         Settings _settings;
         QPixmap _backgroundPixmap;
-        std::function<std::unique_ptr<Wire>()> _wireFactory;
+        std::function<OriginMgrT<Wire>()> _wireFactory;
         int _mode;
         std::shared_ptr<Wire> _newWire;
         bool _newWireSegment;

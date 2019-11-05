@@ -31,9 +31,9 @@ void FancyWire::fromContainer(const Gpds::Container& container)
     QSchematic::Wire::fromContainer( *container.getValue<Gpds::Container*>( "wire" ) );
 }
 
-std::unique_ptr<QSchematic::Item> FancyWire::deepCopy() const
+QSchematic::OriginMgrT<QSchematic::Item> FancyWire::deepCopy() const
 {
-    auto clone = std::make_unique<FancyWire>(parentItem());
+    auto clone = QSchematic::make_origin<FancyWire>(parentItem());
     copyAttributes(*(clone.get()));
 
     return clone;

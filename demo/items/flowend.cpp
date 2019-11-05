@@ -60,9 +60,9 @@ void FlowEnd::fromContainer(const Gpds::Container& container)
     QSchematic::Node::fromContainer( *container.getValue<Gpds::Container*>( "node") );
 }
 
-std::unique_ptr<QSchematic::Item> FlowEnd::deepCopy() const
+QSchematic::OriginMgrT<QSchematic::Item> FlowEnd::deepCopy() const
 {
-    auto clone = std::make_unique<FlowEnd>();
+    auto clone = QSchematic::make_origin<FlowEnd>();
     copyAttributes(*(clone.get()));
 
     return clone;

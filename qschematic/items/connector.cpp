@@ -75,9 +75,9 @@ void Connector::fromContainer(const Gpds::Container& container)
     _label->fromContainer( *container.getValue<Gpds::Container*>( "label" ) );
 }
 
-std::unique_ptr<Item> Connector::deepCopy() const
+OriginMgrT<Item> Connector::deepCopy() const
 {
-    auto clone = std::make_unique<Connector>(type(), gridPos(), text(), parentItem());
+    auto clone = make_origin<Connector>(type(), gridPos(), text(), parentItem());
     copyAttributes(*(clone.get()));
 
     return clone;
@@ -91,7 +91,7 @@ void Connector::copyAttributes(Connector& dest) const
     Item::copyAttributes(dest);
 
     // Label
-    auto labelClone = qgraphicsitem_cast<Label*>(_label->deepCopy().release());
+    auto labelClone = QSchematic::adopt_origin_instance<QSchematic::Label>(_label->deepCopy());
     dest._label = std::shared_ptr<Label>(labelClone);
     dest._label->setParentItem(&dest);
 

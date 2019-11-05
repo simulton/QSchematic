@@ -17,7 +17,7 @@ Item::Item(int type, QGraphicsItem* parent) :
     _highlightEnabled(true),
     _highlighted(false)
 {
-    qDebug() << "Item::Item ->" << this;
+    qDebug() << "Item::Item ->" << type << this;
     // Misc
     setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
@@ -334,6 +334,13 @@ QVariant Item::itemChange(QGraphicsItem::GraphicsItemChange change, const QVaria
 {
     switch (change)
     {
+    case QGraphicsItem::ItemSceneChange:
+        // NOTE: by doing this non-updated scene (ghost images staying) disappeared for some further cases (tips from usenet)
+//        if (value.isNull()) {
+            prepareGeometryChange();
+//        }
+        return QGraphicsItem::itemChange(change, value);
+
     case QGraphicsItem::ItemPositionChange:
     {
         QPointF newPos = value.toPointF();

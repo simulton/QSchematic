@@ -53,9 +53,9 @@ void Label::fromContainer(const Gpds::Container& container)
     }
 }
 
-std::unique_ptr<Item> Label::deepCopy() const
+OriginMgrT<Item> Label::deepCopy() const
 {
-    auto clone = std::make_unique<Label>(type(), parentItem());
+    auto clone = make_origin<Label>(type(), parentItem());
     copyAttributes(*(clone.get()));
 
     return clone;

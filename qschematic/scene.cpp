@@ -7,6 +7,7 @@
 #include <QPixmap>
 #include <QMimeData>
 #include <QtMath>
+#include <QTimer>
 #include "scene.h"
 #include "commands/commanditemmove.h"
 #include "commands/commanditemadd.h"
@@ -28,6 +29,10 @@ Scene::Scene(QObject* parent) :
     _invertWirePosture(true),
     _movingNodes(false)
 {
+    // NOTE: still needed, BSP-indexer consistently crashes on a scene load
+    // from an existing
+    setItemIndexMethod(ItemIndexMethod::NoIndex);
+
     // Undo stack
     _undoStack = new QUndoStack;
     connect(_undoStack, &QUndoStack::cleanChanged, [this](bool isClean) {
@@ -105,13 +110,14 @@ void Scene::fromContainer(const Gpds::Container& container)
         for (const auto& nodeContainer : nodesContainer->getValues<Gpds::Container*>("node")) {
             Q_ASSERT(nodeContainer);
 
-            std::unique_ptr<Item> node = ItemFactory::instance().fromContainer(*nodeContainer);
+            OriginMgrT<Item> node = ItemFactory::instance().fromContainer(*nodeContainer);
             if (!node) {
                 qCritical("Scene::fromContainer(): Couldn't restore node. Skipping.");
                 continue;
             }
             node->fromContainer(*nodeContainer);
-            addItem(std::move(node));
+            // addItem(std::move(node));
+            addItem(node);
         }
     }
 
@@ -169,8 +175,13 @@ void Scene::fromContainer(const Gpds::Container& container)
         }
     }
 
-    // Clear the undo history
-    _undoStack->clear();
+    // NOTE: PURE HACK for UndoCommands-crash (REAL FIX in head-branch)
+    auto undos = _undoStack;
+    _undoStack = new QUndoStack;
+    QTimer::singleShot(1000, [undos]{
+        // Clear the undo history
+        delete undos;
+    });
 }
 
 void Scene::setSettings(const Settings& settings)
@@ -188,7 +199,7 @@ void Scene::setSettings(const Settings& settings)
     update();
 }
 
-void Scene::setWireFactory(const std::function<std::unique_ptr<Wire>()>& factory)
+void Scene::setWireFactory(const std::function<OriginMgrT<Wire>()>& factory)
 {
     _wireFactory = factory;
 }
@@ -205,7 +216,7 @@ void Scene::setMode(int mode)
 
     // Discard current wire/bus
     case WireMode:
-        _newWire.reset();
+        _newWire = {};
         break;
 
     default:
@@ -265,9 +276,17 @@ void Scene::clear()
     _selectedItems.clear();
     Q_ASSERT(_selectedItems.isEmpty());
 
-    // Undo stack
-    _undoStack->clear();
+    // NOTE: PURE HACK for UndoCommands-crash (REAL FIX in head-branch)
+    auto undos = _undoStack;
+    _undoStack = new QUndoStack;
+    QTimer::singleShot(1000, [undos]{
+        // Clear the undo history
+        delete undos;
+    });
+
     clearIsDirty();
+
+    Q_ASSERT(QGraphicsScene::items().isEmpty());
 
     // Update
     update();
@@ -290,22 +309,29 @@ bool Scene::addItem(const std::shared_ptr<Item>& item)
     // Store the shared pointer to keep the item alive for the QGraphicsScene
     _items << item;
 
-    // quick workaround for Command-crashes in this PoC
-    _never_die << item;
-
     // Let the world know
     emit itemAdded(item);
 
     return true;
 }
 
-bool Scene::removeItem(const std::shared_ptr<Item>& item)
+bool Scene::removeItem(const std::shared_ptr<Item> item)
 {
     qDebug() << "Scene:removeItem" << item.get();
     // Sanity check
     if (!item) {
         return false;
     }
+
+    auto itemBounds = item->mapRectToScene(item->boundingRect());
+
+    // Won't remove them selves, if items are kept alive for other reasons
+    disconnect(item.get(), &Item::moved, this, &Scene::itemMoved);
+    disconnect(item.get(), &Item::rotated, this, &Scene::itemRotated);
+
+    // NOTE: Sometimes ghosts remain (not drawn away) when they're active in some way at remove time, found below from looking at Qt-source code...
+    item->clearFocus();
+    item->setFocusProxy(nullptr);
 
     // Remove from scene (if necessary)
     if (item->QGraphicsItem::scene()) {
@@ -315,8 +341,20 @@ bool Scene::removeItem(const std::shared_ptr<Item>& item)
     // Remove shared pointer from local list to reduce instance count
     _items.removeAll(item);
 
+    update(itemBounds);
+
     // Let the world know
     emit itemRemoved(item);
+
+    // NOTE: In order to keep items alive through this entire event loop round,
+    // otherwise crashes because Qt messes with items even after they're removed
+    // (though, again, seems limited to when BSP-index on [as "litmus test"])
+    if (_keep_alive_an_event_loop.isEmpty()) {
+        QTimer::singleShot(0, [this]{
+            _keep_alive_an_event_loop.clear();
+        });
+    }
+    _keep_alive_an_event_loop << item;
 
     return true;
 }
@@ -363,10 +401,10 @@ QVector<std::shared_ptr<Item>> Scene::selectedItems() const
 
     // Retrieve corresponding smart pointers
     QVector<std::shared_ptr<Item>> items(rawItems.count());
-    int i = 0;
+    
     for (auto& item : _items) {
         if (rawItems.contains(item.get())) {
-            items[i++] = item;
+            items.push_back(item);
         }
     }
 
@@ -425,9 +463,9 @@ bool Scene::addWire(const std::shared_ptr<Wire>& wire)
     }
 
     // No point of the new wire lies on an existing line segment - create a new wire net
-    auto newNet = std::make_unique<WireNet>();
+    auto newNet = QSchematic::adopt_origin_instance(QSchematic::make_origin<WireNet>());
     newNet->addWire(wire);
-    addWireNet(std::move(newNet));
+    addWireNet(std::shared_ptr<WireNet>(newNet));
 
     // Add wire to scene
     // Wires createde by mouse interactions are already added to the scene in the Scene::mouseXxxEvent() calls. Prevent
@@ -441,7 +479,7 @@ bool Scene::addWire(const std::shared_ptr<Wire>& wire)
     return true;
 }
 
-bool Scene::removeWire(const std::shared_ptr<Wire>& wire)
+bool Scene::removeWire(const std::shared_ptr<Wire> wire)
 {
     // Remove the wire from the scene
     removeItem(wire);
@@ -777,7 +815,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
     case NormalMode:
     {
         // Reset stuff
-        _newWire.reset();
+        _newWire = {};
 
         // Handle selections
         QGraphicsScene::mousePressEvent(event);
@@ -818,7 +856,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             // Start a new wire if there isn't already one. Else continue the current one.
             if (!_newWire) {
                 if (_wireFactory) {
-                    _newWire.reset(_wireFactory().release());
+                    _newWire = adopt_origin_instance(_wireFactory());
                 } else {
                     _newWire = std::make_shared<Wire>();
                 }
@@ -1075,7 +1113,7 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
             _newWire->setAcceptHoverEvents(true);
             _newWire->setFlag(QGraphicsItem::ItemIsSelectable, true);
             _newWire->simplify();
-            _newWire.reset();
+            _newWire = {};
 
             return;
         }

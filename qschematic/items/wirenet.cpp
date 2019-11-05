@@ -68,7 +68,7 @@ bool WireNet::addWire(const std::shared_ptr<Wire>& wire)
     return true;
 }
 
-bool WireNet::removeWire(const std::shared_ptr<Wire>& wire)
+bool WireNet::removeWire(const std::shared_ptr<Wire> wire)
 {
     disconnect(wire.get(), nullptr, this, nullptr);
     _wires.removeAll(wire);

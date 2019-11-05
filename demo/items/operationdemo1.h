@@ -13,7 +13,7 @@ public:
 
     virtual Gpds::Container toContainer() const override;
     virtual void fromContainer(const Gpds::Container& container) override;
-    virtual std::unique_ptr<QSchematic::Item> deepCopy() const override;
+    virtual QSchematic::OriginMgrT<QSchematic::Item> deepCopy() const override;
 
 private:
     void copyAttributes(OperationDemo1& dest) const;

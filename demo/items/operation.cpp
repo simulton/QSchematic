@@ -71,9 +71,9 @@ void Operation::fromContainer(const Gpds::Container& container)
     _label->fromContainer(*container.getValue<Gpds::Container*>("label"));
 }
 
-std::unique_ptr<QSchematic::Item> Operation::deepCopy() const
+QSchematic::OriginMgrT<QSchematic::Item> Operation::deepCopy() const
 {
-    auto clone = std::make_unique<Operation>(::ItemType::OperationType, parentItem());
+    auto clone = QSchematic::make_origin<Operation>(::ItemType::OperationType, parentItem());
     copyAttributes(*(clone.get()));
 
     return clone;
@@ -84,7 +84,7 @@ void Operation::copyAttributes(Operation& dest) const
     QSchematic::Node::copyAttributes(dest);
 
     // Label
-    auto labelClone = qgraphicsitem_cast<QSchematic::Label*>(_label->deepCopy().release());
+    auto labelClone = QSchematic::adopt_origin_instance<QSchematic::Label>(_label->deepCopy());
     dest._label = std::shared_ptr<QSchematic::Label>(labelClone);
     dest._label->setParentItem(&dest);
 }

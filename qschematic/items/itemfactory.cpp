@@ -15,57 +15,48 @@ ItemFactory& ItemFactory::instance()
     return instance;
 }
 
-void ItemFactory::setCustomItemsFactory(const std::function<std::unique_ptr<Item>(const Gpds::Container&)>& factory)
+void ItemFactory::setCustomItemsFactory(const std::function<OriginMgrT<Item>(const Gpds::Container&)>& factory)
 {
     _customItemFactory = factory;
 }
 
-std::unique_ptr<Item> ItemFactory::fromContainer(const Gpds::Container& container) const
+OriginMgrT<Item> ItemFactory::fromContainer(const Gpds::Container& container) const
 {
     // Extract the type
     Item::ItemType type = ItemFactory::extractType(container);
 
-    // Create the item
-    std::unique_ptr<Item> item;
-
     // First, try custom types
     if (_customItemFactory) {
-        item.reset(_customItemFactory(container).release());
-    }
-
-    // Fall back to internal types
-    if (!item) {
-        switch (type) {
-        case Item::NodeType:
-            item.reset(new Node);
-            break;
-
-        case Item::WireType:
-            item.reset(new Wire);
-            break;
-
-        case Item::WireRoundedCornersType:
-            item.reset(new WireRoundedCorners);
-            break;
-
-        case Item::SplineWireType:
-            item.reset(new SplineWire);
-            break;
-
-        case Item::ConnectorType:
-            item.reset(new Connector);
-            break;
-
-        case Item::LabelType:
-            item.reset(new Label);
-            break;
-
-        case Item::QSchematicItemUserType:
-            break;
+        if (auto item = _customItemFactory(container)) {
+            return item;
         }
     }
 
-    return item;
+    // Fall back to internal types
+    switch (type) {
+    case Item::NodeType:
+        return QSchematic::make_origin<Node>();
+
+    case Item::WireType:
+        return QSchematic::make_origin<Wire>();
+
+    case Item::WireRoundedCornersType:
+        return QSchematic::make_origin<WireRoundedCorners>();
+
+    case Item::SplineWireType:
+        return QSchematic::make_origin<SplineWire>();
+
+    case Item::ConnectorType:
+        return QSchematic::make_origin<Connector>();
+
+    case Item::LabelType:
+        return QSchematic::make_origin<Label>();
+
+    case Item::QSchematicItemUserType:
+        break;
+    }
+
+    return {};
 }
 
 Item::ItemType ItemFactory::extractType(const Gpds::Container& container)

@@ -44,9 +44,9 @@ void OperationDemo1::fromContainer(const Gpds::Container& container)
     Operation::fromContainer( *container.getValue<Gpds::Container*>( "operation" ) );
 }
 
-std::unique_ptr<QSchematic::Item> OperationDemo1::deepCopy() const
+QSchematic::OriginMgrT<QSchematic::Item> OperationDemo1::deepCopy() const
 {
-    auto clone = std::make_unique<OperationDemo1>(parentItem());
+    auto clone = QSchematic::make_origin<OperationDemo1>(parentItem());
     copyAttributes(*(clone.get()));
 
     return clone;

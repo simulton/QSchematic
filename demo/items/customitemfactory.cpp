@@ -1,4 +1,3 @@
-#include "../qschematic/items/item.h"
 #include "../qschematic/items/itemfactory.h"
 #include "itemtypes.h"
 #include "operation.h"
@@ -9,38 +8,30 @@
 #include "flowstart.h"
 #include "flowend.h"
 
-std::unique_ptr<QSchematic::Item> CustomItemFactory::fromContainer(const Gpds::Container& container)
+QSchematic::OriginMgrT<QSchematic::Item> CustomItemFactory::fromContainer(const Gpds::Container& container)
 {
     // Extract the type
     QSchematic::Item::ItemType type = QSchematic::ItemFactory::extractType(container);
 
-    // Create the item
-    std::unique_ptr<QSchematic::Item> item;
     switch (static_cast<ItemType>(type)) {
     case ItemType::OperationType:
-        item.reset(new Operation);
-        break;
+        return QSchematic::make_origin<Operation>();
 
     case ItemType::OperationConnectorType:
-        item.reset(new OperationConnector);
-        break;
+        return QSchematic::make_origin<OperationConnector>();
 
     case ItemType::OperationDemo1Type:
-        item.reset(new OperationDemo1);
-        break;
+        return QSchematic::make_origin<OperationDemo1>();
 
     case ItemType::FancyWireType:
-        item.reset(new FancyWire);
-        break;
+        return QSchematic::make_origin<FancyWire>();
 
     case ItemType::FlowStartType:
-        item.reset(new FlowStart);
-        break;
+        return QSchematic::make_origin<FlowStart>();
 
     case ItemType::FlowEndType:
-        item.reset(new FlowEnd);
-        break;
+        return QSchematic::make_origin<FlowEnd>();
     }
 
-    return item;
+    return {};
 }

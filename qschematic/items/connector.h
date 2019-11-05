@@ -25,7 +25,7 @@ namespace QSchematic {
 
         virtual Gpds::Container toContainer() const override;
         virtual void fromContainer(const Gpds::Container& container) override;
-        virtual std::unique_ptr<Item> deepCopy() const override;
+        virtual OriginMgrT<Item> deepCopy() const override;
 
         void setSnapPolicy(SnapPolicy policy);
         SnapPolicy snapPolicy() const;

@@ -12,16 +12,16 @@ namespace QSchematic
         Q_DISABLE_COPY(ItemMimeData)
 
     public:
-        explicit ItemMimeData(std::unique_ptr<Item> item);
+        explicit ItemMimeData(std::shared_ptr<Item> item);
         virtual ~ItemMimeData() override = default;
 
         virtual QStringList formats() const override;
         virtual bool hasFormat(const QString& mimetype) const override;
 
-        std::unique_ptr<Item> item() const;
+        std::shared_ptr<Item> item() const;
 
     private:
-        std::unique_ptr<Item> _item;
+        std::shared_ptr<Item> _item;
     };
 
 }

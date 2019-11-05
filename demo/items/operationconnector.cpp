@@ -43,9 +43,9 @@ void OperationConnector::fromContainer(const Gpds::Container& container)
     QSchematic::Connector::fromContainer( *container.getValue<Gpds::Container*>( "connector" ) );
 }
 
-std::unique_ptr<QSchematic::Item> OperationConnector::deepCopy() const
+QSchematic::OriginMgrT<QSchematic::Item> OperationConnector::deepCopy() const
 {
-    auto clone = std::make_unique<OperationConnector>(gridPos(), text(), parentItem());
+    auto clone = QSchematic::make_origin<OperationConnector>(gridPos(), text(), parentItem());
     copyAttributes(*(clone.get()));
 
     return clone;

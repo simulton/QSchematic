@@ -10,6 +10,55 @@ namespace QSchematic {
 
     class Scene;
 
+//#define UNIQUE_ORIGIN_T
+#define SHARED_ORIGIN_T
+
+#ifdef UNIQUE_ORIGIN_T
+    template <typename T>
+    using OriginMgrT = std::unique_ptr<T>;
+
+    template <typename T, typename ...ArgsT>
+    auto make_origin(ArgsT&&... args) -> OriginMgrT<T>
+    {
+        return std::make_unique<T>(std::forward<ArgsT>(args)...);
+    }
+
+    template <typename WantedT, typename T>
+    auto adopt_origin_instance(OriginMgrT<T> val) -> WantedT*
+    {
+        return dynamic_cast<WantedT*>(val.release());
+    }
+
+    template <typename T>
+    auto adopt_origin_instance(OriginMgrT<T> val) -> T*
+    {
+        return val.release();
+    }
+
+#else
+    template <typename T>
+    using OriginMgrT = std::shared_ptr<T>;
+
+    template <typename T, typename ...ArgsT>
+    auto make_origin(ArgsT&&... args) -> OriginMgrT<T>
+    {
+        return std::make_shared<T>(std::forward<ArgsT>(args)...);
+    }
+
+    template <typename WantedT, typename T>
+    auto adopt_origin_instance(OriginMgrT<T> val) -> OriginMgrT<WantedT>
+    {
+        return std::dynamic_pointer_cast<WantedT>(val);
+    }
+
+    template <typename T>
+    auto adopt_origin_instance(OriginMgrT<T> val) -> OriginMgrT<T>
+    {
+        return val;
+    }
+
+#endif
+
     class Item : public QGraphicsObject, public Gpds::Serialize
     {
         friend class CommandItemSetVisible;
@@ -37,7 +86,7 @@ namespace QSchematic {
 
         virtual Gpds::Container toContainer() const override;
         virtual void fromContainer(const Gpds::Container& container) override;
-        virtual std::unique_ptr<Item> deepCopy() const = 0;
+        virtual OriginMgrT<Item> deepCopy() const = 0;
 
         int type() const final;
         void setGridPos(const QPoint& gridPos);

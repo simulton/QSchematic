@@ -11,6 +11,8 @@
 #include "../qschematic/items/itemmimedata.h"
 #include "../qschematic/items/label.h"
 
+#include <QDebug>
+
 ItemsLibraryModel::ItemsLibraryModel(QObject* parent) : QAbstractItemModel(parent)
 {
     _rootItem = new ItemsLibraryModelItem<itemType>(Root, nullptr);
@@ -262,6 +264,8 @@ QStringList ItemsLibraryModel::mimeTypes() const
 
 QMimeData* ItemsLibraryModel::mimeData(const QModelIndexList& indexes) const
 {
+    qDebug() << "ItemsLibraryModel::mimeData ->";
+
     if (indexes.count() != 1)
         return new QMimeData();
 
