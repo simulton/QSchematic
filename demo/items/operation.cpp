@@ -23,7 +23,7 @@ Operation::Operation(int type, QGraphicsItem* parent) :
     QSchematic::Node(type, parent)
 {
     // Label
-    _label = std::make_shared<QSchematic::Label>();
+    _label = QSchematic::make_origin<QSchematic::Label>();
     _label->setParentItem(this);
     _label->setVisible(true);
     _label->setMovable(true);
@@ -199,7 +199,7 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         QAction* newConnector = new QAction;
         newConnector->setText("Add connector");
         connect(newConnector, &QAction::triggered, [this, event] {
-            auto connector = std::make_shared<OperationConnector>(event->pos().toPoint(), QStringLiteral("Unnamed"), this);
+            auto connector = QSchematic::make_origin<OperationConnector>(event->pos().toPoint(), QStringLiteral("Unnamed"), this);
 
             if (scene()) {
                 scene()->undoStack()->push(new CommandNodeAddConnector(this, connector));

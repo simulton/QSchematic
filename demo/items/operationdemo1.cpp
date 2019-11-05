@@ -22,7 +22,7 @@ OperationDemo1::OperationDemo1(QGraphicsItem* parent) :
     };
 
     for (const auto& c : connectorAttributes) {
-        auto connector = std::make_shared<OperationConnector>(c.point, c.name);
+        auto connector = QSchematic::make_origin<OperationConnector>(c.point, c.name);
         connector->label()->setVisible(true);
         addConnector(connector);
     }

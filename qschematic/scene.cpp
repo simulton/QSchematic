@@ -116,7 +116,6 @@ void Scene::fromContainer(const Gpds::Container& container)
                 continue;
             }
             node->fromContainer(*nodeContainer);
-            // addItem(std::move(node));
             addItem(node);
         }
     }
@@ -175,13 +174,13 @@ void Scene::fromContainer(const Gpds::Container& container)
         }
     }
 
-    // NOTE: PURE HACK for UndoCommands-crash (REAL FIX in head-branch)
-    auto undos = _undoStack;
-    _undoStack = new QUndoStack;
-    QTimer::singleShot(1000, [undos]{
-        // Clear the undo history
-        delete undos;
-    });
+    //    // NOTE: PURE HACK for UndoCommands-crash (REAL FIX in head-branch)
+    //    auto undos = _undoStack;
+    //    _undoStack = new QUndoStack;
+    //    QTimer::singleShot(1000, [undos]{
+    //        // Clear the undo history
+    //        delete undos;
+    //    });
 }
 
 void Scene::setSettings(const Settings& settings)
@@ -276,13 +275,13 @@ void Scene::clear()
     _selectedItems.clear();
     Q_ASSERT(_selectedItems.isEmpty());
 
-    // NOTE: PURE HACK for UndoCommands-crash (REAL FIX in head-branch)
-    auto undos = _undoStack;
-    _undoStack = new QUndoStack;
-    QTimer::singleShot(1000, [undos]{
-        // Clear the undo history
-        delete undos;
-    });
+//    // NOTE: PURE HACK for UndoCommands-crash (REAL FIX in head-branch)
+//    auto undos = _undoStack;
+//    _undoStack = new QUndoStack;
+//    QTimer::singleShot(1000, [undos]{
+//        // Clear the undo history
+//        delete undos;
+//    });
 
     clearIsDirty();
 
@@ -401,10 +400,11 @@ QVector<std::shared_ptr<Item>> Scene::selectedItems() const
 
     // Retrieve corresponding smart pointers
     QVector<std::shared_ptr<Item>> items(rawItems.count());
-    
+
+    // STEP 1 TEST, THEN REMOVE LOOP CRAP (USE AS ASSERT)
     for (auto& item : _items) {
         if (rawItems.contains(item.get())) {
-            items.push_back(item);
+            items.push_back(item.get()->sharedPtr<Item>());
         }
     }
 
@@ -463,7 +463,7 @@ bool Scene::addWire(const std::shared_ptr<Wire>& wire)
     }
 
     // No point of the new wire lies on an existing line segment - create a new wire net
-    auto newNet = QSchematic::adopt_origin_instance(QSchematic::make_origin<WireNet>());
+    auto newNet = std::make_shared<WireNet>();
     newNet->addWire(wire);
     addWireNet(std::shared_ptr<WireNet>(newNet));
 
@@ -638,18 +638,19 @@ void Scene::wirePointMoved(Wire& rawWire, WirePoint& point)
     Q_UNUSED(point)
 
     // Retrieve corresponding shared ptr
-    std::shared_ptr<Wire> wire;
-    for (auto& item : _items) {
-        std::shared_ptr<Wire> wireItem = std::dynamic_pointer_cast<Wire>(item);
-        if (!wireItem) {
-            continue;
-        }
+//    std::shared_ptr<Wire> wire;
+//    for (auto& item : _items) {
+//        std::shared_ptr<Wire> wireItem = std::dynamic_pointer_cast<Wire>(item);
+//        if (!wireItem) {
+//            continue;
+//        }
 
-        if (wireItem.get() == &rawWire) {
-            wire = wireItem;
-            break;
-        }
-    }
+//        if (wireItem.get() == &rawWire) {
+//            wire = wireItem;
+//            break;
+//        }
+//    }
+    auto wire = rawWire.sharedPtr<Wire>();
 
     // Remove the Wire from the current WireNet if it is part of a WireNet
     auto it = _nets.begin();
@@ -671,9 +672,7 @@ void Scene::wirePointMoved(Wire& rawWire, WirePoint& point)
             break;
 
         } else {
-
             it++;
-
         }
     }
 
@@ -858,7 +857,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
                 if (_wireFactory) {
                     _newWire = adopt_origin_instance(_wireFactory());
                 } else {
-                    _newWire = std::make_shared<Wire>();
+                    _newWire = make_origin<Wire>();
                 }
                 _undoStack->push(new CommandItemAdd(this, _newWire));
             }

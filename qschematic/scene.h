@@ -95,10 +95,9 @@ namespace QSchematic {
         void addWireNet(const std::shared_ptr<WireNet>& wireNet);
         std::shared_ptr<Item> sharedItemPointer(const Item& item) const;
 
-        QList<std::shared_ptr<Item>> _items;
-
+        // TODO add to "central" sh-ptr management
         QList<std::shared_ptr<Item>> _keep_alive_an_event_loop;
-
+        QList<std::shared_ptr<Item>> _items;
         QList<std::shared_ptr<WireNet>> _nets;
         Settings _settings;
         QPixmap _backgroundPixmap;

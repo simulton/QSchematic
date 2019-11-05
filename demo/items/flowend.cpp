@@ -25,7 +25,7 @@ FlowEnd::FlowEnd() :
     _symbolPolygon << QPoint(3*sz, -1*sz);
 
     // Connector
-    auto connector = std::make_shared<OperationConnector>();
+    auto connector = QSchematic::make_origin<OperationConnector>();
     connector->setParentItem(this);
     connector->label()->setVisible(false);
     connector->label()->setMovable(false);

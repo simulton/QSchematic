@@ -10,6 +10,22 @@
 
 using namespace QSchematic;
 
+
+
+namespace QSchematic {
+    namespace SharedPtrTracker {
+        std::unordered_map<const PtrTrackerBaseT*, std::weak_ptr<PtrTrackerBaseT>>
+            _global_items_shared_ptr_registry = {};
+
+        std::vector<std::shared_ptr<PtrTrackerBaseT>>
+            _global_eternalized_shared_ptr_registry = {};
+
+        int _global_alloc_counter = 0;
+    }
+}
+
+
+
 Item::Item(int type, QGraphicsItem* parent) :
     QGraphicsObject(parent),
     _type(type),
@@ -30,7 +46,8 @@ Item::Item(int type, QGraphicsItem* parent) :
 
 Item::~Item()
 {
-    qDebug() << "Item::~Item ->" << this;
+    qDebug() << "Item::~Item ->" << _type << this;
+    Q_ASSERT(SharedPtrTracker::assert_expired(this));
 }
 
 Gpds::Container Item::toContainer() const

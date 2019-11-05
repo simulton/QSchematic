@@ -25,7 +25,7 @@ Connector::Connector(int type, const QPoint& gridPoint, const QString& text, QGr
     _wirePointIndex(-1)
 {
     // Label
-    _label = std::make_shared<Label>();
+    _label = QSchematic::make_origin<Label>();
     _label->setParentItem(this);
     _label->setText(text);
 
