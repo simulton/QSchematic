@@ -110,7 +110,7 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                 bool hasJunction = false;
                 for (const auto& wire: connectedWires()) {
                     for (const auto& junction: wire->junctions()) {
-                        if (junction.toPoint() == point.toPoint()) {
+                        if (junction.toPoint() == (point + pos()).toPoint()) {
                             hasJunction = true;
                             break;
                         }

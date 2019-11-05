@@ -517,8 +517,8 @@ void Wire::movePointTo(int index, const QPointF& moveTo)
             continue;
         }
         for (const auto& point: wire->junctions()) {
-            if (_points[index].toPoint() == point.toPoint()) {
-                wire->movePointBy(wire->wirePointsAbsolute().indexOf(point), QVector2D(moveTo - _points[index].toPointF()));
+            if ((_points[index] + pos()).toPoint() == point.toPoint()) {
+                wire->movePointBy(wire->wirePointsAbsolute().indexOf(point), QVector2D(moveTo - (_points[index] + pos())));
             }
         }
     }
