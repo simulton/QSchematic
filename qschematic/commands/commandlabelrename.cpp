@@ -5,12 +5,11 @@
 using namespace QSchematic;
 
 CommandLabelRename::CommandLabelRename(const QPointer<Label>& label, const QString& newText, QUndoCommand* parent) :
-    QUndoCommand(parent),
+    UndoCommand(parent),
     _label(label),
     _newText(newText)
 {
     _oldText = _label->text();
-
     setText(QStringLiteral("Rename label"));
 }
 

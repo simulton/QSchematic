@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QUndoCommand>
+#include "commandbase.h"
 #include <memory>
 
 namespace QSchematic
@@ -8,7 +8,7 @@ namespace QSchematic
 
     class Item;
 
-    class CommandItemVisibility : public QUndoCommand
+    class CommandItemVisibility : public UndoCommand
     {
     public:
         CommandItemVisibility(const std::shared_ptr<Item>& item, bool newVisibility, QUndoCommand* parent = nullptr);

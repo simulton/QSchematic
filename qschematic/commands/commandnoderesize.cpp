@@ -6,16 +6,14 @@
 using namespace QSchematic;
 
 CommandNodeResize::CommandNodeResize(QPointer<Node> node, const QPointF& newPos, const QSizeF& newSize, QUndoCommand* parent) :
-    QUndoCommand(parent),
+    UndoCommand(parent),
     _node(node),
     _newPos(newPos),
     _newSize(newSize)
 {
     _oldPos = node->pos();
     _oldSize = node->size();
-    QObject::connect(_node.data(), &QObject::destroyed, [this]{
-        setObsolete(true);
-    });
+    connectDependencyDestroySignal(_node.data());
     setText(QStringLiteral("Node resize"));
 }
 

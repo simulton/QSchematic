@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QUndoCommand>
+#include "commandbase.h"
 #include <QPointer>
 #include <QPoint>
 #include <QSize>
@@ -9,7 +9,7 @@ namespace QSchematic
 {
     class Node;
 
-    class CommandNodeRotate : public QUndoCommand
+    class CommandNodeRotate : public UndoCommand
     {
     public:
         CommandNodeRotate(QPointer<Node> node, qreal rotation, QUndoCommand* parent = nullptr);

@@ -174,13 +174,7 @@ void Scene::fromContainer(const Gpds::Container& container)
         }
     }
 
-    //    // NOTE: PURE HACK for UndoCommands-crash (REAL FIX in head-branch)
-    //    auto undos = _undoStack;
-    //    _undoStack = new QUndoStack;
-    //    QTimer::singleShot(1000, [undos]{
-    //        // Clear the undo history
-    //        delete undos;
-    //    });
+    _undoStack->clear();
 }
 
 void Scene::setSettings(const Settings& settings)
@@ -275,13 +269,7 @@ void Scene::clear()
     _selectedItems.clear();
     Q_ASSERT(_selectedItems.isEmpty());
 
-//    // NOTE: PURE HACK for UndoCommands-crash (REAL FIX in head-branch)
-//    auto undos = _undoStack;
-//    _undoStack = new QUndoStack;
-//    QTimer::singleShot(1000, [undos]{
-//        // Clear the undo history
-//        delete undos;
-//    });
+    _undoStack->clear();
 
     clearIsDirty();
 
@@ -399,14 +387,18 @@ QVector<std::shared_ptr<Item>> Scene::selectedItems() const
     const auto& rawItems = QGraphicsScene::selectedItems();
 
     // Retrieve corresponding smart pointers
-    QVector<std::shared_ptr<Item>> items(rawItems.count());
+    auto items = QVector<std::shared_ptr<Item>>{};
+    items.reserve(rawItems.count());
 
-    // STEP 1 TEST, THEN REMOVE LOOP CRAP (USE AS ASSERT)
-    for (auto& item : _items) {
-        if (rawItems.contains(item.get())) {
-            items.push_back(item.get()->sharedPtr<Item>());
+    for ( auto item_ptr : rawItems ) {
+        if ( auto qs_item = dynamic_cast<Item*>(item_ptr) ) {
+            if ( auto item_sh_ptr = qs_item->sharedPtr() ) {
+                items.push_back(item_sh_ptr );
+            }
         }
     }
+
+    // qDebug() << "Scene::selectedItems ->" << rawItems << items << endl;
 
     return items;
 }
@@ -912,16 +904,16 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
         // Reset the position for every selected item and
         // apply the translation through the undostack
         if (_movingNodes) {
-            for (auto& i: selectedItems()) {
-                Item* item = qgraphicsitem_cast<Item*>(i.get());
-                // Move the item if it is movable and it was previously registered by the mousePressEvent
-                if (item and item->isMovable() and _initialItemPositions.contains(i)) {
-                    QVector2D moveBy(item->pos() - _initialItemPositions.value(i));
-                    if (!moveBy.isNull()) {
-                        // Move the item to its initial position
-                        item->setPos(_initialItemPositions.value(i));
-                        // Apply the translation
-                        _undoStack->push(new CommandItemMove(QVector<std::shared_ptr<Item>>() << i, moveBy));
+            for (auto& item: selectedItems()) {
+                if (item and item->isMovable() and _initialItemPositions.contains(item)) {
+                    QVector2D moveBy(item->pos() - _initialItemPositions.value(item));
+
+                    if (not moveBy.isNull()) {
+                        item->setPos(_initialItemPositions.value(item));
+                        auto its = QVector<std::shared_ptr<Item>>() << item;
+//                        qDebug() << "Scene::mouseReleaseEvent -> new CommandItemMove" << item << moveBy;
+                        auto cmd = new CommandItemMove(its, moveBy);
+                        _undoStack->push(cmd);
                     }
                 }
             }

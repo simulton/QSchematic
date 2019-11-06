@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QUndoCommand>
+#include "commandbase.h"
 #include <QPointer>
 #include <QPoint>
 #include <QSize>
@@ -9,7 +9,7 @@ namespace QSchematic
 {
     class Node;
 
-    class CommandNodeResize : public QUndoCommand
+    class CommandNodeResize : public UndoCommand
     {
     public:
         CommandNodeResize(QPointer<Node> node, const QPointF& newPos, const QSizeF& newSize, QUndoCommand* parent = nullptr);
