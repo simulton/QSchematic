@@ -20,6 +20,7 @@ namespace QSchematic {
 
     public:
         WireNet(QObject* parent = nullptr);
+        virtual ~WireNet()  override;
 
         virtual Gpds::Container toContainer() const override;
         virtual void fromContainer(const Gpds::Container& container) override;

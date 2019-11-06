@@ -33,7 +33,6 @@ Item::Item(int type, QGraphicsItem* parent) :
     _highlightEnabled(true),
     _highlighted(false)
 {
-    qDebug() << "Item::Item ->" << type << this;
     // Misc
     setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
@@ -46,7 +45,8 @@ Item::Item(int type, QGraphicsItem* parent) :
 
 Item::~Item()
 {
-    qDebug() << "Item::~Item ->" << _type << this;
+    // Important insurance — if this is NOT expired, then we've been deleted
+    // wrongly by Qt and all kinds of dirty shit will hit the fan!
     Q_ASSERT(SharedPtrTracker::assert_expired(this));
 }
 

@@ -14,6 +14,11 @@ WireNet::WireNet(QObject* parent) :
     connect(_label.get(), &Label::highlightChanged, this, &WireNet::labelHighlightChanged);
 }
 
+WireNet::~WireNet()
+{
+    dissociate_item(_label);
+}
+
 Gpds::Container WireNet::toContainer() const
 {
     // Wires

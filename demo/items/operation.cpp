@@ -53,6 +53,11 @@ Operation::Operation(int type, QGraphicsItem* parent) :
     setGraphicsEffect(graphicsEffect);
 }
 
+Operation::~Operation()
+{
+    dissociate_item(_label);
+}
+
 Gpds::Container Operation::toContainer() const
 {
     // Root

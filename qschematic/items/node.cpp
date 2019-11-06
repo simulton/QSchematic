@@ -37,6 +37,12 @@ Node::Node(int type, QGraphicsItem* parent) :
 {
 }
 
+Node::~Node()
+{
+    dissociate_items(_connectors);
+    dissociate_items(_specialConnectors);
+}
+
 Gpds::Container Node::toContainer() const
 {
     // Connectors configuration

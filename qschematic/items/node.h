@@ -30,7 +30,7 @@ namespace QSchematic {
         Q_ENUM(Mode)
 
         Node(int type = Item::NodeType, QGraphicsItem* parent = nullptr);
-        virtual ~Node() override = default;
+        virtual ~Node() override;
 
         virtual Gpds::Container toContainer() const override;
         virtual void fromContainer(const Gpds::Container& container) override;

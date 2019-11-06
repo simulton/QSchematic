@@ -52,6 +52,14 @@ Connector::Connector(int type, const QPoint& gridPoint, const QString& text, QGr
     calculateTextDirection();
 }
 
+
+
+Connector::~Connector()
+{
+    // So it's definitely removed via the shared_ptr (which we have by way of the item-allocation contracts being shptr all through
+    dissociate_item(_label);
+}
+
 Gpds::Container Connector::toContainer() const
 {
     // Root
