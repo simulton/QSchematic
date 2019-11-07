@@ -15,7 +15,7 @@ namespace QSchematic
     class CommandItemMove : public UndoCommand
     {
     public:
-        CommandItemMove(const QVector<std::shared_ptr<Item>>& item, const QVector2D& moveBy, QUndoCommand* parent = nullptr);
+        CommandItemMove(const QVector<std::shared_ptr<Item>>& item, const QVector<QVector2D>& moveBy, QUndoCommand* parent = nullptr);
 
         virtual int id() const override;
         virtual bool mergeWith(const QUndoCommand* command) override;
@@ -24,7 +24,7 @@ namespace QSchematic
 
     private:
         QVector<std::shared_ptr<Item>> _items;
-        QVector2D _moveBy;
+        QVector<QVector2D> _moveBy;
     };
 
 }

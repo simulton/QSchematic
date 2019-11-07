@@ -5,12 +5,16 @@
 
 using namespace QSchematic;
 
-CommandItemMove::CommandItemMove(const QVector<std::shared_ptr<Item>>& items, const QVector2D& moveBy, QUndoCommand* parent) :
+CommandItemMove::CommandItemMove(const QVector<std::shared_ptr<Item>>& items, const QVector<QVector2D>& moveBy, QUndoCommand* parent) :
     UndoCommand(parent),
     _items(items),
     _moveBy(moveBy)
 {
-    setText(QStringLiteral("Move item"));
+    if (_items.count() > 1) {
+        setText(QStringLiteral("Move items"));
+    } else {
+        setText(QStringLiteral("Move item"));
+    }
 }
 
 int CommandItemMove::id() const
@@ -26,40 +30,32 @@ bool CommandItemMove::mergeWith(const QUndoCommand* command)
     }
 
     // Check items
-    const CommandItemMove* myCommand = static_cast<const CommandItemMove*>(command);
+    const auto myCommand = static_cast<const CommandItemMove*>(command);
     if (_items.count() != myCommand->_items.count()) {
         return false;
     }
-    for (int i = 0; i < _items.count(); i++) {
-        if (_items.at(i) != myCommand->_items.at(i)) {
-            return false;
-        }
+    if (_items != myCommand->_items) {
+        return false;
     }
 
     // Merge
-    _moveBy += myCommand->_moveBy;
+    for (int i = 0; i < _items.count(); i++) {
+        _moveBy[i] += myCommand->_moveBy[i];
+    }
 
     return true;
 }
 
 void CommandItemMove::undo()
 {
-    for (auto item : _items) {
-        if (!item) {
-            continue;
-        }
-
-        item->moveBy(_moveBy * -1);
+    for (int i = 0; i < _items.count(); i++) {
+        _items[i]->moveBy(-_moveBy[i]);
     }
 }
 
 void CommandItemMove::redo()
 {
-    for (auto item : _items) {
-        if (!item) {
-            continue;
-        }
-
-        item->moveBy(_moveBy);
+    for (int i = 0; i < _items.count(); i++) {
+        _items[i]->moveBy(_moveBy[i]);
     }
 }
