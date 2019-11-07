@@ -854,6 +854,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
                 }
             }
             itemsToMove = wiresToMove << itemsToMove;
+            bool needsToMove = false;
             QVector<QVector2D> moveByList;
             for (const auto& item : itemsToMove) {
                 // Move the item if it is movable and it was previously registered by the mousePressEvent
@@ -862,9 +863,14 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
                 item->setPos(_initialItemPositions.value(item));
                 // Add the moveBy to the list
                 moveByList << moveBy;
+                if (not moveBy.isNull()) {
+                    needsToMove = true;
+                }
             }
             // Apply the translation
-            _undoStack->push(new CommandItemMove(itemsToMove, moveByList));
+            if (needsToMove) {
+                _undoStack->push(new CommandItemMove(itemsToMove, moveByList));
+            }
         }
         break;
     }
