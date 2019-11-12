@@ -7,10 +7,13 @@
 #include <QMetaEnum>
 #include <QVector2D>
 #include <QtMath>
+#include <QMenu>
 #include "wire.h"
 #include "connector.h"
 #include "scene.h"
+#include "label.h"
 #include "../utils.h"
+#include "../commands/commandwirepointmove.h"
 
 const qreal BOUNDING_RECT_PADDING = 6.0;
 const qreal HANDLE_SIZE = 3.0;
@@ -33,7 +36,7 @@ public:
 };
 
 Wire::Wire(int type, QGraphicsItem* parent) :
-    Item(type, parent)
+    Item(type, parent), _renameAction(nullptr)
 {
     _pointToMoveIndex = -1;
     _lineSegmentToMoveIndex = -1;
@@ -205,7 +208,6 @@ void Wire::calculateBoundingRect()
     // Create the rectangle
     _rect = QRectF(topLeft, bottomRight);
     if (not topLeft.isNull()) {
-        //qDebug() << "moving wirepoints by" << topLeft;
         for (int i = 0; i < _points.count(); i++) {
             _points[i].setX(_points[i].x() - topLeft.x());
             _points[i].setY(_points[i].y() - topLeft.y());
@@ -215,6 +217,11 @@ void Wire::calculateBoundingRect()
         _offset = newPos - snappedPos;
         setPos(newPos);
     }
+}
+
+void Wire::setRenameAction(QAction* action)
+{
+    _renameAction = action;
 }
 
 void Wire::prependPoint(const QPointF& point)
@@ -713,6 +720,9 @@ void Wire::disconnectWire(Wire* wire)
 
 QVector<WirePoint> Wire::junctions() const
 {
+    if (_points.count() < 2) {
+        return {};
+    }
     QVector<WirePoint> junctions;
     if (_points.first().isJunction()) {
         junctions.append(_points.first() + pos());
@@ -804,8 +814,9 @@ void Wire::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
         event->accept();
 
         // Move
-        movePointTo(_pointToMoveIndex, curPos);
-        emit pointMovedByUser(*this, _points[_pointToMoveIndex]);
+        auto wire = std::static_pointer_cast<Wire>(this->sharedPtr());
+        auto command = new CommandWirepointMove(scene(), wire, _pointToMoveIndex, curPos, nullptr);
+        scene()->undoStack()->push(command);
     }
 
     // Move a line segment?
@@ -983,5 +994,42 @@ QVariant Wire::itemChange(QGraphicsItem::GraphicsItemChange change, const QVaria
         return QPointF(_settings.snapToGrid(value.toPointF())) + _offset;
     default:
         return Item::itemChange(change, value);
+    }
+}
+
+void Wire::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
+{
+    QMenu menu;
+    if (_renameAction) {
+        menu.addAction(_renameAction);
+    }
+    if (not net()->label()->text().isEmpty()) {
+        QAction* showAction = menu.addAction("Label visible");
+        showAction->setCheckable(true);
+        showAction->setChecked(net()->label()->isVisible());
+
+        connect(showAction, &QAction::triggered, this, &Wire::toggleLabelRequested);
+    }
+    if (menu.actions().count()) {
+        menu.exec(event->screenPos());
+    }
+}
+
+std::shared_ptr<WireNet> Wire::net()
+{
+    return _net.lock();
+}
+
+void Wire::setNet(const std::shared_ptr<WireNet>& wirenet)
+{
+    _net = wirenet;
+}
+
+bool Wire::movingWirePoint() const
+{
+    if (_pointToMoveIndex >= 0 or _lineSegmentToMoveIndex >= 0) {
+        return true;
+    } else {
+        return false;
     }
 }

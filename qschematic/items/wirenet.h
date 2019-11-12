@@ -13,7 +13,7 @@ namespace QSchematic {
     class WirePoint;
     class Label;
 
-    class WireNet : public QObject, public gpds::serialize
+    class WireNet : public QObject, public gpds::serialize, public std::enable_shared_from_this<WireNet>
     {
         Q_OBJECT
         Q_DISABLE_COPY(WireNet)
@@ -40,20 +40,23 @@ namespace QSchematic {
 
     signals:
         void pointMoved(Wire& wire, WirePoint& point);
-        void pointMovedByUser(Wire& wire, WirePoint& point);
+        void pointMovedByUser(Wire& wire, int index);
         void highlightChanged(bool highlighted);
+        void contextMenuRequested(const QPoint& pos);
 
     private slots:
         void wirePointMoved(Wire& wire, WirePoint& point);
-        void wirePointMovedByUser(Wire& wire, WirePoint& point);
+        void wirePointMovedByUser(Wire& wire, int index);
         void labelHighlightChanged(const Item& item, bool highlighted);
         void wireHighlightChanged(const Item& item, bool highlighted);
+        void toggleLabel();
 
     private:
 
         QList<std::shared_ptr<Wire>> _wires;
         QString _name;
         std::shared_ptr<Label> _label;
+        void updateLabelPos() const;
     };
 
 }

@@ -35,15 +35,19 @@ void CommandItemRemove::undo()
         return;
     }
 
+    _scene->addItem(_item);
+
     // Is this a wire?
     auto wire = std::dynamic_pointer_cast<Wire>(_item);
     if (wire) {
-        _scene->addWire(wire);
-    }
-
-    // Otherwise, fall back to normal item behavior
-    else {
-        _scene->addItem(_item);
+        auto oldNet = wire->net();
+        if (not _scene->nets().contains(oldNet)) {
+            _scene->addWireNet(wire->net());
+        }
+        wire->net()->addWire(wire);
+        for (int i = 0; i < wire->wirePointsRelative().count(); i++) {
+            wire->net()->pointMovedByUser(*wire.get(), i);
+        }
     }
 
     // Set the item's old parent

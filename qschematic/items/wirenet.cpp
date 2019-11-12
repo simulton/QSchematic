@@ -1,3 +1,6 @@
+#include <utils.h>
+#include <QVector2D>
+#include "../scene.h"
 #include "wirenet.h"
 #include "wire.h"
 #include "label.h"
@@ -11,7 +14,9 @@ WireNet::WireNet(QObject* parent) :
     // Label
     _label = std::make_shared<Label>();
     _label->setPos(0, 0);
+    _label->setVisible(false);
     connect(_label.get(), &Label::highlightChanged, this, &WireNet::labelHighlightChanged);
+    connect(_label.get(), &Label::moved, this, &WireNet::updateLabelPos);
 }
 
 gpds::container WireNet::to_container() const
@@ -25,6 +30,7 @@ gpds::container WireNet::to_container() const
     // Root
     gpds::container root;
     root.add_value("name", _name.toStdString() );
+    root.add_value("label", _label->to_container());
     root.add_value("wires", wiresContainer);
 
     return root;
@@ -34,6 +40,10 @@ void WireNet::from_container(const gpds::container& container)
 {
     // Root
     setName( QString::fromStdString( container.get_value<std::string>( "name" ) ) );
+
+    // Label
+    const gpds::container& labelContainer = *container.get_value<gpds::container*>( "label" );
+    _label->from_container(labelContainer);
 
     // Wires
     {
@@ -59,11 +69,16 @@ bool WireNet::addWire(const std::shared_ptr<Wire>& wire)
         return false;
     }
 
+    wire->setNet(shared_from_this());
+
     // Add the wire
     connect(wire.get(), &Wire::pointMoved, this, &WireNet::wirePointMoved);
     connect(wire.get(), &Wire::pointMovedByUser, this, &WireNet::wirePointMovedByUser);
     connect(wire.get(), &Wire::highlightChanged, this, &WireNet::wireHighlightChanged);
+    connect(wire.get(), &Wire::toggleLabelRequested, this, &WireNet::toggleLabel);
+    connect(wire.get(), &Wire::moved, this, &WireNet::updateLabelPos);
     _wires.append(wire);
+    updateLabelPos();
 
     return true;
 }
@@ -72,6 +87,7 @@ bool WireNet::removeWire(const std::shared_ptr<Wire>& wire)
 {
     disconnect(wire.get(), nullptr, this, nullptr);
     _wires.removeAll(wire);
+    updateLabelPos();
 
     return true;
 }
@@ -167,13 +183,30 @@ std::shared_ptr<Label> WireNet::label()
 
 void WireNet::wirePointMoved(Wire& wire, WirePoint& point)
 {
+    updateLabelPos();
     // Let the others know too
     emit pointMoved(wire, point);
 }
 
-void WireNet::wirePointMovedByUser(Wire& wire, WirePoint& point)
+void WireNet::updateLabelPos() const
 {
-    emit pointMovedByUser(wire, point);
+    QPointF labelPos = _label->textRect().center() + _label->pos();
+    QPointF closestPoint;
+    for (const auto& segment: lineSegments()) {
+        // Find closest point on segment
+         QPointF p = Utils::pointOnLineClosestToPoint(segment.p1(), segment.p2(), labelPos);
+         float distance1 = QVector2D(labelPos - closestPoint).lengthSquared();
+         float distance2 = QVector2D(labelPos - p).lengthSquared();
+         if (closestPoint.isNull() or distance1 > distance2) {
+              closestPoint = p;
+         }
+    }
+    _label->setConnectionPoint(closestPoint);
+}
+
+void WireNet::wirePointMovedByUser(Wire& wire, int index)
+{
+    emit pointMovedByUser(wire, index);
 }
 
 void WireNet::labelHighlightChanged(const Item& item, bool highlighted)
@@ -188,4 +221,9 @@ void WireNet::wireHighlightChanged(const Item& item, bool highlighted)
     Q_UNUSED(item)
 
     setHighlighted(highlighted);
+}
+
+void WireNet::toggleLabel()
+{
+    _label->setVisible(not _label->text().isEmpty() and not _label->isVisible());
 }

@@ -2,7 +2,10 @@
 #include <QBrush>
 #include <QPainter>
 #include <QVector2D>
+#include <QInputDialog>
+#include "../qschematic/commands/commandwirenetrename.h"
 #include "../qschematic/items/wirepoint.h"
+#include "../qschematic/items/wirenet.h"
 #include "../qschematic/scene.h"
 #include "../qschematic/settings.h"
 #include "itemtypes.h"
@@ -13,6 +16,12 @@
 FancyWire::FancyWire(QGraphicsItem* parent) :
     QSchematic::WireRoundedCorners(::ItemType::FancyWireType, parent)
 {
+    auto action = new QAction("Rename ...", this);
+    connect(action, &QAction::triggered, this, [=] {
+        QString name = QInputDialog::getText(nullptr, "Set WireNet name", "Enter the new name", QLineEdit::Normal, net()->name());
+        scene()->undoStack()->push(new QSchematic::CommandWirenetRename(net(), name));
+    });
+    setRenameAction(action);
     setZValue(1);
 }
 

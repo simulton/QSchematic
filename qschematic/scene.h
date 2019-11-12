@@ -62,10 +62,13 @@ namespace QSchematic {
         QList<std::shared_ptr<WireNet>> netsAt(const QPoint& point);
         QList<QPointF> connectionPoints() const;
         QList<std::shared_ptr<Connector>> connectors() const;
+        std::shared_ptr<WireNet> netFromWire(const std::shared_ptr<Wire>& wire) const;
+        void removeWireNet(std::shared_ptr<WireNet> net);
 
         void undo();
         void redo();
         QUndoStack* undoStack() const;
+        void addWireNet(const std::shared_ptr<WireNet> wireNet);
 
     signals:
         void modeChanged(int newMode);
@@ -93,8 +96,12 @@ namespace QSchematic {
     private:
         void renderCachedBackground();
         void setupNewItem(Item& item);
-        void addWireNet(const std::shared_ptr<WireNet> wireNet);
         std::shared_ptr<Item> sharedItemPointer(const Item& item) const;
+        bool mergeNets(std::shared_ptr<WireNet>& net, std::shared_ptr<WireNet>& otherNet);
+        void moveWireToNet(std::shared_ptr<Wire>& rawWire, std::shared_ptr<WireNet>& newNet) const;
+        void connectWire(const std::shared_ptr<Wire>& wire, std::shared_ptr<Wire>& rawWire);
+        void disconnectWire(const std::shared_ptr<Wire>& wire, const std::shared_ptr<Wire>& otherWire);
+        QVector<std::shared_ptr<Wire>> wiresConnectedTo(const std::shared_ptr<Wire>& wire) const;
 
         QList<std::shared_ptr<Item>> _items;
         QList<std::shared_ptr<WireNet>> _nets;
@@ -128,7 +135,7 @@ namespace QSchematic {
         void itemHighlightChanged(const Item& item, bool isHighlighted);
         void wireNetHighlightChanged(bool highlighted);
         void wirePointMoved(Wire& wire, WirePoint& point);
-        void wirePointMovedByUser(Wire& wire, WirePoint& point);
+        void wirePointMovedByUser(Wire& rawWire, int point);
     };
 
 }

@@ -10,6 +10,8 @@ namespace QSchematic
         NodeResizeCommandType,
         LabelRenameCommandType,
         NodeRotateCommandType,
+        WireNetRenameCommandType,
+        WirePointMoveCommandType,
 
         QSchematicCommandUserType = 1000
     };

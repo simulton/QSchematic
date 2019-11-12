@@ -1,7 +1,9 @@
 #pragma once
 
+#include <QAction>
 #include "item.h"
 #include "wirepoint.h"
+#include "wirenet.h"
 #include "line.h"
 
 class QVector2D;
@@ -49,18 +51,23 @@ namespace QSchematic {
         QList<Wire*> connectedWires();
         void disconnectWire(Wire* wire);
         QVector<WirePoint> junctions() const;
+        void setNet(const std::shared_ptr<WireNet>& wirenet);
+        std::shared_ptr<WireNet> net();
+        bool movingWirePoint() const;
 
         QList<QSchematic::Line> lineSegments() const;
 
     signals:
         void pointMoved(Wire& wire, WirePoint& point);
-        void pointMovedByUser(Wire& wire, WirePoint& point);
+        void pointMovedByUser(Wire& wire, int index);
         void pointInserted(int index);
         void pointRemoved(int index);
+        void toggleLabelRequested();
 
     protected:
         void copyAttributes(Wire& dest) const;
         void calculateBoundingRect();
+        void setRenameAction(QAction* action);
 
         virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
         virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
@@ -69,6 +76,7 @@ namespace QSchematic {
         virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;
         virtual void hoverMoveEvent(QGraphicsSceneHoverEvent* event) override;
         virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
+        void contextMenuEvent(QGraphicsSceneContextMenuEvent* event) override;
         virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value) override;
 
     private:
@@ -85,6 +93,8 @@ namespace QSchematic {
         QPointF _prevMousePos;
         QPointF _offset;
         void moveJunctionsToNewSegment(const Line& oldSegment, const Line& newSegment);
+        QAction* _renameAction;
+        std::weak_ptr<WireNet> _net;
     };
 
 }

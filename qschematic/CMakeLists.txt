@@ -17,6 +17,8 @@ set(SOURCES_PRIVATE
     commands/commandlabelrename.cpp
     commands/commandnoderesize.cpp
     commands/commandnoderotate.cpp
+    commands/commandwirenetrename.cpp
+    commands/commandwirepointmove.cpp
     items/connector.cpp
     items/item.cpp
     items/itemfactory.cpp
@@ -46,6 +48,8 @@ set(HEADERS_PUBLIC
     commands/commandnoderesize.h
     commands/commandnoderotate.h
     commands/commands.h
+    commands/commandwirenetrename.h
+    commands/commandwirepointmove.h
     items/connector.h
     items/item.h
     items/itemfactory.h
