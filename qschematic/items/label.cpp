@@ -18,38 +18,38 @@ Label::Label(int type, QGraphicsItem* parent) :
     setSnapToGrid(false);
 }
 
-Gpds::Container Label::toContainer() const
+gpds::container Label::to_container() const
 {
     // Connection point
-    Gpds::Container connectionPoint;
-    connectionPoint.addAttribute("enabled", ( _hasConnectionPoint ? "true" : "false" ));
-    connectionPoint.addValue("x", _connectionPoint.x());
-    connectionPoint.addValue("y", _connectionPoint.y());
+    gpds::container connectionPoint;
+    connectionPoint.add_attribute("enabled", ( _hasConnectionPoint ? "true" : "false" ));
+    connectionPoint.add_value("x", _connectionPoint.x());
+    connectionPoint.add_value("y", _connectionPoint.y());
 
     // Root
-    Gpds::Container root;
+    gpds::container root;
     addItemTypeIdToContainer(root);
-    root.addValue("item", Item::toContainer());
-    root.addValue("text", text().toStdString());
-    root.addValue("connection_point", connectionPoint);
+    root.add_value("item", Item::to_container());
+    root.add_value("text", text().toStdString());
+    root.add_value("connection_point", connectionPoint);
 
     return root;
 }
 
-void Label::fromContainer(const Gpds::Container& container)
+void Label::from_container(const gpds::container& container)
 {
-    Item::fromContainer( *container.getValue<Gpds::Container*>( "item" ) );
-    setText( QString::fromStdString( container.getValue<std::string>( "text" ) ) );
+    Item::from_container( *container.get_value<gpds::container*>( "item" ) );
+    setText( QString::fromStdString( container.get_value<std::string>( "text" ) ) );
 
     // Connection point
-    const Gpds::Container* connectionPointContainer = container.getValue<Gpds::Container*>( "connection_point" );
+    const gpds::container* connectionPointContainer = container.get_value<gpds::container*>( "connection_point" );
     if (connectionPointContainer) {
-        auto attributeString = connectionPointContainer->getAttribute<std::string>( "enabled" );
+        auto attributeString = connectionPointContainer->get_attribute<std::string>( "enabled" );
         if ( attributeString.has_value() ) {
             _hasConnectionPoint = ( attributeString.value() == "true" );
         }
-        _connectionPoint.setX( connectionPointContainer->getValue<double>( "x" ) );
-        _connectionPoint.setY( connectionPointContainer->getValue<double>( "y" ) );
+        _connectionPoint.setX( connectionPointContainer->get_value<double>( "x" ) );
+        _connectionPoint.setY( connectionPointContainer->get_value<double>( "y" ) );
     }
 }
 

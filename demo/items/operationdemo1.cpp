@@ -28,20 +28,20 @@ OperationDemo1::OperationDemo1(QGraphicsItem* parent) :
     }
 }
 
-Gpds::Container OperationDemo1::toContainer() const
+gpds::container OperationDemo1::to_container() const
 {
     // Root
-    Gpds::Container root;
+    gpds::container root;
     addItemTypeIdToContainer(root);
-    root.addValue("operation", Operation::toContainer());
+    root.add_value("operation", Operation::to_container());
 
     return root;
 }
 
-void OperationDemo1::fromContainer(const Gpds::Container& container)
+void OperationDemo1::from_container(const gpds::container& container)
 {
     // Root
-    Operation::fromContainer( *container.getValue<Gpds::Container*>( "operation" ) );
+    Operation::from_container( *container.get_value<gpds::container*>( "operation" ) );
 }
 
 std::shared_ptr<QSchematic::Item> OperationDemo1::deepCopy() const

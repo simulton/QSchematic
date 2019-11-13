@@ -9,7 +9,7 @@
 #include "flowstart.h"
 #include "flowend.h"
 
-std::shared_ptr<QSchematic::Item> CustomItemFactory::fromContainer(const Gpds::Container& container)
+std::shared_ptr<QSchematic::Item> CustomItemFactory::from_container(const gpds::container& container)
 {
     // Extract the type
     QSchematic::Item::ItemType type = QSchematic::ItemFactory::extractType(container);

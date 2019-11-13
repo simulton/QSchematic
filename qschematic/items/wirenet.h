@@ -13,7 +13,7 @@ namespace QSchematic {
     class WirePoint;
     class Label;
 
-    class WireNet : public QObject, public Gpds::Serialize
+    class WireNet : public QObject, public gpds::serialize
     {
         Q_OBJECT
         Q_DISABLE_COPY(WireNet)
@@ -21,8 +21,8 @@ namespace QSchematic {
     public:
         WireNet(QObject* parent = nullptr);
 
-        virtual Gpds::Container toContainer() const override;
-        virtual void fromContainer(const Gpds::Container& container) override;
+        virtual gpds::container to_container() const override;
+        virtual void from_container(const gpds::container& container) override;
 
         bool addWire(const std::shared_ptr<Wire>& wire);
         bool removeWire(const std::shared_ptr<Wire>& wire);

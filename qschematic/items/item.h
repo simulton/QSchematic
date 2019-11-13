@@ -12,7 +12,7 @@ namespace QSchematic {
 
     class Item :
         public QGraphicsObject,
-        public Gpds::Serialize,
+        public gpds::serialize,
         public std::enable_shared_from_this<Item>
     {
         friend class CommandItemSetVisible;
@@ -90,8 +90,8 @@ namespace QSchematic {
         }
         /// @}
 
-        virtual Gpds::Container toContainer() const override;
-        virtual void fromContainer(const Gpds::Container& container) override;
+        virtual gpds::container to_container() const override;
+        virtual void from_container(const gpds::container& container) override;
         virtual std::shared_ptr<Item> deepCopy() const = 0;
 
         int type() const final;
@@ -140,7 +140,7 @@ namespace QSchematic {
         Settings _settings;
 
         void copyAttributes(Item& dest) const;
-        void addItemTypeIdToContainer(Gpds::Container& container) const;
+        void addItemTypeIdToContainer(gpds::container& container) const;
 
         Scene* scene() const;
 

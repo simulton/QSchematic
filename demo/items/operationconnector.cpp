@@ -27,20 +27,20 @@ OperationConnector::OperationConnector(const QPoint& gridPoint, const QString& t
     setForceTextDirection(false);
 }
 
-Gpds::Container OperationConnector::toContainer() const
+gpds::container OperationConnector::to_container() const
 {
     // Root
-    Gpds::Container root;
+    gpds::container root;
     addItemTypeIdToContainer(root);
-    root.addValue("connector", QSchematic::Connector::toContainer());
+    root.add_value("connector", QSchematic::Connector::to_container());
 
     return root;
 }
 
-void OperationConnector::fromContainer(const Gpds::Container& container)
+void OperationConnector::from_container(const gpds::container& container)
 {
     // Root
-    QSchematic::Connector::fromContainer( *container.getValue<Gpds::Container*>( "connector" ) );
+    QSchematic::Connector::from_container( *container.get_value<gpds::container*>( "connector" ) );
 }
 
 std::shared_ptr<QSchematic::Item> OperationConnector::deepCopy() const

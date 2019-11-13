@@ -53,22 +53,22 @@ Operation::Operation(int type, QGraphicsItem* parent) :
     setGraphicsEffect(graphicsEffect);
 }
 
-Gpds::Container Operation::toContainer() const
+gpds::container Operation::to_container() const
 {
     // Root
-    Gpds::Container root;
+    gpds::container root;
     addItemTypeIdToContainer(root);
-    root.addValue("node", QSchematic::Node::toContainer());
-    root.addValue("label", _label->toContainer());
+    root.add_value("node", QSchematic::Node::to_container());
+    root.add_value("label", _label->to_container());
 
     return root;
 }
 
-void Operation::fromContainer(const Gpds::Container& container)
+void Operation::from_container(const gpds::container& container)
 {
     // Root
-    QSchematic::Node::fromContainer( *container.getValue<Gpds::Container*>( "node" ) );
-    _label->fromContainer(*container.getValue<Gpds::Container*>("label"));
+    QSchematic::Node::from_container( *container.get_value<gpds::container*>( "node" ) );
+    _label->from_container(*container.get_value<gpds::container*>("label"));
 }
 
 std::shared_ptr<QSchematic::Item> Operation::deepCopy() const

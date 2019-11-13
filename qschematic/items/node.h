@@ -32,8 +32,8 @@ namespace QSchematic {
         Node(int type = Item::NodeType, QGraphicsItem* parent = nullptr);
         virtual ~Node() override = default;
 
-        virtual Gpds::Container toContainer() const override;
-        virtual void fromContainer(const Gpds::Container& container) override;
+        virtual gpds::container to_container() const override;
+        virtual void from_container(const gpds::container& container) override;
         virtual std::shared_ptr<Item> deepCopy() const override;
 
         Mode mode() const;

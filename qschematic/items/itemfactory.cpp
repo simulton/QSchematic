@@ -15,12 +15,12 @@ ItemFactory& ItemFactory::instance()
     return instance;
 }
 
-void ItemFactory::setCustomItemsFactory(const std::function<std::shared_ptr<Item>(const Gpds::Container&)>& factory)
+void ItemFactory::setCustomItemsFactory(const std::function<std::shared_ptr<Item>(const gpds::container&)>& factory)
 {
     _customItemFactory = factory;
 }
 
-std::shared_ptr<Item> ItemFactory::fromContainer(const Gpds::Container& container) const
+std::shared_ptr<Item> ItemFactory::from_container(const gpds::container& container) const
 {
     // First, try custom types
     if (_customItemFactory) {
@@ -61,7 +61,7 @@ std::shared_ptr<Item> ItemFactory::fromContainer(const Gpds::Container& containe
     return {};
 }
 
-Item::ItemType ItemFactory::extractType(const Gpds::Container& container)
+Item::ItemType ItemFactory::extractType(const gpds::container& container)
 {
-    return static_cast<Item::ItemType>( container.getAttribute<int>( "type_id" ).value_or( -1 ) );
+    return static_cast<Item::ItemType>( container.get_attribute<int>( "type_id" ).value_or( -1 ) );
 }

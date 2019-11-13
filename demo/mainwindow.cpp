@@ -38,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     // Setup the custom item factory
-    auto func = std::bind(&CustomItemFactory::fromContainer, std::placeholders::_1);
+    auto func = std::bind(&CustomItemFactory::from_container, std::placeholders::_1);
     QSchematic::ItemFactory::instance().setCustomItemsFactory(func);
 
     // Settings
@@ -165,7 +165,7 @@ bool MainWindow::save()
     }
 
     // Archiver
-    Gpds::ArchiverXml ar;
+    gpds::archiver_xml ar;
     std::stringstream stream;
     ar.save(stream, *_scene, "qschematic");
 
@@ -196,7 +196,7 @@ bool MainWindow::load()
     }
 
     // Archiver
-    Gpds::ArchiverXml ar;
+    gpds::archiver_xml ar;
     std::stringstream stream;
     stream << file.readAll().data();
     ar.load(stream, *_scene, "qschematic");

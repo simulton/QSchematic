@@ -16,7 +16,7 @@ namespace QSchematic {
     class Connector;
     class WireNet;
 
-    class Scene : public QGraphicsScene, public Gpds::Serialize
+    class Scene : public QGraphicsScene, public gpds::serialize
     {
         Q_OBJECT
         Q_DISABLE_COPY(Scene)
@@ -33,8 +33,8 @@ namespace QSchematic {
         explicit Scene(QObject* parent = nullptr);
         virtual ~Scene() override = default;
 
-        virtual Gpds::Container toContainer() const override;
-        virtual void fromContainer(const Gpds::Container& container) override;
+        virtual gpds::container to_container() const override;
+        virtual void from_container(const gpds::container& container) override;
 
         void setSettings(const Settings& settings);
         void setWireFactory(const std::function<std::shared_ptr<Wire>()>& factory);

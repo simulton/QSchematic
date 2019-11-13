@@ -11,8 +11,8 @@ public:
     OperationConnector(const QPoint& gridPos = QPoint(), const QString& text = QString(), QGraphicsItem* parent = nullptr);
     virtual ~OperationConnector() override = default;
 
-    virtual Gpds::Container toContainer() const override;
-    virtual void fromContainer(const Gpds::Container& container) override;
+    virtual gpds::container to_container() const override;
+    virtual void from_container(const gpds::container& container) override;
     virtual std::shared_ptr<QSchematic::Item> deepCopy() const override;
     virtual QRectF boundingRect() const override;
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
