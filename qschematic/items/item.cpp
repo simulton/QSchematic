@@ -8,6 +8,7 @@
 
 using namespace QSchematic;
 
+
 Item::Item(int type, QGraphicsItem* parent) :
     QGraphicsObject(parent),
     _type(type),
@@ -24,6 +25,13 @@ Item::Item(int type, QGraphicsItem* parent) :
     connect(this, &Item::xChanged, this, &Item::posChanged);
     connect(this, &Item::yChanged, this, &Item::posChanged);
     connect(this, &Item::rotationChanged, this, &Item::rotChanged);
+}
+
+Item::~Item()
+{
+    // Important insurance — if this is NOT expired, then we've been deleted
+    // wrongly by Qt and all kinds of dirty shit will hit the fan!
+    Q_ASSERT(SharedPtrTracker::assert_expired(this));
 }
 
 gpds::container Item::to_container() const
@@ -327,6 +335,12 @@ QVariant Item::itemChange(QGraphicsItem::GraphicsItemChange change, const QVaria
 {
     switch (change)
     {
+    case QGraphicsItem::ItemSceneChange:
+    {
+        // NOTE: by doing this non-updated scene (ghost images staying) disappeared for some further cases (tips from usenet)
+        prepareGeometryChange();
+        return QGraphicsItem::itemChange(change, value);
+    }
     case QGraphicsItem::ItemPositionChange:
     {
         QPointF newPos = value.toPointF();

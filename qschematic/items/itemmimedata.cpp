@@ -7,6 +7,7 @@ ItemMimeData::ItemMimeData(std::shared_ptr<Item> item) :
     _item(item)
 {
 }
+
 QStringList ItemMimeData::formats() const
 {
     return { MIME_TYPE_NODE };

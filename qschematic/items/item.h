@@ -5,15 +5,20 @@
 #include <gpds/serialize.h>
 #include "../types.h"
 #include "../settings.h"
+#include "itemfunctions.h"
+#include "utils/sharedpointertracker.h"
 
-namespace QSchematic {
+#include <QDebug>
 
+namespace QSchematic
+{
     class Scene;
 
     class Item :
         public QGraphicsObject,
-        public gpds::serialize,
-        public std::enable_shared_from_this<Item>
+        public gpds::serialize
+        // ,
+        // public std::enable_shared_from_this<Item>
     {
         friend class CommandItemSetVisible;
 
@@ -36,6 +41,11 @@ namespace QSchematic {
         const QString JSON_ID_STRING = QStringLiteral("type_id");
 
         Item(int type, QGraphicsItem* parent = nullptr);
+        virtual ~Item() override;
+
+
+
+
 
         /**
          * These funcs should be the only source for obtaining a canonical
@@ -48,45 +58,25 @@ namespace QSchematic {
         template <typename RetT = Item>
         auto sharedPtr() const -> std::shared_ptr<const RetT>
         {
-            if constexpr (std::is_same_v<RetT, Item>) {
-                return shared_from_this();
-            }
-            else {
-                return std::dynamic_pointer_cast<const RetT>(shared_from_this());
-            }
+            return SharedPtrTracker::obtain_shared_pointer<RetT>(this);
         }
 
         template <typename RetT = Item>
         auto sharedPtr() -> std::shared_ptr<RetT>
         {
-            if constexpr (std::is_same_v<RetT, Item>) {
-                return shared_from_this();
-            }
-            else {
-                return std::dynamic_pointer_cast<RetT>(shared_from_this());
-            }
+            return SharedPtrTracker::obtain_shared_pointer<RetT>(this);
         }
 
-        template <typename RetT = Item>
-        auto weakPtr() const -> std::weak_ptr<const RetT>
+        template <typename RetT = SharedPtrTracker::PtrTrackerBaseT>
+        auto weakPtr() const -> std::weak_ptr<RetT>
         {
-            if constexpr (std::is_same_v<RetT, Item>) {
-                return weak_from_this();
-            }
-            else {
-                return std::dynamic_pointer_cast<const RetT>(weak_from_this());
-            }
+            return SharedPtrTracker::obtain_weak_pointer(this);
         }
 
-        template <typename RetT = Item>
+        template <typename RetT = SharedPtrTracker::PtrTrackerBaseT>
         auto weakPtr() -> std::weak_ptr<RetT>
         {
-            if constexpr (std::is_same_v<RetT, Item>) {
-                return weak_from_this();
-            }
-            else {
-                return std::dynamic_pointer_cast<RetT>(weak_from_this());
-            }
+            return SharedPtrTracker::obtain_weak_pointer(this);
         }
         /// @}
 

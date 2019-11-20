@@ -11,6 +11,8 @@
 #include "../qschematic/items/itemmimedata.h"
 #include "../qschematic/items/label.h"
 
+#include <QDebug>
+
 ItemsLibraryModel::ItemsLibraryModel(QObject* parent) : QAbstractItemModel(parent)
 {
     _rootItem = new ItemsLibraryModelItem<itemType>(Root, nullptr);

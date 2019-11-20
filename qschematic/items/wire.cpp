@@ -99,7 +99,7 @@ void Wire::from_container(const gpds::container& container)
 
 std::shared_ptr<Item> Wire::deepCopy() const
 {
-    auto clone = std::make_shared<Wire>(type(), parentItem());
+    auto clone = mk_sh<Wire>(type(), parentItem());
     copyAttributes(*(clone.get()));
 
     return clone;
@@ -678,7 +678,7 @@ void Wire::moveLineSegmentBy(int index, const QVector2D& moveBy)
 
     // TODO: I have not looked into code logic at all here — simply added to avoid fail from overflows if unchecked /Oscar C
     if (index + 1 < _points.size()) {
-        movePointTo(index+1, _points[index+1].toPointF() + pos() + moveBy.toPointF());
+        movePointTo(index + 1, _points[index + 1].toPointF() + pos() + moveBy.toPointF());
     }
 }
 

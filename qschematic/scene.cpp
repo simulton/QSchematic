@@ -7,6 +7,8 @@
 #include <QPixmap>
 #include <QMimeData>
 #include <QtMath>
+#include <QTimer>
+
 #include "scene.h"
 #include "commands/commanditemmove.h"
 #include "commands/commanditemadd.h"
@@ -19,6 +21,8 @@
 #include "items/label.h"
 #include "utils/itemscontainerutils.h"
 
+#include <QDebug>
+
 using namespace QSchematic;
 
 Scene::Scene(QObject* parent) :
@@ -28,7 +32,8 @@ Scene::Scene(QObject* parent) :
     _invertWirePosture(true),
     _movingNodes(false)
 {
-    // NOTE: See #T1517
+    // NOTE: still needed, BSP-indexer still crashes on a scene load when
+    // the scene is already populated
     setItemIndexMethod(ItemIndexMethod::NoIndex);
 
     // Undo stack
@@ -270,11 +275,13 @@ void Scene::clear()
 
     clearIsDirty();
 
+    Q_ASSERT(QGraphicsScene::items().isEmpty());
+
     // Update
     update(); // Note, should not be needed, and not recommended according to input, but avoid adding yet a permutation to the investigation
 }
 
-bool Scene::addItem(const std::shared_ptr<Item> item)
+bool Scene::addItem(const std::shared_ptr<Item>& item)
 {
     // Sanity check
     if (!item) {
@@ -302,22 +309,38 @@ bool Scene::removeItem(const std::shared_ptr<Item> item)
         return false;
     }
 
-    // NOTE: Call removed because of #T1517
-    // NOTE2: When items deleted by _user_ (_not clear!_) — it's retained in
-    //  DeleteCommand and therefore remains in scene. Returns to explicit remove,
-    //  workarounds crash by disabling index instead as compensation.
-    //
+    auto itemBoundsToUpdate = item->mapRectToScene(item->boundingRect());
+
+    // Won't remove them selves, if items are kept alive for other reasons
+    disconnect(item.get(), &Item::moved, this, &Scene::itemMoved);
+    disconnect(item.get(), &Item::rotated, this, &Scene::itemRotated);
+
+    // NOTE: Sometimes ghosts remain (not drawn away) when they're active in some way at remove time, found below from looking at Qt-source code...
+    item->clearFocus();
+    item->setFocusProxy(nullptr);
+
     // Remove from scene (if necessary)
     if (item->QGraphicsItem::scene()) {
        QGraphicsScene::removeItem(item.get());
     }
 
-    // NOTE: because of #T1517 workaround the item will still exist in scene
-    // when below signal is sent
+    // Remove shared pointer from local list to reduce instance count
+    _items.removeAll(item);
+
+    update(itemBoundsToUpdate);
+
+    // Let the world know
     emit itemRemoved(item);
 
-    // Remove keep-alive reference
-    _items.removeAll(item);
+    // NOTE: In order to keep items alive through this entire event loop round,
+    // otherwise crashes because Qt messes with items even after they're removed
+    // (though, again, seems limited to when BSP-index on [as "litmus test"])
+    if (_keep_alive_an_event_loop.isEmpty()) {
+        QTimer::singleShot(0, [this]{
+            _keep_alive_an_event_loop.clear();
+        });
+    }
+    _keep_alive_an_event_loop << item;
 
     return true;
 }
@@ -349,18 +372,32 @@ QList<std::shared_ptr<Item>> Scene::items(int itemType) const
 
 std::vector<std::shared_ptr<Item>> Scene::selectedItems() const
 {
-    const auto& rawItems = QGraphicsScene::selectedItems();
 
-    // Retrieve corresponding smart pointers
+    // 111
+    // auto items = ItemUtils::mapItemListToSharedPtrList<std::vector>(QGraphicsScene::selectedItems());
+
+
+    // 222
+    // const auto& rawItems = QGraphicsScene::selectedItems();
+    // // Retrieve corresponding smart pointers
+    // auto items = std::vector<std::shared_ptr<Item>>{};
+    // items.reserve(rawItems.count());
+    // for ( auto item_ptr : rawItems ) {
+    //     if ( auto qs_item = dynamic_cast<Item*>(item_ptr) ) {
+    //         if ( auto item_sh_ptr = qs_item->sharedPtr() ) {
+    //             items.push_back(item_sh_ptr );
+    //         }
+    //     }
+    // }
+
+    // ???
+    // TODO: XXX
+    // - get items but sort out only those in root(?)
+    // - this will break for group style (ExdDes)
+    // - but QS-demo behaves wickedly if child-items are allowed to be selected since it didn't support that before
+
     auto items = ItemUtils::mapItemListToSharedPtrList<std::vector>(QGraphicsScene::selectedItems());
-    int i = 0;
-    for (auto it = items.begin(); it != items.end();) {
-        if (not _items.contains(*it)) {
-            it = items.erase(it);
-        } else {
-            it++;
-        }
-    }
+
     return items;
 }
 
@@ -380,7 +417,7 @@ QList<std::shared_ptr<Node>> Scene::nodes() const
     return nodes;
 }
 
-bool Scene::addWire(const std::shared_ptr<Wire> wire)
+bool Scene::addWire(const std::shared_ptr<Wire>& wire)
 {
     // Sanity check
     if (!wire) {
@@ -811,7 +848,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
     case NormalMode:
     {
         // Reset stuff
-        _newWire.reset();
+        _newWire = {};
 
         // Handle selections
         QGraphicsScene::mousePressEvent(event);
@@ -866,9 +903,9 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             // Start a new wire if there isn't already one. Else continue the current one.
             if (!_newWire) {
                 if (_wireFactory) {
-                    _newWire = _wireFactory();
+                    _newWire = adopt_origin_instance(_wireFactory());
                 } else {
-                    _newWire = std::make_shared<Wire>();
+                    _newWire = mk_sh<Wire>();
                 }
                 _undoStack->push(new CommandItemAdd(this, _newWire));
                 _newWire->setPos(_settings.snapToGrid(event->scenePos()));
@@ -941,6 +978,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
         if (_movingNodes) {
             QVector<std::shared_ptr<Item>> wiresToMove;
             QVector<std::shared_ptr<Item>> itemsToMove;
+
             for (const auto& item : selectedItems()) {
                 if (item->isMovable() and _initialItemPositions.contains(item)) {
                     Wire* wire = dynamic_cast<Wire*>(item.get());
@@ -951,9 +989,11 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
                     }
                 }
             }
+
             itemsToMove = wiresToMove << itemsToMove;
             bool needsToMove = false;
             QVector<QVector2D> moveByList;
+
             for (const auto& item : itemsToMove) {
                 // Move the item if it is movable and it was previously registered by the mousePressEvent
                 QVector2D moveBy(item->pos() - _initialItemPositions.value(item));

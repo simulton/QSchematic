@@ -12,11 +12,16 @@ WireNet::WireNet(QObject* parent) :
     QObject(parent)
 {
     // Label
-    _label = std::make_shared<Label>();
+    _label = QSchematic::mk_sh<Label>();
     _label->setPos(0, 0);
     _label->setVisible(false);
     connect(_label.get(), &Label::highlightChanged, this, &WireNet::labelHighlightChanged);
     connect(_label.get(), &Label::moved, this, &WireNet::updateLabelPos);
+}
+
+WireNet::~WireNet()
+{
+    dissociate_item(_label);
 }
 
 gpds::container WireNet::to_container() const
@@ -83,7 +88,7 @@ bool WireNet::addWire(const std::shared_ptr<Wire>& wire)
     return true;
 }
 
-bool WireNet::removeWire(const std::shared_ptr<Wire>& wire)
+bool WireNet::removeWire(const std::shared_ptr<Wire> wire)
 {
     disconnect(wire.get(), nullptr, this, nullptr);
     _wires.removeAll(wire);

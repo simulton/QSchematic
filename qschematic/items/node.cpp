@@ -11,6 +11,10 @@
 #include "../utils.h"
 #include "../scene.h"
 
+
+#include <QDebug>
+
+
 const QColor COLOR_HIGHLIGHTED = QColor(Qt::blue);
 const QColor COLOR_BODY_FILL   = QColor(Qt::green);
 const QColor COLOR_BODY_BORDER = QColor(Qt::black);
@@ -31,6 +35,12 @@ Node::Node(int type, QGraphicsItem* parent) :
     _connectorsSnapPolicy(Connector::NodeSizerectOutline),
     _connectorsSnapToGrid(true)
 {
+}
+
+Node::~Node()
+{
+    dissociate_items(_connectors);
+    dissociate_items(_specialConnectors);
 }
 
 gpds::container Node::to_container() const
@@ -86,7 +96,7 @@ void Node::from_container(const gpds::container& container)
     if (connectorsContainer) {
         clearConnectors();
         for (const gpds::container* connectorContainer : connectorsContainer->get_values<gpds::container*>( "connector" ) ) {
-            auto connector = std::dynamic_pointer_cast<Connector>(ItemFactory::instance().from_container(*connectorContainer));
+            auto connector = adopt_origin_instance<Connector>(ItemFactory::instance().from_container(*connectorContainer));
             if (!connector) {
                 continue;
             }
@@ -98,7 +108,7 @@ void Node::from_container(const gpds::container& container)
 
 std::shared_ptr<Item> Node::deepCopy() const
 {
-    auto clone = std::make_shared<Node>(type(), parentItem());
+    auto clone = mk_sh<Node>(type(), parentItem());
     copyAttributes(*(clone.get()));
 
     return clone;
@@ -116,7 +126,7 @@ void Node::copyAttributes(Node& dest) const
             continue;
         }
 
-        auto connectorClone = std::dynamic_pointer_cast<Connector>(connector->deepCopy());
+        auto connectorClone = adopt_origin_instance<Connector>(connector->deepCopy());
         connectorClone->setParentItem(&dest);
         dest._connectors << connectorClone;
     }
