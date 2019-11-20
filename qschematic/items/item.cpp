@@ -33,7 +33,8 @@ Item::~Item()
 {
     // Important insurance — if this is NOT expired, then we've been deleted
     // wrongly by Qt and all kinds of dirty shit will hit the fan!
-    Q_ASSERT(SharedPtrTracker::assert_expired(this));
+    // Q_ASSERT(SharedPtrTracker::assert_expired(this));
+    Q_ASSERT(weakPtr().expired());
 }
 
 gpds::container Item::to_container() const

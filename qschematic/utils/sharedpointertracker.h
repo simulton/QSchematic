@@ -4,7 +4,7 @@
 #include <QDebug>
 
 #define TINKER__PTR_TRACKER__LOG_LEVEL 1
-#define TINKER__MAKE_SH__USERSPACE_TRACKER true
+#define TINKER__MAKE_SH__USERSPACE_TRACKER false
 
 /// QDebug stream-op additions
 template <typename ...T>
@@ -72,28 +72,33 @@ auto _dbg_inspect_shptr_registry() -> void
 template <typename InPtrT>
 auto obtain_weak_pointer(InPtrT* ptr) -> std::weak_ptr<PtrTrackerBaseT>
 {
-    auto qg_ptr = static_cast<const PtrTrackerBaseT*>(ptr);
-    if ( _global_items_shared_ptr_registry.find(qg_ptr) != end(_global_items_shared_ptr_registry) ) {
-        auto w_ptr = _global_items_shared_ptr_registry.at(qg_ptr);
-        if ( not w_ptr.expired() ) {
-            #if TINKER__PTR_TRACKER__LOG_LEVEL >= 3
-                qDebug() << "SHPTR-REG => got ptr" << ptr << " => " << w_ptr;
-            #endif
-            return w_ptr;
+    #if TINKER__MAKE_SH__USERSPACE_TRACKER == true
+        auto qg_ptr = static_cast<const PtrTrackerBaseT*>(ptr);
+        if ( _global_items_shared_ptr_registry.find(qg_ptr) != end(_global_items_shared_ptr_registry) ) {
+            auto w_ptr = _global_items_shared_ptr_registry.at(qg_ptr);
+            if ( not w_ptr.expired() ) {
+                #if TINKER__PTR_TRACKER__LOG_LEVEL >= 3
+                    qDebug() << "SHPTR-REG => got ptr" << ptr << " => " << w_ptr;
+                #endif
+                return w_ptr;
+            }
+            else {
+                #if TINKER__PTR_TRACKER__LOG_LEVEL >= 2
+                    qDebug() << "SHPTR-REG => got ptr, but it's not alive anymore!" << ptr;
+                #endif
+                return {};
+            }
         }
         else {
             #if TINKER__PTR_TRACKER__LOG_LEVEL >= 2
-                qDebug() << "SHPTR-REG => got ptr, but it's not alive anymore!" << ptr;
+                qDebug() << "SHPTR-REG => no matching shared-ptr found!" << ptr;
             #endif
             return {};
         }
-    }
-    else {
-        #if TINKER__PTR_TRACKER__LOG_LEVEL >= 2
-            qDebug() << "SHPTR-REG => no matching shared-ptr found!" << ptr;
-        #endif
-        return {};
-    }
+    #else
+        // TODO
+        Q_ASSERT(false);
+    #endif
 }
 
 template <typename WantedT = PtrTrackerBaseT, typename InPtrT>
@@ -112,7 +117,7 @@ auto assert_expired(InPtrT* ptr) -> bool
 }
 
 template <typename T>
-auto eternalize_pointer_life(std::shared_ptr<T> ptr) -> void {
+auto immortalize_pointer(std::shared_ptr<T> ptr) -> void {
     _global_immortal_shared_ptr_registry.push_back(ptr);
 }
 
@@ -144,13 +149,7 @@ auto mk_sh(ArgsT&& ...args) -> std::shared_ptr<InstanceT>
     #endif
 }
 
-
-// TODO: explicit _maybe version, others will assert-throw if expectations unmet
-// TODO: cleanup_stale()
-// TODO: register_untracked_shptr(shptr/weakptr)
-// TODO: mk_sh<>() add capability of tracking TIMESTAMP, SERIAL and/or call-stack-point
-// TODO: assert_shptr_expired(shptr)
-// TODO: assert_shptr_alive(shptr)
+// TODO: purge_stale()
 
 }
 
@@ -161,7 +160,8 @@ namespace QSchematic {
 template <typename T, typename ...ArgsT>
 auto mk_sh(ArgsT&&... args) -> std::shared_ptr<T>
 {
-    return SharedPtrTracker::mk_sh<T>(std::forward<ArgsT>(args)...);
+    // return SharedPtrTracker::mk_sh<T>(std::forward<ArgsT>(args)...);
+    return std::make_shared<T>(std::forward<ArgsT>(args)...);
 }
 
 template <typename WantedT, typename T>

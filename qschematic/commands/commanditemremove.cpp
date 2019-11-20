@@ -38,12 +38,13 @@ void CommandItemRemove::undo()
     _scene->addItem(_item);
 
     // Is this a wire?
-    auto wire = std::dynamic_pointer_cast<Wire>(_item);
-    if (wire) {
+    if ( auto wire = std::dynamic_pointer_cast<Wire>(_item) ) {
         auto oldNet = wire->net();
         if (not _scene->nets().contains(oldNet)) {
             _scene->addWireNet(wire->net());
         }
+
+        // REVIEW: TODO: Crash here because of undo, wire is live-kept, but its' net has dies b/c weak! /Oscar
         wire->net()->addWire(wire);
         for (int i = 0; i < wire->wirePointsRelative().count(); i++) {
             wire->net()->pointMovedByUser(*wire.get(), i);
