@@ -9,7 +9,7 @@ WireNet::WireNet(QObject* parent) :
     QObject(parent)
 {
     // Label
-    _label = QSchematic::make_origin<Label>();
+    _label = QSchematic::mk_sh<Label>();
     _label->setPos(0, 0);
     connect(_label.get(), &Label::highlightChanged, this, &WireNet::labelHighlightChanged);
 }
@@ -19,39 +19,39 @@ WireNet::~WireNet()
     dissociate_item(_label);
 }
 
-Gpds::Container WireNet::toContainer() const
+gpds::container WireNet::to_container() const
 {
     // Wires
-    Gpds::Container wiresContainer;
+    gpds::container wiresContainer;
     for (const auto& wire : _wires) {
-        wiresContainer.addValue("wire", wire->toContainer());
+        wiresContainer.add_value("wire", wire->to_container());
     }
 
     // Root
-    Gpds::Container root;
-    root.addValue("name", std::move( _name.toStdString() ) );
-    root.addValue("wires", wiresContainer);
+    gpds::container root;
+    root.add_value("name", std::move( _name.toStdString() ) );
+    root.add_value("wires", wiresContainer);
 
     return root;
 }
 
-void WireNet::fromContainer(const Gpds::Container& container)
+void WireNet::from_container(const gpds::container& container)
 {
     // Root
-    setName( QString::fromStdString( container.getValue<std::string>( "name" ) ) );
+    setName( QString::fromStdString( container.get_value<std::string>( "name" ) ) );
 
     // Wires
     {
-        const Gpds::Container& wiresContainer = *container.getValue<Gpds::Container*>( "wires" );
-        for (const Gpds::Container* wireContainer : wiresContainer.getValues<Gpds::Container*>( "wire" ) ) {
+        const gpds::container& wiresContainer = *container.get_value<gpds::container*>( "wires" );
+        for (const gpds::container* wireContainer : wiresContainer.get_values<gpds::container*>( "wire" ) ) {
             Q_ASSERT(wireContainer);
 
-            auto newWire = ItemFactory::instance().fromContainer(*wireContainer);
+            auto newWire = ItemFactory::instance().from_container(*wireContainer);
             auto sharedNewWire = std::dynamic_pointer_cast<Wire>( std::shared_ptr<Item>( std::move(newWire) ) );
             if (!sharedNewWire) {
                 continue;
             }
-            sharedNewWire->fromContainer(*wireContainer);
+            sharedNewWire->from_container(*wireContainer);
             addWire(sharedNewWire);
         }
     }

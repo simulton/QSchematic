@@ -46,57 +46,57 @@ Wire::Wire(int type, QGraphicsItem* parent) :
     setMovable(false);
 }
 
-Gpds::Container Wire::toContainer() const
+gpds::container Wire::to_container() const
 {
     // Points
-    Gpds::Container pointsContainer;
+    gpds::container pointsContainer;
     for (int i = 0; i < _points.count(); i++) {
-        Gpds::Container pointContainer;
-        pointContainer.addAttribute("index", i);
-        pointContainer.addValue("x", _points.at(i).x());
-        pointContainer.addValue("y", _points.at(i).y());
-        pointsContainer.addValue("point", pointContainer);
+        gpds::container pointContainer;
+        pointContainer.add_attribute("index", i);
+        pointContainer.add_value("x", _points.at(i).x());
+        pointContainer.add_value("y", _points.at(i).y());
+        pointsContainer.add_value("point", pointContainer);
     }
 
     // Root
-    Gpds::Container rootContainer;
+    gpds::container rootContainer;
     addItemTypeIdToContainer(rootContainer);
-    rootContainer.addValue("item", Item::toContainer());
-    rootContainer.addValue("points", pointsContainer);
+    rootContainer.add_value("item", Item::to_container());
+    rootContainer.add_value("points", pointsContainer);
 
     return rootContainer;
 }
 
-void Wire::fromContainer(const Gpds::Container& container)
+void Wire::from_container(const gpds::container& container)
 {
     // Root
-    Item::fromContainer( *container.getValue<Gpds::Container*>( "item" ) );
+    Item::from_container( *container.get_value<gpds::container*>( "item" ) );
 
     // Points
-    const Gpds::Container* pointsContainer = container.getValue<Gpds::Container*>( "points" );
+    const gpds::container* pointsContainer = container.get_value<gpds::container*>( "points" );
     if (pointsContainer) {
-        auto points =  pointsContainer->getValues<Gpds::Container*>( "point" );
+        auto points =  pointsContainer->get_values<gpds::container*>( "point" );
         // Sort points by index
-        std::sort(points.begin(), points.end(), [](Gpds::Container* a, Gpds::Container* b) {
-            std::optional<int> index1 = a->getAttribute<int>("index");
-            std::optional<int> index2 = b->getAttribute<int>("index");
+        std::sort(points.begin(), points.end(), [](gpds::container* a, gpds::container* b) {
+            std::optional<int> index1 = a->get_attribute<int>("index");
+            std::optional<int> index2 = b->get_attribute<int>("index");
             if (!index1.has_value() || !index2.has_value()) {
-                qCritical("Wire::fromContainer(): Point has no index.");
+                qCritical("Wire::from_container(): Point has no index.");
                 return false;
             }
             return index1.value() < index2.value();
         });
-        for (const Gpds::Container* pointContainer : points ) {
-            _points.append( WirePoint( pointContainer->getValue<double>("x"), pointContainer->getValue<double>("y") ) );
+        for (const gpds::container* pointContainer : points ) {
+            _points.append( WirePoint( pointContainer->get_value<double>("x"), pointContainer->get_value<double>("y") ) );
         }
     }
 
     update();
 }
 
-OriginMgrT<Item> Wire::deepCopy() const
+std::shared_ptr<Item> Wire::deepCopy() const
 {
-    auto clone = make_origin<Wire>(type(), parentItem());
+    auto clone = mk_sh<Wire>(type(), parentItem());
     copyAttributes(*(clone.get()));
 
     return clone;

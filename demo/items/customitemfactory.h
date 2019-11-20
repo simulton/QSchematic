@@ -13,7 +13,7 @@ namespace Gpds {
 class CustomItemFactory
 {
 public:
-    static QSchematic::OriginMgrT<QSchematic::Item> fromContainer(const Gpds::Container& container);
+    static std::shared_ptr<QSchematic::Item> from_container(const gpds::container& container);
 
 private:
     CustomItemFactory() = default;

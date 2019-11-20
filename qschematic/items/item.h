@@ -11,7 +11,6 @@
 
 #define TINKER__PTR_TRACKER__LOG_LEVEL 1
 #define TINKER__MAKE_SH__USERSPACE_TRACKER true
-#define TINKER__MAKE_ORIGIN_ITEM__TYPE 1
 
 
 template <typename ...T>
@@ -191,53 +190,28 @@ namespace QSchematic {
 
 
 
-#if TINKER__MAKE_ORIGIN_ITEM__TYPE == 1
-    template <typename T>
-    using OriginMgrT = std::shared_ptr<T>;
 
-    template <typename T, typename ...ArgsT>
-    auto make_origin(ArgsT&&... args) -> OriginMgrT<T>
-    {
-        return SharedPtrTracker::mk_sh<T>(std::forward<ArgsT>(args)...);
-    }
+template <typename T, typename ...ArgsT>
+auto mk_sh(ArgsT&&... args) -> std::shared_ptr<T>
+{
+    return SharedPtrTracker::mk_sh<T>(std::forward<ArgsT>(args)...);
+}
 
-    template <typename WantedT, typename T>
-    auto adopt_origin_instance(OriginMgrT<T> val) -> OriginMgrT<WantedT>
-    {
-        return std::dynamic_pointer_cast<WantedT>(val);
-    }
+template <typename WantedT, typename T>
+auto adopt_origin_instance(std::shared_ptr<T> val) -> std::shared_ptr<WantedT>
+{
+    return std::dynamic_pointer_cast<WantedT>(val);
+}
 
-    template <typename T>
-    auto adopt_origin_instance(OriginMgrT<T> val) -> OriginMgrT<T>
-    {
-        return val;
-    }
+template <typename T>
+auto adopt_origin_instance(std::shared_ptr<T> val) -> std::shared_ptr<T>
+{
+    return val;
+}
 
-#else
-    template <typename T>
-    using OriginMgrT = std::unique_ptr<T>;
 
-    template <typename T, typename ...ArgsT>
-    auto make_origin(ArgsT&&... args) -> OriginMgrT<T>
-    {
-        return std::make_unique<T>(std::forward<ArgsT>(args)...);
-    }
 
-    template <typename WantedT, typename T>
-    auto adopt_origin_instance(OriginMgrT<T> val) -> WantedT*
-    {
-        return dynamic_cast<WantedT*>(val.release());
-    }
-
-    template <typename T>
-    auto adopt_origin_instance(OriginMgrT<T> val) -> T*
-    {
-        return val.release();
-    }
-
-#endif
-
-    class Item : public QGraphicsObject, public Gpds::Serialize
+    class Item : public QGraphicsObject, public gpds::serialize
     {
         friend class CommandItemSetVisible;
 
@@ -303,9 +277,9 @@ namespace QSchematic {
 
 
 
-        virtual Gpds::Container toContainer() const override;
-        virtual void fromContainer(const Gpds::Container& container) override;
-        virtual OriginMgrT<Item> deepCopy() const = 0;
+        virtual gpds::container to_container() const override;
+        virtual void from_container(const gpds::container& container) override;
+        virtual std::shared_ptr<Item> deepCopy() const = 0;
 
         int type() const final;
         void setGridPos(const QPoint& gridPos);
@@ -353,7 +327,7 @@ namespace QSchematic {
         Settings _settings;
 
         void copyAttributes(Item& dest) const;
-        void addItemTypeIdToContainer(Gpds::Container& container) const;
+        void addItemTypeIdToContainer(gpds::container& container) const;
 
         Scene* scene() const;
 

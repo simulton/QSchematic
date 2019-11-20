@@ -25,7 +25,7 @@ Connector::Connector(int type, const QPoint& gridPoint, const QString& text, QGr
     _wirePointIndex(-1)
 {
     // Label
-    _label = QSchematic::make_origin<Label>();
+    _label = QSchematic::mk_sh<Label>();
     _label->setParentItem(this);
     _label->setText(text);
 
@@ -60,32 +60,32 @@ Connector::~Connector()
     dissociate_item(_label);
 }
 
-Gpds::Container Connector::toContainer() const
+gpds::container Connector::to_container() const
 {
     // Root
-    Gpds::Container root;
+    gpds::container root;
     addItemTypeIdToContainer(root);
-    root.addValue("item", Item::toContainer());
-    root.addValue("snap_policy", snapPolicy());
-    root.addValue("force_text_direction", forceTextDirection());
-    root.addValue("text_direction", textDirection());
-    root.addValue("label", _label->toContainer());
+    root.add_value("item", Item::to_container());
+    root.add_value("snap_policy", snapPolicy());
+    root.add_value("force_text_direction", forceTextDirection());
+    root.add_value("text_direction", textDirection());
+    root.add_value("label", _label->to_container());
 
     return root;
 }
 
-void Connector::fromContainer(const Gpds::Container& container)
+void Connector::from_container(const gpds::container& container)
 {
-    Item::fromContainer( *container.getValue<Gpds::Container*>( "item" ) );
-    setSnapPolicy( static_cast<SnapPolicy>( container.getValue<int>( "snap_policy" ) ) );
-    setForceTextDirection( container.getValue<bool>( "force_text_direction" ) );
-    _textDirection = static_cast<Direction>( container.getValue<int>( "text_direction" ) );
-    _label->fromContainer( *container.getValue<Gpds::Container*>( "label" ) );
+    Item::from_container( *container.get_value<gpds::container*>( "item" ) );
+    setSnapPolicy( static_cast<SnapPolicy>( container.get_value<int>( "snap_policy" ) ) );
+    setForceTextDirection( container.get_value<bool>( "force_text_direction" ) );
+    _textDirection = static_cast<Direction>( container.get_value<int>( "text_direction" ) );
+    _label->from_container( *container.get_value<gpds::container*>( "label" ) );
 }
 
-OriginMgrT<Item> Connector::deepCopy() const
+std::shared_ptr<Item> Connector::deepCopy() const
 {
-    auto clone = make_origin<Connector>(type(), gridPos(), text(), parentItem());
+    auto clone = mk_sh<Connector>(type(), gridPos(), text(), parentItem());
     copyAttributes(*(clone.get()));
 
     return clone;

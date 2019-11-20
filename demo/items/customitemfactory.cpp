@@ -8,29 +8,29 @@
 #include "flowstart.h"
 #include "flowend.h"
 
-QSchematic::OriginMgrT<QSchematic::Item> CustomItemFactory::fromContainer(const Gpds::Container& container)
+std::shared_ptr<QSchematic::Item> CustomItemFactory::from_container(const gpds::container& container)
 {
     // Extract the type
     QSchematic::Item::ItemType type = QSchematic::ItemFactory::extractType(container);
 
     switch (static_cast<ItemType>(type)) {
     case ItemType::OperationType:
-        return QSchematic::make_origin<Operation>();
+        return QSchematic::mk_sh<Operation>();
 
     case ItemType::OperationConnectorType:
-        return QSchematic::make_origin<OperationConnector>();
+        return QSchematic::mk_sh<OperationConnector>();
 
     case ItemType::OperationDemo1Type:
-        return QSchematic::make_origin<OperationDemo1>();
+        return QSchematic::mk_sh<OperationDemo1>();
 
     case ItemType::FancyWireType:
-        return QSchematic::make_origin<FancyWire>();
+        return QSchematic::mk_sh<FancyWire>();
 
     case ItemType::FlowStartType:
-        return QSchematic::make_origin<FlowStart>();
+        return QSchematic::mk_sh<FlowStart>();
 
     case ItemType::FlowEndType:
-        return QSchematic::make_origin<FlowEnd>();
+        return QSchematic::mk_sh<FlowEnd>();
     }
 
     return {};

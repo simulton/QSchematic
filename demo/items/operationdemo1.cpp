@@ -22,31 +22,31 @@ OperationDemo1::OperationDemo1(QGraphicsItem* parent) :
     };
 
     for (const auto& c : connectorAttributes) {
-        auto connector = QSchematic::make_origin<OperationConnector>(c.point, c.name);
+        auto connector = QSchematic::mk_sh<OperationConnector>(c.point, c.name);
         connector->label()->setVisible(true);
         addConnector(connector);
     }
 }
 
-Gpds::Container OperationDemo1::toContainer() const
+gpds::container OperationDemo1::to_container() const
 {
     // Root
-    Gpds::Container root;
+    gpds::container root;
     addItemTypeIdToContainer(root);
-    root.addValue("operation", Operation::toContainer());
+    root.add_value("operation", Operation::to_container());
 
     return root;
 }
 
-void OperationDemo1::fromContainer(const Gpds::Container& container)
+void OperationDemo1::from_container(const gpds::container& container)
 {
     // Root
-    Operation::fromContainer( *container.getValue<Gpds::Container*>( "operation" ) );
+    Operation::from_container( *container.get_value<gpds::container*>( "operation" ) );
 }
 
-QSchematic::OriginMgrT<QSchematic::Item> OperationDemo1::deepCopy() const
+std::shared_ptr<QSchematic::Item> OperationDemo1::deepCopy() const
 {
-    auto clone = QSchematic::make_origin<OperationDemo1>(parentItem());
+    auto clone = QSchematic::mk_sh<OperationDemo1>(parentItem());
     copyAttributes(*(clone.get()));
 
     return clone;

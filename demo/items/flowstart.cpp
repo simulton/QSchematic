@@ -25,7 +25,7 @@ FlowStart::FlowStart() :
     _symbolPolygon << QPoint(-1*sz, 1*sz);
 
     // Connector
-    auto connector = QSchematic::make_origin<OperationConnector>();
+    auto connector = QSchematic::mk_sh<OperationConnector>();
     connector->setParentItem(this);
     connector->label()->setVisible(false);
     connector->label()->setMovable(false);
@@ -44,24 +44,24 @@ FlowStart::FlowStart() :
     setAllowMouseResize(false);
 }
 
-Gpds::Container FlowStart::toContainer() const
+gpds::container FlowStart::to_container() const
 {
     // Root
-    Gpds::Container root;
+    gpds::container root;
     addItemTypeIdToContainer(root);
-    root.addValue("node", QSchematic::Node::toContainer());
+    root.add_value("node", QSchematic::Node::to_container());
 
     return root;
 }
 
-void FlowStart::fromContainer(const Gpds::Container& container)
+void FlowStart::from_container(const gpds::container& container)
 {
-    QSchematic::Node::fromContainer( *container.getValue<Gpds::Container*>( "node") );
+    QSchematic::Node::from_container( *container.get_value<gpds::container*>( "node") );
 }
 
-QSchematic::OriginMgrT<QSchematic::Item> FlowStart::deepCopy() const
+std::shared_ptr<QSchematic::Item> FlowStart::deepCopy() const
 {
-    auto clone = QSchematic::make_origin<FlowStart>();
+    auto clone = QSchematic::mk_sh<FlowStart>();
     copyAttributes(*(clone.get()));
 
     return clone;

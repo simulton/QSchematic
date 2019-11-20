@@ -78,7 +78,7 @@ target_include_directories(qschematic-demo
 )
 target_link_libraries(qschematic-demo Qt5::Core Qt5::Widgets Qt5::Gui Qt5::PrintSupport)
 target_link_libraries(qschematic-demo qschematic-static)
-target_link_libraries(qschematic-demo Gpds::gpds-static)
+target_link_libraries(qschematic-demo gpds::gpds-shared)
 
 # Set window settings
 # Usage: Add -DWINDOW_{dimension}={size} to the cmake options

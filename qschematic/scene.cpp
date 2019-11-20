@@ -48,88 +48,88 @@ Scene::Scene(QObject* parent) :
     renderCachedBackground();
 }
 
-Gpds::Container Scene::toContainer() const
+gpds::container Scene::to_container() const
 {
     // Scene
-    Gpds::Container scene;
+    gpds::container scene;
     {
         // Rect
-        Gpds::Container r;
+        gpds::container r;
         const QRect& rect = sceneRect().toRect();
-        r.addValue("x", rect.x());
-        r.addValue("y", rect.y());
-        r.addValue("width", rect.width());
-        r.addValue("height", rect.height());
-        scene.addValue("rect", r);
+        r.add_value("x", rect.x());
+        r.add_value("y", rect.y());
+        r.add_value("width", rect.width());
+        r.add_value("height", rect.height());
+        scene.add_value("rect", r);
     }
 
     // Nodes
-    Gpds::Container nodesList;
+    gpds::container nodesList;
     for (const auto& node : nodes()) {
-        nodesList.addValue("node", node->toContainer());
+        nodesList.add_value("node", node->to_container());
     }
 
     // Nets
-    Gpds::Container netsList;
+    gpds::container netsList;
     for (const auto& net : nets()) {
-        netsList.addValue("net", net->toContainer());
+        netsList.add_value("net", net->to_container());
     }
 
     // Root
-    Gpds::Container c;
-    c.addValue("scene", scene);
-    c.addValue("nodes", nodesList);
-    c.addValue("nets", netsList);
+    gpds::container c;
+    c.add_value("scene", scene);
+    c.add_value("nodes", nodesList);
+    c.add_value("nets", netsList);
 
     return c;
 }
 
-void Scene::fromContainer(const Gpds::Container& container)
+void Scene::from_container(const gpds::container& container)
 {
     // Scene
     {
-        const Gpds::Container* sceneContainer = container.getValue<Gpds::Container*>("scene");
+        const gpds::container* sceneContainer = container.get_value<gpds::container*>("scene");
         Q_ASSERT( sceneContainer );
 
         // Rect
-        const Gpds::Container* rectContainer = sceneContainer->getValue<Gpds::Container*>("rect");
+        const gpds::container* rectContainer = sceneContainer->get_value<gpds::container*>("rect");
         if ( rectContainer ) {
             QRect rect;
-            rect.setX( rectContainer->getValue<int>("x") );
-            rect.setY( rectContainer->getValue<int>("y") );
-            rect.setWidth( rectContainer->getValue<int>("width") );
-            rect.setHeight( rectContainer->getValue<int>("height") );
+            rect.setX( rectContainer->get_value<int>("x") );
+            rect.setY( rectContainer->get_value<int>("y") );
+            rect.setWidth( rectContainer->get_value<int>("width") );
+            rect.setHeight( rectContainer->get_value<int>("height") );
 
             setSceneRect( rect );
         }
     }
 
     // Nodes
-    const Gpds::Container* nodesContainer = container.getValue<Gpds::Container*>("nodes");
+    const gpds::container* nodesContainer = container.get_value<gpds::container*>("nodes");
     if ( nodesContainer ) {
-        for (const auto& nodeContainer : nodesContainer->getValues<Gpds::Container*>("node")) {
+        for (const auto& nodeContainer : nodesContainer->get_values<gpds::container*>("node")) {
             Q_ASSERT(nodeContainer);
 
-            OriginMgrT<Item> node = ItemFactory::instance().fromContainer(*nodeContainer);
+            std::shared_ptr<Item> node = ItemFactory::instance().from_container(*nodeContainer);
             if (!node) {
-                qCritical("Scene::fromContainer(): Couldn't restore node. Skipping.");
+                qCritical("Scene::from_container(): Couldn't restore node. Skipping.");
                 continue;
             }
-            node->fromContainer(*nodeContainer);
+            node->from_container(*nodeContainer);
             addItem(node);
         }
     }
 
     // Nets
-    const Gpds::Container* netsContainer = container.getValue<Gpds::Container*>("nets");
+    const gpds::container* netsContainer = container.get_value<gpds::container*>("nets");
     if ( netsContainer ) {
         Q_ASSERT( netsContainer );
 
-        for (const Gpds::Container* netContainer : netsContainer->getValues<Gpds::Container*>("net")) {
+        for (const gpds::container* netContainer : netsContainer->get_values<gpds::container*>("net")) {
             Q_ASSERT( netContainer );
 
             auto net = std::make_shared<WireNet>();
-            net->fromContainer( *netContainer );
+            net->from_container( *netContainer );
 
             for (auto& wire : net->wires()) {
                 addItem(wire);
@@ -192,7 +192,7 @@ void Scene::setSettings(const Settings& settings)
     update();
 }
 
-void Scene::setWireFactory(const std::function<OriginMgrT<Wire>()>& factory)
+void Scene::setWireFactory(const std::function<std::shared_ptr<Wire>()>& factory)
 {
     _wireFactory = factory;
 }
@@ -849,7 +849,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
                 if (_wireFactory) {
                     _newWire = adopt_origin_instance(_wireFactory());
                 } else {
-                    _newWire = make_origin<Wire>();
+                    _newWire = mk_sh<Wire>();
                 }
                 _undoStack->push(new CommandItemAdd(this, _newWire));
             }

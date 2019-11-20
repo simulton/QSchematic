@@ -50,31 +50,31 @@ Item::~Item()
     Q_ASSERT(SharedPtrTracker::assert_expired(this));
 }
 
-Gpds::Container Item::toContainer() const
+gpds::container Item::to_container() const
 {
     // Root
-    Gpds::Container root;
+    gpds::container root;
     addItemTypeIdToContainer(root);
-    root.addValue("x", posX());
-    root.addValue("y", posY());
-    root.addValue("rotation", rotation()).addAttribute("unit", "degrees").addAttribute("direction", "cw");
-    root.addValue("movable", isMovable());
-    root.addValue("visible", isVisible());
-    root.addValue("snap_to_grid", snapToGrid());
-    root.addValue("highlight", highlightEnabled());
+    root.add_value("x", posX());
+    root.add_value("y", posY());
+    root.add_value("rotation", rotation()).add_attribute("unit", "degrees").add_attribute("direction", "cw");
+    root.add_value("movable", isMovable());
+    root.add_value("visible", isVisible());
+    root.add_value("snap_to_grid", snapToGrid());
+    root.add_value("highlight", highlightEnabled());
 
     return root;
 }
 
-void Item::fromContainer(const Gpds::Container& container)
+void Item::from_container(const gpds::container& container)
 {
-    setPosX( container.getValue<double>("x") );
-    setPosY( container.getValue<double>("y") );
-    setRotation( container.getValue<double>("rotation") );
-    setMovable( container.getValue<bool>("movable") );
-    setVisible( container.getValue<bool>("visible") );
-    setSnapToGrid( container.getValue<bool>("snap_to_grid") );
-    setHighlightEnabled( container.getValue<bool>("highlight") );
+    setPosX( container.get_value<double>("x") );
+    setPosY( container.get_value<double>("y") );
+    setRotation( container.get_value<double>("rotation") );
+    setMovable( container.get_value<bool>("movable") );
+    setVisible( container.get_value<bool>("visible") );
+    setSnapToGrid( container.get_value<bool>("snap_to_grid") );
+    setHighlightEnabled( container.get_value<bool>("highlight") );
 }
 
 void Item::copyAttributes(Item& dest) const
@@ -93,9 +93,9 @@ void Item::copyAttributes(Item& dest) const
     dest._oldRot = _oldRot;
 }
 
-void Item::addItemTypeIdToContainer(Gpds::Container& container) const
+void Item::addItemTypeIdToContainer(gpds::container& container) const
 {
-    container.addAttribute( "type_id", type() );
+    container.add_attribute( "type_id", type() );
 }
 
 Scene* Item::scene() const

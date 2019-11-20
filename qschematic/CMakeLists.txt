@@ -99,7 +99,7 @@ target_include_directories(qschematic-objs
     INTERFACE
         $<INSTALL_INTERFACE:include>)
 target_link_libraries(qschematic-objs Qt5::Core Qt5::Gui Qt5::Widgets)
-target_link_libraries(qschematic-objs Gpds::gpds-static)
+target_link_libraries(qschematic-objs gpds::gpds-shared)
 
 
 ################################################################################
@@ -115,7 +115,7 @@ target_include_directories(
         $<INSTALL_INTERFACE:include>
 )
 target_link_libraries(qschematic-shared Qt5::Core Qt5::Gui Qt5::Widgets)
-target_link_libraries(qschematic-shared Gpds::gpds-static)
+target_link_libraries(qschematic-shared gpds::gpds-shared)
 
 
 ################################################################################
@@ -136,7 +136,7 @@ target_include_directories(
         $<INSTALL_INTERFACE:include>
 )
 target_link_libraries(qschematic-static Qt5::Core Qt5::Gui Qt5::Widgets)
-target_link_libraries(qschematic-static Gpds::gpds-static)
+target_link_libraries(qschematic-static gpds::gpds-shared)
 
 
 ################################################################################

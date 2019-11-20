@@ -23,7 +23,7 @@ Operation::Operation(int type, QGraphicsItem* parent) :
     QSchematic::Node(type, parent)
 {
     // Label
-    _label = QSchematic::make_origin<QSchematic::Label>();
+    _label = QSchematic::mk_sh<QSchematic::Label>();
     _label->setParentItem(this);
     _label->setVisible(true);
     _label->setMovable(true);
@@ -58,27 +58,27 @@ Operation::~Operation()
     dissociate_item(_label);
 }
 
-Gpds::Container Operation::toContainer() const
+gpds::container Operation::to_container() const
 {
     // Root
-    Gpds::Container root;
+    gpds::container root;
     addItemTypeIdToContainer(root);
-    root.addValue("node", QSchematic::Node::toContainer());
-    root.addValue("label", _label->toContainer());
+    root.add_value("node", QSchematic::Node::to_container());
+    root.add_value("label", _label->to_container());
 
     return root;
 }
 
-void Operation::fromContainer(const Gpds::Container& container)
+void Operation::from_container(const gpds::container& container)
 {
     // Root
-    QSchematic::Node::fromContainer( *container.getValue<Gpds::Container*>( "node" ) );
-    _label->fromContainer(*container.getValue<Gpds::Container*>("label"));
+    QSchematic::Node::from_container( *container.get_value<gpds::container*>( "node" ) );
+    _label->from_container(*container.get_value<gpds::container*>("label"));
 }
 
-QSchematic::OriginMgrT<QSchematic::Item> Operation::deepCopy() const
+std::shared_ptr<QSchematic::Item> Operation::deepCopy() const
 {
-    auto clone = QSchematic::make_origin<Operation>(::ItemType::OperationType, parentItem());
+    auto clone = QSchematic::mk_sh<Operation>(::ItemType::OperationType, parentItem());
     copyAttributes(*(clone.get()));
 
     return clone;
@@ -204,7 +204,7 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         QAction* newConnector = new QAction;
         newConnector->setText("Add connector");
         connect(newConnector, &QAction::triggered, [this, event] {
-            auto connector = QSchematic::make_origin<OperationConnector>(event->pos().toPoint(), QStringLiteral("Unnamed"), this);
+            auto connector = QSchematic::mk_sh<OperationConnector>(event->pos().toPoint(), QStringLiteral("Unnamed"), this);
 
             if (scene()) {
                 scene()->undoStack()->push(new CommandNodeAddConnector(this, connector));

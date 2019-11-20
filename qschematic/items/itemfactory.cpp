@@ -15,12 +15,12 @@ ItemFactory& ItemFactory::instance()
     return instance;
 }
 
-void ItemFactory::setCustomItemsFactory(const std::function<OriginMgrT<Item>(const Gpds::Container&)>& factory)
+void ItemFactory::setCustomItemsFactory(const std::function<std::shared_ptr<Item>(const gpds::container&)>& factory)
 {
     _customItemFactory = factory;
 }
 
-OriginMgrT<Item> ItemFactory::fromContainer(const Gpds::Container& container) const
+std::shared_ptr<Item> ItemFactory::from_container(const gpds::container& container) const
 {
     // Extract the type
     Item::ItemType type = ItemFactory::extractType(container);
@@ -35,22 +35,22 @@ OriginMgrT<Item> ItemFactory::fromContainer(const Gpds::Container& container) co
     // Fall back to internal types
     switch (type) {
     case Item::NodeType:
-        return QSchematic::make_origin<Node>();
+        return QSchematic::mk_sh<Node>();
 
     case Item::WireType:
-        return QSchematic::make_origin<Wire>();
+        return QSchematic::mk_sh<Wire>();
 
     case Item::WireRoundedCornersType:
-        return QSchematic::make_origin<WireRoundedCorners>();
+        return QSchematic::mk_sh<WireRoundedCorners>();
 
     case Item::SplineWireType:
-        return QSchematic::make_origin<SplineWire>();
+        return QSchematic::mk_sh<SplineWire>();
 
     case Item::ConnectorType:
-        return QSchematic::make_origin<Connector>();
+        return QSchematic::mk_sh<Connector>();
 
     case Item::LabelType:
-        return QSchematic::make_origin<Label>();
+        return QSchematic::mk_sh<Label>();
 
     case Item::QSchematicItemUserType:
         break;
@@ -59,7 +59,7 @@ OriginMgrT<Item> ItemFactory::fromContainer(const Gpds::Container& container) co
     return {};
 }
 
-Item::ItemType ItemFactory::extractType(const Gpds::Container& container)
+Item::ItemType ItemFactory::extractType(const gpds::container& container)
 {
-    return static_cast<Item::ItemType>( container.getAttribute<int>( "type_id" ).value_or( -1 ) );
+    return static_cast<Item::ItemType>( container.get_attribute<int>( "type_id" ).value_or( -1 ) );
 }

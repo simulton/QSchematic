@@ -23,9 +23,9 @@ namespace QSchematic {
         virtual ~Wire() override = default;
         virtual void update() override;
 
-        virtual Gpds::Container toContainer() const override;
-        virtual void fromContainer(const Gpds::Container& container) override;
-        virtual OriginMgrT<Item> deepCopy() const override;
+        virtual gpds::container to_container() const override;
+        virtual void from_container(const gpds::container& container) override;
+        virtual std::shared_ptr<Item> deepCopy() const override;
         virtual QRectF boundingRect() const override;
         virtual QPainterPath shape() const override;
 
