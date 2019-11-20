@@ -611,7 +611,8 @@ void Wire::moveLineSegmentBy(int index, const QVector2D& moveBy)
         return;
     }
 
-    if (index < 0 or index > _points.count()-1) {
+    // Have _points.count()-2 in here because N points form N-1 line segments
+    if (index < 0 or index > _points.count()-2) {
         return;
     }
 
