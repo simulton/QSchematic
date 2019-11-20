@@ -25,7 +25,7 @@ Connector::Connector(int type, const QPoint& gridPoint, const QString& text, QGr
     _wirePointIndex(-1)
 {
     // Label
-    _label = std::make_shared<Label>();
+    _label = QSchematic::mk_sh<Label>();
     _label->setParentItem(this);
     _label->setText(text);
 
@@ -50,6 +50,12 @@ Connector::Connector(int type, const QPoint& gridPoint, const QString& text, QGr
     setGridPos(gridPoint);
     calculateSymbolRect();
     calculateTextDirection();
+}
+
+Connector::~Connector()
+{
+    // So it's definitely removed via the shared_ptr (which we have by way of the item-allocation contracts being shptr all through
+    dissociate_item(_label);
 }
 
 gpds::container Connector::to_container() const
@@ -77,7 +83,7 @@ void Connector::from_container(const gpds::container& container)
 
 std::shared_ptr<Item> Connector::deepCopy() const
 {
-    auto clone = std::make_shared<Connector>(type(), gridPos(), text(), parentItem());
+    auto clone = mk_sh<Connector>(type(), gridPos(), text(), parentItem());
     copyAttributes(*(clone.get()));
 
     return clone;
@@ -91,7 +97,7 @@ void Connector::copyAttributes(Connector& dest) const
     Item::copyAttributes(dest);
 
     // Label
-    dest._label = std::dynamic_pointer_cast<Label>(_label->deepCopy());
+    dest._label = adopt_origin_instance<QSchematic::Label>(_label->deepCopy());
     dest._label->setParentItem(&dest);
 
     // Attributes

@@ -21,7 +21,7 @@ namespace QSchematic {
         Q_ENUM(SnapPolicy)
 
         Connector(int type = Item::ConnectorType, const QPoint& gridPos = QPoint(), const QString& text = QString(), QGraphicsItem* parent = nullptr);
-        virtual ~Connector() override = default;
+        virtual ~Connector() override;
 
         virtual gpds::container to_container() const override;
         virtual void from_container(const gpds::container& container) override;

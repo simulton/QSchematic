@@ -1,6 +1,8 @@
 #include <utility>
 #include "itemmimedata.h"
 
+#include <QDebug>
+
 using namespace QSchematic;
 
 ItemMimeData::ItemMimeData(std::shared_ptr<Item> item) :

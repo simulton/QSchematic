@@ -1,4 +1,3 @@
-#include "../qschematic/items/item.h"
 #include "../qschematic/items/itemfactory.h"
 #include "itemtypes.h"
 #include "operation.h"
@@ -14,25 +13,24 @@ std::shared_ptr<QSchematic::Item> CustomItemFactory::from_container(const gpds::
     // Extract the type
     QSchematic::Item::ItemType type = QSchematic::ItemFactory::extractType(container);
 
-    // Create the item
     switch (static_cast<ItemType>(type)) {
     case ItemType::OperationType:
-        return std::make_shared<Operation>();
+        return QSchematic::mk_sh<Operation>();
 
     case ItemType::OperationConnectorType:
-        return std::make_shared<OperationConnector>();
+        return QSchematic::mk_sh<OperationConnector>();
 
     case ItemType::OperationDemo1Type:
-        return std::make_shared<OperationDemo1>();
+        return QSchematic::mk_sh<OperationDemo1>();
 
     case ItemType::FancyWireType:
-        return std::make_shared<FancyWire>();
+        return QSchematic::mk_sh<FancyWire>();
 
     case ItemType::FlowStartType:
-        return std::make_shared<FlowStart>();
+        return QSchematic::mk_sh<FlowStart>();
 
     case ItemType::FlowEndType:
-        return std::make_shared<FlowEnd>();
+        return QSchematic::mk_sh<FlowEnd>();
     }
 
     return {};

@@ -11,4 +11,5 @@ qschematic/*.dll
 # IDE stuff
 .vscode
 .idea
+.vscode
 cmake-build-*

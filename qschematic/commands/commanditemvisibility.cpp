@@ -10,8 +10,6 @@ CommandItemVisibility::CommandItemVisibility(const std::shared_ptr<Item>& item, 
     _newVisibility(newVisibility)
 {
     _oldVisibility = _item->isVisible();
-    // can't happen since we keep it alive
-    // connect(_item.get(), &QObject::destroyed, this, &CommandBase::handleDependencyDestruction);
     setText(QStringLiteral("Change visibility"));
 }
 

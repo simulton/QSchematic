@@ -10,7 +10,7 @@ UndoCommand::UndoCommand(QUndoCommand* parent) : QUndoCommand(parent)
 /**
  * @brief Pure convenience — reduce boilerplate clutter.
  */
-void UndoCommand::connectDependencyDestroySignal(QObject* dependency)
+void UndoCommand::connectDependencyDestroySignal(const QObject* dependency)
 {
     connect(dependency, &QObject::destroyed, this, &UndoCommand::handleDependencyDestruction);
 }

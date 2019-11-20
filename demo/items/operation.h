@@ -15,7 +15,7 @@ class Operation : public QSchematic::Node
 
 public:
     explicit Operation(int type = ::ItemType::OperationType, QGraphicsItem* parent = nullptr);
-    virtual ~Operation() override = default;
+    virtual ~Operation() override;
 
     virtual gpds::container to_container() const override;
     virtual void from_container(const gpds::container& container) override;

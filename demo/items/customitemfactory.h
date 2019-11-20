@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <memory>
+#include "../qschematic/items/item.h"
 
 class QString;
 
@@ -10,7 +11,7 @@ namespace QSchematic {
 }
 
 namespace gpds {
-    class Container;
+    class container;
 }
 
 class CustomItemFactory

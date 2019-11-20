@@ -13,6 +13,7 @@
 namespace QSchematic
 {
     class Scene;
+    class Item;
 
     class Item :
         public QGraphicsObject,
@@ -42,10 +43,6 @@ namespace QSchematic
 
         Item(int type, QGraphicsItem* parent = nullptr);
         virtual ~Item() override;
-
-
-
-
 
         /**
          * These funcs should be the only source for obtaining a canonical

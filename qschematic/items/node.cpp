@@ -460,9 +460,7 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent* event)
 void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
     event->accept();
-
     Item::mouseReleaseEvent(event);
-
     _mode = None;
 }
 

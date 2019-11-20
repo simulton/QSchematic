@@ -47,8 +47,10 @@ void WireNet::from_container(const gpds::container& container)
     setName( QString::fromStdString( container.get_value<std::string>( "name" ) ) );
 
     // Label
-    const gpds::container& labelContainer = *container.get_value<gpds::container*>( "label" );
-    _label->from_container(labelContainer);
+    // NOTE: I'm not sure if this should be here, is new, or was on the way out — confirm! Missing in my saved test-files... /Oscar
+    if ( auto labelContainer = container.get_value<gpds::container*>( "label" ) ) {
+        _label->from_container(*labelContainer);
+    }
 
     // Wires
     {

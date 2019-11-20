@@ -6,6 +6,8 @@
 #include "../scene.h"
 #include "../commands/commanditemmove.h"
 
+#include <QDebug>
+
 using namespace QSchematic;
 
 

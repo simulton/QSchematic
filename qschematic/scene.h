@@ -46,14 +46,14 @@ namespace QSchematic {
         void clearIsDirty();
 
         void clear();
-        bool addItem(const std::shared_ptr<Item> item);
+        bool addItem(const std::shared_ptr<Item>& item);
         bool removeItem(const std::shared_ptr<Item> item);
         QList<std::shared_ptr<Item>> items() const;
         QList<std::shared_ptr<Item>> items(int itemType) const;
         QList<std::shared_ptr<Item>> itemsAt(const QPointF& scenePos, Qt::SortOrder order = Qt::DescendingOrder) const;
         std::vector<std::shared_ptr<Item>> selectedItems() const;
         QList<std::shared_ptr<Node>> nodes() const;
-        bool addWire(const std::shared_ptr<Wire> wire);
+        bool addWire(const std::shared_ptr<Wire>& wire);
         bool removeWire(const std::shared_ptr<Wire> wire);
         QList<std::shared_ptr<Wire>> wires() const;
         QList<std::shared_ptr<WireNet>> nets() const;

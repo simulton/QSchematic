@@ -1,3 +1,5 @@
+#pragma once
+
 #include <QGraphicsScene>
 
 namespace QSchematic {
