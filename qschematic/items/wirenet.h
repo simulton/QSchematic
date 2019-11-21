@@ -12,6 +12,7 @@ namespace QSchematic {
     class Wire;
     class WirePoint;
     class Label;
+    class Scene;
 
     class WireNet : public QObject, public gpds::serialize, public std::enable_shared_from_this<WireNet>
     {
