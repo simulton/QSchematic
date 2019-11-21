@@ -138,6 +138,7 @@ namespace QSchematic {
         void wireNetHighlightChanged(bool highlighted);
         void wirePointMoved(Wire& wire, WirePoint& point);
         void wirePointMovedByUser(Wire& rawWire, int point);
+        void updateNodeConnections(const Node* node) const;
     };
 
 }

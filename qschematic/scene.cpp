@@ -560,8 +560,8 @@ QUndoStack* Scene::undoStack() const
 
 void Scene::itemMoved(const Item& item, const QVector2D& movedBy)
 {
-    Q_UNUSED(item)
     Q_UNUSED(movedBy)
+    Q_UNUSED(item)
 }
 
 void Scene::itemRotated(const Item& item, const qreal rotation)
@@ -1009,6 +1009,13 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
             if (needsToMove) {
                 _undoStack->push(new CommandItemMove(itemsToMove, moveByList));
             }
+
+            for (const auto& item : itemsToMove) {
+                const Node* node = dynamic_cast<const Node*>(item.get());
+                if (node) {
+                    updateNodeConnections(node);
+                }
+            }
         }
         break;
     }
@@ -1032,6 +1039,48 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
     }
 
     _lastMousePos = event->lastScenePos();
+}
+
+void Scene::updateNodeConnections(const Node* node) const
+{
+    // Check if a connector lays on a wirepoint
+    for (auto& connector : node->connectors()) {
+        // If the connector already has a wire attached, skip
+        if (connector->attachedWire() != nullptr) {
+            continue;
+        }
+        // Find if there is a point to connect to
+        for (const auto& wire : wires()) {
+            int index = -1;
+            if (wire->wirePointsAbsolute().first().toPoint() == connector->scenePos().toPoint()) {
+                index = 0;
+            } else if (wire->wirePointsAbsolute().last().toPoint() == connector->scenePos().toPoint()) {
+                index = wire->wirePointsAbsolute().count() - 1;
+            }
+            if (index != -1) {
+                // Ignore if it's a junction
+                if (wire->wirePointsAbsolute().at(index).isJunction()){
+                    continue;
+                }
+                // Check if it isn't already connected to another connector
+                bool alreadyConnected = false;
+                for (const auto& otherConnector : connectors()) {
+                    if (otherConnector == connector) {
+                        continue;
+                    }
+                    if (otherConnector->attachedWire() == wire.get() and
+                        otherConnector->attachedWirepoint() == index) {
+                        alreadyConnected = true;
+                        break;
+                    }
+                }
+                // If it's not already connected, connect it
+                if (not alreadyConnected) {
+                    connector->attachWire(wire.get(), index);
+                }
+            }
+        }
+    }
 }
 
 void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)

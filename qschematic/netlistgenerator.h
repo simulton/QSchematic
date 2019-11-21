@@ -111,8 +111,7 @@ namespace QSchematic
                         }
 
                         // Create the Connector/Node pairs
-                        auto connectorSceneConnectionPoint = templateConnector->mapToScene(templateConnector->connectionPoint());
-                        if (wireScenePoints.contains(connectorSceneConnectionPoint)) {
+                        if (std::find(net.wires.begin(), net.wires.end(), templateConnector->attachedWire()) != net.wires.end()) {
 
                             // Create list of all nodes in this net
                             net.nodes.push_back(templateNode);
