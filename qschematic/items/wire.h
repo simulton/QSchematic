@@ -94,7 +94,7 @@ namespace QSchematic {
         QPointF _offset;
         void moveJunctionsToNewSegment(const Line& oldSegment, const Line& newSegment);
         QAction* _renameAction;
-        std::weak_ptr<WireNet> _net;
+        std::shared_ptr<WireNet> _net;
     };
 
 }

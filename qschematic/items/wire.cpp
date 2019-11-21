@@ -1061,7 +1061,7 @@ void Wire::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 
 std::shared_ptr<WireNet> Wire::net()
 {
-    return _net.lock();
+    return _net;
 }
 
 void Wire::setNet(const std::shared_ptr<WireNet>& wirenet)

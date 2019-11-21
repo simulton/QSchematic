@@ -132,11 +132,8 @@ void Scene::from_container(const gpds::container& container)
             Q_ASSERT( netContainer );
 
             auto net = std::make_shared<WireNet>();
+            net->setScene(this);
             net->from_container( *netContainer );
-
-            for (auto& wire : net->wires()) {
-                addItem(wire);
-            }
 
             addWireNet(net);
         }
@@ -483,7 +480,9 @@ QList<std::shared_ptr<Wire>> Scene::wires() const
     QList<std::shared_ptr<Wire>> list;
 
     for (const auto& wireNet : _nets) {
-        list.append(wireNet->wires());
+        for (const auto& wire : wireNet->wires()) {
+            list.append(wire);
+        }
     }
 
     return list;

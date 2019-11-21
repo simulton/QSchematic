@@ -9,7 +9,7 @@
 using namespace QSchematic;
 
 WireNet::WireNet(QObject* parent) :
-    QObject(parent)
+    QObject(parent), _scene(nullptr)
 {
     // Label
     _label = QSchematic::mk_sh<Label>();
@@ -29,7 +29,7 @@ gpds::container WireNet::to_container() const
     // Wires
     gpds::container wiresContainer;
     for (const auto& wire : _wires) {
-        wiresContainer.add_value("wire", wire->to_container());
+        wiresContainer.add_value("wire", wire.lock()->to_container());
     }
 
     // Root
@@ -43,11 +43,11 @@ gpds::container WireNet::to_container() const
 
 void WireNet::from_container(const gpds::container& container)
 {
+    Q_ASSERT(_scene);
     // Root
     setName( QString::fromStdString( container.get_value<std::string>( "name" ) ) );
 
     // Label
-    // REVIEW: NOTE: I'm not sure if this should be here, is new, or was on the way out! Field's missing in my saved qs-test-files... /Oscar
     if ( auto labelContainer = container.get_value<gpds::container*>( "label" ) ) {
         _label->from_container(*labelContainer);
     }
@@ -65,6 +65,11 @@ void WireNet::from_container(const gpds::container& container)
             }
             sharedNewWire->from_container(*wireContainer);
             addWire(sharedNewWire);
+            if (not _scene) {
+                qCritical("WireNet::from_container(): The scene has not been set.");
+                return;
+            }
+            _scene->addItem(sharedNewWire);
         }
     }
 }
@@ -93,7 +98,12 @@ bool WireNet::addWire(const std::shared_ptr<Wire>& wire)
 bool WireNet::removeWire(const std::shared_ptr<Wire> wire)
 {
     disconnect(wire.get(), nullptr, this, nullptr);
-    _wires.removeAll(wire);
+    for (auto it = _wires.begin(); it != _wires.end(); it++) {
+        if ((*it).lock() == wire) {
+            _wires.erase(it);
+            break;
+        }
+    }
     updateLabelPos();
 
     return true;
@@ -102,7 +112,7 @@ bool WireNet::removeWire(const std::shared_ptr<Wire> wire)
 bool WireNet::contains(const std::shared_ptr<Wire>& wire) const
 {
     for (const auto& w : _wires) {
-        if (w == wire) {
+        if (w.lock() == wire) {
             return true;
         }
     }
@@ -113,7 +123,7 @@ bool WireNet::contains(const std::shared_ptr<Wire>& wire) const
 void WireNet::simplify()
 {
     for (auto& wire : _wires) {
-        wire->simplify();
+        wire.lock()->simplify();
     }
 }
 
@@ -134,17 +144,22 @@ void WireNet::setHighlighted(bool highlighted)
 {
     // Wires
     for (auto& wire : _wires) {
-        if (!wire) {
+        if (wire.expired()) {
             continue;
         }
 
-        wire->setHighlighted(highlighted);
+        wire.lock()->setHighlighted(highlighted);
     }
 
     // Label
     _label->setHighlighted(highlighted);
 
     emit highlightChanged(highlighted);
+}
+
+void WireNet::setScene(Scene* scene)
+{
+    _scene = scene;
 }
 
 QString WireNet::name()const
@@ -154,7 +169,14 @@ QString WireNet::name()const
 
 QList<std::shared_ptr<Wire>> WireNet::wires() const
 {
-    return _wires;
+    QList<std::shared_ptr<Wire>> list;
+    for (const auto& wire: _wires) {
+        if (wire.expired()) {
+            qDebug() << "expired";
+        }
+        list.append(wire.lock());
+    }
+    return list;
 }
 
 QList<Line> WireNet::lineSegments() const
@@ -162,11 +184,11 @@ QList<Line> WireNet::lineSegments() const
     QList<Line> list;
 
     for (const auto& wire : _wires) {
-        if (!wire) {
+        if (wire.expired()) {
             continue;
         }
 
-        list.append(wire->lineSegments());
+        list.append(wire.lock()->lineSegments());
     }
 
     return list;
@@ -177,7 +199,7 @@ QList<QPointF> WireNet::points() const
     QList<QPointF> list;
 
     for (const auto& wire : _wires) {
-        list.append(wire->pointsAbsolute().toList());
+        list.append(wire.lock()->pointsAbsolute().toList());
     }
 
     return list;

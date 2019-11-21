@@ -44,7 +44,6 @@ void CommandItemRemove::undo()
             _scene->addWireNet(wire->net());
         }
 
-        // REVIEW: TODO: Crash here because of undo, wire is live-kept, but its' net has dies b/c weak! /Oscar
         wire->net()->addWire(wire);
         for (int i = 0; i < wire->wirePointsRelative().count(); i++) {
             wire->net()->pointMovedByUser(*wire.get(), i);
