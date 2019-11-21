@@ -862,7 +862,7 @@ void Scene::addWireNet(const std::shared_ptr<WireNet> wireNet)
     connect(wireNet.get(), &WireNet::highlightChanged, this, &Scene::wireNetHighlightChanged);
 
     // Add label
-    QGraphicsScene::addItem(wireNet->label().get());
+    addItem(wireNet->label());
 
     // Keep track of stuff
     _nets.append(wireNet);
@@ -1464,6 +1464,6 @@ QList<std::shared_ptr<Connector>> Scene::connectors() const
 
 void Scene::removeWireNet(std::shared_ptr<WireNet> net)
 {
-    QGraphicsScene::removeItem(net->label().get());
+    removeItem(net->label());
     _nets.removeAll(net);
 }
