@@ -1011,8 +1011,51 @@ void Wire::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 
         connect(showAction, &QAction::triggered, this, &Wire::toggleLabelRequested);
     }
+    bool labelWasVisible = net()->label()->isVisible();
     if (menu.actions().count()) {
         menu.exec(event->screenPos());
+    }
+    // Move the label to the cursor if it was just made visible
+    if (not labelWasVisible and net()->label()->isVisible()) {
+        // Find line segment
+        Line seg;
+        QList<Line> lines = lineSegments();
+        for (const auto& line : lines) {
+            if (line.containsPoint(event->scenePos(), WIRE_SHAPE_PADDING/2)) {
+                seg = line;
+                break;
+            }
+
+        }
+        // This should never happen
+        if (seg.isNull()) {
+            qCritical("Wire::contextMenuEvent(): Couldn't identify the segment the user clicked on.");
+            return;
+        }
+        // Offset the position
+        QPointF pos = event->scenePos();
+        qreal angle = QLineF(seg.p1(), seg.p2()).angle();
+        // When the wire is horizontal move the label up
+        if (seg.isHorizontal()) {
+            pos.setY(seg.p1().y() - _settings.gridSize / 2);
+        }
+        // When the wire is vertical move the label to the right
+        else if (seg.isVertical()) {
+            pos.setX(seg.p1().x() + _settings.gridSize / 2);
+        }
+        // When the wire is diagonal with a positive slope move it up and to the left
+        else if ((angle > 0 and angle < 90) or (angle > 180 and angle < 360)) {
+            QPointF point = Utils::pointOnLineClosestToPoint(seg.p1(), seg.p2(), pos);
+            pos.setX(point.x() - _settings.gridSize / 2 - net()->label()->textRect().width());
+            pos.setY(point.y() - _settings.gridSize / 2);
+        }
+        // When the wire is diagonal with a negative slope move it up and to the right
+        else {
+            QPointF point = Utils::pointOnLineClosestToPoint(seg.p1(), seg.p2(), pos);
+            pos.setX(point.x() + _settings.gridSize / 2);
+            pos.setY(point.y() - _settings.gridSize / 2);
+        }
+        net()->label()->setPos(pos);
     }
 }
 
