@@ -278,6 +278,15 @@ void Scene::clear()
     update(); // Note, should not be needed, and not recommended according to input, but avoid adding yet a permutation to the investigation
 }
 
+/**
+ * Adds an item to the scene
+ * \remark When adding an Item to the Scene, there are two possibilities. If the
+ * Item is a "Top-Level" Item (it has no parent), then you should use
+ * Scene::addItem(). If the Item is the child of another Item then you need to
+ * use the superclass' implementation QGraphicsItem::addItem().
+ * This is needed to determine which Items should be moved by the scene and which
+ * are moved by their parent.
+ */
 bool Scene::addItem(const std::shared_ptr<Item>& item)
 {
     // Sanity check
@@ -394,6 +403,26 @@ std::vector<std::shared_ptr<Item>> Scene::selectedItems() const
     // - but QS-demo behaves wickedly if child-items are allowed to be selected since it didn't support that before
 
     auto items = ItemUtils::mapItemListToSharedPtrList<std::vector>(QGraphicsScene::selectedItems());
+
+    return items;
+}
+
+/**
+ * Returns only the selected items that are not part of another item.
+ * \remark The top-level items are those that were added to the scene by calling Scene::addItem.
+ * Items that should not be top-level items need to be added by using QGraphicsScene::addItem
+ * \returns List of selected top-level items
+ */
+std::vector<std::shared_ptr<Item>> Scene::selectedTopLevelItems() const
+{
+    const auto& rawItems = QGraphicsScene::selectedItems();
+    std::vector<std::shared_ptr<Item>> items;
+
+    for (auto& item : _items) {
+        if (rawItems.contains(item.get())) {
+            items.push_back(item);
+        }
+    }
 
     return items;
 }
@@ -872,7 +901,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
                 }
             }
             Label* label = dynamic_cast<Label*>(item);
-            if (label and selectedItems().size() > 0) {
+            if (label and selectedTopLevelItems().size() > 0) {
                 _movingNodes = true;
             }
         } else {
@@ -881,7 +910,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 
         // Store the initial position of all the selected items
         _initialItemPositions.clear();
-        for (auto& item: selectedItems()) {
+        for (auto& item: selectedTopLevelItems()) {
             if (item) {
                 _initialItemPositions.insert(item, item->pos());
             }
@@ -955,7 +984,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
     switch (_mode) {
     case NormalMode:
     {
-        auto items = selectedItems();
+        auto items = selectedTopLevelItems();
         for (auto& item: items) {
             Wire* wire = dynamic_cast<Wire*>(item.get());
             if (wire and not wire->movingWirePoint()) {
@@ -978,7 +1007,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
             QVector<std::shared_ptr<Item>> wiresToMove;
             QVector<std::shared_ptr<Item>> itemsToMove;
 
-            for (const auto& item : selectedItems()) {
+            for (const auto& item : selectedTopLevelItems()) {
                 if (item->isMovable() and _initialItemPositions.contains(item)) {
                     Wire* wire = dynamic_cast<Wire*>(item.get());
                     if (wire) {
@@ -1104,7 +1133,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             if (_movingNodes) {
                 QVector<std::shared_ptr<Item>> wiresToMove;
                 QVector<std::shared_ptr<Item>> itemsToMove;
-                for (const auto& item : selectedItems()) {
+                for (const auto& item : selectedTopLevelItems()) {
                     if (item->isMovable()) {
                         Wire* wire = dynamic_cast<Wire*>(item.get());
                         if (wire) {

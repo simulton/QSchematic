@@ -52,6 +52,7 @@ namespace QSchematic {
         QList<std::shared_ptr<Item>> items(int itemType) const;
         QList<std::shared_ptr<Item>> itemsAt(const QPointF& scenePos, Qt::SortOrder order = Qt::DescendingOrder) const;
         std::vector<std::shared_ptr<Item>> selectedItems() const;
+        std::vector<std::shared_ptr<Item>> selectedTopLevelItems() const;
         QList<std::shared_ptr<Node>> nodes() const;
         bool addWire(const std::shared_ptr<Wire>& wire);
         bool removeWire(const std::shared_ptr<Wire> wire);
@@ -105,6 +106,12 @@ namespace QSchematic {
 
         // TODO add to "central" sh-ptr management
         QList<std::shared_ptr<Item>> _keep_alive_an_event_loop;
+        /**
+         * Used to store a list of "Top-Level" items. These are the only items
+         * moved by the scene. Scene::addItem automatically adds the items to
+         * this list. Items that are children of another Item should
+         * not be in the list.
+         */
         QList<std::shared_ptr<Item>> _items;
         QList<std::shared_ptr<WireNet>> _nets;
 
