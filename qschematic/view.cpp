@@ -81,7 +81,7 @@ void View::keyPressEvent(QKeyEvent* event)
 
     case Qt::Key_Delete:
         if (_scene) {
-            for (auto item : _scene->selectedItems()) {
+            for (auto item : _scene->selectedTopLevelItems()) {
                 _scene->undoStack()->push(new CommandItemRemove(_scene, item));
             }
         }
