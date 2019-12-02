@@ -4,7 +4,7 @@
 #include <functional>
 #include <QGraphicsScene>
 #include <QUndoStack>
-#include <gpds/serialize.h>
+#include <gpds/serialize.hpp>
 #include "settings.h"
 #include "items/item.h"
 #include "items/wire.h"

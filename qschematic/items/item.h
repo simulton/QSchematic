@@ -2,7 +2,7 @@
 
 #include <memory>
 #include <QGraphicsObject>
-#include <gpds/serialize.h>
+#include <gpds/serialize.hpp>
 #include "../types.h"
 #include "../settings.h"
 #include "itemfunctions.h"

@@ -41,7 +41,7 @@ gpds::container OperationDemo1::to_container() const
 void OperationDemo1::from_container(const gpds::container& container)
 {
     // Root
-    Operation::from_container( *container.get_value<gpds::container*>( "operation" ) );
+    Operation::from_container(*container.get_value<gpds::container*>("operation").value());
 }
 
 std::shared_ptr<QSchematic::Item> OperationDemo1::deepCopy() const

@@ -55,13 +55,13 @@ gpds::container Item::to_container() const
 
 void Item::from_container(const gpds::container& container)
 {
-    setPosX( container.get_value<double>("x") );
-    setPosY( container.get_value<double>("y") );
-    setRotation( container.get_value<double>("rotation") );
-    setMovable( container.get_value<bool>("movable") );
-    setVisible( container.get_value<bool>("visible") );
-    setSnapToGrid( container.get_value<bool>("snap_to_grid") );
-    setHighlightEnabled( container.get_value<bool>("highlight") );
+    setPosX(container.get_value<double>("x").value_or(0));
+    setPosY(container.get_value<double>("y").value_or(0));
+    setRotation(container.get_value<double>("rotation").value_or(0));
+    setMovable(container.get_value<bool>("movable").value_or(true));
+    setVisible(container.get_value<bool>("visible").value_or(true));
+    setSnapToGrid(container.get_value<bool>("snap_to_grid").value_or(true));
+    setHighlightEnabled(container.get_value<bool>("highlight").value_or(false));
 }
 
 void Item::copyAttributes(Item& dest) const

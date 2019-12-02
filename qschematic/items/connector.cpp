@@ -74,11 +74,11 @@ gpds::container Connector::to_container() const
 
 void Connector::from_container(const gpds::container& container)
 {
-    Item::from_container( *container.get_value<gpds::container*>( "item" ) );
-    setSnapPolicy( static_cast<SnapPolicy>( container.get_value<int>( "snap_policy" ) ) );
-    setForceTextDirection( container.get_value<bool>( "force_text_direction" ) );
-    _textDirection = static_cast<Direction>( container.get_value<int>( "text_direction" ) );
-    _label->from_container( *container.get_value<gpds::container*>( "label" ) );
+    Item::from_container(*container.get_value<gpds::container*>("item").value());
+    setSnapPolicy(static_cast<SnapPolicy>(container.get_value<int>("snap_policy").value_or(Anywhere)));
+    setForceTextDirection(container.get_value<bool>("force_text_direction").value_or(false));
+    _textDirection = static_cast<Direction>(container.get_value<int>("text_direction").value_or(LeftToRight));
+    _label->from_container(*container.get_value<gpds::container*>("label").value());
 }
 
 std::shared_ptr<Item> Connector::deepCopy() const

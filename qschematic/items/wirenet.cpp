@@ -45,17 +45,17 @@ void WireNet::from_container(const gpds::container& container)
 {
     Q_ASSERT(_scene);
     // Root
-    setName( QString::fromStdString( container.get_value<std::string>( "name" ) ) );
+    setName(QString::fromStdString(container.get_value<std::string>("name").value_or("")));
 
     // Label
-    if ( auto labelContainer = container.get_value<gpds::container*>( "label" ) ) {
+    if (auto labelContainer = container.get_value<gpds::container*>("label").value_or(nullptr)) {
         _label->from_container(*labelContainer);
     }
 
     // Wires
     {
-        const gpds::container& wiresContainer = *container.get_value<gpds::container*>( "wires" );
-        for (const gpds::container* wireContainer : wiresContainer.get_values<gpds::container*>( "wire" ) ) {
+        const gpds::container& wiresContainer = *container.get_value<gpds::container*>("wires").value();
+        for (const gpds::container* wireContainer : wiresContainer.get_values<gpds::container*>("wire")) {
             Q_ASSERT(wireContainer);
 
             auto newWire = ItemFactory::instance().from_container(*wireContainer);

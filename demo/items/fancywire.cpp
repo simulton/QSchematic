@@ -38,7 +38,7 @@ gpds::container FancyWire::to_container() const
 
 void FancyWire::from_container(const gpds::container& container)
 {
-    QSchematic::Wire::from_container( *container.get_value<gpds::container*>( "wire" ) );
+    QSchematic::Wire::from_container(*container.get_value<gpds::container*>("wire").value());
 }
 
 std::shared_ptr<QSchematic::Item> FancyWire::deepCopy() const

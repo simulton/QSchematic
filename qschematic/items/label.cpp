@@ -38,18 +38,18 @@ gpds::container Label::to_container() const
 
 void Label::from_container(const gpds::container& container)
 {
-    Item::from_container( *container.get_value<gpds::container*>( "item" ) );
-    setText( QString::fromStdString( container.get_value<std::string>( "text" ) ) );
+    Item::from_container(*container.get_value<gpds::container*>("item").value());
+    setText(QString::fromStdString(container.get_value<std::string>("text").value_or("")));
 
     // Connection point
-    const gpds::container* connectionPointContainer = container.get_value<gpds::container*>( "connection_point" );
+    const gpds::container* connectionPointContainer = container.get_value<gpds::container*>("connection_point").value_or(nullptr);
     if (connectionPointContainer) {
         auto attributeString = connectionPointContainer->get_attribute<std::string>( "enabled" );
         if ( attributeString.has_value() ) {
             _hasConnectionPoint = ( attributeString.value() == "true" );
         }
-        _connectionPoint.setX( connectionPointContainer->get_value<double>( "x" ) );
-        _connectionPoint.setY( connectionPointContainer->get_value<double>( "y" ) );
+        _connectionPoint.setX(connectionPointContainer->get_value<double>("x").value_or(0));
+        _connectionPoint.setY(connectionPointContainer->get_value<double>("y").value_or(0));
     }
 }
 

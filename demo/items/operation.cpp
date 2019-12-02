@@ -72,8 +72,8 @@ gpds::container Operation::to_container() const
 void Operation::from_container(const gpds::container& container)
 {
     // Root
-    QSchematic::Node::from_container( *container.get_value<gpds::container*>( "node" ) );
-    _label->from_container(*container.get_value<gpds::container*>("label"));
+    QSchematic::Node::from_container(*container.get_value<gpds::container*>("node").value());
+    _label->from_container(*container.get_value<gpds::container*>("label").value());
 }
 
 std::shared_ptr<QSchematic::Item> Operation::deepCopy() const

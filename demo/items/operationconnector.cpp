@@ -40,7 +40,7 @@ gpds::container OperationConnector::to_container() const
 void OperationConnector::from_container(const gpds::container& container)
 {
     // Root
-    QSchematic::Connector::from_container( *container.get_value<gpds::container*>( "connector" ) );
+    QSchematic::Connector::from_container(*container.get_value<gpds::container*>("connector").value());
 }
 
 std::shared_ptr<QSchematic::Item> OperationConnector::deepCopy() const

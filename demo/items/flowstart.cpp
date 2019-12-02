@@ -56,7 +56,7 @@ gpds::container FlowStart::to_container() const
 
 void FlowStart::from_container(const gpds::container& container)
 {
-    QSchematic::Node::from_container( *container.get_value<gpds::container*>( "node") );
+    QSchematic::Node::from_container(*container.get_value<gpds::container*>("node").value());
 }
 
 std::shared_ptr<QSchematic::Item> FlowStart::deepCopy() const

@@ -32,7 +32,8 @@ gpds::container WireRoundedCorners::to_container() const
 void WireRoundedCorners::from_container(const gpds::container& container)
 {
     // Root
-    Wire::from_container( *container.get_value<gpds::container*>( "wire" ) );
+    auto opt = container.get_value<gpds::container*>("wire");
+    Wire::from_container(opt ? *opt.value() : gpds::container());
 }
 
 void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)

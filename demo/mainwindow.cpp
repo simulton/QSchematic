@@ -13,7 +13,7 @@
 #include <QInputDialog>
 #include <QFileDialog>
 #include <QTextCodec>
-#include <gpds/archiverxml.h>
+#include <gpds/archiver_xml.hpp>
 #ifndef QT_NO_PRINTER
     #include <QPrinter>
     #include <QPrintDialog>

@@ -73,12 +73,12 @@ gpds::container Wire::to_container() const
 void Wire::from_container(const gpds::container& container)
 {
     // Root
-    Item::from_container( *container.get_value<gpds::container*>( "item" ) );
+    Item::from_container(*container.get_value<gpds::container*>("item").value());
 
     // Points
-    const gpds::container* pointsContainer = container.get_value<gpds::container*>( "points" );
+    const gpds::container* pointsContainer = container.get_value<gpds::container*>("points").value_or(nullptr);
     if (pointsContainer) {
-        auto points =  pointsContainer->get_values<gpds::container*>( "point" );
+        auto points = pointsContainer->get_values<gpds::container*>("point");
         // Sort points by index
         std::sort(points.begin(), points.end(), [](gpds::container* a, gpds::container* b) {
             std::optional<int> index1 = a->get_attribute<int>("index");
@@ -90,7 +90,8 @@ void Wire::from_container(const gpds::container& container)
             return index1.value() < index2.value();
         });
         for (const gpds::container* pointContainer : points ) {
-            _points.append( WirePoint( pointContainer->get_value<double>("x"), pointContainer->get_value<double>("y") ) );
+            _points.append(WirePoint(pointContainer->get_value<double>("x").value_or(0),
+                                     pointContainer->get_value<double>("y").value_or(0)));
         }
     }
 

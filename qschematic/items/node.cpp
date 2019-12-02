@@ -78,24 +78,24 @@ gpds::container Node::to_container() const
 void Node::from_container(const gpds::container& container)
 {
     // Root
-    Item::from_container( *container.get_value<gpds::container*>( "item" ) );
-    setSize( container.get_value<double>( "width" ), container.get_value<double>( "height" ) );
-    setAllowMouseResize( container.get_value<bool>( "allow_mouse_resize", true ) );
-    setAllowMouseRotate( container.get_value<bool>( "allow_mouse_rotate", true ) );
+    Item::from_container(*container.get_value<gpds::container*>("item").value());
+    setSize(container.get_value<double>("width").value_or(0), container.get_value<double>("height").value_or(0));
+    setAllowMouseResize(container.get_value<bool>("allow_mouse_resize").value_or(true));
+    setAllowMouseRotate(container.get_value<bool>("allow_mouse_rotate").value_or(true));
 
     // Connectors configuration
-    const gpds::container* connectorsConfigurationContainer = container.get_value<gpds::container*>( "connectors_configuration" );
+    const gpds::container* connectorsConfigurationContainer = container.get_value<gpds::container*>("connectors_configuration").value_or(nullptr);
     if (connectorsConfigurationContainer) {
-        setConnectorsMovable( connectorsConfigurationContainer->get_value<bool>( "movable" ) );
-        setConnectorsSnapPolicy( static_cast<Connector::SnapPolicy>( connectorsConfigurationContainer->get_value<int>( "snap_policy" ) ) );
-        setConnectorsSnapToGrid( connectorsConfigurationContainer->get_value<bool>( "snap_to_grid" ) );
+        setConnectorsMovable(connectorsConfigurationContainer->get_value<bool>("movable").value_or(true));
+        setConnectorsSnapPolicy(static_cast<Connector::SnapPolicy>( connectorsConfigurationContainer->get_value<int>("snap_policy").value_or(Connector::SnapPolicy::Anywhere)));
+        setConnectorsSnapToGrid(connectorsConfigurationContainer->get_value<bool>("snap_to_grid").value_or(true));
     }
 
     // Connectors
-    const gpds::container* connectorsContainer = container.get_value<gpds::container*>( "connectors" );
+    const gpds::container* connectorsContainer = container.get_value<gpds::container*>("connectors").value_or(nullptr);
     if (connectorsContainer) {
         clearConnectors();
-        for (const gpds::container* connectorContainer : connectorsContainer->get_values<gpds::container*>( "connector" ) ) {
+        for (const gpds::container* connectorContainer : connectorsContainer->get_values<gpds::container*>("connector")) {
             auto connector = adopt_origin_instance<Connector>(ItemFactory::instance().from_container(*connectorContainer));
             if (!connector) {
                 continue;

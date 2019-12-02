@@ -91,24 +91,24 @@ void Scene::from_container(const gpds::container& container)
 {
     // Scene
     {
-        const gpds::container* sceneContainer = container.get_value<gpds::container*>("scene");
+        const gpds::container* sceneContainer = container.get_value<gpds::container*>("scene").value_or(nullptr);
         Q_ASSERT( sceneContainer );
 
         // Rect
-        const gpds::container* rectContainer = sceneContainer->get_value<gpds::container*>("rect");
+        const gpds::container* rectContainer = sceneContainer->get_value<gpds::container*>("rect").value_or(nullptr);
         if ( rectContainer ) {
             QRect rect;
-            rect.setX( rectContainer->get_value<int>("x") );
-            rect.setY( rectContainer->get_value<int>("y") );
-            rect.setWidth( rectContainer->get_value<int>("width") );
-            rect.setHeight( rectContainer->get_value<int>("height") );
+            rect.setX(rectContainer->get_value<int>("x").value_or(0));
+            rect.setY(rectContainer->get_value<int>("y").value_or(0));
+            rect.setWidth(rectContainer->get_value<int>("width").value_or(0));
+            rect.setHeight(rectContainer->get_value<int>("height").value_or(0));
 
             setSceneRect( rect );
         }
     }
 
     // Nodes
-    const gpds::container* nodesContainer = container.get_value<gpds::container*>("nodes");
+    const gpds::container* nodesContainer = container.get_value<gpds::container*>("nodes").value_or(nullptr);
     if ( nodesContainer ) {
         for (const auto& nodeContainer : nodesContainer->get_values<gpds::container*>("node")) {
             Q_ASSERT(nodeContainer);
@@ -124,7 +124,7 @@ void Scene::from_container(const gpds::container& container)
     }
 
     // Nets
-    const gpds::container* netsContainer = container.get_value<gpds::container*>("nets");
+    const gpds::container* netsContainer = container.get_value<gpds::container*>("nets").value_or(nullptr);
     if ( netsContainer ) {
         Q_ASSERT( netsContainer );
 
