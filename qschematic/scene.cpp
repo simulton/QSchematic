@@ -471,13 +471,23 @@ bool Scene::removeWire(const std::shared_ptr<Wire> wire)
     removeItem(wire);
 
     // Disconnect from connected wires
-    for (auto otherWire: wiresConnectedTo(wire)) {
+    for (const auto& otherWire: wiresConnectedTo(wire)) {
         if (otherWire != wire) {
             if (otherWire->connectedWires().contains(wire.get())) {
-                disconnectWire(wire, otherWire);
+                disconnectWire(otherWire, wire);
             }
             else if (wire->connectedWires().contains(otherWire.get())) {
-                disconnectWire(otherWire, wire);
+                disconnectWire(wire, otherWire);
+            }
+            // Update the junction on the other wire
+            for (int index = 0; index < otherWire->pointsAbsolute().count(); index++) {
+                const auto point = otherWire->wirePointsAbsolute().at(index);
+                if (not point.isJunction()) {
+                    continue;
+                }
+                if (wire->pointIsOnWire(point.toPointF())) {
+                    otherWire->setPointIsJunction(index, false);
+                }
             }
         }
     }
