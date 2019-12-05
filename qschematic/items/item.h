@@ -140,6 +140,7 @@ namespace QSchematic
         virtual void update();
         void setIsMoving(bool moving);
         bool isMoving() const;
+        Scene* scene() const;
 
     signals:
         void moved(Item& item, const QVector2D& movedBy);
@@ -153,8 +154,6 @@ namespace QSchematic
 
         void copyAttributes(Item& dest) const;
         void addItemTypeIdToContainer(gpds::container& container) const;
-
-        Scene* scene() const;
 
         bool isHighlighted() const;
         virtual void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;

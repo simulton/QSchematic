@@ -392,7 +392,7 @@ void Connector::moveWirePoint() const
     }
 
     // Ignore if the wire is not in the same scene
-    if (_wire->QGraphicsItem::scene() != QGraphicsItem::scene()) {
+    if (_wire->scene() != scene()) {
         return;
     }
 
