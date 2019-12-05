@@ -1016,7 +1016,7 @@ QVariant Wire::itemChange(QGraphicsItem::GraphicsItemChange change, const QVaria
         QPointF newPos = QPointF(_settings.snapToGrid(value.toPointF())) + _offset;
         QVector2D movedBy = QVector2D(newPos - pos());
         // Move junctions
-        if (not _internalMove) {
+        if (not _internalMove and scene()) {
             for (const auto& junction : junctions()) {
                 for (const auto& wire : scene()->wires()) {
                     if (not wire->connectedWires().contains(this)) {
