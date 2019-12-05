@@ -17,7 +17,8 @@ Item::Item(int type, QGraphicsItem* parent) :
     _snapToGrid(true),
     _highlightEnabled(true),
     _highlighted(false),
-    _oldRot{0}
+    _oldRot{0},
+    _isMoving(false)
 {
     // Misc
     setAcceptHoverEvents(true);
@@ -387,4 +388,14 @@ void Item::update()
 
     // Base class
     QGraphicsObject::update();
+}
+
+void Item::setIsMoving(bool moving)
+{
+    _isMoving = moving;
+}
+
+bool Item::isMoving() const
+{
+    return _isMoving;
 }

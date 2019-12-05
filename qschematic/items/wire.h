@@ -54,6 +54,7 @@ namespace QSchematic {
         void setNet(const std::shared_ptr<WireNet>& wirenet);
         std::shared_ptr<WireNet> net();
         bool movingWirePoint() const;
+        void updatePosition();
 
         QList<QSchematic::Line> lineSegments() const;
 
@@ -95,6 +96,7 @@ namespace QSchematic {
         void moveJunctionsToNewSegment(const Line& oldSegment, const Line& newSegment);
         QAction* _renameAction;
         std::shared_ptr<WireNet> _net;
+        bool _internalMove;
     };
 
 }

@@ -12,6 +12,7 @@
 #include "connector.h"
 #include "scene.h"
 #include "label.h"
+#include "node.h"
 #include "../utils.h"
 #include "../commands/commandwirepointmove.h"
 
@@ -36,7 +37,7 @@ public:
 };
 
 Wire::Wire(int type, QGraphicsItem* parent) :
-    Item(type, parent), _renameAction(nullptr)
+    Item(type, parent), _renameAction(nullptr), _internalMove(false)
 {
     _pointToMoveIndex = -1;
     _lineSegmentToMoveIndex = -1;
@@ -208,16 +209,25 @@ void Wire::calculateBoundingRect()
 
     // Create the rectangle
     _rect = QRectF(topLeft, bottomRight);
-    if (not topLeft.isNull()) {
-        for (int i = 0; i < _points.count(); i++) {
-            _points[i].setX(_points[i].x() - topLeft.x());
-            _points[i].setY(_points[i].y() - topLeft.y());
-        }
-        QPointF newPos = pos() + topLeft;
-        QPointF snappedPos = _settings.snapToGrid(newPos);
-        _offset = newPos - snappedPos;
-        setPos(newPos);
+    if (movingWirePoint() and not topLeft.isNull()) {
+        updatePosition();
     }
+}
+
+void Wire::updatePosition()
+{
+    QPointF topLeft = _rect.topLeft();
+    for (int i = 0; i < _points.count(); i++) {
+        _points[i].setX(_points[i].x() - topLeft.x());
+        _points[i].setY(_points[i].y() - topLeft.y());
+    }
+    QPointF newPos = pos() + topLeft;
+    QPointF snappedPos = _settings.snapToGrid(newPos);
+    _offset = newPos - snappedPos;
+    _internalMove = true;
+    setPos(newPos);
+    _internalMove = false;
+    calculateBoundingRect();
 }
 
 void Wire::setRenameAction(QAction* action)
@@ -427,7 +437,7 @@ void Wire::movePointBy(int index, const QVector2D& moveBy)
             if (line.isHorizontal() or line.isVertical()) {
                 // Move connected junctions
                 for (const auto& wire: _connectedWires) {
-                    if (wire->isSelected()) {
+                    if (wire->isMoving()) {
                         continue;
                     }
                     for (const auto& point: wire->junctions()) {
@@ -471,7 +481,7 @@ void Wire::movePointBy(int index, const QVector2D& moveBy)
             if (line.isHorizontal() or line.isVertical()) {
                 // Move connected junctions
                 for (const auto& wire: _connectedWires) {
-                    if (wire->isSelected()) {
+                    if (wire->isMoving()) {
                         continue;
                     }
                     for (const auto& point: wire->junctions()) {
@@ -515,13 +525,13 @@ void Wire::movePointTo(int index, const QPointF& moveTo)
     }
 
     // Do nothing if it already is at that position
-    if (_points[index] == moveTo) {
+    if (pointsAbsolute().at(index) == moveTo) {
         return;
     }
 
     // Move junctions that are on the point
     for (const auto& wire: _connectedWires) {
-        if (wire->isSelected()) {
+        if (wire->isMoving()) {
             continue;
         }
         for (const auto& point: wire->junctions()) {
@@ -564,7 +574,7 @@ void Wire::moveJunctionsToNewSegment(const Line& oldSegment, const Line& newSegm
 
     // Move connected junctions
     for (const auto& wire: _connectedWires) {
-        if (wire->isSelected()) {
+        if (wire->isMoving()) {
             continue;
         }
         for (const auto& point: wire->junctions()) {
@@ -619,7 +629,7 @@ void Wire::moveLineSegmentBy(int index, const QVector2D& moveBy)
 
     // Move connected junctions
     for (const auto& wire: _connectedWires) {
-        if (wire->isSelected()) {
+        if (wire->isMoving()) {
             continue;
         }
         for (const auto& point: wire->junctions()) {
@@ -680,6 +690,7 @@ void Wire::moveLineSegmentBy(int index, const QVector2D& moveBy)
         const QPointF& newPos = _points[index] + pos() + moveBy.toPointF();
         const std::shared_ptr<Wire>& wirePtr = this->sharedPtr<Wire>();
         auto cmd = new CommandWirepointMove(scene(), wirePtr, index, newPos);
+        Q_ASSERT(scene());
         scene()->undoStack()->push(cmd);
     }
     // Move point 2
@@ -1000,11 +1011,72 @@ QVariant Wire::itemChange(QGraphicsItem::GraphicsItemChange change, const QVaria
 {
     switch (change) {
 
-    case ItemPositionChange:
-        return QPointF(_settings.snapToGrid(value.toPointF())) + _offset;
+    case ItemPositionChange: {
+        // Move the wire
+        QPointF newPos = QPointF(_settings.snapToGrid(value.toPointF())) + _offset;
+        QVector2D movedBy = QVector2D(newPos - pos());
+        // Move junctions
+        if (not _internalMove) {
+            for (const auto& junction : junctions()) {
+                for (const auto& wire : scene()->wires()) {
+                    if (not wire->connectedWires().contains(this)) {
+                        continue;
+                    }
+                    if (wire->isMoving()) {
+                        continue;
+                    }
+                    if (wire->pointIsOnWire(junction.toPointF()) and not movedBy.isNull()) {
+                        int index = wirePointsAbsolute().indexOf(junction);
+                        movePointBy(index, -movedBy);
+                    }
+                }
+            }
+            // Move junction on the wire
+            for (const auto& wire : connectedWires()) {
+                if (wire->isMoving()) {
+                    continue;
+                }
+                for (const auto& point : wire->junctions()) {
+                    if (pointIsOnWire(point.toPointF())) {
+                        wire->movePointBy(wire->wirePointsAbsolute().indexOf(point), movedBy);
+                    }
+                }
+            }
+        }
+        return newPos;
+    }
+    case ItemPositionHasChanged:
+        if (_internalMove) {
+            break;
+        }
+        if (not scene()) {
+            break;
+        }
+        // Move points to their connectors
+        for (const auto& conn : scene()->connectors()) {
+            bool isSelected = false;
+            // Check if the connector's node is selected
+            for (const auto& item : scene()->selectedTopLevelItems()) {
+                auto node = item->sharedPtr<Node>();
+                if (node) {
+                    if (node->connectors().contains(conn)) {
+                        isSelected = true;
+                        break;
+                    }
+                }
+            }
+            // Move point onto the connector
+            if (not isSelected and conn->attachedWire() == this) {
+                int index = conn->attachedWirepoint();
+                QVector2D moveBy(conn->scenePos() - pointsAbsolute().at(index));
+                movePointBy(index, moveBy);
+            }
+        }
+        break;
     default:
         return Item::itemChange(change, value);
     }
+    return Item::itemChange(change, value);
 }
 
 void Wire::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)

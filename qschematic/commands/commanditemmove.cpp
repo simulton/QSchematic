@@ -48,14 +48,26 @@ bool CommandItemMove::mergeWith(const QUndoCommand* command)
 
 void CommandItemMove::undo()
 {
+    for (const auto& item : _items) {
+        item->setIsMoving(true);
+    }
     for (int i = 0; i < _items.count(); i++) {
         _items[i]->moveBy(-_moveBy[i]);
+    }
+    for (const auto& item : _items) {
+        item->setIsMoving(false);
     }
 }
 
 void CommandItemMove::redo()
 {
+    for (const auto& item : _items) {
+        item->setIsMoving(true);
+    }
     for (int i = 0; i < _items.count(); i++) {
         _items[i]->moveBy(_moveBy[i]);
+    }
+    for (const auto& item : _items) {
+        item->setIsMoving(false);
     }
 }

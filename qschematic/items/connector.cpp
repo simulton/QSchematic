@@ -391,7 +391,10 @@ void Connector::moveWirePoint() const
         return;
     }
 
-    // If the wire is also moving the connector must not update the wire
+    // Ignore if the wire is not in the same scene
+    if (_wire->QGraphicsItem::scene() != QGraphicsItem::scene()) {
+        return;
+    }
 
     if (_wirePointIndex < -1 or _wire->wirePointsRelative().count() <= _wirePointIndex) {
         return;

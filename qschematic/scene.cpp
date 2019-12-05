@@ -21,8 +21,6 @@
 #include "items/label.h"
 #include "utils/itemscontainerutils.h"
 
-#include <QDebug>
-
 using namespace QSchematic;
 
 Scene::Scene(QObject* parent) :
@@ -984,21 +982,6 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
     switch (_mode) {
     case NormalMode:
     {
-        auto items = selectedTopLevelItems();
-        for (auto& item: items) {
-            Wire* wire = dynamic_cast<Wire*>(item.get());
-            if (wire and not wire->movingWirePoint()) {
-                if (_initialItemPositions.value(item).toPoint() != wire->pos().toPoint()) {
-                    for (auto& otherWire: wire->connectedWires()) {
-                        wirePointMovedByUser(*otherWire, 0);
-                        wirePointMovedByUser(*otherWire, otherWire->wirePointsRelative().count() - 1);
-                    }
-                    for (int i = 0; i < wire->wirePointsRelative().count(); i++) {
-                        wirePointMovedByUser(*wire, i);
-                    }
-                }
-            }
-        }
         QGraphicsScene::mouseReleaseEvent(event);
 
         // Reset the position for every selected item and
@@ -1037,11 +1020,17 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
             if (needsToMove) {
                 _undoStack->push(new CommandItemMove(itemsToMove, moveByList));
             }
-
             for (const auto& item : itemsToMove) {
                 const Node* node = dynamic_cast<const Node*>(item.get());
                 if (node) {
                     updateNodeConnections(node);
+                }
+            }
+
+            for (auto& item : wires()) {
+                Wire* wire = dynamic_cast<Wire*>(item.get());
+                if (wire) {
+                    wire->updatePosition();
                 }
             }
         }
@@ -1135,6 +1124,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                 QVector<std::shared_ptr<Item>> itemsToMove;
                 for (const auto& item : selectedTopLevelItems()) {
                     if (item->isMovable()) {
+                        item->setIsMoving(true);
                         Wire* wire = dynamic_cast<Wire*>(item.get());
                         if (wire) {
                             wiresToMove << item;
@@ -1150,6 +1140,11 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                     // Apply the custom scene snapping
                     moveBy = itemsMoveSnap(item, QVector2D(moveBy)).toPointF();
                     item->setPos(item->pos() + moveBy);
+                }
+                for (const auto& item : selectedTopLevelItems()) {
+                    if (item->isMovable()) {
+                        item->setIsMoving(false);
+                    }
                 }
             }
             else {
@@ -1286,6 +1281,7 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
             _newWire->setAcceptHoverEvents(true);
             _newWire->setFlag(QGraphicsItem::ItemIsSelectable, true);
             _newWire->simplify();
+            _newWire->updatePosition();
             _newWire.reset();
 
             return;
