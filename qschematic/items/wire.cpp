@@ -1073,6 +1073,13 @@ QVariant Wire::itemChange(QGraphicsItem::GraphicsItemChange change, const QVaria
             }
         }
         break;
+    case ItemSelectedHasChanged:
+        if (value.toBool()) {
+            setZValue(zValue()+1);
+        } else {
+            setZValue(zValue()-1);
+        }
+        break;
     default:
         return Item::itemChange(change, value);
     }
