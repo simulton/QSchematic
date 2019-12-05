@@ -417,8 +417,10 @@ void Connector::attachWire(Wire* wire, int index)
         return;
     }
 
-    // Detach wire if there is already one attached
-    detachWire();
+    // Ignore if there is already one attached
+    if (attachedWire()) {
+        return;
+    }
 
     _wire = wire;
     _wirePointIndex = index;
