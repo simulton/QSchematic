@@ -470,6 +470,13 @@ bool Scene::removeWire(const std::shared_ptr<Wire> wire)
     // Remove the wire from the scene
     removeItem(wire);
 
+    // Disconnect from connectors
+    for (const auto& connector: connectors()) {
+        if (connector->attachedWire() == wire.get()) {
+            connector->detachWire();
+        }
+    }
+
     // Disconnect from connected wires
     for (const auto& otherWire: wiresConnectedTo(wire)) {
         if (otherWire != wire) {

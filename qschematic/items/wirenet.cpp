@@ -1,5 +1,6 @@
 #include <utils.h>
 #include <QVector2D>
+#include "connector.h"
 #include "../scene.h"
 #include "wirenet.h"
 #include "wire.h"
@@ -79,6 +80,17 @@ bool WireNet::addWire(const std::shared_ptr<Wire>& wire)
     // Sanity check
     if (!wire) {
         return false;
+    }
+
+    // Attach to connectors
+    if (wire->scene()) {
+        for (const auto& connector : wire->scene()->connectors()) {
+            if (connector->scenePos() == wire->pointsAbsolute().first()) {
+                connector->attachWire(wire.get(), 0);
+            } else if (connector->scenePos() == wire->pointsAbsolute().last()) {
+                connector->attachWire(wire.get(), wire->pointsAbsolute().count() - 1);
+            }
+        }
     }
 
     // Update the junctions of the wires that are already in the net
