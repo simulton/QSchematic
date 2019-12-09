@@ -209,7 +209,9 @@ void Item::moveBy(const QVector2D& moveBy)
 void Item::setSettings(const Settings& settings)
 {
     // Resnap to grid
-    setPos(_settings.snapToGrid(pos()));
+    if (snapToGrid()) {
+        setPos(_settings.snapToGrid(pos()));
+    }
 
     // Store the new settings
     _settings = settings;
