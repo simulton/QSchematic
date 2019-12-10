@@ -221,6 +221,10 @@ void Wire::updatePosition()
         _points[i].setX(_points[i].x() - topLeft.x());
         _points[i].setY(_points[i].y() - topLeft.y());
     }
+    // Move all the child items
+    for (auto& item : childItems()) {
+        item->setPos(item->pos() - topLeft);
+    }
     QPointF newPos = pos() + topLeft;
     QPointF snappedPos = _settings.snapToGrid(newPos);
     _offset = newPos - snappedPos;
@@ -1143,7 +1147,8 @@ void Wire::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
             pos.setX(point.x() + _settings.gridSize / 2);
             pos.setY(point.y() - _settings.gridSize / 2);
         }
-        net()->label()->setPos(pos);
+        net()->label()->setParentItem(this);
+        net()->label()->setPos(pos - Wire::pos());
     }
 }
 

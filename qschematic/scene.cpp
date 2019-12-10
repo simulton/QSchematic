@@ -876,9 +876,6 @@ void Scene::addWireNet(const std::shared_ptr<WireNet> wireNet)
     connect(wireNet.get(), &WireNet::pointMovedByUser, this, &Scene::wirePointMovedByUser);
     connect(wireNet.get(), &WireNet::highlightChanged, this, &Scene::wireNetHighlightChanged);
 
-    // Add label
-    addItem(wireNet->label());
-
     // Keep track of stuff
     _nets.append(wireNet);
 }
@@ -1001,6 +998,9 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
     {
         QGraphicsScene::mouseReleaseEvent(event);
 
+        for (const auto& net : nets()) {
+            net->updateLabelPos(true);
+        }
         // Reset the position for every selected item and
         // apply the translation through the undostack
         if (_movingNodes) {
@@ -1477,6 +1477,5 @@ QList<std::shared_ptr<Connector>> Scene::connectors() const
 
 void Scene::removeWireNet(std::shared_ptr<WireNet> net)
 {
-    removeItem(net->label());
     _nets.removeAll(net);
 }

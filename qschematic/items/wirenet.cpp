@@ -17,11 +17,12 @@ WireNet::WireNet(QObject* parent) :
     _label->setPos(0, 0);
     _label->setVisible(false);
     connect(_label.get(), &Label::highlightChanged, this, &WireNet::labelHighlightChanged);
-    connect(_label.get(), &Label::moved, this, &WireNet::updateLabelPos);
+    connect(_label.get(), &Label::moved, this, [=] { updateLabelPos(); });
 }
 
 WireNet::~WireNet()
 {
+    _label->setParentItem(nullptr);
     dissociate_item(_label);
 }
 
@@ -36,7 +37,11 @@ gpds::container WireNet::to_container() const
     // Root
     gpds::container root;
     root.add_value("name", _name.toStdString() );
+    // The coordinates of the label need to be in the scene space
+    _label->moveBy(QVector2D(_label->parentItem()->pos()));
     root.add_value("label", _label->to_container());
+    // Move the label back to the correct position
+    _label->moveBy(-QVector2D(_label->parentItem()->pos()));
     root.add_value("wires", wiresContainer);
 
     return root;
@@ -110,9 +115,9 @@ bool WireNet::addWire(const std::shared_ptr<Wire>& wire)
     connect(wire.get(), &Wire::pointMovedByUser, this, &WireNet::wirePointMovedByUser);
     connect(wire.get(), &Wire::highlightChanged, this, &WireNet::wireHighlightChanged);
     connect(wire.get(), &Wire::toggleLabelRequested, this, &WireNet::toggleLabel);
-    connect(wire.get(), &Wire::moved, this, &WireNet::updateLabelPos);
+    connect(wire.get(), &Wire::moved, this, [=] { updateLabelPos(); });
     _wires.append(wire);
-    updateLabelPos();
+    updateLabelPos(true);
 
     return true;
 }
@@ -126,7 +131,7 @@ bool WireNet::removeWire(const std::shared_ptr<Wire> wire)
             break;
         }
     }
-    updateLabelPos();
+    updateLabelPos(true);
 
     return true;
 }
@@ -160,6 +165,7 @@ void WireNet::setName(const QString& name)
 
     _label->setText(_name);
     _label->setVisible(!_name.isEmpty());
+    updateLabelPos(true);
 }
 
 void WireNet::setHighlighted(bool highlighted)
@@ -239,20 +245,44 @@ void WireNet::wirePointMoved(Wire& wire, WirePoint& point)
     emit pointMoved(wire, point);
 }
 
-void WireNet::updateLabelPos() const
+/**
+ * Update the label's connection point and its parent if updateParent is true.
+ */
+void WireNet::updateLabelPos(bool updateParent) const
 {
-    QPointF labelPos = _label->textRect().center() + _label->pos();
-    QPointF closestPoint;
-    for (const auto& segment: lineSegments()) {
-        // Find closest point on segment
-         QPointF p = Utils::pointOnLineClosestToPoint(segment.p1(), segment.p2(), labelPos);
-         float distance1 = QVector2D(labelPos - closestPoint).lengthSquared();
-         float distance2 = QVector2D(labelPos - p).lengthSquared();
-         if (closestPoint.isNull() or distance1 > distance2) {
-              closestPoint = p;
-         }
+    // Ignore if the label is not visible
+    if (not _label->isVisible()) {
+        return;
     }
-    _label->setConnectionPoint(closestPoint);
+    // Find closest point
+    QPointF labelPos = _label->textRect().center() + _label->scenePos();
+    QPointF closestPoint;
+    std::shared_ptr<Wire> closestWire;
+    for (const auto& wire : _wires) {
+        std::shared_ptr<Wire> spWire = wire.lock();
+        for (const auto& segment: spWire->lineSegments()) {
+            // Find closest point on segment
+            QPointF p = Utils::pointOnLineClosestToPoint(segment.p1(), segment.p2(), labelPos);
+            float distance1 = QVector2D(labelPos - closestPoint).lengthSquared();
+            float distance2 = QVector2D(labelPos - p).lengthSquared();
+            if (closestPoint.isNull() or distance1 > distance2) {
+                closestPoint = p;
+                closestWire = spWire;
+            }
+        }
+    }
+    // Update the parent if requested
+    if (updateParent and _label->parentItem() != closestWire.get()) {
+        _label->setParentItem(closestWire.get());
+        _label->setPos(labelPos - _label->textRect().center() - closestWire->scenePos());
+    }
+    // Update the connection point
+    if (_label->parentItem()) {
+        _label->setConnectionPoint(closestPoint - _label->parentItem()->pos());
+    } else {
+        _label->setConnectionPoint(closestPoint);
+    }
+
 }
 
 void WireNet::wirePointMovedByUser(Wire& wire, int index)
@@ -277,4 +307,5 @@ void WireNet::wireHighlightChanged(const Item& item, bool highlighted)
 void WireNet::toggleLabel()
 {
     _label->setVisible(not _label->text().isEmpty() and not _label->isVisible());
+    updateLabelPos(true);
 }

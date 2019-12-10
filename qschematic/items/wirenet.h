@@ -34,6 +34,7 @@ namespace QSchematic {
         void setName(const QString& name);
         void setHighlighted(bool highlighted);
         void setScene(Scene* scene);
+        void updateLabelPos(bool updateParent = false) const;
 
         QString name() const;
         QList<std::shared_ptr<Wire>> wires() const;
@@ -60,7 +61,6 @@ namespace QSchematic {
         QString _name;
         std::shared_ptr<Label> _label;
         Scene* _scene{};
-        void updateLabelPos() const;
     };
 
 }
