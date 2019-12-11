@@ -324,13 +324,8 @@ void Wire::simplify()
 
 void Wire::removeDuplicatePoints()
 {
-    // A wire needs at least two points
-    if (_points.count() == 2) {
-        return;
-    }
-
     int i = 0;
-    while (i < _points.count()-1) {
+    while (i < _points.count()-1 and _points.count() > 2) {
         WirePoint p1 = _points.at(i);
         WirePoint p2 = _points.at(i+1);
 
