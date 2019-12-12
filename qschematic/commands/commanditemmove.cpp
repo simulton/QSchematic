@@ -1,4 +1,5 @@
 #include <memory>
+#include <items/wire.h>
 #include "../items/item.h"
 #include "commands.h"
 #include "commanditemmove.h"
@@ -48,26 +49,27 @@ bool CommandItemMove::mergeWith(const QUndoCommand* command)
 
 void CommandItemMove::undo()
 {
-    for (const auto& item : _items) {
-        item->setIsMoving(true);
-    }
     for (int i = 0; i < _items.count(); i++) {
         _items[i]->moveBy(-_moveBy[i]);
     }
-    for (const auto& item : _items) {
-        item->setIsMoving(false);
-    }
+    // Simplify the wires
+    simplifyWires();
 }
 
 void CommandItemMove::redo()
 {
-    for (const auto& item : _items) {
-        item->setIsMoving(true);
-    }
     for (int i = 0; i < _items.count(); i++) {
         _items[i]->moveBy(_moveBy[i]);
     }
+    // Simplify the wires
+    simplifyWires();
+}
+
+void CommandItemMove::simplifyWires() const
+{
     for (const auto& item : _items) {
-        item->setIsMoving(false);
+        if (auto wire = item->sharedPtr<Wire>()) {
+            wire->simplify();
+        }
     }
 }

@@ -47,10 +47,10 @@ namespace QSchematic {
         void moveLineSegmentBy(int index, const QVector2D& moveBy);
         void setPointIsJunction(int index, bool isJunction);
         bool pointIsOnWire(const QPointF& point) const;
-        void connectWire(Wire* wire);
+        bool connectWire(Wire* wire);
         QList<Wire*> connectedWires();
         void disconnectWire(Wire* wire);
-        QVector<WirePoint> junctions() const;
+        QVector<int> junctions() const;
         void setNet(const std::shared_ptr<WireNet>& wirenet);
         std::shared_ptr<WireNet> net();
         bool movingWirePoint() const;

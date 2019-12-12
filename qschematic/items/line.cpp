@@ -83,23 +83,33 @@ QLineF Line::toLineF() const
 bool Line::containsPoint(const QLineF& line, const QPointF& point, qreal tolerance)
 {
     const qreal MIN_LENGTH = 0.01;
-    tolerance = qMax(static_cast<qreal>(tolerance), MIN_LENGTH);
+    tolerance = qMax(tolerance, MIN_LENGTH);
 
-    // Find perpendicular line
-    QLineF normal = line.normalVector();
-    // Move line to point
-    QPointF offset = point - normal.p1();
-    normal.translate(offset);
-    // Set length to double the tolerance
-    normal.setLength(2*tolerance);
-    // Move line so that the center lays on the point
-    QVector2D unit(normal.unitVector().dx(), normal.unitVector().dy());
-    offset = (unit * -tolerance).toPointF();
-    normal.translate(offset);
+    if (line.isNull()) {
+        QPointF linePoint = line.p1();
+        if (QVector2D(linePoint).distanceToPoint(QVector2D(point)) <= tolerance) {
+            return true;
+        }
+    } else {
+        // Find perpendicular line
+        QLineF normal = line.normalVector();
+        // Move line to point
+        QPointF offset = point - normal.p1();
+        normal.translate(offset);
+        // Set length to double the tolerance
+        normal.setLength(2 * tolerance);
+        // Move line so that the center lays on the point
+        QVector2D unit(normal.unitVector().dx(), normal.unitVector().dy());
+        offset = (unit * -tolerance).toPointF();
+        normal.translate(offset);
+        // Make the line longer by 2 * tolerance
+        QLineF lineAdjusted = line;
+        lineAdjusted.setLength(line.length() + 2 * tolerance);
 
-    // Check if the lines are intersecting
-    if (line.intersect(normal, nullptr) == QLineF::BoundedIntersection) {
-        return true;
+        // Check if the lines are intersecting
+        if (lineAdjusted.intersect(normal, nullptr) == QLineF::BoundedIntersection) {
+            return true;
+        }
     }
 
     return false;

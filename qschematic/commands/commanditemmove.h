@@ -25,6 +25,7 @@ namespace QSchematic
     private:
         QVector<std::shared_ptr<Item>> _items;
         QVector<QVector2D> _moveBy;
+        void simplifyWires() const;
     };
 
 }

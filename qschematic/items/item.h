@@ -138,8 +138,6 @@ namespace QSchematic
         bool highlightEnabled() const;
         QPixmap toPixmap(QPointF& hotSpot, qreal scale = 1.0);
         virtual void update();
-        void setIsMoving(bool moving);
-        bool isMoving() const;
         Scene* scene() const;
 
     signals:
@@ -171,7 +169,6 @@ namespace QSchematic
         bool _highlighted;
         QPointF _oldPos;
         qreal _oldRot;
-        bool _isMoving;
     };
 
 }
