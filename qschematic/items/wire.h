@@ -22,7 +22,7 @@ namespace QSchematic {
 
     public:
         Wire(int type = Item::WireType, QGraphicsItem* parent = nullptr);
-        virtual ~Wire() override = default;
+        virtual ~Wire() override;
         virtual void update() override;
 
         virtual gpds::container to_container() const override;

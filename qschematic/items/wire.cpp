@@ -50,6 +50,14 @@ Wire::Wire(int type, QGraphicsItem* parent) :
     setMovable(true);
 }
 
+Wire::~Wire()
+{
+    // Make sure that we don't delete the net's label
+    if (childItems().contains(net()->label().get())) {
+        net()->label()->setParentItem(nullptr);
+    }
+}
+
 gpds::container Wire::to_container() const
 {
     // Points

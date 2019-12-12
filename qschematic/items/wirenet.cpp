@@ -271,6 +271,10 @@ void WireNet::updateLabelPos(bool updateParent) const
             }
         }
     }
+    // If there are no wires left in the net it will be hidden anyway
+    if (not closestWire) {
+        return;
+    }
     // Update the parent if requested
     if (updateParent and _label->parentItem() != closestWire.get()) {
         _label->setParentItem(closestWire.get());
