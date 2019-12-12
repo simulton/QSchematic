@@ -38,10 +38,14 @@ gpds::container WireNet::to_container() const
     gpds::container root;
     root.add_value("name", _name.toStdString() );
     // The coordinates of the label need to be in the scene space
-    _label->moveBy(QVector2D(_label->parentItem()->pos()));
+    if (_label->parentItem()) {
+        _label->moveBy(QVector2D(_label->parentItem()->pos()));
+    }
     root.add_value("label", _label->to_container());
     // Move the label back to the correct position
-    _label->moveBy(-QVector2D(_label->parentItem()->pos()));
+    if (_label->parentItem()) {
+        _label->moveBy(-QVector2D(_label->parentItem()->pos()));
+    }
     root.add_value("wires", wiresContainer);
 
     return root;
