@@ -1,14 +1,11 @@
 #include <QPen>
-#include <QBrush>
 #include <QPainter>
 #include <QVector2D>
 #include <QInputDialog>
 #include "../qschematic/commands/commandwirenetrename.h"
 #include "../qschematic/items/wirepoint.h"
 #include "../qschematic/items/connector.h"
-#include "../qschematic/items/wirenet.h"
 #include "../qschematic/scene.h"
-#include "../qschematic/settings.h"
 #include "itemtypes.h"
 #include "fancywire.h"
 
