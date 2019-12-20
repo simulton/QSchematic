@@ -436,6 +436,20 @@ QList<std::shared_ptr<Node>> Scene::nodes() const
     return nodes;
 }
 
+std::shared_ptr<Node> Scene::nodeFromConnector(const QSchematic::Connector& connector) const
+{
+    for (auto node : nodes()) {
+        const auto& connectors = node->connectors();
+        auto it = std::find_if(std::cbegin(connectors), std::cend(connectors), [&connector](const auto& c) {
+            return c.get() == &connector;
+        });
+        if (it != std::cend(connectors))
+            return node;
+    }
+
+    return nullptr;
+}
+
 bool Scene::addWire(const std::shared_ptr<Wire>& wire)
 {
     // Sanity check

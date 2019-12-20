@@ -54,6 +54,7 @@ namespace QSchematic {
         std::vector<std::shared_ptr<Item>> selectedItems() const;
         std::vector<std::shared_ptr<Item>> selectedTopLevelItems() const;
         QList<std::shared_ptr<Node>> nodes() const;
+        std::shared_ptr<Node> nodeFromConnector(const Connector& connector) const;
         bool addWire(const std::shared_ptr<Wire>& wire);
         bool removeWire(const std::shared_ptr<Wire> wire);
         QList<std::shared_ptr<Wire>> wires() const;
