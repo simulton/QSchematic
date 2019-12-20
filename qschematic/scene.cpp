@@ -314,10 +314,6 @@ bool Scene::removeItem(const std::shared_ptr<Item> item)
 
     auto itemBoundsToUpdate = item->mapRectToScene(item->boundingRect());
 
-    // Won't remove them selves, if items are kept alive for other reasons
-    disconnect(item.get(), &Item::moved, this, &Scene::itemMoved);
-    disconnect(item.get(), &Item::rotated, this, &Scene::itemRotated);
-
     // NOTE: Sometimes ghosts remain (not drawn away) when they're active in some way at remove time, found below from looking at Qt-source code...
     item->clearFocus();
     item->setFocusProxy(nullptr);
@@ -593,27 +589,6 @@ void Scene::redo()
 QUndoStack* Scene::undoStack() const
 {
     return _undoStack;
-}
-
-void Scene::itemMoved(const Item& item, const QVector2D& movedBy)
-{
-    Q_UNUSED(movedBy)
-    Q_UNUSED(item)
-}
-
-void Scene::itemRotated(const Item& item, const qreal rotation)
-{
-    Q_UNUSED(item)
-    Q_UNUSED(rotation)
-}
-
-void Scene::itemHighlightChanged(const Item& item, bool isHighlighted)
-{
-    // Retrieve the corresponding smart pointer
-    if (auto sharedPointer = item.sharedPtr()) {
-        // Let the world know
-        emit itemHighlightChanged(sharedPointer, isHighlighted);
-    }
 }
 
 void Scene::wireNetHighlightChanged(bool highlighted)
@@ -1443,10 +1418,6 @@ void Scene::setupNewItem(Item& item)
 {
     // Set settings
     item.setSettings(_settings);
-
-    // Connections
-    connect(&item, &Item::moved, this, &Scene::itemMoved);
-    connect(&item, &Item::rotated, this, &Scene::itemRotated);
 }
 
 QList<QPointF> Scene::connectionPoints() const

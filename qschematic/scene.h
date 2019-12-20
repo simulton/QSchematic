@@ -76,7 +76,6 @@ namespace QSchematic {
         void isDirtyChanged(bool isDirty);
         void itemAdded(const std::shared_ptr<const Item> item);
         void itemRemoved(const std::shared_ptr<const Item> item);
-        void itemHighlightChanged(const std::shared_ptr<const Item> item, bool isHighlighted);
 
     protected:
         virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
@@ -132,16 +131,11 @@ namespace QSchematic {
         bool _invertWirePosture;
         bool _movingNodes;
         QPointF _lastMousePos;
-        // unused
-        // QList<std::shared_ptr<Item>> _selectedItems;
         QMap<std::shared_ptr<Item>, QPointF> _initialItemPositions;
         QPointF _initialCursorPosition;
         QUndoStack* _undoStack;
 
     private slots:
-        void itemMoved(const Item& item, const QVector2D& movedBy);
-        void itemRotated(const Item& item, const qreal rotation);
-        void itemHighlightChanged(const Item& item, bool isHighlighted);
         void wireNetHighlightChanged(bool highlighted);
         void wirePointMoved(Wire& wire, WirePoint& point);
         void wirePointMovedByUser(Wire& rawWire, int point);
