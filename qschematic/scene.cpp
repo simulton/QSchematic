@@ -4,7 +4,6 @@
 #include <QMessageBox>
 #include <QXmlStreamWriter>
 #include <QUndoStack>
-#include <QPixmap>
 #include <QMimeData>
 #include <QtMath>
 #include <QTimer>
