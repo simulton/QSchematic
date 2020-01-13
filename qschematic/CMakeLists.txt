@@ -98,8 +98,6 @@ target_compile_features(qschematic-objs
     PUBLIC
         cxx_std_17)
 target_sources(qschematic-objs
-    PUBLIC
-        ${HEADERS_PUBLIC}
     PRIVATE
         ${SOURCES_PRIVATE})
 target_include_directories(qschematic-objs
@@ -115,37 +113,21 @@ target_link_libraries(qschematic-objs gpds::gpds-shared)
 # Shared library                                                               #
 ################################################################################
 
-add_library(qschematic-shared SHARED $<TARGET_OBJECTS:qschematic-objs>)
-target_include_directories(
-    qschematic-shared
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    INTERFACE
-        $<INSTALL_INTERFACE:include>
-)
-target_link_libraries(qschematic-shared Qt5::Core Qt5::Gui Qt5::Widgets)
-target_link_libraries(qschematic-shared gpds::gpds-shared)
+add_library(qschematic-shared SHARED)
+target_link_libraries(qschematic-shared qschematic-objs)
 
 
 ################################################################################
 # Static library                                                               #
 ################################################################################
 
-add_library(qschematic-static STATIC $<TARGET_OBJECTS:qschematic-objs>)
+add_library(qschematic-static STATIC)
 target_compile_definitions(
     qschematic-static
     PUBLIC
         QSCHEMATIC_STATIC_DEFINE
 )
-target_include_directories(
-    qschematic-static
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    INTERFACE
-        $<INSTALL_INTERFACE:include>
-)
-target_link_libraries(qschematic-static Qt5::Core Qt5::Gui Qt5::Widgets)
-target_link_libraries(qschematic-static gpds::gpds-shared)
+target_link_libraries(qschematic-static qschematic-objs)
 
 
 ################################################################################
@@ -208,6 +190,7 @@ install(
     TARGETS
         qschematic-shared
         qschematic-static
+        qschematic-objs
     EXPORT QSchematicTargets
     LIBRARY
         DESTINATION ${CMAKE_INSTALL_LIBDIR}
