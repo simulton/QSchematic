@@ -11,7 +11,7 @@ Settings::Settings() :
     gridPointSize(3),
     showGrid(true),
     highlightRectPadding(10),
-    resizeHandleSize(9),
+    resizeHandleSize(7),
     routeStraightAngles(true),
     preserveStraightAngles(true),
     antialiasing(true)
