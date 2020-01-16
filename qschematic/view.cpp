@@ -208,3 +208,29 @@ qreal View::zoomValue() const
 {
     return _scaleFactor;
 }
+
+void View::fitInView()
+{
+    // Check if there is a scene
+    if (not _scene) {
+        return;
+    }
+
+    // Find the combined bounding rect of all the items
+    QRectF rect;
+    for (const auto& item : _scene->QGraphicsScene::items()) {
+        QRectF boundingRect = item->boundingRect();
+        boundingRect.moveTo(item->scenePos());
+        rect = rect.united(boundingRect);
+    }
+
+    // Update and cap the scale factor
+    QGraphicsView::fitInView(rect, Qt::KeepAspectRatio);
+    _scaleFactor = viewport()->geometry().width() / mapToScene(viewport()->geometry()).boundingRect().width();
+    if (_scaleFactor > ZOOM_FACTOR_MAX) {
+        _scaleFactor = ZOOM_FACTOR_MAX;
+    } else if (_scaleFactor < ZOOM_FACTOR_MIN) {
+        _scaleFactor = ZOOM_FACTOR_MIN;
+    }
+    updateScale();
+}

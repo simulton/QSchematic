@@ -57,6 +57,7 @@ private:
     QAction* _actionModeNormal;
     QAction* _actionModeWire;
     QAction* _actionShowGrid;
+    QAction* _actionFitAll;
     QAction* _actionRouteStraightAngles;
     QAction* _actionGenerateNetlist;
     QAction* _actionDebugMode;

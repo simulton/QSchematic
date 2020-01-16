@@ -29,6 +29,7 @@ namespace QSchematic {
 
     public slots:
         void setZoomValue(qreal factor);
+        void fitInView();
 
     protected:
         virtual void keyPressEvent(QKeyEvent* event) override;

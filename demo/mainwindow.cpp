@@ -128,6 +128,7 @@ MainWindow::MainWindow(QWidget *parent)
     // View toolbar
     QToolBar* viewToolbar = new QToolBar;
     viewToolbar->addAction(_actionShowGrid);
+    viewToolbar->addAction(_actionFitAll);
     addToolBar(viewToolbar);
 
     // Debug toolbar
@@ -278,6 +279,12 @@ void MainWindow::createActions()
         _settings.showGrid = checked;
         settingsChanged();
     });
+
+    // Fit all
+    _actionFitAll = new QAction("Fit All");
+//    _actionFitAll->setIcon();
+    _actionFitAll->setToolTip("Center view on all items");
+    connect(_actionFitAll, &QAction::triggered, [this]{_view->fitInView();});
 
     // Route straight angles
     _actionRouteStraightAngles = new QAction("Wire angles");
