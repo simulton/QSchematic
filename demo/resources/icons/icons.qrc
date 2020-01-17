@@ -11,5 +11,6 @@
         <file alias="folder_open.svg">svg/folder_open1.svg</file>
         <file alias="save.svg">svg/save.svg</file>
         <file alias="print.svg">svg/print.svg</file>
+        <file alias="fit_all.svg">svg/fit_all.svg</file>
     </qresource>
 </RCC>

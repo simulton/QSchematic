@@ -1,0 +1,19 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #454444;
+      }
+
+      .cls-2 {
+        fill: none;
+        stroke: #454444;
+        stroke-miterlimit: 10;
+        stroke-width: 1.5px;
+      }
+    </style>
+  </defs>
+  <title>userinterface-203</title>
+  <path class="cls-1" d="M15.46,10.79A5,5,0,0,1,5.93,12H7.64a3.5,3.5,0,1,0-.23-3.59L9,10H5V6L6.3,7.3a5,5,0,0,1,7.89-.69A4.9,4.9,0,0,1,15.46,10.79Z"/>
+  <line class="cls-2" x1="13.5" y1="13.5" x2="19" y2="19"/>
+</svg>

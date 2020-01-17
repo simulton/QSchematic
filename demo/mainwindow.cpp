@@ -282,7 +282,7 @@ void MainWindow::createActions()
 
     // Fit all
     _actionFitAll = new QAction("Fit All");
-//    _actionFitAll->setIcon();
+    _actionFitAll->setIcon(QIcon(":/fit_all.svg"));
     _actionFitAll->setToolTip("Center view on all items");
     connect(_actionFitAll, &QAction::triggered, [this]{_view->fitInView();});
 
