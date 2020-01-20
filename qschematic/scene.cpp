@@ -1516,3 +1516,13 @@ void Scene::removeWireNet(std::shared_ptr<WireNet> net)
 {
     _nets.removeAll(net);
 }
+
+void Scene::connectorHoverEnter(const std::shared_ptr<Connector>& connector)
+{
+    emit connectorHighlighted(connector);
+}
+
+void Scene::connectorHoverLeave()
+{
+    emit connectorHighlighted(nullptr);
+}

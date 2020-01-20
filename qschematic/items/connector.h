@@ -51,6 +51,8 @@ namespace QSchematic {
 
     protected:
         void copyAttributes(Connector& dest) const;
+        void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
+        void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;
 
     private slots:
         void pointInserted(int index);

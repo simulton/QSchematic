@@ -66,6 +66,8 @@ namespace QSchematic {
         QList<std::shared_ptr<Connector>> connectors() const;
         std::shared_ptr<WireNet> netFromWire(const std::shared_ptr<Wire>& wire) const;
         void removeWireNet(std::shared_ptr<WireNet> net);
+        void connectorHoverEnter(const std::shared_ptr<Connector>& connector);
+        void connectorHoverLeave();
 
         void undo();
         void redo();
@@ -77,6 +79,7 @@ namespace QSchematic {
         void isDirtyChanged(bool isDirty);
         void itemAdded(const std::shared_ptr<const Item> item);
         void itemRemoved(const std::shared_ptr<const Item> item);
+        void connectorHighlighted(const std::shared_ptr<const Connector>& connector);
 
     protected:
         virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;

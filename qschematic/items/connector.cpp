@@ -2,11 +2,13 @@
 #include <QPainter>
 #include <QTransform>
 #include <QVector2D>
+#include <QGraphicsSceneHoverEvent>
 #include "connector.h"
 #include "node.h"
 #include "label.h"
 #include "../utils.h"
 #include "wire.h"
+#include "scene.h"
 
 const qreal SIZE               = 1;
 const QColor COLOR_BODY_FILL   = QColor(Qt::green);
@@ -450,4 +452,21 @@ const Wire* Connector::attachedWire() const
 int Connector::attachedWirepoint() const
 {
     return _wirePointIndex;
+}
+
+void Connector::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
+{
+    if (scene()) {
+        scene()->connectorHoverEnter(sharedPtr<Connector>());
+    }
+
+    Item::hoverEnterEvent(event);
+}
+
+void Connector::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
+{
+    if (scene()) {
+        scene()->connectorHoverLeave();
+    }
+    Item::hoverLeaveEvent(event);
 }
