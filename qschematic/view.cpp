@@ -225,12 +225,9 @@ void View::fitInView()
     }
 
     // Update and cap the scale factor
+    qreal currentScaleFactor = _scaleFactor;
     QGraphicsView::fitInView(rect, Qt::KeepAspectRatio);
     _scaleFactor = viewport()->geometry().width() / mapToScene(viewport()->geometry()).boundingRect().width();
-    if (_scaleFactor > ZOOM_FACTOR_MAX) {
-        _scaleFactor = ZOOM_FACTOR_MAX;
-    } else if (_scaleFactor < ZOOM_FACTOR_MIN) {
-        _scaleFactor = ZOOM_FACTOR_MIN;
-    }
+    _scaleFactor = std::clamp(_scaleFactor, ZOOM_FACTOR_MIN, currentScaleFactor);
     updateScale();
 }
