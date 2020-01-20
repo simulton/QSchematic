@@ -454,19 +454,3 @@ int Connector::attachedWirepoint() const
     return _wirePointIndex;
 }
 
-void Connector::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
-{
-    if (scene()) {
-        scene()->connectorHoverEnter(sharedPtr<Connector>());
-    }
-
-    Item::hoverEnterEvent(event);
-}
-
-void Connector::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
-{
-    if (scene()) {
-        scene()->connectorHoverLeave();
-    }
-    Item::hoverLeaveEvent(event);
-}

@@ -267,9 +267,10 @@ void Scene::clear()
     // Nets
     _nets.clear();
 
-    clearIsDirty();
+    // Now that all the top-level items are safeguarded we can call the underlying scene's clear()
+    QGraphicsScene::clear();
 
-    Q_ASSERT(QGraphicsScene::items().isEmpty());
+    clearIsDirty();
 
     // Update
     update(); // Note, should not be needed, and not recommended according to input, but avoid adding yet a permutation to the investigation
@@ -1517,12 +1518,12 @@ void Scene::removeWireNet(std::shared_ptr<WireNet> net)
     _nets.removeAll(net);
 }
 
-void Scene::connectorHoverEnter(const std::shared_ptr<Connector>& connector)
+void Scene::itemHoverEnter(const std::shared_ptr<const Item>& item)
 {
-    emit connectorHighlighted(connector);
+    emit itemHighlighted(item);
 }
 
-void Scene::connectorHoverLeave()
+void Scene::itemHoverLeave([[maybe_unused]] const std::shared_ptr<const Item>& item)
 {
-    emit connectorHighlighted(nullptr);
+    emit itemHighlighted(nullptr);
 }

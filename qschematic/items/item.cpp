@@ -320,20 +320,30 @@ void Item::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 {
     Q_UNUSED(event)
 
+    // Internal stuff
+    // ToDo: Clean this up. Might no longer be required
     setHighlighted(true);
     emit highlightChanged(*this, true);
-
     update();
+
+    // Let the scene know
+    if (scene())
+        scene()->itemHoverEnter(shared_from_this());
 }
 
 void Item::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
 {
     Q_UNUSED(event)
 
+    // Internal stuff
+    // ToDo: Clean this up. Might no longer be required
     setHighlighted(false);
     emit highlightChanged(*this, false);
-
     update();
+
+    // Let the scene know
+    if (scene())
+        scene()->itemHoverLeave(shared_from_this());
 }
 
 QVariant Item::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
