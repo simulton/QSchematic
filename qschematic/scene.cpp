@@ -1,7 +1,6 @@
 #include <algorithm>
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
-#include <QMessageBox>
 #include <QXmlStreamWriter>
 #include <QUndoStack>
 #include <QMimeData>
@@ -1297,18 +1296,9 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 
         // Only do something if there's a wire
         if (_newWire && _newWire->pointsRelative().count() > 1) {
-            bool wireIsFloating = true;
 
             // Get rid of the last point as mouseDoubleClickEvent() is following mousePressEvent()
             _newWire->removeLastPoint();
-
-            // Check whether the wire was connected to a connector
-            for (const QPointF& connectionPoint : connectionPoints()) {
-                if (connectionPoint == _newWire->pointsAbsolute().last()) {
-                    wireIsFloating = false;
-                    break;
-                }
-            }
 
             // Attach point to wire if needed
             for (const auto& wire: wires()) {
@@ -1319,23 +1309,7 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                 if (wire->pointIsOnWire(_newWire->pointsAbsolute().last())) {
                     connectWire(wire, _newWire);
                     _newWire->setPointIsJunction(_newWire->pointsAbsolute().count()-1, true);
-                    wireIsFloating = false;
                 }
-            }
-
-            // Notify the user if the wire ended up on a non-valid thingy
-            if (wireIsFloating) {
-                QMessageBox msgBox;
-                msgBox.setWindowTitle("Wire mode");
-                msgBox.setIcon(QMessageBox::Information);
-                msgBox.setText("A wire must end on either:\n"
-                               "  + A node connector\n"
-                               "  + A wire\n");
-                msgBox.exec();
-
-                _newWire->removeLastPoint();
-
-                return;
             }
 
             // Finish the current wire
