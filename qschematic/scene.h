@@ -107,7 +107,6 @@ namespace QSchematic {
         void disconnectWire(const std::shared_ptr<Wire>& wire, const std::shared_ptr<Wire>& otherWire);
         QVector<std::shared_ptr<Wire>> wiresConnectedTo(const std::shared_ptr<Wire>& wire) const;
         void finishCurrentWire();
-        bool wireIsFullyConnected(const std::shared_ptr<Wire>& wire) const;
 
         // TODO add to "central" sh-ptr management
         QList<std::shared_ptr<Item>> _keep_alive_an_event_loop;

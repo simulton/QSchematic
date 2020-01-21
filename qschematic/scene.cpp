@@ -888,47 +888,6 @@ void Scene::finishCurrentWire()
     _newWire.reset();
 }
 
-/**
- * Checks if both ends of a wire are connected to either a connector or another
- * wire.
- */
-bool Scene::wireIsFullyConnected(const std::shared_ptr<Wire>& wire) const
-{
-    bool firstIsConnected = false;
-    bool lastIsConnected = false;
-
-    // Check whether the wire was connected to connectors
-    for (const QPointF& connectionPoint : connectionPoints()) {
-        if (connectionPoint == _newWire->pointsAbsolute().first()) {
-            firstIsConnected = true;
-        }
-        else if (connectionPoint == _newWire->pointsAbsolute().last()) {
-            lastIsConnected = true;
-        }
-        if (firstIsConnected and lastIsConnected) {
-            return true;
-        }
-    }
-
-    // Check whether the wire is attached to other wires
-    for (const auto& otherWire: wires()) {
-        // Skip current wire
-        if (otherWire == _newWire) {
-            continue;
-        }
-        if (otherWire->pointIsOnWire(_newWire->pointsAbsolute().first())) {
-            firstIsConnected = true;
-        }
-        else if (otherWire->pointIsOnWire(_newWire->pointsAbsolute().last())) {
-            lastIsConnected = true;
-        }
-        if (firstIsConnected and lastIsConnected) {
-            return true;
-        }
-    }
-    return false;
-}
-
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     event->accept();
@@ -1005,10 +964,12 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             _newWireSegment = true;
 
             // Attach point to connector if needed
+            bool wireAttached = false;
             for (const auto& node: nodes()) {
                 for (const auto& connector: node->connectors()) {
                     if (QVector2D(connector->scenePos() - snappedPos).length() < 1) {
                         connector->attachWire(_newWire.get(), _newWire->pointsAbsolute().indexOf(snappedPos));
+                        wireAttached = true;
                         break;
                     }
                 }
@@ -1023,12 +984,13 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
                 if (wire->pointIsOnWire(_newWire->pointsAbsolute().last())) {
                     connectWire(wire, _newWire);
                     _newWire->setPointIsJunction(_newWire->pointsAbsolute().count() - 1, true);
+                    wireAttached = true;
                     break;
                 }
             }
 
             // Check if both ends of the wire are connected to something
-            if (wireIsFullyConnected(_newWire)) {
+            if (wireAttached and _newWire->pointsAbsolute().count() > 1) {
                 finishCurrentWire();
             }
 
