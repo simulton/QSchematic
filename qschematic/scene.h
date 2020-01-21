@@ -140,6 +140,7 @@ namespace QSchematic {
         QMap<std::shared_ptr<Item>, QPointF> _initialItemPositions;
         QPointF _initialCursorPosition;
         QUndoStack* _undoStack;
+        Item* _highlightedItem;
 
     private slots:
         void wireNetHighlightChanged(bool highlighted);

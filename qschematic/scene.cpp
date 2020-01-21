@@ -27,7 +27,8 @@ Scene::Scene(QObject* parent) :
     _mode(NormalMode),
     _newWireSegment(false),
     _invertWirePosture(true),
-    _movingNodes(false)
+    _movingNodes(false),
+    _highlightedItem(nullptr)
 {
     // NOTE: still needed, BSP-indexer still crashes on a scene load when
     // the scene is already populated
@@ -1215,6 +1216,37 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             }
         } else {
             QGraphicsScene::mouseMoveEvent(event);
+        }
+
+        // Highlight the item under the cursor
+        Item* item = dynamic_cast<Item*>(itemAt(newMousePos, QTransform()));
+        if (item) {
+            // Skip if the item is already highlighted
+            if (item == _highlightedItem) {
+                break;
+            }
+            // Disable the highlighting on the previous item
+            if (_highlightedItem) {
+                _highlightedItem->setHighlighted(false);
+                itemHoverLeave(_highlightedItem->shared_from_this());
+                _highlightedItem->update();
+                emit _highlightedItem->highlightChanged(*_highlightedItem, false);
+                _highlightedItem = nullptr;
+            }
+            // Highlight the item
+            item->setHighlighted(true);
+            itemHoverEnter(item->shared_from_this());
+            item->update();
+            emit item->highlightChanged(*item, true);
+            _highlightedItem = item;
+        }
+        // No item selected
+        else if (_highlightedItem) {
+            _highlightedItem->setHighlighted(false);
+            itemHoverLeave(_highlightedItem->shared_from_this());
+            _highlightedItem->update();
+            emit _highlightedItem->highlightChanged(*_highlightedItem, false);
+            _highlightedItem = nullptr;
         }
 
         break;

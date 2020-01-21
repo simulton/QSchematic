@@ -153,8 +153,6 @@ namespace QSchematic
         void addItemTypeIdToContainer(gpds::container& container) const;
 
         bool isHighlighted() const;
-        virtual void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
-        virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;
         virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value) override;
 
     private slots:
