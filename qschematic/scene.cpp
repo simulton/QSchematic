@@ -269,7 +269,11 @@ void Scene::clear()
     _nets.clear();
 
     // Now that all the top-level items are safeguarded we can call the underlying scene's clear()
-    QGraphicsScene::clear();
+#warning "Address this issue..."
+    //QGraphicsScene::clear();
+    const int& itemsCount = QGraphicsScene::items().count();
+    if (itemsCount > 0)
+        qWarning("Scene::clear(): There are still %d items left in the scene. This shouldn't happen.", itemsCount);
 
     clearIsDirty();
 
