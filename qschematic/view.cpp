@@ -11,6 +11,7 @@
 const qreal ZOOM_FACTOR_MIN   = 0.25;
 const qreal ZOOM_FACTOR_MAX   = 10.00;
 const qreal ZOOM_FACTOR_STEPS = 0.10;
+const qreal FIT_ALL_PADDING   = 20.00;
 
 using namespace QSchematic;
 
@@ -223,6 +224,10 @@ void View::fitInView()
         boundingRect.moveTo(item->scenePos());
         rect = rect.united(boundingRect);
     }
+
+    // Add some padding
+    const auto& adj = std::max(0.0, FIT_ALL_PADDING);
+    rect.adjust(-adj, -adj, adj, adj);
 
     // Update and cap the scale factor
     qreal currentScaleFactor = _scaleFactor;
