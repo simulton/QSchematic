@@ -124,6 +124,7 @@ bool WireNet::addWire(const std::shared_ptr<Wire>& wire)
     connect(wire.get(), &Wire::highlightChanged, this, &WireNet::wireHighlightChanged);
     connect(wire.get(), &Wire::toggleLabelRequested, this, &WireNet::toggleLabel);
     connect(wire.get(), &Wire::moved, this, [=] { updateLabelPos(); });
+    connect(wire.get(), &Wire::pointRemoved, this, [=] (int index) { emit pointRemoved(*wire, index);});
     _wires.append(wire);
     updateLabelPos(true);
 

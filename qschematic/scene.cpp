@@ -729,6 +729,36 @@ void Scene::wirePointMovedByUser(Wire& rawWire, int index)
     }
 }
 
+void Scene::wirePointRemoved(Wire& rawWire, int index)
+{
+    // Detach wires
+    if (index == 0 or index == rawWire.pointsAbsolute().count()){
+        for (const auto& wire: wires()) {
+            // Skip current wire
+            if (wire.get() == &rawWire) {
+                continue;
+            }
+            // If is connected
+            if (wire->connectedWires().contains(&rawWire)) {
+                bool shouldDisconnect = true;
+                // Keep the wires connected if there is another junction
+                for (const auto& jIndex : rawWire.junctions()) {
+                    const auto& junction = rawWire.wirePointsAbsolute().at(jIndex);
+                    // If the point is on the line stay connected
+                    if (wire->pointIsOnWire(junction.toPointF())) {
+                        shouldDisconnect = false;
+                        break;
+                    }
+                }
+                if (shouldDisconnect) {
+                    auto rawWirePtr = std::static_pointer_cast<Wire>(rawWire.sharedPtr());
+                    disconnectWire(wire, rawWirePtr);
+                }
+            }
+        }
+    }
+}
+
 /**
  * Disconnects the a wire from another and takes care of updating the wirenets.
  * \param wire The wire that the other is attached to
@@ -866,6 +896,7 @@ void Scene::addWireNet(const std::shared_ptr<WireNet> wireNet)
     connect(wireNet.get(), &WireNet::pointMoved, this, &Scene::wirePointMoved);
     connect(wireNet.get(), &WireNet::pointMovedByUser, this, &Scene::wirePointMovedByUser);
     connect(wireNet.get(), &WireNet::highlightChanged, this, &Scene::wireNetHighlightChanged);
+    connect(wireNet.get(), &WireNet::pointRemoved, this, &Scene::wirePointRemoved);
 
     // Keep track of stuff
     _nets.append(wireNet);

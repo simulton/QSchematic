@@ -36,7 +36,7 @@ namespace QSchematic {
         void insertPoint(int index, const QPointF& point);        // Index of new point
         void removeFirstPoint();
         void removeLastPoint();
-        void removePoint(const QPointF& point);
+        void removePoint(int index);
         QVector<WirePoint> wirePointsRelative() const;
         QVector<WirePoint> wirePointsAbsolute() const;
         QVector<QPointF> pointsRelative() const;

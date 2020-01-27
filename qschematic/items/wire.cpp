@@ -286,6 +286,22 @@ void Wire::insertPoint(int index, const QPointF& point)
         return;
     }
 
+    Line segment = lineSegments().at(index - 1);
+    // If the point is not on the segment, move the junctions
+    if (not segment.containsPoint(point)) {
+        // Find the closest point on the segment
+        QPointF closestPoint = Utils::pointOnLineClosestToPoint(segment.p1(), segment.p2(), point);
+        // Create two line that split the segment at the closest point
+        Line seg1(segment.p1(), closestPoint);
+        Line seg2(closestPoint, segment.p2());
+        // Calculate what will be the new segments
+        Line seg1new(segment.p1(), point);
+        Line seg2new(point, segment.p2());
+        // Move the junction on both lines
+        moveJunctionsToNewSegment(seg1, seg1new);
+        moveJunctionsToNewSegment(seg2, seg2new);
+    }
+
     prepareGeometryChange();
     _points.insert(index, WirePoint(_settings.snapToGrid(point - pos())));
     calculateBoundingRect();
@@ -315,11 +331,30 @@ void Wire::removeLastPoint()
     calculateBoundingRect();
 }
 
-void Wire::removePoint(const QPointF& point)
+void Wire::removePoint(int index)
 {
     prepareGeometryChange();
-    _points.removeAll(WirePoint(point - pos()));
+    // Move the junction on the previous and next segments
+    if (index > 0 and index < _points.length() - 1) {
+        Line newSegment(pointsAbsolute().at(index - 1), pointsAbsolute().at(index + 1));
+        moveJunctionsToNewSegment(lineSegments().at(index - 1), newSegment);
+        moveJunctionsToNewSegment(lineSegments().at(index), newSegment);
+    } else {
+        for (const auto& wire: connectedWires()) {
+            for (int junctionIndex: wire->junctions()) {
+                QPointF point = wire->pointsAbsolute().at(junctionIndex);
+                if (lineSegments().first().containsPoint(point)) {
+                    wire->movePointTo(junctionIndex, pointsAbsolute().at(1));
+                }
+                if (lineSegments().last().containsPoint(point)) {
+                    wire->movePointTo(junctionIndex, pointsAbsolute().at(pointsAbsolute().count() - 2));
+                }
+            }
+        }
+    }
+    _points.remove(index);
     calculateBoundingRect();
+    emit pointRemoved(index);
 }
 
 void Wire::simplify()
@@ -1084,6 +1119,19 @@ QVariant Wire::itemChange(QGraphicsItem::GraphicsItemChange change, const QVaria
 void Wire::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 {
     QMenu menu;
+    QAction* actionAdd = menu.addAction("Add point");
+    // If there is a point nearby
+    int pointIndex = -1;
+    for (int i = 0; i < _points.count(); i++) {
+        if (QVector2D(pointsAbsolute().at(i)).distanceToPoint(QVector2D(event->scenePos())) < 5) {
+            pointIndex = i;
+            break;
+        }
+    }
+    QAction* actionRemove = nullptr;
+    if (_points.count() > 2 and pointIndex != -1) {
+        actionRemove = menu.addAction("Remove point");
+    }
     if (_renameAction) {
         menu.addAction(_renameAction);
     }
@@ -1095,9 +1143,24 @@ void Wire::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         connect(showAction, &QAction::triggered, this, &Wire::toggleLabelRequested);
     }
     bool labelWasVisible = net()->label()->isVisible();
-    if (menu.actions().count()) {
-        menu.exec(event->screenPos());
+    QAction* command = menu.exec(event->screenPos());
+
+    // Add a point at the cursor
+    if (command == actionAdd) {
+        for (int i = 0; i < lineSegments().count(); i++) {
+            if (lineSegments().at(i).containsPoint(event->scenePos(), 4)) {
+                setSelected(true);
+                insertPoint(i + 1, _settings.snapToGrid(event->scenePos()));
+                break;
+            }
+        }
     }
+
+    // Remove the point near the cursor
+    if (actionRemove and command == actionRemove) {
+        removePoint(pointIndex);
+    }
+
     // Move the label to the cursor if it was just made visible
     if (not labelWasVisible and net()->label()->isVisible()) {
         // Find line segment

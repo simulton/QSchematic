@@ -123,8 +123,11 @@ void Connector::pointInserted(int index)
 
 void Connector::pointRemoved(int index)
 {
-    if (_wirePointIndex >= index) {
+    if (_wirePointIndex > index) {
         _wirePointIndex--;
+    }
+    else if (_wirePointIndex == index) {
+        detachWire();
     }
 }
 
@@ -398,7 +401,7 @@ void Connector::moveWirePoint() const
         return;
     }
 
-    if (_wirePointIndex < -1 or _wire->wirePointsRelative().count() <= _wirePointIndex) {
+    if (_wirePointIndex == -1 or _wire->wirePointsRelative().count() <= _wirePointIndex) {
         return;
     }
 
