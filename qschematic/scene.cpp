@@ -1530,3 +1530,41 @@ void Scene::itemHoverLeave([[maybe_unused]] const std::shared_ptr<const Item>& i
 {
     emit itemHighlighted(nullptr);
 }
+
+/**
+ * Removes the last point(s) of the new wire. After execution, the wire should
+ * be in the same state it was before the last point had been added.
+ */
+void Scene::removeLastWirePoint()
+{
+    if (not _newWire) {
+        return;
+    }
+
+    // If we're supposed to preseve right angles, two points have to be removed
+    if (_settings.routeStraightAngles) {
+        // Do nothing if there are not at least 4 points
+        if (_newWire->pointsAbsolute().count() > 3) {
+            // Keep the position of the last point
+            QPointF mousePos = _newWire->pointsAbsolute().last();
+            // Remove both points
+            _newWire->removeLastPoint();
+            _newWire->removeLastPoint();
+            // Move the new last point to where the previous last point was
+            _newWire->movePointBy(_newWire->pointsAbsolute().count() - 1, QVector2D(mousePos - _newWire->pointsAbsolute().last()));
+        }
+    }
+
+    // If we don't care about the angles, only the last point has to be removed
+    else {
+        // Do nothing if there are not at least 3 points
+        if (_newWire->pointsAbsolute().count() > 2) {
+            // Keep the position of the last point
+            QPointF mousePos = _newWire->pointsAbsolute().last();
+            // Remove the point
+            _newWire->removeLastPoint();
+            // Move the new last point to where the previous last point was
+            _newWire->movePointTo(_newWire->pointsAbsolute().count() - 1, mousePos);
+        }
+    }
+}

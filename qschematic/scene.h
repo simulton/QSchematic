@@ -68,6 +68,7 @@ namespace QSchematic {
         void removeWireNet(std::shared_ptr<WireNet> net);
         void itemHoverEnter(const std::shared_ptr<const Item>& item);
         void itemHoverLeave(const std::shared_ptr<const Item>& item);
+        void removeLastWirePoint();
 
         void undo();
         void redo();

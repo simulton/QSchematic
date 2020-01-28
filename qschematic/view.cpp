@@ -82,9 +82,19 @@ void View::keyPressEvent(QKeyEvent* event)
 
     case Qt::Key_Delete:
         if (_scene) {
-            for (auto item : _scene->selectedTopLevelItems()) {
-                _scene->undoStack()->push(new CommandItemRemove(_scene, item));
+            if (_scene->mode() == Scene::NormalMode) {
+                for (auto item : _scene->selectedTopLevelItems()) {
+                    _scene->undoStack()->push(new CommandItemRemove(_scene, item));
+                }
+            } else {
+                _scene->removeLastWirePoint();
             }
+        }
+        return;
+
+    case Qt::Key_Backspace:
+        if (_scene and _scene->mode() == Scene::WireMode) {
+            _scene->removeLastWirePoint();
         }
         return;
 
