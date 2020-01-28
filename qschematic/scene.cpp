@@ -10,6 +10,7 @@
 #include "scene.h"
 #include "commands/commanditemmove.h"
 #include "commands/commanditemadd.h"
+#include "commands/commanditemremove.h"
 #include "items/itemfactory.h"
 #include "items/item.h"
 #include "items/itemmimedata.h"
@@ -1566,5 +1567,56 @@ void Scene::removeLastWirePoint()
             // Move the new last point to where the previous last point was
             _newWire->movePointTo(_newWire->pointsAbsolute().count() - 1, mousePos);
         }
+    }
+}
+
+/**
+ * Removes the wires and wire nets that are not connected to a node
+ */
+void Scene::removeUnconnectedWires()
+{
+    QList<std::shared_ptr<Wire>> wiresToRemove;
+
+    for (const auto& wire : wires()) {
+        // If it has wires attached to it, go to the next wire
+        if (wire->connectedWires().count() > 0) {
+            continue;
+        }
+
+        bool isConnected = false;
+
+        // Check if it is connected to a wire
+        for (const auto& otherWire : wires()) {
+            if (otherWire->connectedWires().contains(wire.get())) {
+                isConnected = true;
+                break;
+            }
+        }
+
+        // If it's connected to a wire, go to the next wire
+        if (isConnected) {
+            continue;
+        }
+
+        // Find out if it's attached to a node
+        for (const auto& connector : connectors()) {
+            if (connector->attachedWire() == wire.get()) {
+                isConnected = true;
+                break;
+            }
+        }
+
+        // If it's connected to a connector, go to the next wire
+        if (isConnected) {
+            continue;
+        }
+
+        // The wire has to be removed, add it to the list
+        wiresToRemove << wire;
+    }
+
+    // Remove the wires that have to be removed
+    for (const auto& wire : wiresToRemove) {
+        _undoStack->push(new CommandItemRemove(this, wire));
     }
 }
