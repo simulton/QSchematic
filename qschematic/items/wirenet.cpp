@@ -22,8 +22,10 @@ WireNet::WireNet(QObject* parent) :
 
 WireNet::~WireNet()
 {
-    _label->setParentItem(nullptr);
-    dissociate_item(_label);
+    if (_label) {
+        _label->setParentItem(nullptr);
+        dissociate_item(_label);
+    }
 }
 
 gpds::container WireNet::to_container() const
