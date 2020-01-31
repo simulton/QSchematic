@@ -31,7 +31,6 @@ set(SOURCES_PRIVATE
     items/wirenet.cpp
     items/wirepoint.cpp
     items/wireroundedcorners.cpp
-    utils/sharedpointertracker.cpp
     scene.cpp
     settings.cpp
     utils.cpp
@@ -66,7 +65,6 @@ set(HEADERS_PUBLIC
     items/wireroundedcorners.h
     utils/itemscontainerutils.h
     utils/itemscustodian.h
-    utils/sharedpointertracker.h
     netlist.h
     netlistgenerator.h
     scene.h

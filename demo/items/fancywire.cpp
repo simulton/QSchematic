@@ -40,7 +40,7 @@ void FancyWire::from_container(const gpds::container& container)
 
 std::shared_ptr<QSchematic::Item> FancyWire::deepCopy() const
 {
-    auto clone = QSchematic::mk_sh<FancyWire>(parentItem());
+    auto clone = std::make_shared<FancyWire>(parentItem());
     copyAttributes(*(clone.get()));
 
     return clone;

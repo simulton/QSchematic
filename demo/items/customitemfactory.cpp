@@ -15,22 +15,22 @@ std::shared_ptr<QSchematic::Item> CustomItemFactory::from_container(const gpds::
 
     switch (static_cast<ItemType>(type)) {
     case ItemType::OperationType:
-        return QSchematic::mk_sh<Operation>();
+        return std::make_shared<Operation>();
 
     case ItemType::OperationConnectorType:
-        return QSchematic::mk_sh<OperationConnector>();
+        return std::make_shared<OperationConnector>();
 
     case ItemType::OperationDemo1Type:
-        return QSchematic::mk_sh<OperationDemo1>();
+        return std::make_shared<OperationDemo1>();
 
     case ItemType::FancyWireType:
-        return QSchematic::mk_sh<FancyWire>();
+        return std::make_shared<FancyWire>();
 
     case ItemType::FlowStartType:
-        return QSchematic::mk_sh<FlowStart>();
+        return std::make_shared<FlowStart>();
 
     case ItemType::FlowEndType:
-        return QSchematic::mk_sh<FlowEnd>();
+        return std::make_shared<FlowEnd>();
     }
 
     return {};

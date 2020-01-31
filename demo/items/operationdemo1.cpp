@@ -22,7 +22,7 @@ OperationDemo1::OperationDemo1(QGraphicsItem* parent) :
     };
 
     for (const auto& c : connectorAttributes) {
-        auto connector = QSchematic::mk_sh<OperationConnector>(c.point, c.name);
+        auto connector = std::make_shared<OperationConnector>(c.point, c.name);
         connector->label()->setVisible(true);
         addConnector(connector);
     }
@@ -46,7 +46,7 @@ void OperationDemo1::from_container(const gpds::container& container)
 
 std::shared_ptr<QSchematic::Item> OperationDemo1::deepCopy() const
 {
-    auto clone = QSchematic::mk_sh<OperationDemo1>(parentItem());
+    auto clone = std::make_shared<OperationDemo1>(parentItem());
     copyAttributes(*(clone.get()));
 
     return clone;

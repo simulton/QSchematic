@@ -45,7 +45,7 @@ void OperationConnector::from_container(const gpds::container& container)
 
 std::shared_ptr<QSchematic::Item> OperationConnector::deepCopy() const
 {
-    auto clone = QSchematic::mk_sh<OperationConnector>(gridPos(), text(), parentItem());
+    auto clone = std::make_shared<OperationConnector>(gridPos(), text(), parentItem());
     copyAttributes(*(clone.get()));
 
     return clone;

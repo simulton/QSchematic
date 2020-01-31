@@ -25,7 +25,7 @@ FlowEnd::FlowEnd() :
     _symbolPolygon << QPoint(3*sz, -1*sz);
 
     // Connector
-    auto connector = QSchematic::mk_sh<OperationConnector>();
+    auto connector = std::make_shared<OperationConnector>();
     connector->setParentItem(this);
     connector->label()->setVisible(false);
     connector->label()->setMovable(false);
@@ -62,7 +62,7 @@ void FlowEnd::from_container(const gpds::container& container)
 
 std::shared_ptr<QSchematic::Item> FlowEnd::deepCopy() const
 {
-    auto clone = QSchematic::mk_sh<FlowEnd>();
+    auto clone = std::make_shared<FlowEnd>();
     copyAttributes(*(clone.get()));
 
     return clone;

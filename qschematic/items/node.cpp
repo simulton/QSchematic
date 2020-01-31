@@ -96,7 +96,7 @@ void Node::from_container(const gpds::container& container)
     if (connectorsContainer) {
         clearConnectors();
         for (const gpds::container* connectorContainer : connectorsContainer->get_values<gpds::container*>("connector")) {
-            auto connector = adopt_origin_instance<Connector>(ItemFactory::instance().from_container(*connectorContainer));
+            auto connector = std::dynamic_pointer_cast<Connector>(ItemFactory::instance().from_container(*connectorContainer));
             if (!connector) {
                 continue;
             }
@@ -108,7 +108,7 @@ void Node::from_container(const gpds::container& container)
 
 std::shared_ptr<Item> Node::deepCopy() const
 {
-    auto clone = mk_sh<Node>(type(), parentItem());
+    auto clone = std::make_shared<Node>(type(), parentItem());
     copyAttributes(*(clone.get()));
 
     return clone;
@@ -126,7 +126,7 @@ void Node::copyAttributes(Node& dest) const
             continue;
         }
 
-        auto connectorClone = adopt_origin_instance<Connector>(connector->deepCopy());
+        auto connectorClone = std::dynamic_pointer_cast<Connector>(connector->deepCopy());
         connectorClone->setParentItem(&dest);
         dest._connectors << connectorClone;
     }

@@ -109,7 +109,7 @@ void Wire::from_container(const gpds::container& container)
 
 std::shared_ptr<Item> Wire::deepCopy() const
 {
-    auto clone = mk_sh<Wire>(type(), parentItem());
+    auto clone = std::make_shared<Wire>(type(), parentItem());
     copyAttributes(*(clone.get()));
 
     return clone;

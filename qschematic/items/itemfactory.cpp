@@ -35,22 +35,22 @@ std::shared_ptr<Item> ItemFactory::from_container(const gpds::container& contain
     // Fall back to internal types
     switch (type) {
     case Item::NodeType:
-        return QSchematic::mk_sh<Node>();
+        return std::make_shared<Node>();
 
     case Item::WireType:
-        return QSchematic::mk_sh<Wire>();
+        return std::make_shared<Wire>();
 
     case Item::WireRoundedCornersType:
-        return QSchematic::mk_sh<WireRoundedCorners>();
+        return std::make_shared<WireRoundedCorners>();
 
     case Item::SplineWireType:
-        return QSchematic::mk_sh<SplineWire>();
+        return std::make_shared<SplineWire>();
 
     case Item::ConnectorType:
-        return QSchematic::mk_sh<Connector>();
+        return std::make_shared<Connector>();
 
     case Item::LabelType:
-        return QSchematic::mk_sh<Label>();
+        return std::make_shared<Label>();
 
     case Item::QSchematicItemUserType:
         break;

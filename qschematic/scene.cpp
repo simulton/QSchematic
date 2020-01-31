@@ -982,9 +982,9 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             // Start a new wire if there isn't already one. Else continue the current one.
             if (!_newWire) {
                 if (_wireFactory) {
-                    _newWire = adopt_origin_instance(_wireFactory());
+                    _newWire = _wireFactory();
                 } else {
-                    _newWire = mk_sh<Wire>();
+                    _newWire = std::make_shared<Wire>();
                 }
                 _undoStack->push(new CommandItemAdd(this, _newWire));
                 _newWire->setPos(_settings.snapToGrid(event->scenePos()));

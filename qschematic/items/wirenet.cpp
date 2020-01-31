@@ -13,7 +13,7 @@ WireNet::WireNet(QObject* parent) :
     QObject(parent), _scene(nullptr)
 {
     // Label
-    _label = QSchematic::mk_sh<Label>();
+    _label = std::make_shared<Label>();
     _label->setPos(0, 0);
     _label->setVisible(false);
     connect(_label.get(), &Label::highlightChanged, this, &WireNet::labelHighlightChanged);

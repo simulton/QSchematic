@@ -25,7 +25,7 @@ FlowStart::FlowStart() :
     _symbolPolygon << QPoint(-1*sz, 1*sz);
 
     // Connector
-    auto connector = QSchematic::mk_sh<OperationConnector>();
+    auto connector = std::make_shared<OperationConnector>();
     connector->setParentItem(this);
     connector->label()->setVisible(false);
     connector->label()->setMovable(false);
@@ -61,7 +61,7 @@ void FlowStart::from_container(const gpds::container& container)
 
 std::shared_ptr<QSchematic::Item> FlowStart::deepCopy() const
 {
-    auto clone = QSchematic::mk_sh<FlowStart>();
+    auto clone = std::make_shared<FlowStart>();
     copyAttributes(*(clone.get()));
 
     return clone;
