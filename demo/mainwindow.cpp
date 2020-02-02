@@ -218,6 +218,7 @@ void MainWindow::createActions()
     _actionOpen->setText("Open");
     _actionOpen->setIcon( QIcon( ":/folder_open.svg" ) );
     _actionOpen->setToolTip("Open a file");
+    _actionOpen->setShortcut(QKeySequence::Open);
     connect(_actionOpen, &QAction::triggered, [this]{
         load();
     });
@@ -227,6 +228,7 @@ void MainWindow::createActions()
     _actionSave->setText("Save");
     _actionSave->setToolTip("Save to a file");
     _actionSave->setIcon( QIcon( ":/save.svg" ) );
+    _actionSave->setShortcut(QKeySequence::Save);
     connect(_actionSave, &QAction::triggered, [this]{
         save();
     });
