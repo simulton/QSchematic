@@ -36,6 +36,25 @@ For more, check out the `docs/screenshots` folder.
 
 You happy now?
 
+# Building & integration
+The QSchematic library depends on Qt5 and [GPDS](https://gpds.simulton.com) for (de)serialization.
+Both QSchematic and GPDS are cmake projects. Building & integrating should therefore be straight forward. Follow these steps:
+
+1. Download/clone, build & install [GPDS](https://gpds.simulton.com)
+2. Download/clone QSchematic
+3. Build the `qschematic-static` and/or `qschematic-shared` cmake targets to build a static and/or shared library version of QSchematic
+
+The QSchematic static & shared library cmake targets are exported which allows for easy integration into a client application/library.
+After successfully building & installing the QSchematic library targets, use `find_package()` to include the QSchematic targets and `target_link_libraries()` to add the corresponding target to your client application/library:
+```
+find_package(QSchematic REQUIRED)
+
+add_executable(my_application "")
+target_link_libraries(my_application QSchematic::qschematic-static)
+```
+Check out the `/demo` for a practical hands-on example.
+
+
 # Architecture
 Did someone say UML?!
 
