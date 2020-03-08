@@ -256,6 +256,7 @@ void Scene::clear()
     // Ensure no lingering lifespans kept in map-keys, selections or undocommands
     _initialItemPositions.clear();
     clearSelection();
+    clearFocus();
     _undoStack->clear();
 
     // Remove from scene
@@ -269,16 +270,10 @@ void Scene::clear()
     _nets.clear();
 
     // Now that all the top-level items are safeguarded we can call the underlying scene's clear()
-#warning "Address this issue..."
-    //QGraphicsScene::clear();
-    const int& itemsCount = QGraphicsScene::items().count();
-    if (itemsCount > 0)
-        qWarning("Scene::clear(): There are still %d items left in the scene. This shouldn't happen.", itemsCount);
+    QGraphicsScene::clear();
 
+    // NO longer dirty
     clearIsDirty();
-
-    // Update
-    update(); // Note, should not be needed, and not recommended according to input, but avoid adding yet a permutation to the investigation
 }
 
 /**
@@ -314,10 +309,11 @@ bool Scene::addItem(const std::shared_ptr<Item>& item)
 
 bool Scene::removeItem(const std::shared_ptr<Item> item)
 {
-    if (!item) {
+    // Sanity check
+    if (!item)
         return false;
-    }
 
+    // Figure out what area we need to update
     auto itemBoundsToUpdate = item->mapRectToScene(item->boundingRect());
 
     // NOTE: Sometimes ghosts remain (not drawn away) when they're active in some way at remove time, found below from looking at Qt-source code...
@@ -325,13 +321,12 @@ bool Scene::removeItem(const std::shared_ptr<Item> item)
     item->setFocusProxy(nullptr);
 
     // Remove from scene (if necessary)
-    if (item->QGraphicsItem::scene()) {
-       QGraphicsScene::removeItem(item.get());
-    }
+    QGraphicsScene::removeItem(item.get());
 
     // Remove shared pointer from local list to reduce instance count
     _items.removeAll(item);
 
+    // Update the corresponding scene area (redraw)
     update(itemBoundsToUpdate);
 
     // Let the world know
@@ -339,12 +334,7 @@ bool Scene::removeItem(const std::shared_ptr<Item> item)
 
     // NOTE: In order to keep items alive through this entire event loop round,
     // otherwise crashes because Qt messes with items even after they're removed
-    // (though, again, seems limited to when BSP-index on [as "litmus test"])
-    if (_keep_alive_an_event_loop.isEmpty()) {
-        QTimer::singleShot(0, [this]{
-            _keep_alive_an_event_loop.clear();
-        });
-    }
+    // ToDo: Fix this
     _keep_alive_an_event_loop << item;
 
     return true;
