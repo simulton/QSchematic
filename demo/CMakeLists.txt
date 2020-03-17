@@ -9,7 +9,7 @@ find_package(Qt5
         Widgets
         PrintSupport)
 
-find_package(Gpds 0.1.0
+find_package(gpds 0.1.0
     REQUIRED)
 
 # Header files
