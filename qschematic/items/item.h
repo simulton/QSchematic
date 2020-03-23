@@ -129,6 +129,7 @@ namespace QSchematic
 
     signals:
         void moved(Item& item, const QVector2D& movedBy);
+        void movedInScene(Item& item);
         void rotated(Item& item, const qreal rotation);
         void highlightChanged(const Item& item, bool isHighlighted);
         void settingsChanged();
@@ -144,6 +145,7 @@ namespace QSchematic
 
     private slots:
         void posChanged();
+        void scenePosChanged();
         void rotChanged();
 
     private:

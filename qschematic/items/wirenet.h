@@ -4,17 +4,23 @@
 #include <QObject>
 #include <QList>
 #include <gpds/serialize.hpp>
-#include "line.h"
+#include "wire_system/line.h"
+#include "../wire_system/net.h"
+
+namespace wire_system {
+    class point;
+}
+
+using namespace wire_system;
 
 namespace QSchematic {
 
     class Item;
     class Wire;
-    class WirePoint;
     class Label;
     class Scene;
 
-    class WireNet : public QObject, public gpds::serialize, public std::enable_shared_from_this<WireNet>
+    class WireNet : public QObject, public gpds::serialize, public wire_system::net
     {
         Q_OBJECT
         Q_DISABLE_COPY(WireNet)
@@ -26,40 +32,32 @@ namespace QSchematic {
         virtual gpds::container to_container() const override;
         virtual void from_container(const gpds::container& container) override;
 
-        bool addWire(const std::shared_ptr<Wire>& wire);
-        bool removeWire(const std::shared_ptr<Wire> wire);
-        bool contains(const std::shared_ptr<Wire>& wire) const;
+        bool addWire(const std::shared_ptr<wire>& wire) override;
+        bool removeWire(const std::shared_ptr<wire> wire) override;
         void simplify();
-        void setName(const std::string& name);
-        void setName(const QString& name);
+        void set_name(const QString& name) override;
         void setHighlighted(bool highlighted);
         void setScene(Scene* scene);
         void updateLabelPos(bool updateParent = false) const;
+        void wirePointMoved(Wire& wire, const point& point);
 
-        QString name() const;
-        QList<std::shared_ptr<Wire>> wires() const;
-        QList<Line> lineSegments() const;
+        QList<line> lineSegments() const;
         QList<QPointF> points() const;
         std::shared_ptr<Label> label();
 
     signals:
-        void pointMoved(Wire& wire, WirePoint& point);
-        void pointMovedByUser(Wire& wire, int index);
         void highlightChanged(bool highlighted);
         void contextMenuRequested(const QPoint& pos);
-        void pointRemoved(Wire& rawWire, int index);
 
     private slots:
-        void wirePointMoved(Wire& wire, WirePoint& point);
-        void wirePointMovedByUser(Wire& wire, int index);
         void labelHighlightChanged(const Item& item, bool highlighted);
         void wireHighlightChanged(const Item& item, bool highlighted);
         void toggleLabel();
 
     private:
+        QList<std::shared_ptr<WireNet>> nets() const;
+        void highlight_global_net(bool highlighted);
 
-        QList<std::weak_ptr<Wire>> _wires;
-        QString _name;
         std::shared_ptr<Label> _label;
         Scene* _scene{};
     };

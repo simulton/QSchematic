@@ -30,13 +30,16 @@ gpds::container WireNet::to_container() const
 {
     // Wires
     gpds::container wiresContainer;
-    for (const auto& wire : _wires) {
-        wiresContainer.add_value("wire", wire.lock()->to_container());
+    for (const auto& wire : wires()) {
+        if (auto wire_net = std::dynamic_pointer_cast<Wire>(wire))
+        {
+            wiresContainer.add_value("wire", wire_net->to_container());
+        }
     }
 
     // Root
     gpds::container root;
-    root.add_value("name", _name.toStdString() );
+    root.add_value("name", name().toStdString() );
     // The coordinates of the label need to be in the scene space
     if (_label->parentItem()) {
         _label->moveBy(QVector2D(_label->parentItem()->pos()));
@@ -55,7 +58,7 @@ void WireNet::from_container(const gpds::container& container)
 {
     Q_ASSERT(_scene);
     // Root
-    setName(QString::fromStdString(container.get_value<std::string>("name").value_or("")));
+    set_name(QString::fromStdString(container.get_value<std::string>("name").value_or("")));
 
     // Label
     if (auto labelContainer = container.get_value<gpds::container*>("label").value_or(nullptr)) {
@@ -84,114 +87,110 @@ void WireNet::from_container(const gpds::container& container)
     }
 }
 
-bool WireNet::addWire(const std::shared_ptr<Wire>& wire)
+bool WireNet::addWire(const std::shared_ptr<wire>& wire)
 {
-    // Sanity check
-    if (!wire) {
+    if (not net::addWire(wire)) {
         return false;
     }
 
-    // Attach to connectors
-    if (wire->scene()) {
-        for (const auto& connector : wire->scene()->connectors()) {
-            if (connector->scenePos() == wire->pointsAbsolute().first()) {
-                connector->attachWire(wire.get(), 0);
-            } else if (connector->scenePos() == wire->pointsAbsolute().last()) {
-                connector->attachWire(wire.get(), wire->pointsAbsolute().count() - 1);
-            }
-        }
+    if (auto wire_net = std::dynamic_pointer_cast<Wire>(wire))
+    {
+        // Connect signals
+        connect(wire_net.get(), &Wire::pointMoved, this, &WireNet::wirePointMoved);
+        connect(wire_net.get(), &Wire::highlightChanged, this, &WireNet::wireHighlightChanged);
+        connect(wire_net.get(), &Wire::toggleLabelRequested, this, &WireNet::toggleLabel);
+        connect(wire_net.get(), &Wire::moved, this, [=] { updateLabelPos(); });
     }
 
-    // Update the junctions of the wires that are already in the net
-    for (const auto& otherWire : wire->connectedWires()) {
-        for (int index = 0; index < otherWire->pointsAbsolute().count(); index++) {
-            // Ignore if it's not the first/last point
-            if (index != 0 and index != otherWire->pointsAbsolute().count() - 1) {
-                continue;
-            }
-            // Mark the point as junction if it's on the wire
-            if (wire->pointIsOnWire(otherWire->pointsAbsolute().at(index))) {
-                otherWire->setPointIsJunction(index, true);
-            }
-        }
-    }
 
-    wire->setNet(shared_from_this());
-
-    // Add the wire
-    connect(wire.get(), &Wire::pointMoved, this, &WireNet::wirePointMoved);
-    connect(wire.get(), &Wire::pointMovedByUser, this, &WireNet::wirePointMovedByUser);
-    connect(wire.get(), &Wire::highlightChanged, this, &WireNet::wireHighlightChanged);
-    connect(wire.get(), &Wire::toggleLabelRequested, this, &WireNet::toggleLabel);
-    connect(wire.get(), &Wire::moved, this, [=] { updateLabelPos(); });
-    connect(wire.get(), &Wire::pointRemoved, this, [=] (int index) { emit pointRemoved(*wire, index);});
-    _wires.append(wire);
     updateLabelPos(true);
 
     return true;
 }
 
-bool WireNet::removeWire(const std::shared_ptr<Wire> wire)
+bool WireNet::removeWire(const std::shared_ptr<wire> wire)
 {
-    disconnect(wire.get(), nullptr, this, nullptr);
-    for (auto it = _wires.begin(); it != _wires.end(); it++) {
-        if ((*it).lock() == wire) {
-            _wires.erase(it);
-            break;
-        }
+    if (auto wire_net = std::dynamic_pointer_cast<Wire>(wire)) {
+        disconnect(wire_net.get(), nullptr, this, nullptr);
     }
+    net::removeWire(wire);
     updateLabelPos(true);
 
     return true;
-}
-
-bool WireNet::contains(const std::shared_ptr<Wire>& wire) const
-{
-    for (const auto& w : _wires) {
-        if (w.lock() == wire) {
-            return true;
-        }
-    }
-
-    return false;
 }
 
 void WireNet::simplify()
 {
-    for (auto& wire : _wires) {
-        wire.lock()->simplify();
+    for (auto& wire : wires()) {
+        wire->simplify();
     }
 }
 
-void WireNet::setName(const std::string& name)
+void WireNet::set_name(const QString& name)
 {
-    setName( QString::fromStdString( name ) );
-}
+    net::set_name(name);
 
-void WireNet::setName(const QString& name)
-{
-    _name = name;
-
-    _label->setText(_name);
-    _label->setVisible(!_name.isEmpty());
+    _label->setText(this->name());
+    _label->setVisible(!this->name().isEmpty());
     updateLabelPos(true);
 }
 
 void WireNet::setHighlighted(bool highlighted)
 {
     // Wires
-    for (auto& wire : _wires) {
-        if (wire.expired()) {
+    for (auto& wire : wires()) {
+        if (not wire) {
             continue;
         }
 
-        wire.lock()->setHighlighted(highlighted);
+        if (auto wire_item = std::dynamic_pointer_cast<Wire>(wire)) {
+            wire_item->setHighlighted(highlighted);
+        }
     }
 
     // Label
     _label->setHighlighted(highlighted);
 
-    emit highlightChanged(highlighted);
+}
+
+/**
+ * Returns a list of all the nets that are in the same global net as the given net
+ */
+QList<std::shared_ptr<WireNet>> WireNet::nets() const
+{
+    QList<std::shared_ptr<WireNet>> list;
+
+    for (auto& net : manager()->nets()) {
+        if (!net) {
+            continue;
+        }
+
+        if (net->name().isEmpty()) {
+            continue;
+        }
+
+        if (QString::compare(net->name(), name(), Qt::CaseInsensitive) == 0) {
+            if (auto otherNet = std::dynamic_pointer_cast<WireNet>(net)) {
+                list.append(otherNet);
+            }
+        }
+    }
+
+    return list;
+}
+
+void WireNet::highlight_global_net(bool highlighted)
+{
+    // Highlight the net
+    setHighlighted(highlighted);
+
+    // Highlight all wire nets that are part of this net
+    for (auto& otherWireNet : nets()) {
+
+        otherWireNet->blockSignals(true);
+        otherWireNet->setHighlighted(highlighted);
+        otherWireNet->blockSignals(false);
+    }
 }
 
 void WireNet::setScene(Scene* scene)
@@ -199,33 +198,16 @@ void WireNet::setScene(Scene* scene)
     _scene = scene;
 }
 
-QString WireNet::name()const
+QList<line> WireNet::lineSegments() const
 {
-    return _name;
-}
+    QList<line> list;
 
-QList<std::shared_ptr<Wire>> WireNet::wires() const
-{
-    QList<std::shared_ptr<Wire>> list;
-    for (const auto& wire: _wires) {
-        if (wire.expired()) {
-            qDebug() << "expired";
-        }
-        list.append(wire.lock());
-    }
-    return list;
-}
-
-QList<Line> WireNet::lineSegments() const
-{
-    QList<Line> list;
-
-    for (const auto& wire : _wires) {
-        if (wire.expired()) {
+    for (const auto& wire : wires()) {
+        if (not wire) {
             continue;
         }
 
-        list.append(wire.lock()->lineSegments());
+        list.append(wire->line_segments());
     }
 
     return list;
@@ -235,8 +217,10 @@ QList<QPointF> WireNet::points() const
 {
     QList<QPointF> list;
 
-    for (const auto& wire : _wires) {
-        list.append(wire.lock()->pointsAbsolute().toList());
+    for (const auto& wire : wires()) {
+        for (const auto& point : wire->points()) {
+            list.append(point.toPointF());
+        }
     }
 
     return list;
@@ -247,11 +231,9 @@ std::shared_ptr<Label> WireNet::label()
     return _label;
 }
 
-void WireNet::wirePointMoved(Wire& wire, WirePoint& point)
+void WireNet::wirePointMoved(Wire& wire, const point& point)
 {
     updateLabelPos();
-    // Let the others know too
-    emit pointMoved(wire, point);
 }
 
 /**
@@ -266,17 +248,16 @@ void WireNet::updateLabelPos(bool updateParent) const
     // Find closest point
     QPointF labelPos = _label->textRect().center() + _label->scenePos();
     QPointF closestPoint;
-    std::shared_ptr<Wire> closestWire;
-    for (const auto& wire : _wires) {
-        std::shared_ptr<Wire> spWire = wire.lock();
-        for (const auto& segment: spWire->lineSegments()) {
+    std::shared_ptr<wire> closestWire;
+    for (const auto& wire : wires()) {
+        for (const auto& segment: wire->line_segments()) {
             // Find closest point on segment
             QPointF p = Utils::pointOnLineClosestToPoint(segment.p1(), segment.p2(), labelPos);
             float distance1 = QVector2D(labelPos - closestPoint).lengthSquared();
             float distance2 = QVector2D(labelPos - p).lengthSquared();
             if (closestPoint.isNull() or distance1 > distance2) {
                 closestPoint = p;
-                closestWire = spWire;
+                closestWire = wire;
             }
         }
     }
@@ -285,9 +266,10 @@ void WireNet::updateLabelPos(bool updateParent) const
         return;
     }
     // Update the parent if requested
-    if (updateParent and _label->parentItem() != closestWire.get()) {
-        _label->setParentItem(closestWire.get());
-        _label->setPos(labelPos - _label->textRect().center() - closestWire->scenePos());
+    auto closestWireItem = std::dynamic_pointer_cast<Wire>(closestWire);
+    if (updateParent and _label->parentItem() != closestWireItem.get()) {
+        _label->setParentItem(closestWireItem.get());
+        _label->setPos(labelPos - _label->textRect().center() - closestWireItem->scenePos());
     }
     // Update the connection point
     if (_label->parentItem()) {
@@ -296,11 +278,6 @@ void WireNet::updateLabelPos(bool updateParent) const
         _label->setConnectionPoint(closestPoint);
     }
 
-}
-
-void WireNet::wirePointMovedByUser(Wire& wire, int index)
-{
-    emit pointMovedByUser(wire, index);
 }
 
 void WireNet::labelHighlightChanged(const Item& item, bool highlighted)
@@ -314,7 +291,7 @@ void WireNet::wireHighlightChanged(const Item& item, bool highlighted)
 {
     Q_UNUSED(item)
 
-    setHighlighted(highlighted);
+    highlight_global_net(highlighted);
 }
 
 void WireNet::toggleLabel()

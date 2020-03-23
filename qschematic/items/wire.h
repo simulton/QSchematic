@@ -2,21 +2,19 @@
 
 #include <QAction>
 #include "item.h"
-#include "wirepoint.h"
+#include "wire_system/point.h"
 #include "wirenet.h"
-#include "line.h"
+#include "wire_system/wire.h"
 
 class QVector2D;
 
 namespace QSchematic {
 
-    class Line;
-
     /**
      * IMPORTANT NOTE: The points coordinates are RELATIVE and in SCENE COORDINATES.
      *                 Wires must be movable so we can move entire groups of stuff.
      */
-    class Wire : public Item
+    class Wire : public Item, public wire_system::wire
     {
         Q_OBJECT
 
@@ -31,38 +29,19 @@ namespace QSchematic {
         virtual QRectF boundingRect() const override;
         virtual QPainterPath shape() const override;
 
-        void prependPoint(const QPointF& point);
-        void appendPoint(const QPointF& point);
-        void insertPoint(int index, const QPointF& point);        // Index of new point
+        void prepend_point(const QPointF& point) override;
+        void append_point(const QPointF& point) override;
+        void insert_point(int index, const QPointF& point) override;        // Index of new point
         void removeFirstPoint();
         void removeLastPoint();
-        void removePoint(int index);
-        QVector<WirePoint> wirePointsRelative() const;
-        QVector<WirePoint> wirePointsAbsolute() const;
+        QVector<point> wirePointsRelative() const;
         QVector<QPointF> pointsRelative() const;
         QVector<QPointF> pointsAbsolute() const;
-        void simplify();
-        void movePointBy(int index, const QVector2D& moveBy);
-        void movePointTo(int index, const QPointF& moveTo);
-        void moveLineSegmentBy(int index, const QVector2D& moveBy);
-        void setPointIsJunction(int index, bool isJunction);
-        bool pointIsOnWire(const QPointF& point) const;
-        bool connectWire(Wire* wire);
-        QList<Wire*> connectedWires();
-        void disconnectWire(Wire* wire);
-        QVector<int> junctions() const;
-        void setNet(const std::shared_ptr<WireNet>& wirenet);
-        std::shared_ptr<WireNet> net();
+        void move_point_to(int index, const QPointF& moveTo) override;
         bool movingWirePoint() const;
-        void updatePosition();
-
-        QList<QSchematic::Line> lineSegments() const;
 
     signals:
-        void pointMoved(Wire& wire, WirePoint& point);
-        void pointMovedByUser(Wire& wire, int index);
-        void pointInserted(int index);
-        void pointRemoved(int index);
+        void pointMoved(Wire& wire, point& point);
         void toggleLabelRequested();
 
     protected:
@@ -79,24 +58,19 @@ namespace QSchematic {
         virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
         void contextMenuEvent(QGraphicsSceneContextMenuEvent* event) override;
         virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value) override;
+        void about_to_change() override;
+        void has_changed() override;
+        void add_segment(int index) override;
 
     private:
         Q_DISABLE_COPY(Wire)
 
-        void removeDuplicatePoints();
-        void removeObsoletePoints();
-
-        QVector<WirePoint> _points;
-        QList<Wire*> _connectedWires;
         QRectF _rect;
         int _pointToMoveIndex;
         int _lineSegmentToMoveIndex;
         QPointF _prevMousePos;
         QPointF _offset;
-        void moveJunctionsToNewSegment(const Line& oldSegment, const Line& newSegment);
         QAction* _renameAction;
-        std::shared_ptr<WireNet> _net;
-        bool _internalMove;
     };
 
 }

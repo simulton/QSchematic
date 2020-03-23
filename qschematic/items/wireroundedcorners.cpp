@@ -1,7 +1,7 @@
 #include <QPainter>
 #include <QVector2D>
-#include "wirepoint.h"
-#include "line.h"
+#include "wire_system/point.h"
+#include "wire_system/line.h"
 #include "../utils.h"
 #include "wireroundedcorners.h"
 
@@ -43,7 +43,7 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
 
     // Retrieve the scene points as we'll need them a lot
     auto sceneWirePoints(wirePointsRelative());
-    QVector<WirePoint> scenePoints;
+    QVector<point> scenePoints;
     for (const auto& wirePoint : sceneWirePoints) {
         scenePoints << wirePoint;
     }
@@ -89,7 +89,7 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
         // Render
         for (int i = 0; i < scenePoints.count(); i++) {
             // Retrieve point
-            WirePoint point = scenePoints.at(i);
+            point point = scenePoints.at(i);
 
             // If it's the last point
             if (i == scenePoints.count()-1) {
@@ -97,21 +97,21 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
             }
             // If it's the first point
             else if (i == 0) {
-                WirePoint nPoint = scenePoints.at(i+1);
+                wire_system::point nPoint = scenePoints.at(i + 1);
                 path.moveTo(point.toPointF());
                 path.lineTo(Utils::centerPoint(point.toPointF(), nPoint.toPointF()));
             }
             // It's a point in the middle of the wire
             else {
                 // Get the previous and next points
-                WirePoint pPoint = scenePoints.at(i-1);
-                WirePoint nPoint = scenePoints.at(i+1);
+                wire_system::point pPoint = scenePoints.at(i - 1);
+                wire_system::point nPoint = scenePoints.at(i + 1);
 
                 // Find if there is a junction on this point
                 bool hasJunction = false;
-                for (const auto& wire: connectedWires()) {
+                for (const auto& wire: connected_wires()) {
                     for (const auto& jIndex: wire->junctions()) {
-                        const auto& junction = wire->wirePointsAbsolute().at(jIndex);
+                        const auto& junction = wire->points().at(jIndex);
                         if (junction.toPoint() == (point + pos()).toPoint()) {
                             hasJunction = true;
                             break;
@@ -135,7 +135,7 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                     linePointAdjust = line2.length();
                 }
                 // We certainly don't want an arc if this is a junction
-                if (not hasJunction and not point.isJunction()) {
+                if (not hasJunction and not point.is_junction()) {
                     // Shorten lines if there is a rounded corner
                     line1.setLength(line1.length() - linePointAdjust);
                     line2.setLength(line2.length() - linePointAdjust);
@@ -144,7 +144,7 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                 // Render lines
                 path.lineTo(line1.p2());
                 // Render the arc if there is no junction
-                if (not hasJunction and not point.isJunction()) {
+                if (not hasJunction and not point.is_junction()) {
                     path.quadTo(point.toPointF(), line2.p2());
                 }
                 path.lineTo(line2.p2());
@@ -155,8 +155,8 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
 
     // Draw the junction points
     int junctionRadius = 4;
-    for (const QSchematic::WirePoint& wirePoint : wirePointsRelative()) {
-        if (wirePoint.isJunction()) {
+    for (const wire_system::point& wirePoint : wirePointsRelative()) {
+        if (wirePoint.is_junction()) {
             painter->setPen(penJunction);
             painter->setBrush(brushJunction);
             painter->drawEllipse(wirePoint.toPoint(), junctionRadius, junctionRadius);
@@ -178,7 +178,7 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
         // Render
         painter->setPen(penHandle);
         painter->setBrush(brushHandle);
-        for (const WirePoint& point : scenePoints) {
+        for (const point& point : scenePoints) {
             QRectF handleRect(point.x() - HANDLE_SIZE, point.toPoint().y() - HANDLE_SIZE, 2*HANDLE_SIZE, 2*HANDLE_SIZE);
             painter->drawRect(handleRect);
         }

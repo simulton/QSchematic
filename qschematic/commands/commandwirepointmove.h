@@ -27,8 +27,8 @@ namespace QSchematic
         std::shared_ptr<Wire> _wire;
         QVector<QPointF> _oldPos;
         QVector<QPointF> _newPos;
-        std::shared_ptr<WireNet> _oldNet;
-        std::shared_ptr<WireNet> _newNet;
+        std::shared_ptr<net> _oldNet;
+        std::shared_ptr<net> _newNet;
         Scene* _scene;
     };
 

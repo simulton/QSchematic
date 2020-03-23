@@ -24,12 +24,10 @@ set(SOURCES_PRIVATE
     items/itemfactory.cpp
     items/itemmimedata.cpp
     items/label.cpp
-    items/line.cpp
     items/node.cpp
     items/splinewire.cpp
     items/wire.cpp
     items/wirenet.cpp
-    items/wirepoint.cpp
     items/wireroundedcorners.cpp
     scene.cpp
     settings.cpp
@@ -56,12 +54,10 @@ set(HEADERS_PUBLIC
     items/itemfactory.h
     items/itemmimedata.h
     items/label.h
-    items/line.h
     items/node.h
     items/splinewire.h
     items/wire.h
     items/wirenet.h
-    items/wirepoint.h
     items/wireroundedcorners.h
     utils/itemscontainerutils.h
     utils/itemscustodian.h
@@ -85,6 +81,8 @@ find_package(Qt5
 # Include GPDS package
 find_package(gpds 0.1.0 REQUIRED)
 
+# Add the wire system
+add_subdirectory(wire_system)
 
 
 ################################################################################
@@ -105,6 +103,7 @@ target_include_directories(qschematic-objs
         $<INSTALL_INTERFACE:include>)
 target_link_libraries(qschematic-objs Qt5::Core Qt5::Gui Qt5::Widgets)
 target_link_libraries(qschematic-objs gpds::gpds-shared)
+target_link_libraries(qschematic-objs wire_system)
 
 
 ################################################################################
@@ -189,6 +188,7 @@ install(
         qschematic-shared
         qschematic-static
         qschematic-objs
+        wire_system
     EXPORT QSchematicTargets
     LIBRARY
         DESTINATION ${CMAKE_INSTALL_LIBDIR}

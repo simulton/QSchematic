@@ -41,7 +41,7 @@ void CommandWirenetRename::undo()
         return;
     }
 
-    _net->setName(_oldText);
+    _net->set_name(_oldText);
 }
 
 void CommandWirenetRename::redo()
@@ -50,5 +50,5 @@ void CommandWirenetRename::redo()
         return;
     }
 
-    _net->setName(_newText);
+    _net->set_name(_newText);
 }

@@ -62,7 +62,7 @@ void CommandWirepointMove::undo()
         int diff = _oldPos.count() - _wire->wirePointsRelative().count();
         if (diff > 0) {
             for (int i = 0; i < diff; i++) {
-                _wire->appendPoint(QPointF());
+                _wire->append_point(QPointF());
             }
         } else {
             for (int i = 0; i < qAbs(diff); i++) {
@@ -73,8 +73,8 @@ void CommandWirepointMove::undo()
 
     for (int i = 0; i < _oldPos.count(); i++) {
         if (_newPos[i] != _oldPos[i]) {
-            _wire->movePointTo(i, _oldPos[i]);
-            _wire->net()->pointMovedByUser(*_wire.get(), i);
+            _wire->move_point_to(i, _oldPos[i]);
+            _scene->wire_manager()->point_moved_by_user(*_wire.get(), i);
         }
     }
     if (_oldNet != _wire->net()) {
@@ -84,11 +84,11 @@ void CommandWirepointMove::undo()
             tmpNet->removeWire(wire);
         }
         // If not already in the scene add the existing net
-        if (not _scene->nets().contains(_oldNet)) {
-            _scene->addWireNet(_oldNet);
+        if (not _scene->wire_manager()->nets().contains(_oldNet)) {
+            _scene->wire_manager()->add_net(_oldNet);
         }
         // Remove the tmp net
-        _scene->removeWireNet(tmpNet);
+        _scene->wire_manager()->remove_net(tmpNet);
     }
 }
 
@@ -96,8 +96,8 @@ void CommandWirepointMove::redo()
 {
     for (int i = 0; i < _newPos.count(); i++) {
         if (_newPos[i] != _oldPos[i]) {
-            _wire->movePointTo(i, _newPos[i]);
-            _wire->net()->pointMovedByUser(*_wire.get(), i);
+            _wire->move_point_to(i, _newPos[i]);
+            _scene->wire_manager()->point_moved_by_user(*_wire.get(), i);
         }
     }
     // Use existing net
@@ -110,11 +110,11 @@ void CommandWirepointMove::redo()
             tmpNet->removeWire(wire);
         }
         // If not already in the scene add the existing net
-        if (not _scene->nets().contains(_newNet)) {
-            _scene->addWireNet(_newNet);
+        if (not _scene->wire_manager()->nets().contains(_newNet)) {
+            _scene->wire_manager()->add_net(_newNet);
         }
         // Remove the tmp net
-        _scene->removeWireNet(tmpNet);
+        _scene->wire_manager()->remove_net(tmpNet);
     } else {
         _newNet = _wire->net();
     }

@@ -1,5 +1,4 @@
 #include "splinewire.h"
-#include "wirepoint.h"
 #include <QPainter>
 #include <QPainterPathStroker>
 #include <QtMath>
@@ -58,8 +57,8 @@ void SplineWire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
     brushJunction.setColor(isHighlighted() ? COLOR_HIGHLIGHTED : COLOR);
 
     int junctionRadius = 4;
-    for (const QSchematic::WirePoint& wirePoint : wirePointsRelative()) {
-        if (wirePoint.isJunction()) {
+    for (const point& wirePoint : wirePointsRelative()) {
+        if (wirePoint.is_junction()) {
             painter->setPen(penJunction);
             painter->setBrush(brushJunction);
             painter->drawEllipse(wirePoint.toPoint(), junctionRadius, junctionRadius);
@@ -81,7 +80,7 @@ void SplineWire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
         // Render
         painter->setPen(penHandle);
         painter->setBrush(brushHandle);
-        for (const WirePoint& point : wirePointsRelative()) {
+        for (const point& point : wirePointsRelative()) {
             QRectF handleRect(point.x() - HANDLE_SIZE, point.toPoint().y() - HANDLE_SIZE, 2*HANDLE_SIZE, 2*HANDLE_SIZE);
             painter->drawRect(handleRect);
         }
@@ -105,7 +104,7 @@ QPainterPath SplineWire::path() const
 
     // Retrieve the scene points as we'll need them a lot
     auto sceneWirePoints(wirePointsRelative());
-    QVector<WirePoint> scenePoints;
+    QVector<point> scenePoints;
     for (const auto& wirePoint : sceneWirePoints) {
         scenePoints << wirePoint;
     }
@@ -118,8 +117,8 @@ QPainterPath SplineWire::path() const
     // Render
     for (int i = 0; i <= scenePoints.count()-2; i++) {
         // Retrieve points
-        WirePoint p1 = scenePoints.at(i);
-        WirePoint p2 = scenePoints.at(i+1);
+        point p1 = scenePoints.at(i);
+        point p2 = scenePoints.at(i + 1);
 
         // If there are just two points we need to render the line just like this and we're done
         if (scenePoints.count() == 2) {
@@ -129,7 +128,7 @@ QPainterPath SplineWire::path() const
 
         // If we have two line segments we want to render an arc connecting them
         } else if (i < scenePoints.count()-2) {
-            WirePoint p3 = scenePoints.at(i+2);
+            point p3 = scenePoints.at(i + 2);
 
             // Tangent at p2
             QPointF ctrlP1;
@@ -155,7 +154,7 @@ QPainterPath SplineWire::path() const
             }
 
             if (i < scenePoints.count()-3) {
-                WirePoint p4 = scenePoints.at(i+3);
+                point p4 = scenePoints.at(i + 3);
 
                 // Tangent at p3
                 QPointF ctrlP2;

@@ -21647,7 +21647,7 @@
 									"_parent": {
 										"$ref": "AAAAAAFnVhVq9rudwrA="
 									},
-									"name": "movePointTo",
+									"name": "move_point_to",
 									"parameters": [
 										{
 											"_type": "UMLParameter",

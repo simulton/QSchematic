@@ -6,7 +6,7 @@
 #include <QRectF>
 #include <QPainterPath>
 #include <QVector2D>
-#include "items/line.h"
+#include "wire_system/line.h"
 #include "utils.h"
 
 using namespace QSchematic;
