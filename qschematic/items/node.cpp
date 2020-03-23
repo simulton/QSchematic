@@ -35,6 +35,7 @@ Node::Node(int type, QGraphicsItem* parent) :
     _connectorsSnapPolicy(Connector::NodeSizerectOutline),
     _connectorsSnapToGrid(true)
 {
+    connect(this, &Node::settingsChanged, this, &Node::propagateSettings);
 }
 
 Node::~Node()
@@ -292,6 +293,7 @@ bool Node::addConnector(const std::shared_ptr<Connector>& connector)
     connector->setMovable(_connectorsMovable);
     connector->setSnapPolicy(_connectorsSnapPolicy);
     connector->setSnapToGrid(_connectorsSnapToGrid);
+    connector->setSettings(_settings);
 
     _connectors << connector;
 
@@ -864,4 +866,11 @@ void Node::paintRotateHandle(QPainter& painter)
     handleBrush.setColor(Qt::white);
     painter.setBrush(handleBrush);
     painter.drawEllipse(rect.adjusted(-handlePen.width()+adj, -handlePen.width()+adj, (handlePen.width()/2)-adj, (handlePen.width()/2)-adj));
+}
+
+void Node::propagateSettings()
+{
+    for (const auto& connector : connectors()) {
+        connector->setSettings(_settings);
+    }
 }

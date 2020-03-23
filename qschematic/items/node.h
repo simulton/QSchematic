@@ -91,6 +91,8 @@ namespace QSchematic {
         virtual void paintRotateHandle(QPainter& painter);
 
     private:
+        void propagateSettings();
+
         Mode _mode;
         QPointF _lastMousePosWithGridMove;
         RectanglePoint _resizeHandle;
