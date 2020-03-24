@@ -31,7 +31,7 @@ public:
     [[nodiscard]] QList<std::shared_ptr<net>> nets() const;
     [[nodiscard]] QList<std::shared_ptr<wire>> wires() const;
     void generate_junctions();
-    void connect_wire(wire* wire, wire_system::wire* rawWire);
+    void connect_wire(wire* wire, wire_system::wire* rawWire, std::size_t point);
     void remove_net(std::shared_ptr<net> net);
     void clear();
     bool remove_wire(const std::shared_ptr<wire> wire);

@@ -55,12 +55,10 @@ void manager::generate_junctions()
                 continue;
             }
             if (wire->point_is_on_wire(otherWire->points().first().toPointF())) {
-                connect_wire(wire.get(), otherWire.get());
-                otherWire->set_point_is_junction(0, true);
+                connect_wire(wire.get(), otherWire.get(), 0);
             }
             if (wire->point_is_on_wire(otherWire->points().last().toPointF())) {
-                connect_wire(wire.get(), otherWire.get());
-                otherWire->set_point_is_junction(otherWire->points().count() - 1, true);
+                connect_wire(wire.get(), otherWire.get(), otherWire->points().count() - 1);
             }
         }
     }
@@ -71,7 +69,7 @@ void manager::generate_junctions()
  * @param wire The wire to connect to
  * @param rawWire The wire to connect
  */
-void manager::connect_wire(wire* wire, wire_system::wire* rawWire)
+void manager::connect_wire(wire* wire, wire_system::wire* rawWire, std::size_t point)
 {
     if (not wire->connect_wire(rawWire)) {
         return;
@@ -81,6 +79,9 @@ void manager::connect_wire(wire* wire, wire_system::wire* rawWire)
     if (merge_nets(net, otherNet)) {
         remove_net(otherNet);
     }
+
+    // Set the wire point to be a junction
+    rawWire->set_point_is_junction(point, true);
 }
 
 /**
@@ -286,8 +287,7 @@ void manager::point_moved_by_user(wire& rawWire, int index)
             }
             if (wire->point_is_on_wire(rawWire.points().at(index).toPointF())) {
                 if (not rawWire.connected_wires().contains(wire.get())) {
-                    rawWire.set_point_is_junction(index, true);
-                    connect_wire(wire.get(), &rawWire);
+                    connect_wire(wire.get(), &rawWire, index);
                 }
             }
         }

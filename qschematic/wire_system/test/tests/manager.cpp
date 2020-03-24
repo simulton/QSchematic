@@ -78,12 +78,13 @@ TEST_SUITE("Manager")
         REQUIRE(wire1->net() != wire2->net());
 
         // Connect the wires
-        manager.connect_wire(wire1.get(), wire2.get());
+        manager.connect_wire(wire1.get(), wire2.get(), 1);
 
         // Make sure the wires are connected
         REQUIRE(manager.wires_connected_to(wire1).count() == 2);
         REQUIRE(wire1->net());
         REQUIRE(wire1->net() == wire2->net());
+        REQUIRE(wire2->points().last().is_junction());
     }
 
     TEST_CASE ("disconnect_wire(): Wire can be disconnected")
@@ -103,10 +104,11 @@ TEST_SUITE("Manager")
         manager.add_wire(wire2);
 
         // Connect the wires
-        manager.connect_wire(wire1.get(), wire2.get());
+        manager.connect_wire(wire1.get(), wire2.get(), 1);
 
         // Make sure the wires are connected
         REQUIRE(wire1->connected_wires().contains(wire2.get()));
+        REQUIRE(wire2->points().last().is_junction());
 
         // Disconnect the wire
         manager.disconnect_wire(wire1, wire2.get());

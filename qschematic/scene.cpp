@@ -548,8 +548,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
                     continue;
                 }
                 if (wire->point_is_on_wire(_newWire->pointsAbsolute().last())) {
-                    m_wire_manager->connect_wire(wire.get(), _newWire.get());
-                    _newWire->set_point_is_junction(_newWire->pointsAbsolute().count() - 1, true);
+                    m_wire_manager->connect_wire(wire.get(), _newWire.get(), _newWire->pointsAbsolute().count() - 1);
                     wireAttached = true;
                     break;
                 }
@@ -914,8 +913,7 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                     continue;
                 }
                 if (wire->point_is_on_wire(_newWire->pointsAbsolute().last())) {
-                    m_wire_manager->connect_wire(wire.get(), _newWire.get());
-                    _newWire->set_point_is_junction(_newWire->pointsAbsolute().count() - 1, true);
+                    m_wire_manager->connect_wire(wire.get(), _newWire.get(), _newWire->pointsAbsolute().count() - 1);
                 }
             }
 
