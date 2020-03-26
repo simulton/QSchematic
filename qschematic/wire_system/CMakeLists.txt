@@ -6,7 +6,7 @@ find_package(Qt5
         Gui
 )
 
-add_subdirectory(test)
+add_subdirectory(test EXCLUDE_FROM_ALL)
 
 set(SOURCES_PRIVATE
     line.cpp

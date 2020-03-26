@@ -27,8 +27,6 @@ if (DEPENDENCY_GPDS_FROM_SYSTEM AND DEPENDENCY_GPDS_SHARED)
     set(DEPENDENCY_GPDS_TARGET gpds::gpds-shared)
 endif()
 
-message(GPDS: ${DEPENDENCY_GPDS_FROM_SYSTEM})
-
 # Include the library
 add_subdirectory(qschematic)
 
