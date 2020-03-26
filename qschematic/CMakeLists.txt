@@ -90,20 +90,29 @@ add_subdirectory(wire_system)
 ################################################################################
 
 add_library(qschematic-objs OBJECT "")
+
 target_compile_features(qschematic-objs
     PUBLIC
-        cxx_std_17)
+        cxx_std_17
+)
 target_sources(qschematic-objs
     PRIVATE
-        ${SOURCES_PRIVATE})
+        ${SOURCES_PRIVATE}
+)
+
 target_include_directories(qschematic-objs
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     INTERFACE
-        $<INSTALL_INTERFACE:include>)
-target_link_libraries(qschematic-objs Qt5::Core Qt5::Gui Qt5::Widgets)
-target_link_libraries(qschematic-objs gpds::gpds-shared)
-target_link_libraries(qschematic-objs wire_system)
+        $<INSTALL_INTERFACE:include>
+)
+
+target_link_libraries(qschematic-objs
+    PUBLIC
+        Qt5::Core Qt5::Gui Qt5::Widgets
+        gpds::gpds-shared
+        wire_system
+)
 
 
 ################################################################################
