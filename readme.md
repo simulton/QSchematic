@@ -50,7 +50,7 @@ After successfully building & installing the QSchematic library targets, use `fi
 find_package(QSchematic REQUIRED)
 
 add_executable(my_application "")
-target_link_libraries(my_application QSchematic::qschematic-static)
+target_link_libraries(my_application qschematic::qschematic-static)
 ```
 Check out the `/demo` for a practical hands-on example.
 
