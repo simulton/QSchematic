@@ -10,6 +10,8 @@ project(qschematic)
 
 # User options
 option(BUILD_DEMO "Whether to build the demo project" ON)
+option(DEPENDENCY_GPDS_FROM_SYSTEM "Whether to use the system's installation of GPDS or to pull GPDS internally" OFF)
+option(DEPENDENCY_GPDS_SHARED "Controls whether to link to GPDS as a shared library or statically" ON)
 
 # User settings
 set(CMAKE_DEBUG_POSTFIX d)
@@ -19,10 +21,13 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Qt5 stuff
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
+# Determine which GPDS target to use
+set(DEPENDENCY_GPDS_TARGET gpds::gpds-static)
+if (DEPENDENCY_GPDS_FROM_SYSTEM AND DEPENDENCY_GPDS_SHARED)
+    set(DEPENDENCY_GPDS_TARGET gpds::gpds-shared)
+endif()
+
+message(GPDS: ${DEPENDENCY_GPDS_FROM_SYSTEM})
 
 # Include the library
 add_subdirectory(qschematic)

@@ -1,7 +1,11 @@
 # Project settings
 project(qschematic
     VERSION 0.1.0
-    LANGUAGES CXX)
+    LANGUAGES CXX
+)
+
+# External dependencies
+include(external.cmake)
 
 # CMake settings
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -70,17 +74,6 @@ set(HEADERS_PUBLIC
     view.h
 )
 
-# Include Qt5 packages
-find_package(Qt5
-    REQUIRED
-    COMPONENTS
-        Core
-        Gui
-        Widgets)
-
-# Include GPDS package
-find_package(gpds 0.1.0 REQUIRED)
-
 # Add the wire system
 add_subdirectory(wire_system)
 
@@ -91,27 +84,37 @@ add_subdirectory(wire_system)
 
 add_library(qschematic-objs OBJECT "")
 
-target_compile_features(qschematic-objs
+target_compile_features(
+    qschematic-objs
     PUBLIC
         cxx_std_17
 )
+
 target_sources(qschematic-objs
     PRIVATE
         ${SOURCES_PRIVATE}
 )
 
-target_include_directories(qschematic-objs
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    INTERFACE
-        $<INSTALL_INTERFACE:include>
+target_include_directories(
+    qschematic-objs
+    PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}
 )
 
-target_link_libraries(qschematic-objs
+target_link_libraries(
+    qschematic-objs
     PUBLIC
         Qt5::Core Qt5::Gui Qt5::Widgets
-        gpds::gpds-shared
+        ${DEPENDENCY_GPDS_TARGET}
         wire_system
+)
+
+set_target_properties(
+    qschematic-objs
+    PROPERTIES
+        AUTOMOC ON
+        AUTORCC ON
+        AUTOUIC ON
 )
 
 
@@ -120,7 +123,11 @@ target_link_libraries(qschematic-objs
 ################################################################################
 
 add_library(qschematic-shared SHARED)
-target_link_libraries(qschematic-shared qschematic-objs)
+target_link_libraries(
+    qschematic-shared
+    PUBLIC
+        qschematic-objs
+)
 
 
 ################################################################################
@@ -133,7 +140,11 @@ target_compile_definitions(
     PUBLIC
         QSCHEMATIC_STATIC_DEFINE
 )
-target_link_libraries(qschematic-static qschematic-objs)
+target_link_libraries(
+    qschematic-static
+    PUBLIC
+        qschematic-objs
+)
 
 
 ################################################################################
@@ -177,7 +188,7 @@ generate_export_header(qschematic-shared
 # Some basic stuff we'll need in this section
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
-set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/cmake/QSchematic)
+set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/cmake/qschematic)
 
 # Install headers
 foreach( file ${HEADERS_PUBLIC} )
@@ -198,7 +209,7 @@ install(
         qschematic-static
         qschematic-objs
         wire_system
-    EXPORT QSchematicTargets
+    EXPORT qschematic-targets
     LIBRARY
         DESTINATION ${CMAKE_INSTALL_LIBDIR}
         COMPONENT lib
@@ -214,32 +225,32 @@ install(
 
 # Package version
 write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/QSchematic/QSchematicConfigVersion.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/qschematic/qschematic-config-version.cmake"
     VERSION ${QSchematic_VERSION}
     COMPATIBILITY AnyNewerVersion
 )
 install(
     FILES
-        QSchematicConfig.cmake
-        "${CMAKE_CURRENT_BINARY_DIR}/QSchematic/QSchematicConfigVersion.cmake"
+        qschematic-config.cmake
+        "${CMAKE_CURRENT_BINARY_DIR}/qschematic/qschematic-config-version.cmake"
     DESTINATION ${ConfigPackageLocation}
 )
 
 # Package configuration
-configure_file(QSchematicConfig.cmake
-    "${CMAKE_CURRENT_BINARY_DIR}/QSchematic/QSchematicConfig.cmake"
+configure_file(qschematic-config.cmake
+    "${CMAKE_CURRENT_BINARY_DIR}/qschematic/qschematic-config.cmake"
     COPYONLY
 )
 
 # Package export targets
 export(
-    EXPORT QSchematicTargets
-    FILE "${CMAKE_CURRENT_BINARY_DIR}/QSchematic/QSchematicTargets.cmake"
-    NAMESPACE QSchematic::
+    EXPORT qschematic-targets
+    FILE "${CMAKE_CURRENT_BINARY_DIR}/qschematic/qschematic-targets.cmake"
+    NAMESPACE qschematic::
 )
 install(
-    EXPORT QSchematicTargets
-    FILE QSchematicTargets.cmake
-    NAMESPACE QSchematic::
+    EXPORT qschematic-targets
+    FILE qschematic-targets.cmake
+    NAMESPACE qschematic::
     DESTINATION ${ConfigPackageLocation}
 )

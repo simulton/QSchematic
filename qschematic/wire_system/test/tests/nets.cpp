@@ -1,4 +1,4 @@
-#include "doctest.h"
+#include "3rdparty/doctest.h"
 #include "manager.h"
 #include "wire.h"
 #include "net.h"

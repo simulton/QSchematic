@@ -1,16 +1,14 @@
+# Pull in external dependencies
+include(../qschematic/external.cmake)
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
 
+# Qt5
 find_package(Qt5
-    REQUIRED
     COMPONENTS
-        Core
-        Gui
-        Widgets
-        PrintSupport)
-
-find_package(gpds 0.1.0
-    REQUIRED)
+        PrintSupport
+)
 
 # Header files
 set(HEADERS_PRIVATE
@@ -72,15 +70,23 @@ target_sources(qschematic-demo
         ${SOURCES_PRIVATE}
         ${RESOURCES}
 )
-target_include_directories(qschematic-demo
+target_include_directories(
+    qschematic-demo
     PRIVATE
         ..
 )
-target_link_libraries(qschematic-demo
+target_link_libraries(
+    qschematic-demo
     PRIVATE
-        qschematic-static
-        Qt5::Core Qt5::Widgets Qt5::Gui Qt5::PrintSupport
-        gpds::gpds-shared
+        qschematic-objs
+        Qt5::PrintSupport
+)
+set_target_properties(
+    qschematic-demo
+    PROPERTIES
+        AUTOMOC ON
+        AUTORCC ON
+        AUTOUIC ON
 )
 
 # Set window settings
