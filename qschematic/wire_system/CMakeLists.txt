@@ -27,7 +27,7 @@ set(HEADERS_PUBLIC
     connectable.h
 )
 
-add_library(wire_system)
+add_library(wire_system OBJECT)
 
 target_compile_features(
     wire_system
