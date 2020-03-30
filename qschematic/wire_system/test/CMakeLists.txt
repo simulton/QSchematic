@@ -19,5 +19,4 @@ target_sources(
 target_link_libraries(wire_system-tests
 	PRIVATE
 		wire_system
-		doctest::doctest
 )
