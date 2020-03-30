@@ -1,3 +1,5 @@
+[![Build Status](https://ci.simulton.com/buildStatus/icon?job=QSchematic&build=13)](https://ci.simulton.com/job/QSchematic/13/)
+
 # Introduction
 QSchematic is a library to draw diagrams & schematics with Qt. It uses Qt's [graphics view framework](http://doc.qt.io/qt-5/graphicsview.html).
 
