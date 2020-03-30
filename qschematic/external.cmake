@@ -1,7 +1,7 @@
 include(FetchContent)
 
 # GPDS
-if (GPDS_DEPENDENCY_FROM_SYSTEM)
+if (DEPENDENCY_GPDS_FROM_SYSTEM)
     find_package(gpds 0.1.0 REQUIRED)
 else()
     FetchContent_Declare(
