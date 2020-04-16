@@ -32,7 +32,8 @@ Special thank goes to Professor François Corthay (Switzerland) for initially pr
 
 # Screenshots
 The library allows complete customization of every visual aspect. Therefore, screenshots are not really a telling thing as they are just showing an application specific implementation of the paint functions. But meh... I guess people still want to see some stuff so here we go:
-![Screenshot 01](https://github.com/simulton/QSchematic/blob/master/docs/screenshots/screenshot_02.png?raw=true)
+![Screenshot 04](docs/screenshots/screenshot_04.png)
+![Screenshot 05](docs/screenshots/screenshot_05.png)
 
 For more, check out the `docs/screenshots` folder.
 
