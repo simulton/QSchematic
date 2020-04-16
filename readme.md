@@ -25,7 +25,7 @@ Technical stuff:
 This library is currently under heavy development.
 
 # Licensing
-The entire library is BSD 3-clause licensed.
+The entire library is MIT licensed.
 
 # Credits
 Special thank goes to Professor François Corthay (Switzerland) for initially privately funding this project.
