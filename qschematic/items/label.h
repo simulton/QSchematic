@@ -15,6 +15,7 @@ class Label : public Item
 
     signals:
         void textChanged(const QString& newText);
+        void doubleClicked();
 
     public:
         Label(int type = Item::LabelType, QGraphicsItem* parent = nullptr);
@@ -39,6 +40,7 @@ class Label : public Item
     protected:
         void copyAttributes(Label& dest) const;
         void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
+        void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event) override;
 
     private:
         void calculateTextRect();

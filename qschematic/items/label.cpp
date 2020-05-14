@@ -202,3 +202,8 @@ void Label::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWi
         painter->drawPath(shape());
     }
 }
+
+void Label::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
+{
+    emit doubleClicked();
+}

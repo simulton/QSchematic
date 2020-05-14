@@ -18,6 +18,14 @@ WireNet::WireNet(QObject* parent) :
     _label->setVisible(false);
     connect(_label.get(), &Label::highlightChanged, this, &WireNet::labelHighlightChanged);
     connect(_label.get(), &Label::moved, this, [=] { updateLabelPos(); });
+
+    // Rename net by double clicking on label
+    connect(_label.get(), &Label::doubleClicked, this, [=] {
+        Wire* wire = dynamic_cast<Wire*>(_label->parentItem());
+        if (wire) {
+            wire->rename_net();
+        }
+    });
 }
 
 WireNet::~WireNet()

@@ -378,6 +378,36 @@ void Wire::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
     _prevMousePos = curPos;
 }
 
+void Wire::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
+{
+    // Ignore if there is no rename action
+    if (not _renameAction) {
+        return;
+    }
+
+    // If the net is a WireNet, retrieve the label
+    std::shared_ptr<Label> label;
+    if (auto wireNet = std::dynamic_pointer_cast<WireNet>(net())) {
+        label = wireNet->label();
+    }
+
+    // Ignore if there is no label
+    if (not label) {
+        return;
+    }
+
+    // Keep track of whether the label is already visible
+    bool labelWasVisible = label->isVisible();
+
+    // Trigger the action
+    _renameAction->trigger();
+
+    // Move the label to the cursor if it wasn't already visible
+    if (not labelWasVisible and label->isVisible()) {
+        label_to_cursor(event->scenePos(), label);
+    }
+}
+
 void Wire::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 {
     Item::hoverEnterEvent(event);
@@ -613,47 +643,52 @@ void Wire::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 
     // Move the label to the cursor if it was just made visible
     if (label and not labelWasVisible and label->isVisible()) {
-        // Find line segment
-        line seg;
-        QList<line> lines = line_segments();
-        for (const auto& line : lines) {
-            if (line.contains_point(event->scenePos(), WIRE_SHAPE_PADDING / 2)) {
-                seg = line;
-                break;
-            }
-
-        }
-        // This should never happen
-        if (seg.is_null()) {
-            qCritical("Wire::contextMenuEvent(): Couldn't identify the segment the user clicked on.");
-            return;
-        }
-        // Offset the position
-        QPointF pos = event->scenePos();
-        qreal angle = QLineF(seg.p1(), seg.p2()).angle();
-        // When the wire is horizontal move the label up
-        if (seg.is_horizontal()) {
-            pos.setY(seg.p1().y() - _settings.gridSize / 2);
-        }
-        // When the wire is vertical move the label to the right
-        else if (seg.is_vertical()) {
-            pos.setX(seg.p1().x() + _settings.gridSize / 2);
-        }
-        // When the wire is diagonal with a positive slope move it up and to the left
-        else if ((angle > 0 and angle < 90) or (angle > 180 and angle < 360)) {
-            QPointF point = Utils::pointOnLineClosestToPoint(seg.p1(), seg.p2(), pos);
-            pos.setX(point.x() - _settings.gridSize / 2 - label->textRect().width());
-            pos.setY(point.y() - _settings.gridSize / 2);
-        }
-        // When the wire is diagonal with a negative slope move it up and to the right
-        else {
-            QPointF point = Utils::pointOnLineClosestToPoint(seg.p1(), seg.p2(), pos);
-            pos.setX(point.x() + _settings.gridSize / 2);
-            pos.setY(point.y() - _settings.gridSize / 2);
-        }
-        label->setParentItem(this);
-        label->setPos(pos - Wire::pos());
+        label_to_cursor(event->scenePos(), label);
     }
+}
+
+void Wire::label_to_cursor(const QPointF& scenePos, std::shared_ptr<Label>& label) const
+{
+    // Find line segment
+    line seg;
+    QList<line> lines = line_segments();
+    for (const auto& line : lines) {
+        if (line.contains_point(scenePos, WIRE_SHAPE_PADDING / 2)) {
+            seg = line;
+            break;
+        }
+
+    }
+    // This should never happen
+    if (seg.is_null()) {
+        qCritical("Wire::contextMenuEvent(): Couldn't identify the segment the user clicked on.");
+        return;
+    }
+    // Offset the position
+    QPointF pos = scenePos;
+    qreal angle = QLineF(seg.p1(), seg.p2()).angle();
+    // When the wire is horizontal move the label up
+    if (seg.is_horizontal()) {
+        pos.setY(seg.p1().y() - _settings.gridSize / 2);
+    }
+    // When the wire is vertical move the label to the right
+    else if (seg.is_vertical()) {
+        pos.setX(seg.p1().x() + _settings.gridSize / 2);
+    }
+    // When the wire is diagonal with a positive slope move it up and to the left
+    else if ((angle > 0 and angle < 90) or (angle > 180 and angle < 360)) {
+        QPointF point = Utils::pointOnLineClosestToPoint(seg.p1(), seg.p2(), pos);
+        pos.setX(point.x() - _settings.gridSize / 2 - label->textRect().width());
+        pos.setY(point.y() - _settings.gridSize / 2);
+    }
+    // When the wire is diagonal with a negative slope move it up and to the right
+    else {
+        QPointF point = Utils::pointOnLineClosestToPoint(seg.p1(), seg.p2(), pos);
+        pos.setX(point.x() + _settings.gridSize / 2);
+        pos.setY(point.y() - _settings.gridSize / 2);
+    }
+    label->setParentItem((QGraphicsItem*) this);
+    label->setPos(pos - Wire::pos());
 }
 
 bool Wire::movingWirePoint() const
@@ -681,4 +716,11 @@ void Wire::add_segment(int index)
         _lineSegmentToMoveIndex++;
     }
     wire::add_segment(index);
+}
+
+void Wire::rename_net()
+{
+    if (_renameAction) {
+        _renameAction->trigger();
+    }
 }

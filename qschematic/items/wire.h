@@ -39,6 +39,7 @@ namespace QSchematic {
         QVector<QPointF> pointsAbsolute() const;
         void move_point_to(int index, const QPointF& moveTo) override;
         bool movingWirePoint() const;
+        void rename_net();
 
     signals:
         void pointMoved(Wire& wire, point& point);
@@ -52,6 +53,7 @@ namespace QSchematic {
         virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
         virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
         virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
+        void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event) override;
         virtual void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
         virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;
         virtual void hoverMoveEvent(QGraphicsSceneHoverEvent* event) override;
@@ -64,6 +66,8 @@ namespace QSchematic {
 
     private:
         Q_DISABLE_COPY(Wire)
+
+        void label_to_cursor(const QPointF& scenePos, std::shared_ptr<Label>& label) const;
 
         QRectF _rect;
         int _pointToMoveIndex;
