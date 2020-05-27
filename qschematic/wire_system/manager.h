@@ -23,10 +23,18 @@ class connectable;
 class manager : public QObject
 {
     Q_OBJECT
-    Q_DISABLE_COPY_MOVE(manager)
+
 public:
+    // Construction
     manager();
+    manager(const manager& other) = delete;
+    manager(manager&& other) = delete;
     virtual ~manager() override = default;
+
+    // Operators
+    manager& operator=(const manager& rhs) = delete;
+    manager& operator=(manager&& rhs) = delete;
+
     void add_net(const std::shared_ptr<net> wireNet);
     [[nodiscard]] QList<std::shared_ptr<net>> nets() const;
     [[nodiscard]] QList<std::shared_ptr<wire>> wires() const;

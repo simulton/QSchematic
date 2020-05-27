@@ -1,9 +1,11 @@
 #pragma once
 
 #include <QList>
-#include <QVector2D>
+#include <QVector>
 #include <memory>
 #include "point.h"
+
+class QVector2D;
 
 namespace wire_system
 {
@@ -45,7 +47,7 @@ namespace wire_system
     protected:
         void move_junctions_to_new_segment(const line& oldSegment, const line& newSegment);
         void move_line_segment_by(int index, const QVector2D& moveBy);
-        manager* manager();
+        class manager* manager();
 
         QVector<point> m_points;
 
