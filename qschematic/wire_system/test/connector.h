@@ -1,6 +1,6 @@
 #pragma once
 
-#include "connectable.h"
+#include "../connectable.h"
 
 struct connector : public wire_system::connectable
 {

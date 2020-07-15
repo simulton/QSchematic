@@ -1,6 +1,6 @@
 #include "3rdparty/doctest.h"
-#include "manager.h"
-#include "wire.h"
+#include "../manager.h"
+#include "../wire.h"
 #include "connector.h"
 
 TEST_SUITE("Manager")
@@ -18,7 +18,7 @@ TEST_SUITE("Manager")
         manager.add_wire(wire1);
 
         REQUIRE(manager.wires().count() == 1);
-        REQUIRE(wire1->net());
+        REQUIRE(wire1->net().get());
 
         auto wire2 = std::make_shared<wire_system::wire>();
         wire2->append_point({10, 10});
@@ -30,7 +30,7 @@ TEST_SUITE("Manager")
         manager.add_wire(wire2);
 
         REQUIRE(manager.wires().count() == 2);
-        REQUIRE(wire2->net());
+        REQUIRE(wire2->net().get());
     }
 
     TEST_CASE ("generate_junctions(): Junctions can be generated")
@@ -54,8 +54,8 @@ TEST_SUITE("Manager")
 
         // Make sure the wires are connected
         REQUIRE(manager.wires_connected_to(wire1).count() == 2);
-        REQUIRE(wire1->net());
-        REQUIRE(wire1->net() == wire2->net());
+        REQUIRE(wire1->net().get());
+        REQUIRE(wire1->net().get() == wire2->net().get());
     }
 
     TEST_CASE ("connect_wire(): Wire can be connected manually")
@@ -75,15 +75,15 @@ TEST_SUITE("Manager")
         manager.add_wire(wire2);
 
         // Make sure the wires are not connected
-        REQUIRE(wire1->net() != wire2->net());
+        REQUIRE_NE(wire1->net().get(), wire2->net().get());
 
         // Connect the wires
         manager.connect_wire(wire1.get(), wire2.get(), 1);
 
         // Make sure the wires are connected
         REQUIRE(manager.wires_connected_to(wire1).count() == 2);
-        REQUIRE(wire1->net());
-        REQUIRE(wire1->net() == wire2->net());
+        REQUIRE(wire1->net().get());
+        REQUIRE_EQ(wire1->net().get(), wire2->net().get());
         REQUIRE(wire2->points().last().is_junction());
     }
 
@@ -115,7 +115,7 @@ TEST_SUITE("Manager")
 
         // Make sure the wires are not connected
         REQUIRE_FALSE(wire1->connected_wires().contains(wire2.get()));
-        REQUIRE(wire1->net() != wire2->net());
+        REQUIRE_NE(wire1->net().get(), wire2->net().get());
     }
 
     TEST_CASE ("attach_wire_to_connector(): Attaching a wire to a connector")
