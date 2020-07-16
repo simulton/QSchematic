@@ -15,7 +15,6 @@ class QUndoView;
 class QGraphicsSceneContextMenuEvent;
 
 namespace QSchematic {
-    class Editor;
     class Scene;
     class View;
     class Wire;
@@ -42,7 +41,6 @@ private:
     void settingsChanged();
     void print();
 
-    QSchematic::Editor* _schematicEditor;
     QSchematic::Scene* _scene;
     QSchematic::View* _view;
     QSchematic::Settings _settings;

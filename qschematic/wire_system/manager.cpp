@@ -391,7 +391,6 @@ void manager::detach_wire_from_all(const wire* wire)
 {
     for (const auto& connector : m_connections.keys()) {
         // Skip if it's not the connected to the wire
-        auto wirePoint = m_connections.value(connector);
         if (m_connections.value(connector).first != wire) {
             continue;
         }

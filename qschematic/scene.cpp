@@ -743,7 +743,6 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 
     // Retrieve the new mouse position
     QPointF newMousePos = event->scenePos();
-    QVector2D movedBy(event->scenePos() - event->lastScenePos());
 
     switch (_mode) {
 

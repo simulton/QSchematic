@@ -203,7 +203,7 @@ void Label::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWi
     }
 }
 
-void Label::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
+void Label::mouseDoubleClickEvent([[maybe_unused]] QGraphicsSceneMouseEvent* event)
 {
     emit doubleClicked();
 }

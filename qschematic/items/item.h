@@ -19,8 +19,6 @@ namespace QSchematic
         public gpds::serialize,
         public std::enable_shared_from_this<Item>
     {
-        friend class CommandItemSetVisible;
-
         Q_OBJECT
         Q_DISABLE_COPY(Item)
 
@@ -36,8 +34,6 @@ namespace QSchematic
             QSchematicItemUserType = QGraphicsItem::UserType + 100
         };
         Q_ENUM(ItemType)
-
-        const QString JSON_ID_STRING = QStringLiteral("type_id");
 
         Item(int type, QGraphicsItem* parent = nullptr);
         virtual ~Item() override;
