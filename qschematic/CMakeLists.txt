@@ -33,6 +33,11 @@ set(SOURCES_PRIVATE
     items/wire.cpp
     items/wirenet.cpp
     items/wireroundedcorners.cpp
+    wire_system/line.cpp
+    wire_system/manager.cpp
+    wire_system/wire.cpp
+    wire_system/point.cpp
+    wire_system/net.cpp
     scene.cpp
     settings.cpp
     utils.cpp
@@ -65,6 +70,12 @@ set(HEADERS_PUBLIC
     items/wireroundedcorners.h
     utils/itemscontainerutils.h
     utils/itemscustodian.h
+    wire_system/connectable.h
+    wire_system/line.h
+    wire_system/manager.h
+    wire_system/wire.h
+    wire_system/point.h
+    wire_system/net.h
     netlist.h
     netlistgenerator.h
     scene.h
@@ -76,7 +87,6 @@ set(HEADERS_PUBLIC
 
 # Add the wire system
 add_subdirectory(wire_system)
-
 
 ################################################################################
 # Object library                                                               #
@@ -97,8 +107,8 @@ target_sources(qschematic-objs
 
 target_include_directories(
     qschematic-objs
-    PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
 )
 
 target_link_libraries(
@@ -106,7 +116,6 @@ target_link_libraries(
     PUBLIC
         Qt5::Core Qt5::Gui Qt5::Widgets
         ${DEPENDENCY_GPDS_TARGET}
-        wire_system
 )
 
 set_target_properties(
@@ -208,7 +217,6 @@ install(
         qschematic-shared
         qschematic-static
         qschematic-objs
-        wire_system
     EXPORT qschematic-targets
     LIBRARY
         DESTINATION ${CMAKE_INSTALL_LIBDIR}

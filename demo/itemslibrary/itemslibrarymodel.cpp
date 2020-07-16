@@ -1,17 +1,15 @@
 #include <QColor>
 #include <QMimeData>
+
+#include "qschematic/items/itemmimedata.h"
+#include "qschematic/items/label.h"
+
 #include "itemslibrarymodel.h"
-#include "itemslibrarymodelitem.h"
 #include "iteminfo.h"
 #include "../items/operation.h"
 #include "../items/operationdemo1.h"
 #include "../items/flowstart.h"
 #include "../items/flowend.h"
-#include "../qschematic/items/item.h"
-#include "../qschematic/items/itemmimedata.h"
-#include "../qschematic/items/label.h"
-
-#include <QDebug>
 
 ItemsLibraryModel::ItemsLibraryModel(QObject* parent) : QAbstractItemModel(parent)
 {

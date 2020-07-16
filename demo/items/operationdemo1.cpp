@@ -1,4 +1,5 @@
-#include "../qschematic/items/label.h"
+#include "qschematic/items/label.h"
+
 #include "operationdemo1.h"
 #include "operationconnector.h"
 #include "itemtypes.h"

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QWidget>
+
 #include "qschematic/netlist.h"
 
 class NetlistViewerModel;

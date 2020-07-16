@@ -1,6 +1,7 @@
 #pragma once
 
-#include "../qschematic/items/node.h"
+#include "qschematic/items/node.h"
+
 #include "itemtypes.h"
 
 namespace QSchematic

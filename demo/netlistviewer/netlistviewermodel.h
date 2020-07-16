@@ -1,7 +1,8 @@
 #pragma once
 
-#include "common/treemodel.h"
 #include "qschematic/netlist.h"
+
+#include "common/treemodel.h"
 
 class Operation;
 class OperationConnector;

@@ -3,9 +3,6 @@
 #include <QVector>
 #include <QVariant>
 
-#include <QVariant>
-#include <QVector>
-
 class TreeItem
 {
 public:

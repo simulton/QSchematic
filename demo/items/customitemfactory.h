@@ -2,7 +2,8 @@
 
 #include <functional>
 #include <memory>
-#include "../qschematic/items/item.h"
+
+#include "qschematic/items/item.h"
 
 class QString;
 

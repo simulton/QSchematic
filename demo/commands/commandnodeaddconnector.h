@@ -1,6 +1,6 @@
 #pragma once
 
-#include "commands/commandbase.h"
+#include "qschematic/commands/commandbase.h"
 #include <QPointer>
 #include <memory>
 

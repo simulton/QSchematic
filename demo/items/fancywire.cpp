@@ -2,10 +2,11 @@
 #include <QPainter>
 #include <QVector2D>
 #include <QInputDialog>
-#include "../qschematic/commands/commandwirenetrename.h"
+
+#include "qschematic/commands/commandwirenetrename.h"
 #include "qschematic/wire_system/point.h"
-#include "../qschematic/items/connector.h"
-#include "../qschematic/scene.h"
+#include "qschematic/items/connector.h"
+#include "qschematic/scene.h"
 #include "itemtypes.h"
 #include "fancywire.h"
 

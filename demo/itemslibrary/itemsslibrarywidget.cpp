@@ -1,4 +1,5 @@
 #include <QBoxLayout>
+
 #include "itemsslibrarywidget.h"
 #include "itemslibrarymodel.h"
 #include "itemslibraryview.h"

@@ -1,4 +1,5 @@
-#include "../qschematic/items/itemfactory.h"
+#include "qschematic/items/itemfactory.h"
+
 #include "itemtypes.h"
 #include "operation.h"
 #include "operationconnector.h"

@@ -1,4 +1,5 @@
 #include <QBoxLayout>
+
 #include "netlistviewer.h"
 #include "netlistviewermodel.h"
 #include "netlistviewerview.h"

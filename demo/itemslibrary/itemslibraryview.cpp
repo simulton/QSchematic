@@ -1,8 +1,10 @@
 #include <QDrag>
 #include <QPainter>
+
+#include "qschematic/items/item.h"
+#include "qschematic/items/itemmimedata.h"
+
 #include "itemslibraryview.h"
-#include "../qschematic/items/item.h"
-#include "../qschematic/items/itemmimedata.h"
 
 ItemsLibraryView::ItemsLibraryView(QWidget* parent) : QTreeView(parent)
 {

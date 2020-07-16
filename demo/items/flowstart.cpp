@@ -1,9 +1,10 @@
 #include <QPainter>
 #include <QGraphicsDropShadowEffect>
+
 #include "flowstart.h"
 #include "itemtypes.h"
 #include "operationconnector.h"
-#include "../qschematic/items/label.h"
+#include "qschematic/items/label.h"
 
 const QColor COLOR_BODY_FILL   = QColor( QStringLiteral( "#e0e0e0" ) );
 const QColor COLOR_BODY_BORDER = QColor(Qt::black);

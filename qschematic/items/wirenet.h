@@ -4,8 +4,9 @@
 #include <QObject>
 #include <QList>
 #include <gpds/serialize.hpp>
+
 #include "wire_system/line.h"
-#include "../wire_system/net.h"
+#include "wire_system/net.h"
 
 namespace wire_system {
     class point;
