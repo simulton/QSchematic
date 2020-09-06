@@ -11,7 +11,6 @@ class QGraphicsSceneHoverEvent;
 namespace QSchematic {
 
     class Connector;
-    class Label;
 
     class Node : public Item
     {

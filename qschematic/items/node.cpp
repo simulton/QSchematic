@@ -1,10 +1,8 @@
 #include <QApplication>
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
-#include <QCursor>
 #include <QtMath>
 #include "node.h"
-#include "label.h"
 #include "itemfactory.h"
 #include "../commands/commandnoderesize.h"
 #include "../commands/commandnoderotate.h"
