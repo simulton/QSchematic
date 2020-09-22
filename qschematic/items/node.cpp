@@ -243,6 +243,10 @@ bool Node::allowMouseRotate() const
 
 void Node::addSpecialConnector(const std::shared_ptr<Connector>& connector)
 {
+    // Sanity check
+    if (!connector)
+        return;
+
     _specialConnectors.push_back( connector );
 
     addConnector( connector );
