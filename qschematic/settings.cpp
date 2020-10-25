@@ -5,19 +5,6 @@
 
 using namespace QSchematic;
 
-Settings::Settings() :
-    debug(false),
-    gridSize(20),
-    gridPointSize(3),
-    showGrid(true),
-    highlightRectPadding(10),
-    resizeHandleSize(7),
-    routeStraightAngles(true),
-    preserveStraightAngles(true),
-    antialiasing(true)
-{
-}
-
 QPoint Settings::toGridPoint(const QPointF& point) const
 {
     int gridX = qRound(point.x() / gridSize);
