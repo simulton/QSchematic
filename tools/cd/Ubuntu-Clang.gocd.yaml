@@ -1,0 +1,20 @@
+format_version: 10
+pipelines:
+  QSchematic-FreeBSD-GCC:
+    group: QSchematic
+    template: QSchematic-OS-Compiler
+    label_template: ${COUNT}
+    lock_behavior: none
+    display_order: -1
+    materials:
+      git-09940e3:
+        git: https://github.com/simulton/qschematic
+        shallow_clone: false
+        auto_update: true
+        branch: master
+    parameters:
+      COMPILER_SUITE: clang
+      OS: ubuntu
+      CMAKE_CXX_COMPILER: clang++
+      CMAKE_GENERATOR: Unix Makefiles
+      CMAKE_C_COMPILER: clang
