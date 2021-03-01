@@ -8,8 +8,6 @@ if (DEPENDENCY_GPDS_DOWNLOAD)
         GIT_TAG        master
     )
     FetchContent_MakeAvailable(gpds)
-
-    set(DEPENDENCY_GPDS_TARGET "gpds-shared")
 endif()
 
 # Qt5

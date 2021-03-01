@@ -13,12 +13,8 @@ option(BUILD_DEMO "Whether to build the demo project" ON)
 option(DEPENDENCY_GPDS_DOWNLOAD "Whether to pull the GPDS dependency via FetchContent" ON)
 
 # User settings
+set(DEPENDENCY_GPDS_TARGET "gpds-shared")
 set(CMAKE_DEBUG_POSTFIX d)
-
-# C++ options
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Include the library
 add_subdirectory(qschematic)
@@ -39,4 +35,3 @@ set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/license.txt")
 set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/readme.md")
 include(CPack)
-

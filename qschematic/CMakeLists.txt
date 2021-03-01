@@ -114,7 +114,9 @@ target_include_directories(
 target_link_libraries(
     qschematic-objs
     PUBLIC
-        Qt5::Core Qt5::Gui Qt5::Widgets
+        Qt5::Core
+        Qt5::Gui
+        Qt5::Widgets
         ${DEPENDENCY_GPDS_TARGET}
 )
 
