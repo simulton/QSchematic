@@ -10,7 +10,7 @@ project(qschematic)
 
 # User options
 option(BUILD_DEMO "Whether to build the demo project" ON)
-option(DEPENDENCY_GPDS_FROM_SYSTEM "Whether to use the system's installation of GPDS or to pull GPDS internally" OFF)
+option(DEPENDENCY_GPDS_DOWNLOAD "Whether to pull the GPDS dependency via FetchContent" ON)
 
 # User settings
 set(CMAKE_DEBUG_POSTFIX d)
