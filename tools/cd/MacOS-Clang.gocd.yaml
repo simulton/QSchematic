@@ -1,6 +1,6 @@
 format_version: 10
 pipelines:
-  QSchematic-FreeBSD-GCC:
+  QSchematic-MacOS-Clang:
     group: QSchematic
     template: QSchematic-OS-Compiler
     label_template: ${COUNT}
