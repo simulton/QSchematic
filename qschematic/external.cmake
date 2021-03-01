@@ -5,7 +5,7 @@ if (DEPENDENCY_GPDS_DOWNLOAD)
     FetchContent_Declare(
         gpds
         GIT_REPOSITORY https://github.com/simulton/gpds
-        GIT_TAG        develop
+        GIT_TAG        master
     )
     FetchContent_MakeAvailable(gpds)
 
