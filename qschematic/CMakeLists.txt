@@ -109,6 +109,7 @@ target_include_directories(
     qschematic-objs
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
+        $<INSTALL_INTERFACE:..>
 )
 
 target_link_libraries(
