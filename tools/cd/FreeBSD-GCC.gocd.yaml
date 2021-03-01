@@ -7,7 +7,7 @@ pipelines:
     lock_behavior: none
     display_order: -1
     materials:
-      git-5169a52:
+      https://github.com/simulton/qschematic:
         git: https://github.com/simulton/qschematic
         shallow_clone: false
         auto_update: true
