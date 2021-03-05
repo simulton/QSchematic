@@ -6,8 +6,8 @@ pipelines:
     label_template: ${COUNT}
     lock_behavior: none
     display_order: -1
-      environment_variables:
-        CMAKE_PREFIX_PATH: /usr/local/opt/qt
+    environment_variables:
+      CMAKE_PREFIX_PATH: /usr/local/opt/qt
     materials:
       git-09940e3:
         git: https://github.com/simulton/qschematic
