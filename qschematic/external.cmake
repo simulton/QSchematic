@@ -5,7 +5,7 @@ if (DEPENDENCY_GPDS_DOWNLOAD)
     FetchContent_Declare(
         gpds
         GIT_REPOSITORY https://github.com/simulton/gpds
-        GIT_TAG        master
+        GIT_TAG        1.0.0
     )
     FetchContent_GetProperties(gpds)
     if(NOT gpds_POPULATED)

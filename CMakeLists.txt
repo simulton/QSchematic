@@ -13,7 +13,7 @@ option(BUILD_DEMO "Whether to build the demo project" ON)
 option(DEPENDENCY_GPDS_DOWNLOAD "Whether to pull the GPDS dependency via FetchContent" ON)
 
 # User settings
-set(DEPENDENCY_GPDS_TARGET "gpds-shared")
+set(DEPENDENCY_GPDS_TARGET "gpds-static")
 set(CMAKE_DEBUG_POSTFIX d)
 
 # Include the library
@@ -28,7 +28,7 @@ endif()
 # CPack                                                                        #
 ################################################################################
 set(CPACK_PACKAGE_VENDOR "Simulton GmbH")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "A library that allows creating diagrams such as flowcharts or even proper engineering schematics within a Qt application.")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "A library for diagrams such as flowcharts or even proper engineering schematics within a Qt application.")
 set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
