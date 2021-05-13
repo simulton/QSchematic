@@ -7,6 +7,7 @@
 
 #include "wire_system/line.h"
 #include "wire_system/net.h"
+#include "qschematic_export.h"
 
 namespace wire_system {
     class point;
@@ -21,7 +22,10 @@ namespace QSchematic {
     class Label;
     class Scene;
 
-    class WireNet : public QObject, public gpds::serialize, public wire_system::net
+    class QSCHEMATIC_EXPORT WireNet :
+        public QObject,
+        public gpds::serialize,
+        public wire_system::net
     {
         Q_OBJECT
         Q_DISABLE_COPY(WireNet)

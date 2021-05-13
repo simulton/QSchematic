@@ -1,10 +1,12 @@
 #pragma once
 
 #include "wire.h"
+#include "qschematic_export.h"
 
 namespace QSchematic
 {
-    class SplineWire : public QSchematic::Wire
+    class QSCHEMATIC_EXPORT SplineWire :
+        public QSchematic::Wire
     {
         Q_OBJECT
         Q_DISABLE_COPY(SplineWire)

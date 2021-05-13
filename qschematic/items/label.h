@@ -3,10 +3,12 @@
 #include <QFont>
 
 #include "item.h"
+#include "qschematic_export.h"
 
 namespace QSchematic {
 
-class Label : public Item
+    class QSCHEMATIC_EXPORT Label :
+        public Item
     {
         Q_OBJECT
         Q_DISABLE_COPY(Label)

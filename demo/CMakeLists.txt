@@ -78,7 +78,7 @@ target_include_directories(
 target_link_libraries(
     qschematic-demo
     PRIVATE
-        qschematic-objs
+        qschematic-static
         Qt5::PrintSupport
 )
 set_target_properties(

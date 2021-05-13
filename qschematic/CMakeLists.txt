@@ -129,6 +129,12 @@ set_target_properties(
         AUTOUIC ON
 )
 
+target_compile_definitions(
+    qschematic-objs
+    PRIVATE
+        qschematic_shared_EXPORTS   # We are building this library!
+)
+
 
 ################################################################################
 # Shared library                                                               #

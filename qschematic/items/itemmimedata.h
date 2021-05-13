@@ -1,12 +1,14 @@
 #include <memory>
 #include <QMimeData>
 #include "item.h"
+#include "qschematic_export.h"
 
 namespace QSchematic
 {
     const QString MIME_TYPE_NODE = "qschematic/node";
 
-    class ItemMimeData : public QMimeData
+    class QSCHEMATIC_EXPORT ItemMimeData :
+        public QMimeData
     {
         Q_OBJECT
         Q_DISABLE_COPY(ItemMimeData)

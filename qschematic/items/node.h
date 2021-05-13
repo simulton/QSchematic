@@ -4,6 +4,7 @@
 #include "item.h"
 #include "connector.h"
 #include "../types.h"
+#include "qschematic_export.h"
 
 class QGraphicsSceneMouseEvent;
 class QGraphicsSceneHoverEvent;
@@ -12,7 +13,8 @@ namespace QSchematic {
 
     class Connector;
 
-    class Node : public Item
+    class QSCHEMATIC_EXPORT Node :
+        public Item
     {
         Q_OBJECT
         Q_DISABLE_COPY(Node)
