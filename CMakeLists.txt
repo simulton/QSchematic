@@ -24,6 +24,19 @@ if (BUILD_DEMO)
     add_subdirectory(demo EXCLUDE_FROM_ALL)
 endif()
 
+# Print options
+message("")
+message("-------------------------")
+message("QSchematic configuration:")
+message("  Build")
+message("    Demo       : " ${BUILD_DEMO})
+message("  Dependencies")
+message("    GPDS")
+message("      Download : " ${DEPENDENCY_GPDS_DOWNLOAD})
+message("      Target   : " ${DEPENDENCY_GPDS_TARGET})
+message("-------------------------")
+message("")
+
 ################################################################################
 # CPack                                                                        #
 ################################################################################
