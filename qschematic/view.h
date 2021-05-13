@@ -2,10 +2,12 @@
 
 #include <QGraphicsView>
 #include "scene.h"
+#include "qschematic_export.h"
 
 namespace QSchematic {
 
-    class View : public QGraphicsView
+    class QSCHEMATIC_EXPORT View :
+        public QGraphicsView
     {
         Q_OBJECT
         Q_DISABLE_COPY(View)

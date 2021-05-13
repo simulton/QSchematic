@@ -9,6 +9,7 @@
 #include "settings.h"
 #include "items/item.h"
 #include "items/wire.h"
+#include "qschematic_export.h"
 //#include "utils/itemscustodian.h"
 
 namespace QSchematic {
@@ -17,7 +18,9 @@ namespace QSchematic {
     class Connector;
     class WireNet;
 
-    class Scene : public QGraphicsScene, public gpds::serialize
+    class QSCHEMATIC_EXPORT Scene :
+        public QGraphicsScene,
+        public gpds::serialize
     {
         Q_OBJECT
         Q_DISABLE_COPY(Scene)

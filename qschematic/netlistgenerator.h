@@ -4,6 +4,7 @@
 #include "scene.h"
 #include "items/wirenet.h"
 #include "items/node.h"
+#include "qschematic_export.h"
 
 namespace QSchematic
 {
@@ -12,7 +13,7 @@ namespace QSchematic
     class Connector;
     class Scene;
 
-    class NetlistGenerator
+    class QSCHEMATIC_EXPORT NetlistGenerator
     {
     public:
         template<typename TNode = Node*, typename TConnector = Connector*, typename TWire = Wire*, typename TNet = Net<TWire, TNode, TConnector>>
