@@ -1,10 +1,13 @@
 #pragma once
 
+#include "qschematic_export.h"
+
 #include <QPointF>
 
 namespace wire_system {
 
-    class point : private QPointF
+    class QSCHEMATIC_EXPORT point :
+        private QPointF
     {
     public:
         // Expose some of the QPoint interfaces

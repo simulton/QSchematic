@@ -4,7 +4,9 @@
 #include <QList>
 #include <QMap>
 #include <memory>
+
 #include "../settings.h"
+#include "qschematic_export.h"
 
 namespace QSchematic
 {
@@ -20,7 +22,8 @@ class net;
 class wire;
 class connectable;
 
-class manager : public QObject
+class QSCHEMATIC_EXPORT manager :
+    public QObject
 {
     Q_OBJECT
 

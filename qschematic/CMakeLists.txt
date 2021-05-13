@@ -155,7 +155,7 @@ target_link_libraries(
 add_library(qschematic-static STATIC)
 target_compile_definitions(
     qschematic-static
-    PUBLIC
+    PRIVATE
         QSCHEMATIC_STATIC_DEFINE
 )
 target_link_libraries(

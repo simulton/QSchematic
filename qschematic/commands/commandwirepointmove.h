@@ -12,7 +12,8 @@ namespace QSchematic
 {
     class Item;
 
-    class CommandWirepointMove : public UndoCommand
+    class QSCHEMATIC_EXPORT CommandWirepointMove :
+        public UndoCommand
     {
     public:
         CommandWirepointMove(Scene* scene, const std::shared_ptr<Wire>& wire, int index,

@@ -1,12 +1,14 @@
 #pragma once
 
+#include "qschematic_export.h"
+
 #include <QPointF>
 
 class QLineF;
 
 namespace wire_system {
 
-    class line
+    class QSCHEMATIC_EXPORT line
     {
     public:
         line() = default;

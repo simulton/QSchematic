@@ -3,7 +3,9 @@
 #include <QList>
 #include <QVector>
 #include <memory>
+
 #include "point.h"
+#include "qschematic_export.h"
 
 class QVector2D;
 
@@ -13,9 +15,8 @@ namespace wire_system
     class net;
     class line;
 
-    class wire
+    class QSCHEMATIC_EXPORT wire
     {
-
     public:
         wire();
         wire(const wire&) = delete;

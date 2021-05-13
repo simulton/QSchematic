@@ -9,7 +9,8 @@ namespace QSchematic
 {
     class Node;
 
-    class CommandNodeRotate : public UndoCommand
+    class QSCHEMATIC_EXPORT CommandNodeRotate :
+        public UndoCommand
     {
     public:
         CommandNodeRotate(QPointer<Node> node, qreal rotation, QUndoCommand* parent = nullptr);

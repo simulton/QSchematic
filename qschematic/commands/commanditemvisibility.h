@@ -8,7 +8,8 @@ namespace QSchematic
 
     class Item;
 
-    class CommandItemVisibility : public UndoCommand
+    class QSCHEMATIC_EXPORT CommandItemVisibility :
+        public UndoCommand
     {
     public:
         CommandItemVisibility(const std::shared_ptr<Item>& item, bool newVisibility, QUndoCommand* parent = nullptr);

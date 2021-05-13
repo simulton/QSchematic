@@ -11,7 +11,8 @@ namespace QSchematic
     class Scene;
     class Item;
 
-    class CommandItemRemove : public UndoCommand
+    class QSCHEMATIC_EXPORT CommandItemRemove :
+        public UndoCommand
     {
     public:
         CommandItemRemove(const QPointer<Scene>& scene, const std::shared_ptr<Item>& item, QUndoCommand* parent = nullptr);

@@ -12,7 +12,8 @@ namespace QSchematic
 {
     class Item;
 
-    class CommandItemMove : public UndoCommand
+    class QSCHEMATIC_EXPORT CommandItemMove :
+        public UndoCommand
     {
     public:
         CommandItemMove(const QVector<std::shared_ptr<Item>>& item, const QVector<QVector2D>& moveBy, QUndoCommand* parent = nullptr);

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "qschematic_export.h"
+
 #include <QUndoCommand>
 
 namespace QSchematic
@@ -7,7 +9,9 @@ namespace QSchematic
     class Scene;
     class Item;
 
-    class UndoCommand : public QObject, public QUndoCommand
+    class QSCHEMATIC_EXPORT UndoCommand :
+        public QObject,
+        public QUndoCommand
     {
     public:
         UndoCommand(QUndoCommand* parent = nullptr);

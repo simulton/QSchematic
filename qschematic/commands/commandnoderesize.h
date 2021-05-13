@@ -9,7 +9,8 @@ namespace QSchematic
 {
     class Node;
 
-    class CommandNodeResize : public UndoCommand
+    class QSCHEMATIC_EXPORT CommandNodeResize :
+        public UndoCommand
     {
     public:
         CommandNodeResize(QPointer<Node> node, const QPointF& newPos, const QSizeF& newSize, QUndoCommand* parent = nullptr);

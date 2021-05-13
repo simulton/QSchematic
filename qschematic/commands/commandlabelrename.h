@@ -8,7 +8,8 @@ namespace QSchematic
 
     class Label;
 
-    class CommandLabelRename : public UndoCommand
+    class QSCHEMATIC_EXPORT CommandLabelRename :
+        public UndoCommand
     {
     public:
         CommandLabelRename(const QPointer<Label>& label, const QString& newText, QUndoCommand* parent = nullptr);

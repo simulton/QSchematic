@@ -9,7 +9,8 @@ namespace QSchematic
 
     class Label;
 
-    class CommandWirenetRename : public UndoCommand
+    class QSCHEMATIC_EXPORT CommandWirenetRename :
+        public UndoCommand
     {
     public:
         CommandWirenetRename(const std::shared_ptr<WireNet>& net, const QString& newText, QUndoCommand* parent = nullptr);

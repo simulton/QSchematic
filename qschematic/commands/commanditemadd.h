@@ -1,6 +1,7 @@
 #pragma once
 
 #include "commandbase.h"
+
 #include <QPointer>
 #include <memory>
 
@@ -9,7 +10,8 @@ namespace QSchematic
     class Scene;
     class Item;
 
-    class CommandItemAdd : public UndoCommand
+    class QSCHEMATIC_EXPORT CommandItemAdd :
+        public UndoCommand
     {
     public:
         CommandItemAdd(const QPointer<Scene>& scene, const std::shared_ptr<Item>& item, QUndoCommand* parent = nullptr);

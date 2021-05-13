@@ -1,8 +1,10 @@
 #pragma once
 
+#include "qschematic_export.h"
+
 namespace wire_system
 {
-    class connectable
+    class QSCHEMATIC_EXPORT connectable
     {
     public:
         [[nodiscard]] virtual QPointF position() const = 0;
