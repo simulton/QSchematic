@@ -57,7 +57,7 @@ Dependencies:
   - Qt5
   - [GPDS](https://gpds.simulton.com) for (de)serialization.
 
-If the cmake option `DEPENDENCY_GPDS_DOWNLOAD` is enabled, cmake will automatically pull the `GPDS` dependency.
+If the cmake option `QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD` is enabled, cmake will automatically pull the `GPDS` dependency.
 Therefore, assuming a system with a working Qt5 installation, all you have to do is:
 
 ```shell

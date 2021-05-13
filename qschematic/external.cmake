@@ -1,7 +1,7 @@
 include(FetchContent)
 
 # GPDS
-if (DEPENDENCY_GPDS_DOWNLOAD)
+if (QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD)
     FetchContent_Declare(
         gpds
         GIT_REPOSITORY https://github.com/simulton/gpds

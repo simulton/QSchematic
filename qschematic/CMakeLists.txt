@@ -118,7 +118,7 @@ target_link_libraries(
         Qt5::Core
         Qt5::Gui
         Qt5::Widgets
-        ${DEPENDENCY_GPDS_TARGET}
+        ${QSCHEMATIC_DEPENDENCY_GPDS_TARGET}
 )
 
 set_target_properties(

@@ -9,18 +9,18 @@ endif()
 project(qschematic)
 
 # User options
-option(BUILD_DEMO "Whether to build the demo project" ON)
-option(DEPENDENCY_GPDS_DOWNLOAD "Whether to pull the GPDS dependency via FetchContent" ON)
+option(QSCHEMATIC_BUILD_DEMO "Whether to build the demo project" ON)
+option(QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD "Whether to pull the GPDS dependency via FetchContent" ON)
 
 # User settings
-set(DEPENDENCY_GPDS_TARGET "gpds-static")
+set(QSCHEMATIC_DEPENDENCY_GPDS_TARGET "gpds-static")
 set(CMAKE_DEBUG_POSTFIX d)
 
 # Include the library
 add_subdirectory(qschematic)
 
 # Include the example(s)
-if (BUILD_DEMO)
+if (QSCHEMATIC_BUILD_DEMO)
     add_subdirectory(demo EXCLUDE_FROM_ALL)
 endif()
 
@@ -29,11 +29,11 @@ message("")
 message("-------------------------")
 message("QSchematic configuration:")
 message("  Build")
-message("    Demo       : " ${BUILD_DEMO})
+message("    Demo       : " ${QSCHEMATIC_BUILD_DEMO})
 message("  Dependencies")
 message("    GPDS")
-message("      Download : " ${DEPENDENCY_GPDS_DOWNLOAD})
-message("      Target   : " ${DEPENDENCY_GPDS_TARGET})
+message("      Download : " ${QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD})
+message("      Target   : " ${QSCHEMATIC_DEPENDENCY_GPDS_TARGET})
 message("-------------------------")
 message("")
 
