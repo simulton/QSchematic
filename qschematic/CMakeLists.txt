@@ -150,16 +150,16 @@ target_compile_definitions(
 
 add_library(${TARGET_SHARED} SHARED)
 
-target_link_libraries(
-    ${TARGET_SHARED}
-    PUBLIC
-        qschematic-objs
-)
-
 target_compile_definitions(
     ${TARGET_SHARED}
     PRIVATE
         qschematic_shared_EXPORTS   # We are building this library!
+)
+
+target_link_libraries(
+    ${TARGET_SHARED}
+    PUBLIC
+        qschematic-objs
 )
 
 
@@ -174,6 +174,7 @@ target_compile_definitions(
     PUBLIC
         QSCHEMATIC_STATIC_DEFINE
 )
+
 target_link_libraries(
     ${TARGET_STATIC}
     PUBLIC
