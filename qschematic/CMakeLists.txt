@@ -116,7 +116,7 @@ target_include_directories(
     ${TARGET_OBJS}
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> # For qschematic_export.h
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/..>
         $<INSTALL_INTERFACE:..>
 )
 
