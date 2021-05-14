@@ -115,6 +115,7 @@ target_sources(
 target_include_directories(
     ${TARGET_OBJS}
     PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> # For qschematic_export.h
         $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
         $<INSTALL_INTERFACE:..>
 )
@@ -155,6 +156,12 @@ target_link_libraries(
         qschematic-objs
 )
 
+target_compile_definitions(
+    ${TARGET_SHARED}
+    PRIVATE
+        qschematic_shared_EXPORTS   # We are building this library!
+)
+
 
 ################################################################################
 # Static library                                                               #
@@ -164,7 +171,7 @@ add_library(${TARGET_STATIC} STATIC)
 
 target_compile_definitions(
     ${TARGET_STATIC}
-    PRIVATE
+    PUBLIC
         QSCHEMATIC_STATIC_DEFINE
 )
 target_link_libraries(
@@ -197,7 +204,7 @@ set_target_properties(
 
 include(GenerateExportHeader)
 generate_export_header(
-    ${TARGET_OBJS}
+    ${TARGET_SHARED}
     BASE_NAME qschematic
     DEPRECATED_MACRO_NAME "QSCHEMATIC_DEPRECATED"
     NO_DEPRECATED_MACRO_NAME "QSCHEMATIC_NO_DEPRECATED"
