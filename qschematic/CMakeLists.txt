@@ -88,32 +88,39 @@ set(HEADERS_PUBLIC
 # Add the wire system
 add_subdirectory(wire_system)
 
+# Setup target names
+set(TARGET_BASE_NAME "qschematic")
+set(TARGET_OBJS      ${TARGET_BASE_NAME}-objs)
+set(TARGET_STATIC    ${TARGET_BASE_NAME}-static)
+set(TARGET_SHARED    ${TARGET_BASE_NAME}-shared)
+
 ################################################################################
 # Object library                                                               #
 ################################################################################
 
-add_library(qschematic-objs OBJECT "")
+add_library(${TARGET_OBJS} OBJECT)
 
 target_compile_features(
-    qschematic-objs
+    ${TARGET_OBJS}
     PUBLIC
         cxx_std_17
 )
 
-target_sources(qschematic-objs
+target_sources(
+    ${TARGET_OBJS}
     PRIVATE
         ${SOURCES_PRIVATE}
 )
 
 target_include_directories(
-    qschematic-objs
+    ${TARGET_OBJS}
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
         $<INSTALL_INTERFACE:..>
 )
 
 target_link_libraries(
-    qschematic-objs
+    ${TARGET_OBJS}
     PUBLIC
         Qt5::Core
         Qt5::Gui
@@ -122,7 +129,7 @@ target_link_libraries(
 )
 
 set_target_properties(
-    qschematic-objs
+    ${TARGET_OBJS}
     PROPERTIES
         AUTOMOC ON
         AUTORCC ON
@@ -130,7 +137,7 @@ set_target_properties(
 )
 
 target_compile_definitions(
-    qschematic-objs
+    ${TARGET_OBJS}
     PRIVATE
         qschematic_shared_EXPORTS   # We are building this library!
 )
@@ -140,9 +147,10 @@ target_compile_definitions(
 # Shared library                                                               #
 ################################################################################
 
-add_library(qschematic-shared SHARED)
+add_library(${TARGET_SHARED} SHARED)
+
 target_link_libraries(
-    qschematic-shared
+    ${TARGET_SHARED}
     PUBLIC
         qschematic-objs
 )
@@ -152,14 +160,15 @@ target_link_libraries(
 # Static library                                                               #
 ################################################################################
 
-add_library(qschematic-static STATIC)
+add_library(${TARGET_STATIC} STATIC)
+
 target_compile_definitions(
-    qschematic-static
+    ${TARGET_STATIC}
     PRIVATE
         QSCHEMATIC_STATIC_DEFINE
 )
 target_link_libraries(
-    qschematic-static
+    ${TARGET_STATIC}
     PUBLIC
         qschematic-objs
 )
@@ -170,9 +179,9 @@ target_link_libraries(
 ################################################################################
 
 set_target_properties(
-    qschematic-objs
-    qschematic-static
-    qschematic-shared
+    ${TARGET_OBJS}
+    ${TARGET_STATIC}
+    ${TARGET_SHARED}
     PROPERTIES
         OUTPUT_NAME "qschematic"
         ARCHIVE_OUTPUT_NAME "qschematic"
@@ -187,7 +196,8 @@ set_target_properties(
 ################################################################################
 
 include(GenerateExportHeader)
-generate_export_header(qschematic-shared
+generate_export_header(
+    ${TARGET_OBJS}
     BASE_NAME qschematic
     DEPRECATED_MACRO_NAME "QSCHEMATIC_DEPRECATED"
     NO_DEPRECATED_MACRO_NAME "QSCHEMATIC_NO_DEPRECATED"
@@ -223,9 +233,9 @@ install(
 # Targets
 install(
     TARGETS
-        qschematic-shared
-        qschematic-static
-        qschematic-objs
+        ${TARGET_OBJS}
+        ${TARGET_STATIC}
+        ${TARGET_SHARED}
     EXPORT qschematic-targets
     LIBRARY
         DESTINATION ${CMAKE_INSTALL_LIBDIR}
