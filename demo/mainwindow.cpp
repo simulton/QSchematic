@@ -18,12 +18,12 @@
     #include <QPrinter>
     #include <QPrintDialog>
 #endif
-#include "../qschematic/scene.h"
-#include "../qschematic/view.h"
-#include "../qschematic/items/node.h"
-#include "../qschematic/items/itemfactory.h"
-#include "../qschematic/netlist.h"
-#include "../qschematic/netlistgenerator.h"
+#include <qschematic/scene.h>
+#include <qschematic/view.h>
+#include <qschematic/items/node.h>
+#include <qschematic/items/itemfactory.h>
+#include <qschematic/netlist.h>
+#include <qschematic/netlistgenerator.h>
 #include "mainwindow.h"
 #include "items/customitemfactory.h"
 #include "items/operation.h"

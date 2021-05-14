@@ -1,5 +1,5 @@
-#include "../qschematic/items/node.h"
-#include "../qschematic/items/connector.h"
+#include <qschematic/items/node.h>
+#include <qschematic/items/connector.h>
 #include "commands.h"
 #include "commandnodeaddconnector.h"
 

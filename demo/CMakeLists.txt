@@ -70,11 +70,6 @@ target_sources(qschematic-demo
         ${SOURCES_PRIVATE}
         ${RESOURCES}
 )
-target_include_directories(
-    qschematic-demo
-    PRIVATE
-        ..
-)
 target_link_libraries(
     qschematic-demo
     PRIVATE
