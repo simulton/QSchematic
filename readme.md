@@ -16,19 +16,18 @@ Feature overview:
   - Completely customizable by inheriting from the provided classes
 
 Technical stuff:
-  - Written in C++
+  - Written in C++17
   - Everything is contained within the `QSchematic` namespace
   - Tested with Qt5
   - No dependencies other than Qt5 and a C++17 compatible compiler
-  - BSD 3-clause licensed
-
-# State
-This library is currently under heavy development.
+  - MIT licensed
 
 # Licensing
-The entire library is MIT licensed.
+This library is MIT licensed.
 
 # Credits
+This library was originally designed, implemented and maintained by [Joel Bodenmann](https://github.com/tectu) in 2015. It was handed over to [Simulton GmbH](https://simulton.com) in late 2018. 
+
 Special thank goes to Professor François Corthay (Switzerland) for initially privately funding this project.
 
 # Screenshots
@@ -37,8 +36,6 @@ The library allows complete customization of every visual aspect. Therefore, scr
 ![Screenshot 05](docs/screenshots/screenshot_05.png)
 
 For more, check out the `docs/screenshots` folder.
-
-You happy now?
 
 # Instructions
 This is built using `cmake`.
@@ -70,6 +67,53 @@ make -j4
 ```
 
 ## Integration
+
+### CMake
+This library can be integrated easily into other cmake projects. There are two main mechanisms available:
+- Using `FetchContent_Declare()`
+- Install the library and use `find_package()`
+
+#### fetchContent_Declare()
+```cmake
+include(FetchContent)
+
+# Fetch QSchematic
+FetchContent_Declare(
+    qschematic
+    GIT_REPOSITORY https://github.com/simulton/qschematic
+    GIT_TAG        1.0.1
+)
+FetchContent_MakeAvailable(qschematic)
+
+# Link to your application/library
+target_link_libraries(
+    my_app
+    PRIVATE
+        qschematic-static
+)
+```
+To change options & variables, the call to `FetchContent_MakeAvailable()` shown above can be replaced with:
+```cmake
+FetchContent_Declare(
+    qschematic
+    GIT_REPOSITORY https://github.com/simulton/qschematic
+    GIT_TAG        1.0.1
+)
+FetchContent_GetProperties(qschematic)
+if(NOT qschematic_POPULATED)
+    FetchContent_Populate(qschematic)
+    
+    set(QSCHEMATIC_BUILD_DEMO OFF CACHE INTERNAL "")
+    set(QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD OFF CACHE INTERNAL "")
+    set(QSCHEMATIC_DEPENDENCY_GPDS_TARGET "gpds-shared" CACHE INTERNAL "")
+    
+    add_subdirectory(${qschematic_SOURCE_DIR} ${qschematic_BINARY_DIR})
+endif()
+
+
+```
+
+#### find_package()
 The QSchematic static & shared library cmake targets are exported which allows for easy integration into a client application/library.
 After successfully building & installing the QSchematic library targets, use `find_package()` to include the QSchematic targets and `target_link_libraries()` to add the corresponding target to your client application/library:
 ```
@@ -78,8 +122,9 @@ find_package(QSchematic REQUIRED)
 add_executable(my_application "")
 target_link_libraries(my_application qschematic::qschematic-static)
 ```
-Check out the `/demo` for a practical hands-on example.
 
+### Other build systems
+Use the cmake scripts that ship with this library to build either the static library (cmake target `qschematic-static`) or the shared library (cmake target `qschematic-shared`) and link the resulting library into your client application/library using whatever mechanism the build system of your choosing provides.
 
 # Architecture
 Did someone say UML?!
