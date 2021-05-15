@@ -1,10 +1,5 @@
 cmake_minimum_required(VERSION 3.19)
 
-# Policies
-if (POLICY CMP0076)
-    cmake_policy(SET CMP0076 NEW)
-endif()
-
 # Project
 project(qschematic)
 
