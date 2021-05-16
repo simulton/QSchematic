@@ -94,54 +94,73 @@ set(TARGET_OBJS      ${TARGET_BASE_NAME}-objs)
 set(TARGET_STATIC    ${TARGET_BASE_NAME}-static)
 set(TARGET_SHARED    ${TARGET_BASE_NAME}-shared)
 
+# This function sets stuff up common to all targets
+function(setup_target_common target)
+    target_compile_features(
+        ${target}
+        PUBLIC
+            cxx_std_17
+    )
+
+    target_sources(
+        ${target}
+        PRIVATE
+            ${SOURCES_PRIVATE}
+    )
+
+    target_include_directories(
+        ${target}
+        PUBLIC
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>      # For qschematic_export.h
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/..>
+            $<INSTALL_INTERFACE:..>
+    )
+
+    target_link_libraries(
+        ${target}
+        PUBLIC
+            Qt5::Core
+            Qt5::Gui
+            Qt5::Widgets
+            ${QSCHEMATIC_DEPENDENCY_GPDS_TARGET}
+    )
+
+    set_target_properties(
+        ${target}
+        PROPERTIES
+            AUTOMOC ON
+            AUTORCC ON
+            AUTOUIC ON
+    )
+
+    set_target_properties(
+        ${target}
+        PROPERTIES
+            OUTPUT_NAME "qschematic"
+            ARCHIVE_OUTPUT_NAME "qschematic"
+            VERSION ${PROJECT_VERSION}
+            POSITION_INDEPENDENT_CODE 1
+    )
+
+    include(GenerateExportHeader)
+    generate_export_header(
+        ${target}
+        BASE_NAME qschematic
+        DEPRECATED_MACRO_NAME "QSCHEMATIC_DEPRECATED"
+        NO_DEPRECATED_MACRO_NAME "QSCHEMATIC_NO_DEPRECATED"
+        EXPORT_MACRO_NAME "QSCHEMATIC_EXPORT"
+        NO_EXPORT_MACRO_NAME "QSCHEMATIC_NO_EXPORT"
+        STATIC_DEFINE "QSCHEMATIC_STATIC_DEFINE"
+        DEFINE_NO_DEPRECATED
+    )
+endfunction()
+
 ################################################################################
 # Object library                                                               #
 ################################################################################
 
 add_library(${TARGET_OBJS} OBJECT)
-
-target_compile_features(
-    ${TARGET_OBJS}
-    PUBLIC
-        cxx_std_17
-)
-
-target_sources(
-    ${TARGET_OBJS}
-    PRIVATE
-        ${SOURCES_PRIVATE}
-)
-
-target_include_directories(
-    ${TARGET_OBJS}
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> # For qschematic_export.h
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/..>
-        $<INSTALL_INTERFACE:..>
-)
-
-target_link_libraries(
-    ${TARGET_OBJS}
-    PUBLIC
-        Qt5::Core
-        Qt5::Gui
-        Qt5::Widgets
-        ${QSCHEMATIC_DEPENDENCY_GPDS_TARGET}
-)
-
-set_target_properties(
-    ${TARGET_OBJS}
-    PROPERTIES
-        AUTOMOC ON
-        AUTORCC ON
-        AUTOUIC ON
-)
-
-target_compile_definitions(
-    ${TARGET_OBJS}
-    PRIVATE
-        qschematic_shared_EXPORTS   # We are building this library!
-)
+setup_target_common(${TARGET_OBJS})
 
 
 ################################################################################
@@ -149,18 +168,7 @@ target_compile_definitions(
 ################################################################################
 
 add_library(${TARGET_SHARED} SHARED)
-
-target_compile_definitions(
-    ${TARGET_SHARED}
-    PRIVATE
-        qschematic_shared_EXPORTS   # We are building this library!
-)
-
-target_link_libraries(
-    ${TARGET_SHARED}
-    PUBLIC
-        qschematic-objs
-)
+setup_target_common(${TARGET_SHARED})
 
 
 ################################################################################
@@ -168,53 +176,13 @@ target_link_libraries(
 ################################################################################
 
 add_library(${TARGET_STATIC} STATIC)
+setup_target_common(${TARGET_STATIC})
 
 target_compile_definitions(
     ${TARGET_STATIC}
     PUBLIC
         QSCHEMATIC_STATIC_DEFINE
 )
-
-target_link_libraries(
-    ${TARGET_STATIC}
-    PUBLIC
-        qschematic-objs
-)
-
-
-################################################################################
-# Common library properties                                                    #
-################################################################################
-
-set_target_properties(
-    ${TARGET_OBJS}
-    ${TARGET_STATIC}
-    ${TARGET_SHARED}
-    PROPERTIES
-        OUTPUT_NAME "qschematic"
-        ARCHIVE_OUTPUT_NAME "qschematic"
-        VERSION ${PROJECT_VERSION}
-        POSITION_INDEPENDENT_CODE 1
-)
-
-
-
-################################################################################
-# Export header                                                                #
-################################################################################
-
-include(GenerateExportHeader)
-generate_export_header(
-    ${TARGET_SHARED}
-    BASE_NAME qschematic
-    DEPRECATED_MACRO_NAME "QSCHEMATIC_DEPRECATED"
-    NO_DEPRECATED_MACRO_NAME "QSCHEMATIC_NO_DEPRECATED"
-    EXPORT_MACRO_NAME "QSCHEMATIC_EXPORT"
-    NO_EXPORT_MACRO_NAME "QSCHEMATIC_NO_EXPORT"
-    STATIC_DEFINE "QSCHEMATIC_STATIC_DEFINE"
-    DEFINE_NO_DEPRECATED
-)
-
 
 
 ################################################################################
