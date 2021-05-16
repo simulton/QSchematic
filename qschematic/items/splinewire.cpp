@@ -139,7 +139,7 @@ QPainterPath SplineWire::path() const
                 qreal angle2 = qAtan2(d2.x(), d2.y());
                 qreal alpha = M_PI - (angle1 + angle2)/2;
                 // Flip it when both vectors are aligned
-                if (angle2 > angle1 and (angle2 > 0 or angle1 < 0)) {
+                if (angle2 > angle1 && (angle2 > 0 || angle1 < 0)) {
                     alpha += M_PI;
                 }
                 ctrlP1 = QPointF(-d2.manhattanLength()*CTRL_POINT_RATIO * qCos(alpha) + p2.x(), -d2.manhattanLength()*CTRL_POINT_RATIO * qSin(alpha) + p2.y());
@@ -165,7 +165,7 @@ QPainterPath SplineWire::path() const
                     qreal angle2 = qAtan2(d2.x(), d2.y());
                     qreal beta = M_PI - (angle1 + angle2)/2;
                     // Flip it when both vectors are aligned
-                    if (angle2 > angle1 and (angle2 > 0 or angle1 < 0)) {
+                    if (angle2 > angle1 && (angle2 > 0 || angle1 < 0)) {
                         beta += M_PI;
                     }
                     ctrlP2 = QPointF(d1.manhattanLength()*CTRL_POINT_RATIO * qCos(beta) + p3.x(), d1.manhattanLength()*CTRL_POINT_RATIO * qSin(beta) + p3.y());

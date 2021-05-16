@@ -86,7 +86,7 @@ void WireNet::from_container(const gpds::container& container)
             }
             sharedNewWire->from_container(*wireContainer);
             addWire(sharedNewWire);
-            if (not _scene) {
+            if (!_scene) {
                 qCritical("WireNet::from_container(): The scene has not been set.");
                 return;
             }
@@ -97,7 +97,7 @@ void WireNet::from_container(const gpds::container& container)
 
 bool WireNet::addWire(const std::shared_ptr<wire>& wire)
 {
-    if (not net::addWire(wire)) {
+    if (!net::addWire(wire)) {
         return false;
     }
 
@@ -147,7 +147,7 @@ void WireNet::setHighlighted(bool highlighted)
 {
     // Wires
     for (auto& wire : wires()) {
-        if (not wire) {
+        if (!wire) {
             continue;
         }
 
@@ -211,7 +211,7 @@ QList<line> WireNet::lineSegments() const
     QList<line> list;
 
     for (const auto& wire : wires()) {
-        if (not wire) {
+        if (!wire) {
             continue;
         }
 
@@ -250,7 +250,7 @@ void WireNet::wirePointMoved(Wire& wire, const point& point)
 void WireNet::updateLabelPos(bool updateParent) const
 {
     // Ignore if the label is not visible
-    if (not _label->isVisible()) {
+    if (!_label->isVisible()) {
         return;
     }
     // Find closest point
@@ -263,19 +263,19 @@ void WireNet::updateLabelPos(bool updateParent) const
             QPointF p = Utils::pointOnLineClosestToPoint(segment.p1(), segment.p2(), labelPos);
             float distance1 = QVector2D(labelPos - closestPoint).lengthSquared();
             float distance2 = QVector2D(labelPos - p).lengthSquared();
-            if (closestPoint.isNull() or distance1 > distance2) {
+            if (closestPoint.isNull() || distance1 > distance2) {
                 closestPoint = p;
                 closestWire = wire;
             }
         }
     }
     // If there are no wires left in the net it will be hidden anyway
-    if (not closestWire) {
+    if (!closestWire) {
         return;
     }
     // Update the parent if requested
     auto closestWireItem = std::dynamic_pointer_cast<Wire>(closestWire);
-    if (updateParent and _label->parentItem() != closestWireItem.get()) {
+    if (updateParent && _label->parentItem() != closestWireItem.get()) {
         _label->setParentItem(closestWireItem.get());
         _label->setPos(labelPos - _label->textRect().center() - closestWireItem->scenePos());
     }
@@ -304,6 +304,6 @@ void WireNet::wireHighlightChanged(const Item& item, bool highlighted)
 
 void WireNet::toggleLabel()
 {
-    _label->setVisible(not _label->text().isEmpty() and not _label->isVisible());
+    _label->setVisible(!_label->text().isEmpty() && !_label->isVisible());
     updateLabelPos(true);
 }

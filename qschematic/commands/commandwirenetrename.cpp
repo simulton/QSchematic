@@ -26,7 +26,7 @@ bool CommandWirenetRename::mergeWith(const QUndoCommand* command)
     }
 
     auto myCommand = dynamic_cast<const CommandWirenetRename*>(command);
-    if (!myCommand or _net != myCommand->_net) {
+    if (!myCommand || _net != myCommand->_net) {
         return false;
     }
 

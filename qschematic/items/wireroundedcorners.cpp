@@ -135,7 +135,7 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                     linePointAdjust = line2.length();
                 }
                 // We certainly don't want an arc if this is a junction
-                if (not hasJunction and not point.is_junction()) {
+                if (!hasJunction && !point.is_junction()) {
                     // Shorten lines if there is a rounded corner
                     line1.setLength(line1.length() - linePointAdjust);
                     line2.setLength(line2.length() - linePointAdjust);
@@ -144,7 +144,7 @@ void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem
                 // Render lines
                 path.lineTo(line1.p2());
                 // Render the arc if there is no junction
-                if (not hasJunction and not point.is_junction()) {
+                if (!hasJunction && !point.is_junction()) {
                     path.quadTo(point.toPointF(), line2.p2());
                 }
                 path.lineTo(line2.p2());

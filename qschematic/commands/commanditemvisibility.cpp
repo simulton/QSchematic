@@ -25,7 +25,7 @@ bool CommandItemVisibility::mergeWith(const QUndoCommand* command)
     }
 
     const CommandItemVisibility* myCommand = dynamic_cast<const CommandItemVisibility*>(command);
-    if (!myCommand or _item != myCommand->_item) {
+    if (!myCommand || _item != myCommand->_item) {
         return false;
     }
 

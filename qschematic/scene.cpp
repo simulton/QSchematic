@@ -79,7 +79,7 @@ gpds::container Scene::to_container() const
 
         // Make sure it's a WireNet
         auto wire_net = std::dynamic_pointer_cast<WireNet>(net);
-        if (not wire_net) {
+        if (!wire_net) {
             continue;
         }
 
@@ -470,7 +470,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
         QGraphicsItem* item = itemAt(event->scenePos(), QTransform());
         if (item){
             Node* node = dynamic_cast<Node*>(item);
-            if (node and node->mode() == Node::None) {
+            if (node && node->mode() == Node::None) {
                 _movingNodes = true;
             } else {
                 _movingNodes = false;
@@ -486,7 +486,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
                 }
             }
             Label* label = dynamic_cast<Label*>(item);
-            if (label and selectedTopLevelItems().size() > 0) {
+            if (label && selectedTopLevelItems().size() > 0) {
                 _movingNodes = true;
             }
         } else {
@@ -555,7 +555,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             }
 
             // Check if both ends of the wire are connected to something
-            if (wireAttached and _newWire->pointsAbsolute().count() > 1) {
+            if (wireAttached && _newWire->pointsAbsolute().count() > 1) {
                 finishCurrentWire();
             }
 
@@ -581,7 +581,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 
             // Make sure it's a WireNet
             auto wire_net = std::dynamic_pointer_cast<WireNet>(net);
-            if (not wire_net) {
+            if (!wire_net) {
                 continue;
             }
 
@@ -594,7 +594,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
             QVector<std::shared_ptr<Item>> itemsToMove;
 
             for (const auto& item : selectedTopLevelItems()) {
-                if (item->isMovable() and _initialItemPositions.contains(item)) {
+                if (item->isMovable() && _initialItemPositions.contains(item)) {
                     Wire* wire = dynamic_cast<Wire*>(item.get());
                     if (wire) {
                         wiresToMove << item;
@@ -615,7 +615,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
                 item->setPos(_initialItemPositions.value(item));
                 // Add the moveBy to the list
                 moveByList << moveBy;
-                if (not moveBy.isNull()) {
+                if (!moveBy.isNull()) {
                     needsToMove = true;
                 }
             }
@@ -689,14 +689,14 @@ void Scene::updateNodeConnections(const Node* node) const
                     if (otherConnector == connector) {
                         continue;
                     }
-                    if (m_wire_manager->attached_wire(connector.get()) == wire.get() and
+                    if (m_wire_manager->attached_wire(connector.get()) == wire.get() &&
                         m_wire_manager->attached_point(otherConnector.get()) == index) {
                         alreadyConnected = true;
                         break;
                     }
                 }
                 // If it's not already connected, connect it
-                if (not alreadyConnected) {
+                if (!alreadyConnected) {
                     m_wire_manager->attach_wire_to_connector(wire.get(), index, connector.get());
                 }
             }
@@ -710,7 +710,7 @@ void Scene::wirePointMoved(wire& rawWire, int index)
     for (const auto& node: nodes()) {
         for (const auto& connector: node->connectors()) {
             const wire* wire = m_wire_manager->attached_wire(connector.get());
-            if (not wire) {
+            if (!wire) {
                 continue;
             }
 
@@ -1005,7 +1005,7 @@ void Scene::renderCachedBackground()
 {
     // Create the pixmap
     QRect rect = sceneRect().toRect();
-    if (rect.isNull() or !rect.isValid()) {
+    if (rect.isNull() || !rect.isValid()) {
         return;
     }
     QPixmap pixmap(rect.width(), rect.height());
@@ -1029,7 +1029,7 @@ void Scene::renderCachedBackground()
     pixmap.fill(Qt::white);
 
     // Draw the grid if supposed to
-    if (_settings.showGrid and (_settings.gridSize > 0)) {
+    if (_settings.showGrid && (_settings.gridSize > 0)) {
         qreal left = int(rect.left()) - (int(rect.left()) % _settings.gridSize);
         qreal top = int(rect.top()) - (int(rect.top()) % _settings.gridSize);
 
@@ -1082,7 +1082,7 @@ void Scene::generateConnections()
  */
 void Scene::finishCurrentWire()
 {
-    if (not _newWire) {
+    if (!_newWire) {
         return;
     }
     // Finish the current wire
@@ -1132,7 +1132,7 @@ void Scene::itemHoverLeave([[maybe_unused]] const std::shared_ptr<const Item>& i
  */
 void Scene::removeLastWirePoint()
 {
-    if (not _newWire) {
+    if (!_newWire) {
         return;
     }
 
@@ -1220,7 +1220,7 @@ void Scene::removeUnconnectedWires()
 
 bool Scene::addWire(const std::shared_ptr<Wire>& wire)
 {
-    if (not m_wire_manager->add_wire(wire)) {
+    if (!m_wire_manager->add_wire(wire)) {
         return false;
     }
 

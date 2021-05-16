@@ -26,7 +26,7 @@ bool CommandNodeAddConnector::mergeWith(const QUndoCommand* command)
 
 void CommandNodeAddConnector::undo()
 {
-    if (!_node or !_connector) {
+    if (!_node || !_connector) {
         return;
     }
 
@@ -36,7 +36,7 @@ void CommandNodeAddConnector::undo()
 
 void CommandNodeAddConnector::redo()
 {
-    if (!_node or !_connector) {
+    if (!_node || !_connector) {
         return;
     }
 

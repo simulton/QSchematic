@@ -199,7 +199,7 @@ QVariant Connector::itemChange(QGraphicsItem::GraphicsItemChange change, const Q
         }
 
         // Honor snap-to-grid
-        if (parentNode->canSnapToGrid() and snapToGrid()) {
+        if (parentNode->canSnapToGrid() && snapToGrid()) {
             proposedPos = _settings.snapToGrid(proposedPos);
         }
 
@@ -364,7 +364,7 @@ QPointF Connector::position() const
 void Connector::notify_wire_manager()
 {
     // Ignore if it's not in a scene
-    if (not scene()) {
+    if (!scene()) {
         return;
     }
 

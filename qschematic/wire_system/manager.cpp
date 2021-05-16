@@ -73,7 +73,7 @@ void manager::generate_junctions()
  */
 void manager::connect_wire(wire* wire, wire_system::wire* rawWire, std::size_t point)
 {
-    if (not wire->connect_wire(rawWire)) {
+    if (!wire->connect_wire(rawWire)) {
         return;
     }
     std::shared_ptr<wire_system::net> net = wire->net();
@@ -127,7 +127,7 @@ bool manager::remove_wire(const std::shared_ptr<wire> wire)
             // Update the junction on the other wire
             for (int index = 0; index < otherWire->points_count(); index++) {
                 const auto point = otherWire->points().at(index);
-                if (not point.is_junction()) {
+                if (!point.is_junction()) {
                     continue;
                 }
                 if (wire->point_is_on_wire(point.toPointF())) {
@@ -193,7 +193,7 @@ QVector<std::shared_ptr<wire>> manager::wires_connected_to(const std::shared_ptr
         }
 
         connectedWires << newList;
-    } while (not newList.isEmpty());
+    } while (!newList.isEmpty());
 
     return connectedWires;
 }
@@ -248,7 +248,7 @@ void manager::point_moved_by_user(wire& rawWire, int index)
     emit wire_point_moved(rawWire, index);
 
     // Detach wires
-    if (index == 0 or index == rawWire.points_count() - 1){
+    if (index == 0 || index == rawWire.points_count() - 1){
         if (point.is_junction()) {
             for (const auto& wire: wires()) {
                 // Skip current wire
@@ -281,14 +281,14 @@ void manager::point_moved_by_user(wire& rawWire, int index)
     }
 
     // Attach point to wire if needed
-    if (index == 0 or index == rawWire.points().count() - 1) {
+    if (index == 0 || index == rawWire.points().count() - 1) {
         for (const auto& wire: wires()) {
             // Skip current wire
             if (wire.get() == &rawWire) {
                 continue;
             }
             if (wire->point_is_on_wire(rawWire.points().at(index).toPointF())) {
-                if (not rawWire.connected_wires().contains(wire.get())) {
+                if (!rawWire.connected_wires().contains(wire.get())) {
                     connect_wire(wire.get(), &rawWire, index);
                 }
             }
@@ -298,12 +298,12 @@ void manager::point_moved_by_user(wire& rawWire, int index)
 
 void manager::attach_wire_to_connector(wire* wire, int index, const connectable* connector)
 {
-    if (not wire or not connector) {
+    if (!wire || !connector) {
         return;
     }
 
     // TODO: Check if it make sense for the index to be -1 or is this an error?
-    if (index < -1 or wire->points().count() < index) {
+    if (index < -1 || wire->points().count() < index) {
         return;
     }
 
@@ -345,7 +345,7 @@ void manager::point_inserted(const wire* wire, int index)
             continue;
         }
         // Inserted point comes before the connected point or the last point is connected
-        else if (wirePoint.second >= index or wirePoint.second == wire->points_count() - 2) {
+        else if (wirePoint.second >= index || wirePoint.second == wire->points_count() - 2) {
             wirePoint.second++;
         }
         // Update the connection
@@ -401,7 +401,7 @@ void manager::detach_wire_from_all(const wire* wire)
 
 wire* manager::attached_wire(const connectable* connector)
 {
-    if (not m_connections.contains(connector)) {
+    if (!m_connections.contains(connector)) {
         return nullptr;
     }
     return m_connections.value(connector).first;
@@ -409,7 +409,7 @@ wire* manager::attached_wire(const connectable* connector)
 
 int manager::attached_point(const connectable* connector)
 {
-    if (not m_connections.contains(connector)) {
+    if (!m_connections.contains(connector)) {
         return -1;
     }
     return m_connections.value(connector).second;
@@ -417,18 +417,18 @@ int manager::attached_point(const connectable* connector)
 
 void manager::connector_moved(const connectable* connector)
 {
-    if (not m_connections.contains(connector)) {
+    if (!m_connections.contains(connector)) {
         return;
     }
     const auto wirePoint = m_connections.value(connector);
 
-    if (wirePoint.second < -1 or wirePoint.first->points_count() <= wirePoint.second) {
+    if (wirePoint.second < -1 || wirePoint.first->points_count() <= wirePoint.second) {
         return;
     }
 
     QPointF oldPos = wirePoint.first->points().at(wirePoint.second).toPointF();
     QVector2D moveBy = QVector2D(connector->position() - oldPos);
-    if (not moveBy.isNull()) {
+    if (!moveBy.isNull()) {
         wirePoint.first->move_point_by(wirePoint.second, moveBy);
     }
 }

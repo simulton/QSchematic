@@ -26,7 +26,7 @@ bool CommandLabelRename::mergeWith(const QUndoCommand* command)
     }
 
     const CommandLabelRename* myCommand = dynamic_cast<const CommandLabelRename*>(command);
-    if (!myCommand or _label != myCommand->_label) {
+    if (!myCommand || _label != myCommand->_label) {
         return false;
     }
 

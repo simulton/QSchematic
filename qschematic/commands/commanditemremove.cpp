@@ -31,7 +31,7 @@ bool CommandItemRemove::mergeWith(const QUndoCommand* command)
 
 void CommandItemRemove::undo()
 {
-    if (!_scene or !_item) {
+    if (!_scene || !_item) {
         return;
     }
 
@@ -40,7 +40,7 @@ void CommandItemRemove::undo()
     // Is this a wire?
     if ( auto wire = std::dynamic_pointer_cast<Wire>(_item) ) {
         auto oldNet = wire->net();
-        if (not _scene->wire_manager()->nets().contains(oldNet)) {
+        if (!_scene->wire_manager()->nets().contains(oldNet)) {
             _scene->wire_manager()->add_net(wire->net());
         }
 
@@ -56,7 +56,7 @@ void CommandItemRemove::undo()
 
 void CommandItemRemove::redo()
 {
-    if (!_scene or !_item) {
+    if (!_scene || !_item) {
         return;
     }
 

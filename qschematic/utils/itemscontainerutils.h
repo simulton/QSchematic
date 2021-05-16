@@ -16,7 +16,7 @@ auto mapItemListToSharedPtrList(ContainerT itemList) -> OutContainerT<std::share
 {
     OutContainerT<std::shared_ptr<Item>> out;
 
-    if constexpr (not std::is_same_v<OutContainerT<Item>, QList<Item>>) {
+    if constexpr (!std::is_same_v<OutContainerT<Item>, QList<Item>>) {
         out.reserve(itemList.count());
     }
 
