@@ -156,7 +156,7 @@ void Node::setSize(const QSizeF& size)
     }
 
     // Boundary checks
-    if (size.width() < 1 or size.height() < 1) {
+    if (size.width() < 1 || size.height() < 1) {
         return;
     }
 
@@ -168,12 +168,12 @@ void Node::setSize(const QSizeF& size)
 
     // Move connectors
     for (const auto& connector: connectors()) {
-        if (qFuzzyCompare(connector->posX(), oldSize.width()) or
+        if (qFuzzyCompare(connector->posX(), oldSize.width()) ||
             connector->posX() > size.width())
         {
             connector->setX(size.width());
         }
-        if (qFuzzyCompare(connector->posY(), oldSize.height()) or
+        if (qFuzzyCompare(connector->posY(), oldSize.height()) ||
             connector->posY() > size.height())
         {
             connector->setY(size.height());
@@ -304,7 +304,7 @@ bool Node::addConnector(const std::shared_ptr<Connector>& connector)
 
 bool Node::removeConnector(const std::shared_ptr<Connector>& connector)
 {
-    if (!connector or !_connectors.contains(connector)) {
+    if (!connector || !_connectors.contains(connector)) {
         return false;
     }
 
@@ -514,7 +514,7 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             qreal dy = d.y();
 
             // Don't do anything if there's nothing to do
-            if (qFuzzyIsNull(dx) and qFuzzyIsNull(dy)) {
+            if (qFuzzyIsNull(dx) && qFuzzyIsNull(dy)) {
                 break;
             }
 
@@ -580,13 +580,13 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             // Minimum size
             if (newSize.height() < 1) {
                 newSize.setHeight(1);
-                if (not qFuzzyCompare(newPos.ry(), pos().ry())) {
+                if (!qFuzzyCompare(newPos.ry(), pos().ry())) {
                     newPos.setY(posY() + _size.height() - 1);
                 }
             }
             if (newSize.width() < 1) {
                 newSize.setWidth(1);
-                if (not qFuzzyCompare(newPos.rx(), pos().rx())) {
+                if (!qFuzzyCompare(newPos.rx(), pos().rx())) {
                     newPos.setX(posX() + _size.width() - 1);
                 }
             }
@@ -645,7 +645,7 @@ void Node::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
         setCursor(Qt::ArrowCursor);
 
         // If selected, we should adjust the cursor for the resize handles
-        if (isSelected() and _allowMouseResize) {
+        if (isSelected() && _allowMouseResize) {
             auto handles = resizeHandles();
             auto it = handles.constBegin();
             while (it != handles.constEnd()) {
@@ -676,7 +676,7 @@ void Node::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
                 it++;
             }
         }
-        if (isSelected() and _allowMouseRotate) {
+        if (isSelected() && _allowMouseRotate) {
             if (rotationHandle().contains(event->pos().toPoint())) {
                 setCursor(Qt::SizeAllCursor);
             }
@@ -694,7 +694,7 @@ QRectF Node::boundingRect() const
     adj = qMax(adj, PEN_WIDTH / 2.0);
 
     // Add resize handles
-    if (isSelected() and _allowMouseResize) {
+    if (isSelected() && _allowMouseResize) {
         adj = qMax(adj, static_cast<qreal>(_settings.resizeHandleSize));
     }
 
@@ -708,7 +708,7 @@ QRectF Node::boundingRect() const
     rect = rect.adjusted(-adj, -adj, adj, adj);
 
     // Rotate handle
-    if (isSelected() and _allowMouseRotate) {
+    if (isSelected() && _allowMouseRotate) {
         rect = rect.united(rotationHandle());
     }
 
@@ -765,12 +765,12 @@ void Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     painter->drawRoundedRect(sizeRect(), _settings.gridSize/2, _settings.gridSize/2);
 
     // Resize handles
-    if (isSelected() and allowMouseResize()) {
+    if (isSelected() && allowMouseResize()) {
         paintResizeHandles(*painter);
     }
 
     // Rotate handle
-    if (isSelected() and allowMouseRotate()) {
+    if (isSelected() && allowMouseRotate()) {
         paintRotateHandle(*painter);
     }
 }
@@ -786,7 +786,7 @@ void Node::update()
 bool Node::canSnapToGrid() const
 {
     // Only snap when the rotation is a multiple of 90
-    return Item::snapToGrid() and fmod(rotation(), 90) == 0;
+    return Item::snapToGrid() && fmod(rotation(), 90) == 0;
 }
 
 QVariant Node::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
@@ -800,7 +800,7 @@ QVariant Node::itemChange(QGraphicsItem::GraphicsItemChange change, const QVaria
             // If it is rotated 90 or 270 degrees and the difference between
             // the height and width is odd then the position needs to be
             // offset by half a grid unit vertically and horizontally.
-            if ((qFuzzyCompare(qAbs(rotation()), 90) or qFuzzyCompare(qAbs(rotation()), 270)) and
+            if ((qFuzzyCompare(qAbs(rotation()), 90) || qFuzzyCompare(qAbs(rotation()), 270)) &&
                 (fmod(_size.width()/_settings.gridSize - _size.height()/_settings.gridSize, 2) != 0))
             {
                 newPos.setX(qCeil(newPos.rx()/_settings.gridSize)*_settings.gridSize);

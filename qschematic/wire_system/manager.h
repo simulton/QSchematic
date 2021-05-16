@@ -4,6 +4,7 @@
 #include <QList>
 #include <QMap>
 #include <memory>
+#include <optional>
 
 #include "../settings.h"
 #include "qschematic_export.h"

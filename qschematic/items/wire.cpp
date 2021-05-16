@@ -381,7 +381,7 @@ void Wire::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 void Wire::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 {
     // Ignore if there is no rename action
-    if (not _renameAction) {
+    if (!_renameAction) {
         return;
     }
 
@@ -392,7 +392,7 @@ void Wire::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
     }
 
     // Ignore if there is no label
-    if (not label) {
+    if (!label) {
         return;
     }
 
@@ -403,7 +403,7 @@ void Wire::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
     _renameAction->trigger();
 
     // Move the label to the cursor if it wasn't already visible
-    if (not labelWasVisible and label->isVisible()) {
+    if (!labelWasVisible && label->isVisible()) {
         label_to_cursor(event->scenePos(), label);
     }
 }
@@ -551,7 +551,7 @@ QVariant Wire::itemChange(QGraphicsItem::GraphicsItemChange change, const QVaria
         return newPos;
     }
     case ItemPositionHasChanged:
-        if (not scene()) {
+        if (!scene()) {
             break;
         }
         // Move points to their connectors
@@ -568,7 +568,7 @@ QVariant Wire::itemChange(QGraphicsItem::GraphicsItemChange change, const QVaria
                 }
             }
             // Move point onto the connector
-            if (not isSelected and scene()->wire_manager()->attached_wire(conn.get()) == this) {
+            if (!isSelected && scene()->wire_manager()->attached_wire(conn.get()) == this) {
                 int index = scene()->wire_manager()->attached_point(conn.get());
                 QVector2D moveBy(conn->scenePos() - pointsAbsolute().at(index));
                 move_point_by(index, moveBy);
@@ -601,7 +601,7 @@ void Wire::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         }
     }
     QAction* actionRemove = nullptr;
-    if (points_count() > 2 and pointIndex != -1) {
+    if (points_count() > 2 && pointIndex != -1) {
         actionRemove = menu.addAction("Remove point");
     }
     if (_renameAction) {
@@ -615,14 +615,14 @@ void Wire::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
     }
 
     // Show checkbox to toggle the visibility of the label
-    if (label and not net()->name().isEmpty()) {
+    if (label && !net()->name().isEmpty()) {
         QAction* showAction = menu.addAction("Label visible");
         showAction->setCheckable(true);
         showAction->setChecked(label->isVisible());
 
         connect(showAction, &QAction::triggered, this, &Wire::toggleLabelRequested);
     }
-    bool labelWasVisible = label and label->isVisible();
+    bool labelWasVisible = label && label->isVisible();
     QAction* command = menu.exec(event->screenPos());
 
     // Add a point at the cursor
@@ -637,12 +637,12 @@ void Wire::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
     }
 
     // Remove the point near the cursor
-    if (actionRemove and command == actionRemove) {
+    if (actionRemove && command == actionRemove) {
         remove_point(pointIndex);
     }
 
     // Move the label to the cursor if it was just made visible
-    if (label and not labelWasVisible and label->isVisible()) {
+    if (label && !labelWasVisible && label->isVisible()) {
         label_to_cursor(event->scenePos(), label);
     }
 }
@@ -676,7 +676,7 @@ void Wire::label_to_cursor(const QPointF& scenePos, std::shared_ptr<Label>& labe
         pos.setX(seg.p1().x() + _settings.gridSize / 2);
     }
     // When the wire is diagonal with a positive slope move it up and to the left
-    else if ((angle > 0 and angle < 90) or (angle > 180 and angle < 360)) {
+    else if ((angle > 0 && angle < 90) || (angle > 180 && angle < 360)) {
         QPointF point = Utils::pointOnLineClosestToPoint(seg.p1(), seg.p2(), pos);
         pos.setX(point.x() - _settings.gridSize / 2 - label->textRect().width());
         pos.setY(point.y() - _settings.gridSize / 2);
@@ -693,7 +693,7 @@ void Wire::label_to_cursor(const QPointF& scenePos, std::shared_ptr<Label>& labe
 
 bool Wire::movingWirePoint() const
 {
-    if (_pointToMoveIndex >= 0 or _lineSegmentToMoveIndex >= 0) {
+    if (_pointToMoveIndex >= 0 || _lineSegmentToMoveIndex >= 0) {
         return true;
     } else {
         return false;

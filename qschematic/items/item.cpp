@@ -256,7 +256,7 @@ bool Item::snapToGrid() const
 
 bool Item::isHighlighted() const
 {
-    return ( ( _highlighted or isSelected() ) and _highlightEnabled );
+    return ( ( _highlighted || isSelected() ) && _highlightEnabled );
 }
 
 void Item::setHighlighted(bool highlighted)
@@ -293,7 +293,7 @@ QPixmap Item::toPixmap(QPointF& hotSpot, qreal scale)
     rectF.setWidth(rectF.width() - rectF.x());
     rectF.setHeight(rectF.height() - rectF.y());
     const QRect& rect = rectF.toRect();
-    if (rect.isNull() or !rect.isValid()) {
+    if (rect.isNull() || !rect.isValid()) {
         return QPixmap();
     }
 

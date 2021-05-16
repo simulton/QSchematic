@@ -153,12 +153,12 @@ void Operation::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
     }
 
     // Resize handles
-    if (isSelected() and allowMouseResize()) {
+    if (isSelected() && allowMouseResize()) {
         paintResizeHandles(*painter);
     }
 
     // Rotate handle
-    if (isSelected() and allowMouseRotate()) {
+    if (isSelected() && allowMouseRotate()) {
         paintRotateHandle(*painter);
     }
 }

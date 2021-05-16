@@ -33,7 +33,7 @@ int TreeModel::rowCount( const QModelIndex& parent ) const
     }
 
     TreeItem* parentItem;
-    if ( not parent.isValid() ) {
+    if ( !parent.isValid() ) {
         parentItem = _rootItem;
     } else {
         parentItem = static_cast<TreeItem*>( parent.internalPointer() );
@@ -54,7 +54,7 @@ int TreeModel::columnCount( const QModelIndex& parent ) const
 
 Qt::ItemFlags TreeModel::flags( const QModelIndex& index ) const
 {
-    if ( not index.isValid() ) {
+    if ( !index.isValid() ) {
         return Qt::NoItemFlags;
     }
 
@@ -63,12 +63,12 @@ Qt::ItemFlags TreeModel::flags( const QModelIndex& index ) const
 
 QModelIndex TreeModel::index( int row, int column, const QModelIndex& parent ) const
 {
-    if ( not hasIndex(row, column, parent) ) {
+    if ( !hasIndex(row, column, parent) ) {
         return QModelIndex();
     }
 
     TreeItem* parentItem;
-    if ( not parent.isValid() ) {
+    if ( !parent.isValid() ) {
         parentItem = _rootItem;
     } else {
         parentItem = static_cast<TreeItem*>( parent.internalPointer() );
@@ -84,7 +84,7 @@ QModelIndex TreeModel::index( int row, int column, const QModelIndex& parent ) c
 
 QModelIndex TreeModel::parent( const QModelIndex& index ) const
 {
-    if ( not index.isValid() ) {
+    if ( !index.isValid() ) {
         return QModelIndex();
     }
 
@@ -102,7 +102,7 @@ QModelIndex TreeModel::parent( const QModelIndex& index ) const
 
 QVariant TreeModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
-    if ( orientation == Qt::Horizontal and role == Qt::DisplayRole ) {
+    if ( orientation == Qt::Horizontal && role == Qt::DisplayRole ) {
         return _rootItem->data( section );
     }
 
@@ -111,7 +111,7 @@ QVariant TreeModel::headerData( int section, Qt::Orientation orientation, int ro
 
 QVariant TreeModel::data( const QModelIndex& index, int role ) const
 {
-    if ( not index.isValid() ) {
+    if ( !index.isValid() ) {
         return QVariant();
     }
 

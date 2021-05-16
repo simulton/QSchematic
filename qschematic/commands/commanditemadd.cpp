@@ -29,7 +29,7 @@ bool CommandItemAdd::mergeWith(const QUndoCommand* command)
 
 void CommandItemAdd::undo()
 {
-    if (!_scene or !_item) {
+    if (!_scene || !_item) {
         return;
     }
 
@@ -47,7 +47,7 @@ void CommandItemAdd::undo()
 
 void CommandItemAdd::redo()
 {
-    if (!_scene or !_item) {
+    if (!_scene || !_item) {
         return;
     }
 
@@ -55,7 +55,7 @@ void CommandItemAdd::redo()
     auto wire = std::dynamic_pointer_cast<Wire>(_item);
     if (wire) {
         if (wire->net()) {
-            if (not _scene->wire_manager()->nets().contains(wire->net())) {
+            if (!_scene->wire_manager()->nets().contains(wire->net())) {
                 _scene->wire_manager()->add_net(wire->net());
             }
             wire->net()->addWire(wire);

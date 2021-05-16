@@ -84,7 +84,7 @@ void CommandWirepointMove::undo()
             tmpNet->removeWire(wire);
         }
         // If not already in the scene add the existing net
-        if (not _scene->wire_manager()->nets().contains(_oldNet)) {
+        if (!_scene->wire_manager()->nets().contains(_oldNet)) {
             _scene->wire_manager()->add_net(_oldNet);
         }
         // Remove the tmp net
@@ -101,7 +101,7 @@ void CommandWirepointMove::redo()
         }
     }
     // Use existing net
-    if (_newNet and _newNet != _wire->net()) {
+    if (_newNet && _newNet != _wire->net()) {
         // Retrieve temporary net
         auto tmpNet = _wire->net();
         // Move all wires to the existing net
@@ -110,7 +110,7 @@ void CommandWirepointMove::redo()
             tmpNet->removeWire(wire);
         }
         // If not already in the scene add the existing net
-        if (not _scene->wire_manager()->nets().contains(_newNet)) {
+        if (!_scene->wire_manager()->nets().contains(_newNet)) {
             _scene->wire_manager()->add_net(_newNet);
         }
         // Remove the tmp net

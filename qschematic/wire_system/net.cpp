@@ -47,7 +47,7 @@ bool net::addWire(const std::shared_ptr<wire>& wire)
     for (const auto& otherWire : wire->connected_wires()) {
         for (int index = 0; index < otherWire->points_count(); index++) {
             // Ignore if it's not the first/last point
-            if (index != 0 and index != otherWire->points_count() - 1) {
+            if (index != 0 && index != otherWire->points_count() - 1) {
                 continue;
             }
             // Mark the point as junction if it's on the wire

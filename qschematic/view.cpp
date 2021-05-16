@@ -93,7 +93,7 @@ void View::keyPressEvent(QKeyEvent* event)
         return;
 
     case Qt::Key_Backspace:
-        if (_scene and _scene->mode() == Scene::WireMode) {
+        if (_scene && _scene->mode() == Scene::WireMode) {
             _scene->removeLastWirePoint();
         }
         return;
@@ -223,7 +223,7 @@ qreal View::zoomValue() const
 void View::fitInView()
 {
     // Check if there is a scene
-    if (not _scene) {
+    if (!_scene) {
         return;
     }
 

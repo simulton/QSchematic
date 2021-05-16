@@ -29,7 +29,7 @@ namespace QSchematic
             std::vector<TNode> nodes;
             for ( const auto& node : scene.nodes() ) {
                 // Sanity check
-                if ( not node ) {
+                if ( !node ) {
                     continue;
                 }
 
@@ -44,7 +44,7 @@ namespace QSchematic
                 auto wireNet = std::dynamic_pointer_cast<WireNet>(net);
 
                 // Sanity check
-                if (not wireNet) {
+                if (!wireNet) {
                     continue;
                 }
 

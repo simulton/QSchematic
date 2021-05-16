@@ -30,7 +30,7 @@ void TreeItem::appendChild( TreeItem* item )
 
 TreeItem* TreeItem::child( int row )
 {
-    if ( row < 0 or row >= _children.size() ) {
+    if ( row < 0 || row >= _children.size() ) {
         return nullptr;
     }
 
@@ -49,7 +49,7 @@ int TreeItem::columnCount( ) const
 
 QVariant TreeItem::data( int column ) const
 {
-    if ( column < 0 or column >= _data.size() ) {
+    if ( column < 0 || column >= _data.size() ) {
         return QVariant();
     }
 
