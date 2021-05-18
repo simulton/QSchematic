@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <memory>
 #include <functional>
 #include <QGraphicsScene>
@@ -54,6 +55,29 @@ namespace QSchematic {
         bool removeItem(const std::shared_ptr<Item> item);
         QList<std::shared_ptr<Item>> items() const;
         QList<std::shared_ptr<Item>> items(int itemType) const;
+
+        /**
+         * Get list of items of a certain type.
+         *
+         * @tparam T The type of item.
+         * @return List of all items of type `T`.
+         */
+        template<typename T>
+        [[nodiscard]]
+        std::vector<std::shared_ptr<T>> items() const
+        {
+            const auto& itms = items();
+
+            std::vector<std::shared_ptr<T>> ret;
+            ret.reserve(itms.size());
+
+            for (const auto& item : itms)
+                if (auto casted = std::dynamic_pointer_cast<T>(item); casted)
+                    ret.emplace_back(std::move(casted));
+
+            return ret;
+        }
+
         QList<std::shared_ptr<Item>> itemsAt(const QPointF& scenePos, Qt::SortOrder order = Qt::DescendingOrder) const;
         std::vector<std::shared_ptr<Item>> selectedItems() const;
         std::vector<std::shared_ptr<Item>> selectedTopLevelItems() const;
