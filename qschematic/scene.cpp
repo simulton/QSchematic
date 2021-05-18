@@ -1,7 +1,7 @@
 #include <algorithm>
+
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
-#include <QXmlStreamWriter>
 #include <QUndoStack>
 #include <QMimeData>
 #include <QtMath>

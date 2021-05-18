@@ -1,8 +1,7 @@
 #include <QKeyEvent>
 #include <QWheelEvent>
 #include <QScrollBar>
-#include <QAction>
-#include <QMenu>
+
 #include "commands/commanditemremove.h"
 #include "view.h"
 #include "scene.h"
