@@ -23,8 +23,10 @@ namespace QSchematic {
         Label(int type = Item::LabelType, QGraphicsItem* parent = nullptr);
         virtual ~Label() override = default;
 
+#ifdef USE_GPDS
         virtual gpds::container to_container() const override;
         virtual void from_container(const gpds::container& container) override;
+#endif
         virtual std::shared_ptr<Item> deepCopy() const override;
 
         virtual QRectF boundingRect() const final;

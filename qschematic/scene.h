@@ -5,7 +5,9 @@
 #include <functional>
 #include <QGraphicsScene>
 #include <QUndoStack>
+#ifdef USE_GPDS
 #include <gpds/serialize.hpp>
+#endif
 #include "wire_system/manager.h"
 #include "settings.h"
 #include "items/item.h"
@@ -20,8 +22,10 @@ namespace QSchematic {
     class WireNet;
 
     class QSCHEMATIC_EXPORT Scene :
-        public QGraphicsScene,
-        public gpds::serialize
+        public QGraphicsScene
+#ifdef USE_GPDS
+        ,public gpds::serialize
+#endif
     {
         Q_OBJECT
         Q_DISABLE_COPY(Scene)
@@ -38,8 +42,10 @@ namespace QSchematic {
         explicit Scene(QObject* parent = nullptr);
         virtual ~Scene() override = default;
 
+#ifdef USE_GPDS
         virtual gpds::container to_container() const override;
         virtual void from_container(const gpds::container& container) override;
+#endif
 
         void setSettings(const Settings& settings);
         void setWireFactory(const std::function<std::shared_ptr<Wire>()>& factory);

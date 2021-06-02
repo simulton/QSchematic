@@ -14,7 +14,7 @@ ItemFactory& ItemFactory::instance()
 
     return instance;
 }
-
+#ifdef USE_GPDS
 void ItemFactory::setCustomItemsFactory(const std::function<std::shared_ptr<Item>(const gpds::container&)>& factory)
 {
     _customItemFactory = factory;
@@ -63,3 +63,4 @@ Item::ItemType ItemFactory::extractType(const gpds::container& container)
 {
     return static_cast<Item::ItemType>( container.get_attribute<int>( "type_id" ).value_or( -1 ) );
 }
+#endif

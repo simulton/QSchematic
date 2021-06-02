@@ -17,7 +17,7 @@ Label::Label(int type, QGraphicsItem* parent) :
 {
     setSnapToGrid(false);
 }
-
+#ifdef USE_GPDS
 gpds::container Label::to_container() const
 {
     // Connection point
@@ -52,7 +52,7 @@ void Label::from_container(const gpds::container& container)
         _connectionPoint.setY(connectionPointContainer->get_value<double>("y").value_or(0));
     }
 }
-
+#endif
 std::shared_ptr<Item> Label::deepCopy() const
 {
     auto clone = std::make_shared<Label>(type(), parentItem());

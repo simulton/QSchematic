@@ -41,7 +41,7 @@ Node::~Node()
     dissociate_items(_connectors);
     dissociate_items(_specialConnectors);
 }
-
+#ifdef USE_GPDS
 gpds::container Node::to_container() const
 {
     // Connectors configuration
@@ -104,7 +104,7 @@ void Node::from_container(const gpds::container& container)
         }
     }
 }
-
+#endif
 std::shared_ptr<Item> Node::deepCopy() const
 {
     auto clone = std::make_shared<Node>(type(), parentItem());

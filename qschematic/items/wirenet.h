@@ -3,7 +3,9 @@
 #include <memory>
 #include <QObject>
 #include <QList>
+#ifdef USE_GPDS
 #include <gpds/serialize.hpp>
+#endif
 
 #include "wire_system/line.h"
 #include "wire_system/net.h"
@@ -24,7 +26,9 @@ namespace QSchematic {
 
     class QSCHEMATIC_EXPORT WireNet :
         public QObject,
+#ifdef USE_GPDS
         public gpds::serialize,
+#endif
         public wire_system::net
     {
         Q_OBJECT
@@ -34,8 +38,10 @@ namespace QSchematic {
         WireNet(QObject* parent = nullptr);
         virtual ~WireNet()  override;
 
+#ifdef USE_GPDS
         virtual gpds::container to_container() const override;
         virtual void from_container(const gpds::container& container) override;
+#endif
 
         bool addWire(const std::shared_ptr<wire>& wire) override;
         bool removeWire(const std::shared_ptr<wire> wire) override;
