@@ -1,0 +1,10 @@
+target_sources(
+    ${TARGET}
+    PRIVATE
+        model.cpp
+        model.h
+        viewer.cpp
+        viewer.h
+        view.cpp
+        view.h
+)

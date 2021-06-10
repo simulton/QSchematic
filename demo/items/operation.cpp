@@ -172,13 +172,12 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         QAction* text = new QAction;
         text->setText("Rename ...");
         connect(text, &QAction::triggered, [this] {
+            if (!scene())
+                return;
+
             const QString& newText = QInputDialog::getText(nullptr, "Rename Connector", "New connector text", QLineEdit::Normal, label()->text());
 
-            if (scene()) {
-                scene()->undoStack()->push(new QSchematic::CommandLabelRename(label().get(), newText));
-            } else {
-                label()->setText(newText);
-            }
+            scene()->undoStack()->push(new QSchematic::CommandLabelRename(label().get(), newText));
         });
 
         // Label visibility
@@ -187,11 +186,10 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         labelVisibility->setChecked(label()->isVisible());
         labelVisibility->setText("Label visible");
         connect(labelVisibility, &QAction::toggled, [this](bool enabled) {
-            if (scene()) {
-                scene()->undoStack()->push(new QSchematic::CommandItemVisibility(label(), enabled));
-            } else {
-                label()->setVisible(enabled);
-            }
+            if (!scene())
+                return;
+
+            scene()->undoStack()->push(new QSchematic::CommandItemVisibility(label(), enabled));
         });
 
         // Align label
@@ -205,22 +203,20 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         QAction* newConnector = new QAction;
         newConnector->setText("Add connector");
         connect(newConnector, &QAction::triggered, [this, event] {
+            if (!scene())
+                return;
+
             auto connector = std::make_shared<OperationConnector>(event->pos().toPoint(), QStringLiteral("Unnamed"), this);
 
-            if (scene()) {
-                scene()->undoStack()->push(new CommandNodeAddConnector(this, connector));
-            } else {
-                addConnector(connector);
-            }
+            scene()->undoStack()->push(new Commands::CommandNodeAddConnector(this, connector));
         });
 
         // Duplicate
         QAction* duplicate = new QAction;
         duplicate->setText("Duplicate");
         connect(duplicate, &QAction::triggered, [this] {
-            if (!scene()) {
+            if (!scene())
                 return;
-            }
 
             auto clone = deepCopy();
             clone->setPos( pos() + QPointF(5*_settings.gridSize, 5*_settings.gridSize));
@@ -231,22 +227,23 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         QAction* deleteFromModel = new QAction;
         deleteFromModel->setText("Delete");
         connect(deleteFromModel, &QAction::triggered, [this] {
-            if (scene()) {
-                // Retrieve smart pointer
-                std::shared_ptr<QSchematic::Item> itemPointer;
-                for (auto& i : scene()->items()) {
-                    if (i.get() == this) {
-                        itemPointer = i;
-                        break;
-                    }
-                }
-                if (!itemPointer) {
-                    return;
-                }
+            if (!scene())
+                return;
 
-                // Issue command
-                scene()->undoStack()->push(new QSchematic::CommandItemRemove(scene(), itemPointer));
+            // Retrieve smart pointer
+            std::shared_ptr<QSchematic::Item> itemPointer;
+            for (auto& i : scene()->items()) {
+                if (i.get() == this) {
+                    itemPointer = i;
+                    break;
+                }
             }
+            if (!itemPointer) {
+                return;
+            }
+
+            // Issue command
+            scene()->undoStack()->push(new QSchematic::CommandItemRemove(scene(), itemPointer));
         });
 
         // Assemble

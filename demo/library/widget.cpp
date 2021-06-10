@@ -1,18 +1,20 @@
 #include <QBoxLayout>
 
-#include "itemsslibrarywidget.h"
-#include "itemslibrarymodel.h"
-#include "itemslibraryview.h"
+#include "widget.h"
+#include "model.h"
+#include "view.h"
 
-ItemsLibraryWidget::ItemsLibraryWidget(QWidget* parent) : QWidget(parent)
+using namespace Library;
+
+Widget::Widget(QWidget* parent) : QWidget(parent)
 {
     // Model
-    _model = new ItemsLibraryModel(this);
+    _model = new Model(this);
 
     // View
-    _view = new ItemsLibraryView(this);
+    _view = new View(this);
     _view->setModel(_model);
-    connect(_view, &ItemsLibraryView::clicked, this, &ItemsLibraryWidget::itemClickedSlot);
+    connect(_view, &View::clicked, this, &Widget::itemClickedSlot);
 
     // Main layout
     QVBoxLayout* layout = new QVBoxLayout(this);
@@ -24,12 +26,12 @@ ItemsLibraryWidget::ItemsLibraryWidget(QWidget* parent) : QWidget(parent)
     _view->expandAll();
 }
 
-void ItemsLibraryWidget::setPixmapScale(qreal scale)
+void Widget::setPixmapScale(qreal scale)
 {
     _view->setPixmapScale(scale);
 }
 
-void ItemsLibraryWidget::itemClickedSlot(const QModelIndex& index)
+void Widget::itemClickedSlot(const QModelIndex& index)
 {
     // Sanity check
     if (!index.isValid()) {
@@ -44,7 +46,7 @@ void ItemsLibraryWidget::itemClickedSlot(const QModelIndex& index)
     emit itemClicked(item);
 }
 
-void ItemsLibraryWidget::expandAll()
+void Widget::expandAll()
 {
     _view->expandAll();
 }

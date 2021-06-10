@@ -1,12 +1,14 @@
+#include "view.h"
+
+#include <qschematic/items/item.h>
+#include <qschematic/items/itemmimedata.h>
+
 #include <QDrag>
 #include <QPainter>
 
-#include "qschematic/items/item.h"
-#include "qschematic/items/itemmimedata.h"
+using namespace Library;
 
-#include "itemslibraryview.h"
-
-ItemsLibraryView::ItemsLibraryView(QWidget* parent) : QTreeView(parent)
+View::View(QWidget* parent) : QTreeView(parent)
 {
     // Initialization
     _scale = 1.0;
@@ -19,12 +21,12 @@ ItemsLibraryView::ItemsLibraryView(QWidget* parent) : QTreeView(parent)
     setIconSize(QSize(28, 28));
 }
 
-void ItemsLibraryView::setPixmapScale(qreal scale)
+void View::setPixmapScale(qreal scale)
 {
     _scale = scale;
 }
 
-void ItemsLibraryView::startDrag(Qt::DropActions supportedActions)
+void View::startDrag(Qt::DropActions supportedActions)
 {
     QModelIndexList indexes = selectedIndexes();
     if (indexes.count() != 1) {

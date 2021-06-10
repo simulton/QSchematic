@@ -1,6 +1,19 @@
-#include <functional>
-#include <memory>
-#include <sstream>
+#include "mainwindow.h"
+#include "items/customitemfactory.h"
+#include "items/operation.h"
+#include "items/operationconnector.h"
+#include "items/fancywire.h"
+#include "library/widget.h"
+#include "netlist/viewer.h"
+
+#include <gpds/archiver_xml.hpp>
+#include <qschematic/scene.h>
+#include <qschematic/view.h>
+#include <qschematic/items/node.h>
+#include <qschematic/items/itemfactory.h>
+#include <qschematic/netlist.h>
+#include <qschematic/netlistgenerator.h>
+
 #include <QToolBar>
 #include <QAction>
 #include <QFile>
@@ -13,24 +26,14 @@
 #include <QInputDialog>
 #include <QFileDialog>
 #include <QTextCodec>
-#include <gpds/archiver_xml.hpp>
 #ifndef QT_NO_PRINTER
     #include <QPrinter>
     #include <QPrintDialog>
 #endif
-#include <qschematic/scene.h>
-#include <qschematic/view.h>
-#include <qschematic/items/node.h>
-#include <qschematic/items/itemfactory.h>
-#include <qschematic/netlist.h>
-#include <qschematic/netlistgenerator.h>
-#include "mainwindow.h"
-#include "items/customitemfactory.h"
-#include "items/operation.h"
-#include "items/operationconnector.h"
-#include "items/fancywire.h"
-#include "itemslibrary/itemsslibrarywidget.h"
-#include "netlistviewer/netlistviewer.h"
+
+#include <functional>
+#include <memory>
+#include <sstream>
 
 const QString FILE_FILTERS = "XML (*.xml)";
 
@@ -79,8 +82,8 @@ MainWindow::MainWindow(QWidget *parent)
     _view->setScene(_scene);
 
     // Item library
-    _itemLibraryWidget = new ItemsLibraryWidget(this);
-    connect(_view, &QSchematic::View::zoomChanged, _itemLibraryWidget, &ItemsLibraryWidget::setPixmapScale);
+    _itemLibraryWidget = new Library::Widget(this);
+    connect(_view, &QSchematic::View::zoomChanged, _itemLibraryWidget, &Library::Widget::setPixmapScale);
     QDockWidget* itemLibraryDock = new QDockWidget;
     itemLibraryDock->setWindowTitle("Items");
     itemLibraryDock->setWidget(_itemLibraryWidget);
@@ -94,7 +97,7 @@ MainWindow::MainWindow(QWidget *parent)
     addDockWidget(Qt::LeftDockWidgetArea, undoDockWiget);
 
     // Netlist viewer
-    _netlistViewer = new NetlistViewer();
+    _netlistViewer = new ::Netlist::Viewer();
     QDockWidget* netlistviewerDockWidget = new QDockWidget;
     netlistviewerDockWidget->setWindowTitle(QStringLiteral("Netlist Viewer"));
     netlistviewerDockWidget->setWidget(_netlistViewer);

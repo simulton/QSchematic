@@ -6,22 +6,22 @@
 class TreeItem
 {
 public:
-    explicit TreeItem( const QVector<QVariant>& data, TreeItem* parentItem = nullptr );
-    ~TreeItem();
+    explicit TreeItem(const QVector<QVariant>& data, TreeItem* parentItem = nullptr);
+    virtual ~TreeItem();
 
     void clear();
-    void setData( QVector<QVariant>&& data );
-    void appendChild( TreeItem* child );
+    void setData(QVector<QVariant>&& data);
+    void appendChild(TreeItem* child);
 
-    TreeItem* child( int row );
-    int childCount( ) const;
-    int columnCount( ) const;
-    QVariant data( int column ) const;
-    int row( ) const;
-    TreeItem* parentItem( );
+    [[nodiscard]] TreeItem* child(int row);
+    [[nodiscard]] int childCount() const;
+    [[nodiscard]] int columnCount() const;
+    [[nodiscard]] QVariant data(int column) const;
+    [[nodiscard]] int row() const;
+    [[nodiscard]] TreeItem* parentItem();
 
 private:
     QVector<TreeItem*> _children;
     QVector<QVariant> _data;
-    TreeItem* _parent;
+    TreeItem* _parent = nullptr;
 };

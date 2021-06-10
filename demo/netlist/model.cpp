@@ -1,16 +1,18 @@
-#include "netlistviewermodel.h"
+#include "model.h"
 #include "common/treeitem.h"
 #include "items/operation.h"
 #include "items/operationconnector.h"
 
-NetlistViewerModel::NetlistViewerModel( QObject* parent ) :
+using namespace Netlist;
+
+Model::Model(QObject* parent) :
     TreeModel( parent )
 {
     // Set header
     _rootItem->setData( { "Name", "Address" } );
 }
 
-void NetlistViewerModel::setNetlist( const QSchematic::Netlist<Operation*, OperationConnector*>& netlist )
+void Model::setNetlist(const QSchematic::Netlist<Operation*, OperationConnector*>& netlist)
 {
     // Clear previous content
     clear();
@@ -64,7 +66,7 @@ void NetlistViewerModel::setNetlist( const QSchematic::Netlist<Operation*, Opera
     }
 }
 
-QString NetlistViewerModel::pointerToString( const void* ptr )
+QString Model::pointerToString(const void* ptr)
 {
     return QString( "0x%1" ).arg( (quintptr)ptr, QT_POINTER_SIZE * 2, 16, QChar('0') );
 }

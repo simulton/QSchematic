@@ -2,6 +2,7 @@
 
 #include "qschematic/commands/commands.h"
 
-enum CommandType {
+enum CommandType
+{
     NodeAddConnectorCommandType = QSchematic::QSchematicCommandUserType + 1,
 };

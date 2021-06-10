@@ -1,8 +1,10 @@
 #pragma once
 
-#include <memory>
+#include <qschematic/settings.h>
+
 #include <QMainWindow>
-#include "../qschematic/settings.h"
+
+#include <memory>
 
 #ifndef WINDOW_WIDTH
     #define WINDOW_WIDTH 2800
@@ -14,22 +16,31 @@
 class QUndoView;
 class QGraphicsSceneContextMenuEvent;
 
-namespace QSchematic {
+namespace QSchematic
+{
     class Scene;
     class View;
     class Wire;
 }
 
-class ItemsLibraryWidget;
-class NetlistViewer;
+namespace Library
+{
+    class Widget;
+}
 
-class MainWindow : public QMainWindow
+namespace Netlist
+{
+    class Viewer;
+}
+
+class MainWindow :
+    public QMainWindow
 {
     Q_OBJECT
-    Q_DISABLE_COPY(MainWindow)
+    Q_DISABLE_COPY_MOVE(MainWindow)
 
 public:
-    MainWindow(QWidget* parent = nullptr);
+    explicit MainWindow(QWidget* parent = nullptr);
     ~MainWindow() override = default;
 
     bool save();
@@ -44,9 +55,9 @@ private:
     QSchematic::Scene* _scene;
     QSchematic::View* _view;
     QSchematic::Settings _settings;
-    ItemsLibraryWidget* _itemLibraryWidget;
+    Library::Widget* _itemLibraryWidget;
     QUndoView* _undoView;
-    NetlistViewer* _netlistViewer;
+    ::Netlist::Viewer* _netlistViewer;
     QAction* _actionOpen;
     QAction* _actionSave;
     QAction* _actionPrint;

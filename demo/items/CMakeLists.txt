@@ -1,0 +1,19 @@
+target_sources(
+    ${TARGET}
+    PRIVATE
+        customitemfactory.cpp
+        customitemfactory.h
+        fancywire.cpp
+        fancywire.h
+        flowend.cpp
+        flowend.h
+        flowstart.cpp
+        flowstart.h
+        itemtypes.h
+        operation.cpp
+        operation.h
+        operationconnector.cpp
+        operationconnector.h
+        operationdemo1.cpp
+        operationdemo1.h
+)
