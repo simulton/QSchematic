@@ -33,7 +33,7 @@ WireNet::~WireNet()
     if (_label)
         dissociate_item(_label);
 }
-
+#ifdef USE_GPDS
 gpds::container WireNet::to_container() const
 {
     // Wires
@@ -94,7 +94,7 @@ void WireNet::from_container(const gpds::container& container)
         }
     }
 }
-
+#endif
 bool WireNet::addWire(const std::shared_ptr<wire>& wire)
 {
     if (!net::addWire(wire)) {

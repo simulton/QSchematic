@@ -5,11 +5,18 @@ project(qschematic)
 
 # User options
 option(QSCHEMATIC_BUILD_DEMO "Whether to build the demo project" ON)
-option(QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD "Whether to pull the GPDS dependency via FetchContent" ON)
+option(QSCHEMATIC_USE_GPDS "Whether to use GPDS dependency to save and load files" ON)
 
+#GPDS options and settings
+if (QSCHEMATIC_USE_GPDS)
+    option(QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD "Whether to pull the GPDS dependency via FetchContent" ON)
+    set(QSCHEMATIC_DEPENDENCY_GPDS_TARGET "gpds-static" CACHE STRING "The CMake target of the GPDS library to use")
+    add_compile_definitions(USE_GPDS)
+endif()
 # User settings
-set(QSCHEMATIC_DEPENDENCY_GPDS_TARGET "gpds-static" CACHE STRING "The CMake target of the GPDS library to use")
 set(CMAKE_DEBUG_POSTFIX d)
+
+#set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # Include the library
 add_subdirectory(qschematic)
@@ -25,10 +32,12 @@ message("-------------------------")
 message("QSchematic configuration:")
 message("  Build")
 message("    Demo       : " ${QSCHEMATIC_BUILD_DEMO})
-message("  Dependencies")
-message("    GPDS")
-message("      Download : " ${QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD})
-message("      Target   : " ${QSCHEMATIC_DEPENDENCY_GPDS_TARGET})
+if (QSCHEMATIC_USE_GPDS)
+    message("  Dependencies")
+    message("    GPDS")
+    message("      Download : " ${QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD})
+    message("      Target   : " ${QSCHEMATIC_DEPENDENCY_GPDS_TARGET})
+endif()
 message("-------------------------")
 message("")
 

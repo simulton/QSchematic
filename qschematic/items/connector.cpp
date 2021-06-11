@@ -52,7 +52,7 @@ Connector::~Connector()
     // So it's definitely removed via the shared_ptr (which we have by way of the item-allocation contracts being shptr all through
     dissociate_item(_label);
 }
-
+#ifdef USE_GPDS
 gpds::container Connector::to_container() const
 {
     // Root
@@ -75,7 +75,7 @@ void Connector::from_container(const gpds::container& container)
     _textDirection = static_cast<Direction>(container.get_value<int>("text_direction").value_or(LeftToRight));
     _label->from_container(*container.get_value<gpds::container*>("label").value());
 }
-
+#endif
 std::shared_ptr<Item> Connector::deepCopy() const
 {
     auto clone = std::make_shared<Connector>(type(), gridPos(), text(), parentItem());

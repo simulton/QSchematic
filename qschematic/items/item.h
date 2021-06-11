@@ -2,7 +2,9 @@
 
 #include <memory>
 #include <QGraphicsObject>
+#ifdef USE_GPDS
 #include <gpds/serialize.hpp>
+#endif
 #include "../types.h"
 #include "../settings.h"
 #include "itemfunctions.h"
@@ -17,7 +19,9 @@ namespace QSchematic
 
     class QSCHEMATIC_EXPORT Item :
         public QGraphicsObject,
+#ifdef USE_GPDS
         public gpds::serialize,
+#endif
         public std::enable_shared_from_this<Item>
     {
         Q_OBJECT
@@ -84,8 +88,10 @@ namespace QSchematic
         }
         /// @}
 
+#ifdef USE_GPDS
         virtual gpds::container to_container() const override;
         virtual void from_container(const gpds::container& container) override;
+#endif
         virtual std::shared_ptr<Item> deepCopy() const = 0;
 
         int type() const final;
@@ -135,7 +141,9 @@ namespace QSchematic
         Settings _settings;
 
         void copyAttributes(Item& dest) const;
+#ifdef USE_GPDS
         void addItemTypeIdToContainer(gpds::container& container) const;
+#endif
 
         bool isHighlighted() const;
         virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value) override;

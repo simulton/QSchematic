@@ -51,7 +51,7 @@ Scene::Scene(QObject* parent) :
     // Prepare the background
     renderCachedBackground();
 }
-
+#ifdef USE_GPDS
 gpds::container Scene::to_container() const
 {
     // Scene
@@ -157,7 +157,7 @@ void Scene::from_container(const gpds::container& container)
     // Clear the undo history
     _undoStack->clear();
 }
-
+#endif
 void Scene::setSettings(const Settings& settings)
 {
     // Update settings of all items

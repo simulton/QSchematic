@@ -43,7 +43,7 @@ Item::~Item()
     // Q_ASSERT(SharedPtrTracker::assert_expired(this));
     Q_ASSERT(weakPtr().expired());
 }
-
+#ifdef USE_GPDS
 gpds::container Item::to_container() const
 {
     // Root
@@ -70,7 +70,7 @@ void Item::from_container(const gpds::container& container)
     setSnapToGrid(container.get_value<bool>("snap_to_grid").value_or(true));
     setHighlightEnabled(container.get_value<bool>("highlight").value_or(false));
 }
-
+#endif
 void Item::copyAttributes(Item& dest) const
 {
     // Base class
@@ -86,12 +86,12 @@ void Item::copyAttributes(Item& dest) const
     dest._oldPos = _oldPos;
     dest._oldRot = _oldRot;
 }
-
+#ifdef USE_GPDS
 void Item::addItemTypeIdToContainer(gpds::container& container) const
 {
     container.add_attribute( "type_id", type() );
 }
-
+#endif
 Scene* Item::scene() const
 {
     return qobject_cast<Scene*>(QGraphicsObject::scene());

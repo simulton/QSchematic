@@ -59,7 +59,7 @@ Wire::~Wire()
         }
     }
 }
-
+#ifdef USE_GPDS
 gpds::container Wire::to_container() const
 {
     // Points
@@ -108,7 +108,7 @@ void Wire::from_container(const gpds::container& container)
 
     update();
 }
-
+#endif
 std::shared_ptr<Item> Wire::deepCopy() const
 {
     auto clone = std::make_shared<Wire>(type(), parentItem());

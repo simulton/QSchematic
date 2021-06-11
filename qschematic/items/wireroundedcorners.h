@@ -16,8 +16,10 @@ namespace QSchematic
         WireRoundedCorners(int type = Item::WireRoundedCornersType, QGraphicsItem* parent = nullptr);
         virtual ~WireRoundedCorners() override = default;
 
+#ifdef USE_GPDS
         virtual gpds::container to_container() const override;
         virtual void from_container(const gpds::container& container) override;
+#endif
         virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
     private:
