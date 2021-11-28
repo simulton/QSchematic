@@ -37,7 +37,7 @@ namespace QSchematic
         Q_ENUM(ItemType)
 
         Item(int type, QGraphicsItem* parent = nullptr);
-        virtual ~Item() override;
+        ~Item() override;
 
         /**
          * These funcs should be the only source for obtaining a canonical
@@ -84,8 +84,8 @@ namespace QSchematic
         }
         /// @}
 
-        virtual gpds::container to_container() const override;
-        virtual void from_container(const gpds::container& container) override;
+        gpds::container to_container() const override;
+        void from_container(const gpds::container& container) override;
         virtual std::shared_ptr<Item> deepCopy() const = 0;
 
         int type() const final;
@@ -138,7 +138,7 @@ namespace QSchematic
         void addItemTypeIdToContainer(gpds::container& container) const;
 
         bool isHighlighted() const;
-        virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value) override;
+        QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value) override;
 
     private slots:
         void posChanged();

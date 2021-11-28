@@ -19,7 +19,7 @@ namespace QSchematic {
         };
 
         explicit View(QWidget* parent = nullptr);
-        virtual ~View() override = default;
+        ~View() override = default;
 
         void setScene(Scene* scene);
         void setSettings(const Settings& settings);
@@ -34,11 +34,11 @@ namespace QSchematic {
         void fitInView();
 
     protected:
-        virtual void keyPressEvent(QKeyEvent* event) override;
-        virtual void wheelEvent(QWheelEvent* event) override;
-        virtual void mouseMoveEvent(QMouseEvent* event) override;
-        virtual void mousePressEvent(QMouseEvent* event) override;
-        virtual void mouseReleaseEvent(QMouseEvent* event) override;
+        void keyPressEvent(QKeyEvent* event) override;
+        void wheelEvent(QWheelEvent* event) override;
+        void mouseMoveEvent(QMouseEvent* event) override;
+        void mousePressEvent(QMouseEvent* event) override;
+        void mouseReleaseEvent(QMouseEvent* event) override;
 
     private:
         void updateScale();

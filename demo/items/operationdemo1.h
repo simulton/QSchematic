@@ -9,11 +9,11 @@ class OperationDemo1 : public Operation
 
 public:
     explicit OperationDemo1(QGraphicsItem* parent = nullptr);
-    virtual ~OperationDemo1() override = default;
+    ~OperationDemo1() override = default;
 
-    virtual gpds::container to_container() const override;
-    virtual void from_container(const gpds::container& container) override;
-    virtual std::shared_ptr<QSchematic::Item> deepCopy() const override;
+    gpds::container to_container() const override;
+    void from_container(const gpds::container& container) override;
+    std::shared_ptr<QSchematic::Item> deepCopy() const override;
 
 private:
     void copyAttributes(OperationDemo1& dest) const;

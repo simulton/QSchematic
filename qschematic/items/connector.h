@@ -25,11 +25,11 @@ namespace QSchematic {
         Q_ENUM(SnapPolicy)
 
         Connector(int type = Item::ConnectorType, const QPoint& gridPos = QPoint(), const QString& text = QString(), QGraphicsItem* parent = nullptr);
-        virtual ~Connector() override;
+        ~Connector() override;
 
-        virtual gpds::container to_container() const override;
-        virtual void from_container(const gpds::container& container) override;
-        virtual std::shared_ptr<Item> deepCopy() const override;
+        gpds::container to_container() const override;
+        void from_container(const gpds::container& container) override;
+        std::shared_ptr<Item> deepCopy() const override;
 
         void setSnapPolicy(SnapPolicy policy);
         SnapPolicy snapPolicy() const;
@@ -39,14 +39,14 @@ namespace QSchematic {
         bool forceTextDirection() const;
         void setForcedTextDirection(Direction direction);
         Direction textDirection() const;
-        virtual void update() override;
+        void update() override;
 
         QPointF connectionPoint() const;
         std::shared_ptr<Label> label() const;
         void alignLabel();
-        virtual QRectF boundingRect() const override;
-        virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value) override;
-        virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
+        QRectF boundingRect() const override;
+        QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value) override;
+        void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
         // Connectable
         QPointF position() const override;

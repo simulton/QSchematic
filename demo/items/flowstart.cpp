@@ -63,7 +63,7 @@ void FlowStart::from_container(const gpds::container& container)
 std::shared_ptr<QSchematic::Item> FlowStart::deepCopy() const
 {
     auto clone = std::make_shared<FlowStart>();
-    copyAttributes(*(clone.get()));
+    copyAttributes(*clone);
 
     return clone;
 }

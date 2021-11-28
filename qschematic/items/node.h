@@ -31,11 +31,11 @@ namespace QSchematic {
         Q_ENUM(Mode)
 
         Node(int type = Item::NodeType, QGraphicsItem* parent = nullptr);
-        virtual ~Node() override;
+        ~Node() override;
 
-        virtual gpds::container to_container() const override;
-        virtual void from_container(const gpds::container& container) override;
-        virtual std::shared_ptr<Item> deepCopy() const override;
+        gpds::container to_container() const override;
+        void from_container(const gpds::container& container) override;
+        std::shared_ptr<Item> deepCopy() const override;
 
         Mode mode() const;
         void setSize(const QSizeF& size);
@@ -71,17 +71,17 @@ namespace QSchematic {
          */
         virtual auto sizeChangedEvent() -> void;
 
-        virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
-        virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
-        virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
-        virtual void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
-        virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;
-        virtual void hoverMoveEvent(QGraphicsSceneHoverEvent* event) override;
-        virtual QRectF boundingRect() const override;
+        void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+        void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
+        void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
+        void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
+        void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;
+        void hoverMoveEvent(QGraphicsSceneHoverEvent* event) override;
+        QRectF boundingRect() const override;
         QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value) override;
-        virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
-        virtual bool canSnapToGrid() const;
-        virtual void update() override;
+        void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
+        bool canSnapToGrid() const;
+        void update() override;
 
     protected:
         void copyAttributes(Node& dest) const;

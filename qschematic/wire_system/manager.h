@@ -33,7 +33,7 @@ public:
     manager();
     manager(const manager& other) = delete;
     manager(manager&& other) = delete;
-    virtual ~manager() override = default;
+    ~manager() override = default;
 
     // Operators
     manager& operator=(const manager& rhs) = delete;

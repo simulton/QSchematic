@@ -81,7 +81,7 @@ void Operation::from_container(const gpds::container& container)
 std::shared_ptr<QSchematic::Item> Operation::deepCopy() const
 {
     auto clone = std::make_shared<Operation>(::ItemType::OperationType, parentItem());
-    copyAttributes(*(clone.get()));
+    copyAttributes(*clone);
 
     return clone;
 }

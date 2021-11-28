@@ -18,10 +18,10 @@ namespace QSchematic
     public:
         CommandItemMove(const QVector<std::shared_ptr<Item>>& item, const QVector<QVector2D>& moveBy, QUndoCommand* parent = nullptr);
 
-        virtual int id() const override;
-        virtual bool mergeWith(const QUndoCommand* command) override;
-        virtual void undo() override;
-        virtual void redo() override;
+        int id() const override;
+        bool mergeWith(const QUndoCommand* command) override;
+        void undo() override;
+        void redo() override;
 
     private:
         QVector<std::shared_ptr<Item>> _items;

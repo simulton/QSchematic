@@ -108,7 +108,7 @@ void Node::from_container(const gpds::container& container)
 std::shared_ptr<Item> Node::deepCopy() const
 {
     auto clone = std::make_shared<Node>(type(), parentItem());
-    copyAttributes(*(clone.get()));
+    copyAttributes(*clone);
 
     return clone;
 }

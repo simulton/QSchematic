@@ -15,10 +15,10 @@ namespace QSchematic
 
     public:
         explicit ItemMimeData(std::shared_ptr<Item> item);
-        virtual ~ItemMimeData() override = default;
+        ~ItemMimeData() override = default;
 
-        virtual QStringList formats() const override;
-        virtual bool hasFormat(const QString& mimetype) const override;
+        QStringList formats() const override;
+        bool hasFormat(const QString& mimetype) const override;
 
         std::shared_ptr<Item> item() const;
 

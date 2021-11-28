@@ -12,7 +12,7 @@ class TreeModel :
 
 public:
     explicit TreeModel(QObject* parent = nullptr);
-    virtual ~TreeModel() override;
+    ~TreeModel() override;
 
     void clear();
 

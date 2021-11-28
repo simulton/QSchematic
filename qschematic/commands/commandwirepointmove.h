@@ -19,10 +19,10 @@ namespace QSchematic
         CommandWirepointMove(Scene* scene, const std::shared_ptr<Wire>& wire, int index,
                              const QPointF& pos, QUndoCommand* parent = nullptr);
 
-        virtual int id() const override;
-        virtual bool mergeWith(const QUndoCommand* command) override;
-        virtual void undo() override;
-        virtual void redo() override;
+        int id() const override;
+        bool mergeWith(const QUndoCommand* command) override;
+        void undo() override;
+        void redo() override;
 
     private:
         std::shared_ptr<Wire> _wire;

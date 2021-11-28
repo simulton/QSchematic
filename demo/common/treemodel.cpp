@@ -30,7 +30,7 @@ int TreeModel::rowCount(const QModelIndex& parent) const
     if (parent.column() > 0)
         return 0;
 
-    TreeItem* parentItem = nullptr;
+    TreeItem* parentItem;
     if (!parent.isValid())
         parentItem = _rootItem;
     else

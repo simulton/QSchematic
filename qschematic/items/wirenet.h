@@ -32,10 +32,10 @@ namespace QSchematic {
 
     public:
         WireNet(QObject* parent = nullptr);
-        virtual ~WireNet()  override;
+        ~WireNet()  override;
 
-        virtual gpds::container to_container() const override;
-        virtual void from_container(const gpds::container& container) override;
+        gpds::container to_container() const override;
+        void from_container(const gpds::container& container) override;
 
         bool addWire(const std::shared_ptr<wire>& wire) override;
         bool removeWire(const std::shared_ptr<wire> wire) override;

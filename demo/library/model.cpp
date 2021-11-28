@@ -144,7 +144,7 @@ int Model::rowCount(const QModelIndex& parent) const
 
 int Model::columnCount(const QModelIndex& parent) const
 {
-    Q_UNUSED(parent);
+    Q_UNUSED(parent)
 
     return 1;
 }
@@ -231,8 +231,6 @@ QVariant Model::data(const QModelIndex& index, int role) const
             return {};
 
     }
-
-    return { };
 }
 
 Qt::ItemFlags Model::flags(const QModelIndex& index) const

@@ -64,7 +64,7 @@ void FlowEnd::from_container(const gpds::container& container)
 std::shared_ptr<QSchematic::Item> FlowEnd::deepCopy() const
 {
     auto clone = std::make_shared<FlowEnd>();
-    copyAttributes(*(clone.get()));
+    copyAttributes(*clone);
 
     return clone;
 }

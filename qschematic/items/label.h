@@ -21,14 +21,14 @@ namespace QSchematic {
 
     public:
         Label(int type = Item::LabelType, QGraphicsItem* parent = nullptr);
-        virtual ~Label() override = default;
+        ~Label() override = default;
 
-        virtual gpds::container to_container() const override;
-        virtual void from_container(const gpds::container& container) override;
-        virtual std::shared_ptr<Item> deepCopy() const override;
+        gpds::container to_container() const override;
+        void from_container(const gpds::container& container) override;
+        std::shared_ptr<Item> deepCopy() const override;
 
-        virtual QRectF boundingRect() const final;
-        virtual QPainterPath shape() const final;
+        QRectF boundingRect() const final;
+        QPainterPath shape() const final;
 
         void setText(const QString& text);
         QString text() const;

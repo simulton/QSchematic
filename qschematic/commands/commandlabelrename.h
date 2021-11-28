@@ -14,10 +14,10 @@ namespace QSchematic
     public:
         CommandLabelRename(const QPointer<Label>& label, const QString& newText, QUndoCommand* parent = nullptr);
 
-        virtual int id() const override;
-        virtual bool mergeWith(const QUndoCommand* command) override;
-        virtual void undo() override;
-        virtual void redo() override;
+        int id() const override;
+        bool mergeWith(const QUndoCommand* command) override;
+        void undo() override;
+        void redo() override;
 
     private:
         QPointer<Label> _label;

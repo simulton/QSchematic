@@ -36,10 +36,10 @@ namespace QSchematic {
         Q_ENUM(Mode)
 
         explicit Scene(QObject* parent = nullptr);
-        virtual ~Scene() override = default;
+        ~Scene() override = default;
 
-        virtual gpds::container to_container() const override;
-        virtual void from_container(const gpds::container& container) override;
+        gpds::container to_container() const override;
+        void from_container(const gpds::container& container) override;
 
         void setSettings(const Settings& settings);
         void setWireFactory(const std::function<std::shared_ptr<Wire>()>& factory);
@@ -106,15 +106,15 @@ namespace QSchematic {
         void itemHighlighted(const std::shared_ptr<const Item>& item);
 
     protected:
-        virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
-        virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
-        virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
-        virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* mouseEvent) override;
-        virtual void dragEnterEvent(QGraphicsSceneDragDropEvent* event) override;
-        virtual void dragMoveEvent(QGraphicsSceneDragDropEvent* event) override;
-        virtual void dragLeaveEvent(QGraphicsSceneDragDropEvent* event) override;
-        virtual void dropEvent(QGraphicsSceneDragDropEvent* event) override;
-        virtual void drawBackground(QPainter* painter, const QRectF& rect) override;
+        void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+        void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
+        void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
+        void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* mouseEvent) override;
+        void dragEnterEvent(QGraphicsSceneDragDropEvent* event) override;
+        void dragMoveEvent(QGraphicsSceneDragDropEvent* event) override;
+        void dragLeaveEvent(QGraphicsSceneDragDropEvent* event) override;
+        void dropEvent(QGraphicsSceneDragDropEvent* event) override;
+        void drawBackground(QPainter* painter, const QRectF& rect) override;
 
         /* This gets called just before the item is actually being moved by moveBy. Subclasses may
          * implement this to implement snapping to elements other than the grid

@@ -12,11 +12,11 @@ namespace QSchematic
         Q_DISABLE_COPY_MOVE(SplineWire)
     public:
         SplineWire(int type = Item::SplineWireType, QGraphicsItem* parent = nullptr);
-        virtual ~SplineWire() override = default;
+        ~SplineWire() override = default;
 
-        virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
-        virtual QPainterPath path() const;
-        virtual QPainterPath shape() const override;
-        virtual QRectF boundingRect() const override;
+        void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
+        QPainterPath path() const;
+        QPainterPath shape() const override;
+        QRectF boundingRect() const override;
     };
 }

@@ -24,14 +24,14 @@ namespace QSchematic {
 
     public:
         Wire(int type = Item::WireType, QGraphicsItem* parent = nullptr);
-        virtual ~Wire() override;
-        virtual void update() override;
+        ~Wire() override;
+        void update() override;
 
-        virtual gpds::container to_container() const override;
-        virtual void from_container(const gpds::container& container) override;
-        virtual std::shared_ptr<Item> deepCopy() const override;
-        virtual QRectF boundingRect() const override;
-        virtual QPainterPath shape() const override;
+        gpds::container to_container() const override;
+        void from_container(const gpds::container& container) override;
+        std::shared_ptr<Item> deepCopy() const override;
+        QRectF boundingRect() const override;
+        QPainterPath shape() const override;
 
         void prepend_point(const QPointF& point) override;
         void append_point(const QPointF& point) override;
@@ -54,16 +54,16 @@ namespace QSchematic {
         void calculateBoundingRect();
         void setRenameAction(QAction* action);
 
-        virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
-        virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
-        virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
+        void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+        void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
+        void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
         void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event) override;
-        virtual void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
-        virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;
-        virtual void hoverMoveEvent(QGraphicsSceneHoverEvent* event) override;
-        virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
+        void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
+        void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;
+        void hoverMoveEvent(QGraphicsSceneHoverEvent* event) override;
+        void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
         void contextMenuEvent(QGraphicsSceneContextMenuEvent* event) override;
-        virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value) override;
+        QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value) override;
         void about_to_change() override;
         void has_changed() override;
         void add_segment(int index) override;
