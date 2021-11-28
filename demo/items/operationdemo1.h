@@ -5,7 +5,7 @@
 class OperationDemo1 : public Operation
 {
     Q_OBJECT
-    Q_DISABLE_COPY(OperationDemo1)
+    Q_DISABLE_COPY_MOVE(OperationDemo1)
 
 public:
     explicit OperationDemo1(QGraphicsItem* parent = nullptr);

@@ -9,7 +9,7 @@ namespace QSchematic
         public QSchematic::Wire
     {
         Q_OBJECT
-        Q_DISABLE_COPY(SplineWire)
+        Q_DISABLE_COPY_MOVE(SplineWire)
     public:
         SplineWire(int type = Item::SplineWireType, QGraphicsItem* parent = nullptr);
         virtual ~SplineWire() override = default;

@@ -12,7 +12,7 @@ namespace QSchematic
 class Operation : public QSchematic::Node
 {
     Q_OBJECT
-    Q_DISABLE_COPY(Operation)
+    Q_DISABLE_COPY_MOVE(Operation)
 
 public:
     explicit Operation(int type = ::ItemType::OperationType, QGraphicsItem* parent = nullptr);

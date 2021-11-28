@@ -28,7 +28,7 @@ namespace QSchematic {
         public wire_system::net
     {
         Q_OBJECT
-        Q_DISABLE_COPY(WireNet)
+        Q_DISABLE_COPY_MOVE(WireNet)
 
     public:
         WireNet(QObject* parent = nullptr);

@@ -21,7 +21,7 @@ namespace QSchematic
         public std::enable_shared_from_this<Item>
     {
         Q_OBJECT
-        Q_DISABLE_COPY(Item)
+        Q_DISABLE_COPY_MOVE(Item)
 
     public:
         enum ItemType {

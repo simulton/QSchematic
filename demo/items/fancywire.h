@@ -5,7 +5,7 @@
 class FancyWire : public QSchematic::WireRoundedCorners
 {
     Q_OBJECT
-    Q_DISABLE_COPY(FancyWire)
+    Q_DISABLE_COPY_MOVE(FancyWire)
 
 public:
     FancyWire(QGraphicsItem* parent = nullptr);

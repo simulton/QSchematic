@@ -17,7 +17,7 @@ namespace QSchematic {
         public Item
     {
         Q_OBJECT
-        Q_DISABLE_COPY(Node)
+        Q_DISABLE_COPY_MOVE(Node)
 
     signals:
         void sizeChanged();

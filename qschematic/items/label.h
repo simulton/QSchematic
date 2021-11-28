@@ -11,7 +11,7 @@ namespace QSchematic {
         public Item
     {
         Q_OBJECT
-        Q_DISABLE_COPY(Label)
+        Q_DISABLE_COPY_MOVE(Label)
 
         friend class CommandLabelRename;
 

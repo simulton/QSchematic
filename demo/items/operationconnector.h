@@ -5,7 +5,7 @@
 class OperationConnector : public QSchematic::Connector
 {
     Q_OBJECT
-    Q_DISABLE_COPY(OperationConnector)
+    Q_DISABLE_COPY_MOVE(OperationConnector)
 
 public:
     OperationConnector(const QPoint& gridPos = QPoint(), const QString& text = QString(), QGraphicsItem* parent = nullptr);

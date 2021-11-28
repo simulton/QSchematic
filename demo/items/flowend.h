@@ -7,7 +7,7 @@ class OperationConnector;
 class FlowEnd : public QSchematic::Node
 {
     Q_OBJECT
-    Q_DISABLE_COPY(FlowEnd)
+    Q_DISABLE_COPY_MOVE(FlowEnd)
 
 public:
     FlowEnd();

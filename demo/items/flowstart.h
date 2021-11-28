@@ -5,7 +5,7 @@
 class FlowStart : public QSchematic::Node
 {
     Q_OBJECT
-    Q_DISABLE_COPY(FlowStart)
+    Q_DISABLE_COPY_MOVE(FlowStart)
 
 public:
     FlowStart();

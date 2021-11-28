@@ -69,7 +69,7 @@ namespace QSchematic {
         void add_segment(int index) override;
 
     private:
-        Q_DISABLE_COPY(Wire)
+        Q_DISABLE_COPY_MOVE(Wire)
 
         void label_to_cursor(const QPointF& scenePos, std::shared_ptr<Label>& label) const;
 

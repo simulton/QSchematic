@@ -8,7 +8,7 @@ class TreeModel :
     public QAbstractItemModel
 {
     Q_OBJECT
-    Q_DISABLE_COPY(TreeModel)
+    Q_DISABLE_COPY_MOVE(TreeModel)
 
 public:
     explicit TreeModel(QObject* parent = nullptr);

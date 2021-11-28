@@ -14,7 +14,7 @@ namespace Netlist
         public TreeModel
     {
         Q_OBJECT
-        Q_DISABLE_COPY(Model)
+        Q_DISABLE_COPY_MOVE(Model)
 
     public:
         explicit Model(QObject* parent = nullptr);

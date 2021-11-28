@@ -14,7 +14,7 @@ namespace QSchematic {
         public wire_system::connectable
     {
         Q_OBJECT
-        Q_DISABLE_COPY(Connector)
+        Q_DISABLE_COPY_MOVE(Connector)
 
     public:
         enum SnapPolicy {

@@ -24,7 +24,7 @@ namespace QSchematic {
         public gpds::serialize
     {
         Q_OBJECT
-        Q_DISABLE_COPY(Scene)
+        Q_DISABLE_COPY_MOVE(Scene)
 
     public:
         enum Mode {

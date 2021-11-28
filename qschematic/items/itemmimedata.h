@@ -11,7 +11,7 @@ namespace QSchematic
         public QMimeData
     {
         Q_OBJECT
-        Q_DISABLE_COPY(ItemMimeData)
+        Q_DISABLE_COPY_MOVE(ItemMimeData)
 
     public:
         explicit ItemMimeData(std::shared_ptr<Item> item);

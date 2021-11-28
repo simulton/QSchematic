@@ -10,7 +10,7 @@ namespace QSchematic
         public QSchematic::Wire
     {
         Q_OBJECT
-        Q_DISABLE_COPY(WireRoundedCorners)
+        Q_DISABLE_COPY_MOVE(WireRoundedCorners)
 
     public:
         WireRoundedCorners(int type = Item::WireRoundedCornersType, QGraphicsItem* parent = nullptr);

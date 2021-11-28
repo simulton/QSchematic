@@ -10,7 +10,7 @@ namespace QSchematic {
         public QGraphicsView
     {
         Q_OBJECT
-        Q_DISABLE_COPY(View)
+        Q_DISABLE_COPY_MOVE(View)
 
     public:
         enum Mode {
