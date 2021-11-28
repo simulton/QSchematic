@@ -77,6 +77,7 @@ void Item::copyAttributes(Item& dest) const
     dest.setParentItem(parentItem());
     dest.setPos(pos());
     dest.setRotation(rotation());
+    dest.setMovable(isMovable());
     dest.setVisible(isVisible());
 
     // Attributes
