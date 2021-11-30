@@ -11,6 +11,7 @@
 
 #include "operationconnector.h"
 #include "operation.h"
+#include "popup/popup_connector.hpp"
 
 #define SIZE (_settings.gridSize/2)
 #define RECT (QRectF(-SIZE, -SIZE, 2*SIZE, 2*SIZE))
@@ -53,6 +54,11 @@ std::shared_ptr<QSchematic::Item> OperationConnector::deepCopy() const
 void OperationConnector::copyAttributes(OperationConnector& dest) const
 {
     QSchematic::Connector::copyAttributes(dest);
+}
+
+std::unique_ptr<QWidget> OperationConnector::popup() const
+{
+    return std::make_unique<PopupConnector>(*this);
 }
 
 QRectF OperationConnector::boundingRect() const

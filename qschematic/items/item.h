@@ -9,6 +9,7 @@
 #include "qschematic_export.h"
 
 #include <QDebug>
+#include <QWidget>
 
 namespace QSchematic
 {
@@ -123,6 +124,7 @@ namespace QSchematic
         QPixmap toPixmap(QPointF& hotSpot, qreal scale = 1.0);
         virtual void update();
         Scene* scene() const;
+        virtual std::unique_ptr<QWidget> popup() const { return nullptr; }
 
     signals:
         void moved(Item& item, const QVector2D& movedBy);

@@ -160,6 +160,8 @@ namespace QSchematic {
         QUndoStack* _undoStack;
         std::shared_ptr<wire_system::manager> m_wire_manager;
         Item* _highlightedItem;
+        QTimer* _popupTimer;
+        std::shared_ptr<QGraphicsProxyWidget> _popup;
 
     private slots:
         void updateNodeConnections(const Node* node) const;

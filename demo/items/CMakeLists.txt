@@ -1,3 +1,5 @@
+add_subdirectory(popup)
+
 target_sources(
     ${TARGET}
     PRIVATE

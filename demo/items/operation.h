@@ -21,6 +21,7 @@ public:
     gpds::container to_container() const override;
     void from_container(const gpds::container& container) override;
     std::shared_ptr<QSchematic::Item> deepCopy() const override;
+    std::unique_ptr<QWidget> popup() const override;
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
     void contextMenuEvent(QGraphicsSceneContextMenuEvent* event) override;
 

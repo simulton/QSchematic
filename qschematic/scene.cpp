@@ -2,6 +2,7 @@
 
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
+#include <QGraphicsProxyWidget>
 #include <QUndoStack>
 #include <QMimeData>
 #include <QtMath>
@@ -41,6 +42,20 @@ Scene::Scene(QObject* parent) :
     _undoStack = new QUndoStack;
     connect(_undoStack, &QUndoStack::cleanChanged, [this](bool isClean) {
         emit isDirtyChanged(!isClean);
+    });
+
+    // Popup timer
+    _popupTimer = new QTimer(this);
+    _popupTimer->setSingleShot(true);
+    connect(_popupTimer, &QTimer::timeout, [this]{
+        // Sanity check
+        if (!_highlightedItem)
+            return;
+
+        // Get item popup
+        _popup.reset( addWidget(_highlightedItem->popup().release()) );
+        _popup->setZValue(100);
+        _popup->setPos(_lastMousePos + QPointF{ 5, 5 });
     });
 
     // Stuff
@@ -1119,11 +1134,20 @@ QList<std::shared_ptr<Connector>> Scene::connectors() const
 void Scene::itemHoverEnter(const std::shared_ptr<const Item>& item)
 {
     emit itemHighlighted(item);
+
+    // Start popup timer
+    _popupTimer->start(_settings.popupDelay);
 }
 
 void Scene::itemHoverLeave([[maybe_unused]] const std::shared_ptr<const Item>& item)
 {
+    // ToDo: clear _highlightedItem ?
+
     emit itemHighlighted(nullptr);
+
+    // Stop popup timer
+    _popupTimer->stop();
+    _popup = { };
 }
 
 /**
