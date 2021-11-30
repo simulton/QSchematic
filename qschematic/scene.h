@@ -124,12 +124,12 @@ namespace QSchematic {
     private:
         void renderCachedBackground();
         void setupNewItem(Item& item);
-        std::shared_ptr<Item> sharedItemPointer(const Item& item) const;
         void generateConnections();
         void finishCurrentWire();
 
         // TODO add to "central" sh-ptr management
         QList<std::shared_ptr<Item>> _keep_alive_an_event_loop;
+
         /**
          * Used to store a list of "Top-Level" items. These are the only items
          * moved by the scene. Scene::addItem automatically adds the items to
