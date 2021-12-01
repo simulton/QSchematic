@@ -66,4 +66,5 @@ target_link_libraries(
 	PUBLIC
 		Qt5::Core
 		Qt5::Gui
+		qschematic-static
 )
