@@ -20,7 +20,7 @@ jobs:
               name: "Ubuntu GCC",
               cxx: "g++-11",
               cc: "gcc-11",
-              packages: "gcc-11 g++-11 libspdlog-dev libfmt-dev qt5-default",
+              packages: "gcc-11 g++-11 libspdlog-dev libfmt-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools",
               os: ubuntu-latest,
             }
           ]
