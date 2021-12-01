@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+    branches: [master]
+
+env:
+  BUILD_TYPE: Release
+  INSTALL_LOCATION: .local
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        feature_spdlog: [ON, OFF]
+        toolchain:
+          [
+            {
+              name: "Ubuntu GCC",
+              cxx: "g++-11",
+              cc: "gcc-11",
+              packages: "gcc-11 g++-11 libspdlog-dev libfmt-dev",
+              os: ubuntu-latest,
+            }
+          ]
+
+    continue-on-error: false
+    runs-on: ${{ matrix.toolchain.os }}
+    env:
+      CC: ${{ matrix.toolchain.cc }}
+      CXX: ${{ matrix.toolchain.cxx }}
+
+    name: "${{ matrix.toolchain.name }} (spdlog: ${{ matrix.feature_spdlog}})"
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Ninja
+        uses: seanmiddleditch/gha-setup-ninja@master
+
+      - name: Install packages (via apt)
+        if: runner.os == 'Linux'
+        run: sudo apt install ${{ matrix.toolchain.packages }} -y
+
+      - name: Configure
+        run: cmake -Bbuild -GNinja -DQSCHEMATIC_BUILD_DEMO=ON -DQSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD=ON
+
+      - name: Build
+        run: cmake --build build
