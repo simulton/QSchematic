@@ -16,7 +16,7 @@ add_subdirectory(qschematic)
 
 # Include the example(s)
 if (QSCHEMATIC_BUILD_DEMO)
-    add_subdirectory(demo EXCLUDE_FROM_ALL)
+    add_subdirectory(demo)
 endif()
 
 # Print options
