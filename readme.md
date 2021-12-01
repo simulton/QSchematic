@@ -1,6 +1,3 @@
-[![Build Status](https://ci.simulton.com/buildStatus/icon?job=QSchematic%2Fmaster&subject=master)](https://ci.simulton.com/job/QSchematic/job/master/)
-[![Build Status](https://ci.simulton.com/buildStatus/icon?job=QSchematic%2Fdevelop&subject=develop)](https://ci.simulton.com/job/QSchematic/job/develop/)
-
 # Introduction
 QSchematic is a library to draw diagrams & schematics with Qt. It uses Qt's [graphics view framework](http://doc.qt.io/qt-5/graphicsview.html).
 
@@ -12,14 +9,21 @@ Feature overview:
   - Undo/redo
   - Drag'n'Drop
   - Template based netlist generation
-  - Serialization to/from XML (powered by [GPDS](https://gpds.simulton.com))
+  - Serialization to/from XML
   - Completely customizable by inheriting from the provided classes
+  - Items
+    - All items support "highlighted" and an optional pop-up widget on hover
+    - Nodes
+    - Wires
+      - Straight
+      - Square
+      - Spline / Bezier
+    - Connectors
 
 Technical stuff:
   - Written in C++17
+  - Qt >= 5.13
   - Everything is contained within the `QSchematic` namespace
-  - Tested with Qt5
-  - No dependencies other than Qt5 and a C++17 compatible compiler
   - MIT licensed
 
 # Licensing
@@ -45,13 +49,12 @@ The following targets are provided:
 
 | Target | Description |
 | --- | --- |
-| `qschematic-objs` | A cmake `OBJECT` library. This can be helpful for integration into other cmake projects. |
 | `qschematic-static` | Builds a static library. | 
 | `qschematic-shared` | Builds a shared/dynamic library. | 
 | `qschematic-demo` | Builds a simple demo application. | 
 
 Dependencies:
-  - Qt5
+  - Qt >= 5.13
   - [GPDS](https://gpds.simulton.com) for (de)serialization.
 
 If the cmake option `QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD` is enabled, cmake will automatically pull the `GPDS` dependency.
