@@ -2,6 +2,7 @@
 project(qschematic
     VERSION 1.1.0
     LANGUAGES CXX
+    HOMEPAGE_URL https://github.com/simulton/qschematic
 )
 
 # External dependencies
