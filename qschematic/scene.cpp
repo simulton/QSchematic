@@ -1016,13 +1016,9 @@ QVector2D Scene::itemsMoveSnap(const std::shared_ptr<Item>& items, const QVector
     return moveBy;
 }
 
-void Scene::renderCachedBackground()
+QPixmap Scene::renderBackground(const QRect& rect) const
 {
-    // Create the pixmap
-    QRect rect = sceneRect().toRect();
-    if (rect.isNull() || !rect.isValid()) {
-        return;
-    }
+    // Create pixmap
     QPixmap pixmap(rect.width(), rect.height());
 
     // Grid pen
@@ -1071,8 +1067,20 @@ void Scene::renderCachedBackground()
 
     painter.end();
 
+    return pixmap;
+}
+
+void Scene::renderCachedBackground()
+{
+    // Create the pixmap
+    const QRect& rect = sceneRect().toRect();
+    if (rect.isNull() || !rect.isValid())
+        return;
+
+    // Render background
+    _backgroundPixmap = std::move(renderBackground(rect));
+
     // Update
-    _backgroundPixmap = pixmap;
     update();
 }
 

@@ -108,6 +108,7 @@ namespace QSchematic {
     protected:
         Settings _settings;
 
+        // QGraphicsScene
         void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
         void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
         void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
@@ -122,6 +123,14 @@ namespace QSchematic {
          * implement this to implement snapping to elements other than the grid
          */
         virtual QVector2D itemsMoveSnap(const std::shared_ptr<Item>& item, const QVector2D& moveBy) const;
+
+        /**
+         * Renders the background.
+         *
+         * @param rect The scene rectangle. This is guaranteed to be non-null & valid.
+         */
+        [[nodiscard]]
+        virtual QPixmap renderBackground(const QRect& rect) const;
 
     private:
         void renderCachedBackground();
