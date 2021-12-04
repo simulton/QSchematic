@@ -473,6 +473,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
     event->accept();
 
     // Remove popup
+    _popupTimer->stop();
     _popup = { };
 
     switch (_mode) {
@@ -908,6 +909,7 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
     event->accept();
 
     // Remove popup
+    _popupTimer->stop();
     _popup = { };
 
     switch (_mode) {
