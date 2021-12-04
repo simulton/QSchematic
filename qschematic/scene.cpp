@@ -472,6 +472,9 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     event->accept();
 
+    // Remove popup
+    _popup = { };
+
     switch (_mode) {
     case NormalMode:
     {
@@ -903,6 +906,9 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 {
     event->accept();
+
+    // Remove popup
+    _popup = { };
 
     switch (_mode) {
     case NormalMode:
