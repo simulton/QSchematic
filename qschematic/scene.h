@@ -106,6 +106,8 @@ namespace QSchematic {
         void itemHighlighted(const std::shared_ptr<const Item>& item);
 
     protected:
+        Settings _settings;
+
         void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
         void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
         void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
@@ -146,7 +148,6 @@ namespace QSchematic {
         // ItemUtils::ItemsCustodian<Item> _items;
         // ItemUtils::ItemsCustodian<WireNet> m_nets;
 
-        Settings _settings;
         QPixmap _backgroundPixmap;
         std::function<std::shared_ptr<Wire>()> _wireFactory;
         int _mode;
