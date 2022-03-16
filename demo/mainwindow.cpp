@@ -26,7 +26,6 @@
 #include <QGraphicsSceneContextMenuEvent>
 #include <QInputDialog>
 #include <QFileDialog>
-#include <QTextCodec>
 #ifndef QT_NO_PRINTER
     #include <QPrinter>
     #include <QPrintDialog>
