@@ -5,7 +5,8 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
 
 # Qt5
-find_package(Qt5
+find_package(
+    Qt5
     COMPONENTS
         PrintSupport
 )
@@ -45,7 +46,7 @@ target_link_libraries(
     ${TARGET}
     PRIVATE
         qschematic-static
-        Qt5::PrintSupport
+        Qt::PrintSupport
 )
 set_target_properties(
     ${TARGET}

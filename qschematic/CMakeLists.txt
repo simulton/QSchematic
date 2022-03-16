@@ -119,9 +119,9 @@ function(setup_target_common target)
     target_link_libraries(
         ${target}
         PUBLIC
-            Qt5::Core
-            Qt5::Gui
-            Qt5::Widgets
+            Qt::Core
+            Qt::Gui
+            Qt::Widgets
             ${QSCHEMATIC_DEPENDENCY_GPDS_TARGET}
     )
 
