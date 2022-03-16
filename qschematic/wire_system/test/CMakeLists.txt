@@ -5,14 +5,6 @@
 #       Maybe we'll find a better way to handle this in the future.
 ###
 
-# Include Qt5 packages
-find_package(Qt5
-	REQUIRED
-	COMPONENTS
-		Core
-		Gui
-)
-
 set(WIRESYSTEM_SOURCES
 	../connectable.h
 	../line.cpp
@@ -55,16 +47,8 @@ target_compile_features(wire_system-tests
 		cxx_std_17
 )
 
-set_target_properties(
-	wire_system-tests
-    PROPERTIES
-		AUTOMOC ON
-)
-
 target_link_libraries(
 	wire_system-tests
 	PUBLIC
-		Qt5::Core
-		Qt5::Gui
 		qschematic-static
 )
