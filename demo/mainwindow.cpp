@@ -16,6 +16,7 @@
 
 #include <QToolBar>
 #include <QAction>
+#include <QActionGroup>
 #include <QFile>
 #include <QDir>
 #include <QMenuBar>
