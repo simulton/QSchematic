@@ -14,7 +14,16 @@ if (QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD)
         set(GPDS_BUILD_EXAMPLES OFF CACHE INTERNAL "")
         set(GPDS_FEATURE_SPDLOG OFF CACHE INTERNAL "")
         add_subdirectory(${gpds_SOURCE_DIR} ${gpds_BINARY_DIR})
+
+        # Create alias libraries
+        add_library(gpds::gpds-static ALIAS gpds-static)
+        add_library(gpds::gpds-shared ALIAS gpds-shared)
     endif()
+else()
+    find_package(
+        gpds
+        REQUIRED
+    )
 endif()
 
 # Qt5
