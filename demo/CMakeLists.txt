@@ -53,7 +53,6 @@ set_target_properties(
     PROPERTIES
         AUTOMOC ON
         AUTORCC ON
-        AUTOUIC ON
 )
 
 # Set window settings

@@ -130,7 +130,6 @@ function(setup_target_common target)
         PROPERTIES
             AUTOMOC ON
             AUTORCC ON
-            AUTOUIC ON
     )
 
     set_target_properties(
