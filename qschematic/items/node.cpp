@@ -304,7 +304,10 @@ bool Node::addConnector(const std::shared_ptr<Connector>& connector)
 
 bool Node::removeConnector(const std::shared_ptr<Connector>& connector)
 {
-    if (!connector || !_connectors.contains(connector)) {
+    if (!connector) {
+        return false;
+    }
+    if (!_connectors.contains(connector) && !_specialConnectors.contains(connector)) {
         return false;
     }
 
