@@ -11,7 +11,7 @@ CommandLabelRename::CommandLabelRename(const QPointer<Label>& label, const QStri
 {
     _oldText = _label->text();
     // TODO: is there a reason for no destruction tracking here? (leaves it alone for now / Oscar)
-    setText(QStringLiteral("Rename label"));
+    setText(tr("Rename label"));
 }
 
 int CommandLabelRename::id() const

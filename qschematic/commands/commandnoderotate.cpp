@@ -12,7 +12,7 @@ CommandNodeRotate::CommandNodeRotate(QPointer<Node> node, qreal newAngle, QUndoC
 {
     _oldAngle = node->rotation();
     connectDependencyDestroySignal(_node.data());
-    setText(QStringLiteral("Node rotate"));
+    setText(tr("Node rotate"));
 }
 
 int CommandNodeRotate::id() const

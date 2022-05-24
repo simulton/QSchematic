@@ -14,7 +14,7 @@ CommandNodeResize::CommandNodeResize(QPointer<Node> node, const QPointF& newPos,
     _oldPos = node->pos();
     _oldSize = node->size();
     connectDependencyDestroySignal(_node.data());
-    setText(QStringLiteral("Node resize"));
+    setText(tr("Node resize"));
 }
 
 int CommandNodeResize::id() const

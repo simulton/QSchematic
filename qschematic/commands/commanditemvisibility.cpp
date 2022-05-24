@@ -10,7 +10,7 @@ CommandItemVisibility::CommandItemVisibility(const std::shared_ptr<Item>& item, 
     _newVisibility(newVisibility)
 {
     _oldVisibility = _item->isVisible();
-    setText(QStringLiteral("Change visibility"));
+    setText(tr("Change visibility"));
 }
 
 int CommandItemVisibility::id() const

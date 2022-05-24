@@ -12,9 +12,9 @@ CommandItemMove::CommandItemMove(const QVector<std::shared_ptr<Item>>& items, co
     _moveBy(moveBy)
 {
     if (_items.count() > 1) {
-        setText(QStringLiteral("Move items"));
+        setText(tr("Move items"));
     } else {
-        setText(QStringLiteral("Move item"));
+        setText(tr("Move item"));
     }
 }
 
