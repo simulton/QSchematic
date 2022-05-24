@@ -534,11 +534,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 
             // Start a new wire if there isn't already one. Else continue the current one.
             if (!_newWire) {
-                if (_wireFactory) {
-                    _newWire = _wireFactory();
-                } else {
-                    _newWire = std::make_shared<Wire>();
-                }
+                _newWire = make_wire();
                 _undoStack->push(new CommandItemAdd(this, _newWire));
                 _newWire->setPos(_settings.snapToGrid(event->scenePos()));
             }
@@ -1124,6 +1120,14 @@ void Scene::finishCurrentWire()
     _newWire.reset();
 }
 
+std::shared_ptr<Wire>
+Scene::make_wire() const
+{
+    if (_wireFactory)
+        return _wireFactory();
+    else
+        return std::make_shared<Wire>();
+}
 
 QList<QPointF> Scene::connectionPoints() const
 {

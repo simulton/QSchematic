@@ -138,6 +138,18 @@ namespace QSchematic {
         void generateConnections();
         void finishCurrentWire();
 
+        /**
+         * Make new wire.
+         *
+         * @details This makes a new wire. If @p _wireFactory is non-null, the wire factory is used. Otherwise, the
+         *          built-in wire type is used.
+         *
+         * @return The new wire.
+         */
+        [[nodiscard]]
+        std::shared_ptr<Wire>
+        make_wire() const;
+
         // TODO add to "central" sh-ptr management
         QList<std::shared_ptr<Item>> _keep_alive_an_event_loop;
 
