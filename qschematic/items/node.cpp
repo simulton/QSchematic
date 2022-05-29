@@ -47,7 +47,7 @@ gpds::container Node::to_container() const
     // Connectors configuration
     gpds::container connectorsConfigurationContainer;
     connectorsConfigurationContainer.add_value("movable", connectorsMovable());
-    connectorsConfigurationContainer.add_value("snap_policy", connectorsSnapPolicy());
+    connectorsConfigurationContainer.add_value("snap_policy", static_cast<int>(connectorsSnapPolicy()));
     connectorsConfigurationContainer.add_value("snap_to_grid", connectorsSnapToGrid());
 
     // Connectors
