@@ -5,7 +5,7 @@ if (QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD)
     FetchContent_Declare(
         gpds
         GIT_REPOSITORY https://github.com/simulton/gpds
-        GIT_TAG        1.4.0
+        GIT_TAG        1.5.0
     )
     FetchContent_GetProperties(gpds)
     if(NOT gpds_POPULATED)
