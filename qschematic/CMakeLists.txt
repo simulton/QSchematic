@@ -214,7 +214,7 @@ install(
         DESTINATION ${CMAKE_INSTALL_BINDIR}
         COMPONENT bin
     INCLUDES
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/qschematic
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
 # Package version
