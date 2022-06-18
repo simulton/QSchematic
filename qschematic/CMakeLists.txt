@@ -1,10 +1,3 @@
-# Project settings
-project(qschematic
-    VERSION 1.3.0
-    LANGUAGES CXX
-    HOMEPAGE_URL https://github.com/simulton/qschematic
-)
-
 # External dependencies
 include(external.cmake)
 
@@ -194,7 +187,7 @@ endforeach()
 
 # Install export header
 install(
-    FILES ${PROJECT_BINARY_DIR}/qschematic_export.h
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/qschematic_export.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/qschematic
 )
 

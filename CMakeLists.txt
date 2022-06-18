@@ -1,7 +1,12 @@
 cmake_minimum_required(VERSION 3.19)
 
 # Project
-project(qschematic)
+project(
+    qschematic
+    VERSION 1.3.0
+    LANGUAGES CXX
+    HOMEPAGE_URL https://github.com/simulton/qschematic
+)
 
 # User options
 option(QSCHEMATIC_BUILD_DEMO "Whether to build the demo project" ON)
