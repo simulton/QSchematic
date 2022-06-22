@@ -101,8 +101,8 @@ namespace QSchematic {
     signals:
         void modeChanged(int newMode);
         void isDirtyChanged(bool isDirty);
-        void itemAdded(std::shared_ptr<const Item> item);
-        void itemRemoved(std::shared_ptr<const Item> item);
+        void itemAdded(std::shared_ptr<Item> item);
+        void itemRemoved(std::shared_ptr<Item> item);
         void itemHighlighted(const std::shared_ptr<const Item>& item);
 
     protected:
