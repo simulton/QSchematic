@@ -14,7 +14,6 @@
 namespace QSchematic
 {
     class Scene;
-    class Item;
 
     class QSCHEMATIC_EXPORT Item :
         public QGraphicsObject,
