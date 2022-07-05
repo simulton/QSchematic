@@ -9,7 +9,7 @@ namespace QSchematic
 {
     class Node;
 
-    class QSCHEMATIC_EXPORT CommandNodeRotate :
+    class CommandNodeRotate :
         public UndoCommand
     {
     public:

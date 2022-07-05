@@ -6,7 +6,6 @@
 #include "wire_system/wire.h"
 #include "item.h"
 #include "wirenet.h"
-#include "qschematic_export.h"
 
 class QVector2D;
 
@@ -16,7 +15,7 @@ namespace QSchematic {
      * IMPORTANT NOTE: The points coordinates are RELATIVE and in SCENE COORDINATES.
      *                 Wires must be movable so we can move entire groups of stuff.
      */
-    class QSCHEMATIC_EXPORT Wire :
+    class Wire :
         public Item,
         public wire_system::wire
     {

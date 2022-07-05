@@ -3,11 +3,10 @@
 #include <QFont>
 
 #include "item.h"
-#include "qschematic_export.h"
 
 namespace QSchematic {
 
-    class QSCHEMATIC_EXPORT Label :
+    class Label :
         public Item
     {
         Q_OBJECT

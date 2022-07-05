@@ -1,7 +1,5 @@
 #pragma once
 
-#include "qschematic_export.h"
-
 #include <QList>
 #include <memory>
 
@@ -15,7 +13,7 @@ namespace wire_system
     class wire;
     class manager;
 
-    class QSCHEMATIC_EXPORT net :
+    class net :
         public std::enable_shared_from_this<net>
     {
     public:

@@ -7,7 +7,6 @@
 #include <optional>
 
 #include "../settings.h"
-#include "qschematic_export.h"
 
 namespace QSchematic
 {
@@ -23,7 +22,7 @@ class net;
 class wire;
 class connectable;
 
-class QSCHEMATIC_EXPORT manager :
+class manager :
     public QObject
 {
     Q_OBJECT

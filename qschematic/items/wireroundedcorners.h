@@ -1,12 +1,11 @@
 #pragma once
 
 #include "wire.h"
-#include "qschematic_export.h"
 
 namespace QSchematic
 {
 
-    class QSCHEMATIC_EXPORT WireRoundedCorners :
+    class WireRoundedCorners :
         public QSchematic::Wire
     {
         Q_OBJECT

@@ -2,14 +2,13 @@
 
 #include "item.h"
 #include "wire_system/connectable.h"
-#include "qschematic_export.h"
 
 namespace QSchematic {
 
     class Label;
     class Wire;
 
-    class QSCHEMATIC_EXPORT Connector :
+    class Connector :
         public Item,
         public wire_system::connectable
     {

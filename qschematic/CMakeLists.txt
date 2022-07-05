@@ -2,6 +2,7 @@
 include(external.cmake)
 
 # CMake settings
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
 
@@ -104,7 +105,6 @@ function(setup_target_common target)
     target_include_directories(
         ${target}
         PUBLIC
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>      # For qschematic_export.h
             $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/..>
             $<INSTALL_INTERFACE:..>
     )
@@ -132,18 +132,6 @@ function(setup_target_common target)
             ARCHIVE_OUTPUT_NAME "qschematic"
             VERSION ${PROJECT_VERSION}
             POSITION_INDEPENDENT_CODE 1
-    )
-
-    include(GenerateExportHeader)
-    generate_export_header(
-        ${target}
-        BASE_NAME qschematic
-        DEPRECATED_MACRO_NAME "QSCHEMATIC_DEPRECATED"
-        NO_DEPRECATED_MACRO_NAME "QSCHEMATIC_NO_DEPRECATED"
-        EXPORT_MACRO_NAME "QSCHEMATIC_EXPORT"
-        NO_EXPORT_MACRO_NAME "QSCHEMATIC_NO_EXPORT"
-        STATIC_DEFINE "QSCHEMATIC_STATIC_DEFINE"
-        DEFINE_NO_DEPRECATED
     )
 endfunction()
 
@@ -184,12 +172,6 @@ foreach( file ${HEADERS_PUBLIC} )
     get_filename_component( dir ${file} DIRECTORY )
     install( FILES ${file} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/qschematic/${dir} )
 endforeach()
-
-# Install export header
-install(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/qschematic_export.h
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/qschematic
-)
 
 # Targets
 install(

@@ -2,11 +2,10 @@
 
 #include <QGraphicsView>
 #include "scene.h"
-#include "qschematic_export.h"
 
 namespace QSchematic {
 
-    class QSCHEMATIC_EXPORT View :
+    class View :
         public QGraphicsView
     {
         Q_OBJECT
