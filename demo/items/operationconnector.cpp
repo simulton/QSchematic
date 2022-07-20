@@ -102,6 +102,18 @@ void OperationConnector::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
     // Create the menu
     QMenu menu;
     {
+        // Connector visibility
+        QAction* visibility = new QAction;
+        visibility->setCheckable(true);
+        visibility->setChecked(isVisible());
+        visibility->setText("Visible");
+        connect(visibility, &QAction::toggled, [this](const bool enabled) {
+            if (scene())
+                scene()->undoStack()->push(new QSchematic::CommandItemVisibility(this->shared_from_this(), enabled));
+            else
+                setVisible(enabled);
+        });
+
         // Label visibility
         QAction* labelVisibility = new QAction;
         labelVisibility->setCheckable(true);
@@ -167,6 +179,7 @@ void OperationConnector::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         });
 
         // Assemble
+        menu.addAction(visibility);
         menu.addAction(labelVisibility);
         menu.addAction(text);
         menu.addAction(alignLabel);
