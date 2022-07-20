@@ -205,6 +205,17 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
             this->alignConnectorLabels();
         });
 
+        // Show all connectors
+        QAction* showAllConnectors = new QAction;
+        showAllConnectors->setText("Show all connectors");
+        connect(showAllConnectors, &QAction::triggered, [this] {
+            if (!scene())
+                return;
+
+            for (const std::shared_ptr<Connector>& conn : connectors())
+                scene()->undoStack()->push(new QSchematic::CommandItemVisibility(conn, true));
+        });
+
         // Add connector
         QAction* newConnector = new QAction;
         newConnector->setText("Add connector");
@@ -258,6 +269,7 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         menu.addSeparator();
         menu.addAction(newConnector);
         menu.addAction(alignConnectorLabels);
+        menu.addAction(showAllConnectors);
         menu.addSeparator();
         menu.addAction(duplicate);
         menu.addAction(deleteFromModel);
