@@ -547,6 +547,10 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             bool wireAttached = false;
             for (const auto& node: nodes()) {
                 for (const auto& connector: node->connectors()) {
+                    // Ignore hidden connectors
+                    if (!connector->isVisible())
+                        continue;
+
                     if (QVector2D(connector->scenePos() - snappedPos).length() < 1) {
                         m_wire_manager->attach_wire_to_connector(_newWire.get(), _newWire->pointsAbsolute().indexOf(snappedPos),
                                                                  connector.get());
@@ -681,6 +685,10 @@ void Scene::updateNodeConnections(const Node* node) const
 {
     // Check if a connector lays on a wirepoint
     for (auto& connector : node->connectors()) {
+        // Skip hidden connectors
+        if (!connector->isVisible())
+            continue;
+        
         // If the connector already has a wire attached, skip
         if (m_wire_manager->attached_wire(connector.get()) != nullptr) {
             continue;
