@@ -212,21 +212,16 @@ install(
 
 # Package version
 write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/qschematic/qschematic-config-version.cmake"
+    qschematic-config-version.cmake
     VERSION ${QSchematic_VERSION}
     COMPATIBILITY AnyNewerVersion
 )
+configure_file(qschematic-config.cmake.in qschematic-config.cmake @ONLY)
 install(
     FILES
-        qschematic-config.cmake
-        "${CMAKE_CURRENT_BINARY_DIR}/qschematic/qschematic-config-version.cmake"
+        ${CMAKE_CURRENT_BINARY_DIR}/qschematic-config.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/qschematic-config-version.cmake
     DESTINATION ${ConfigPackageLocation}
-)
-
-# Package configuration
-configure_file(qschematic-config.cmake
-    "${CMAKE_CURRENT_BINARY_DIR}/qschematic/qschematic-config.cmake"
-    COPYONLY
 )
 
 # Package export targets

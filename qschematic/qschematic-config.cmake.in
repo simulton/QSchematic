@@ -1,0 +1,25 @@
+include(CMakeFindDependencyMacro)
+
+########################################################################################################################
+# Include dependencies                                                                                                 #
+########################################################################################################################
+
+set(QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD @QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD@)
+
+# Qt
+# ToDo: Support Qt6
+find_dependency(
+    Qt5
+    COMPONENTS
+        Core
+        Gui
+        Widgets
+)
+
+# GPDS
+if (NOT QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD)
+    find_dependency(gpds)
+endif()
+
+# Add the targets file
+include("${CMAKE_CURRENT_LIST_DIR}/qschematic-targets.cmake")
