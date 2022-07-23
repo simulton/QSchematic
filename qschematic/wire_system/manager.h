@@ -1,12 +1,13 @@
 #pragma once
 
+#include "../settings.h"
+
 #include <QObject>
 #include <QList>
 #include <QMap>
+
 #include <memory>
 #include <optional>
-
-#include "../settings.h"
 
 namespace QSchematic
 {

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <QString>
 #include <QIcon>
+#include <QString>
 
 namespace QSchematic
 {

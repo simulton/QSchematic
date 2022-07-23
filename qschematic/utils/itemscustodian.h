@@ -1,10 +1,11 @@
 #pragma once
 
+#include "items/item.h"
+
 #include <QObject>
+
 #include <unordered_map>
 #include <memory>
-
-#include "items/item.h"
 
 namespace QSchematic {
 

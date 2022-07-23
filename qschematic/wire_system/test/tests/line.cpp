@@ -1,5 +1,5 @@
-#include "3rdparty/doctest.h"
-#include "../line.h"
+#include "../3rdparty/doctest.h"
+#include "../../line.h"
 
 TEST_SUITE("Line")
 {

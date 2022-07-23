@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QList>
+
 #include <memory>
 
 namespace QSchematic

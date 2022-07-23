@@ -1,14 +1,15 @@
 #pragma once
 
-#include <memory>
-#include <QGraphicsObject>
-#include <gpds/serialize.hpp>
+#include "itemfunctions.h"
 #include "../types.h"
 #include "../settings.h"
-#include "itemfunctions.h"
 
+#include <gpds/serialize.hpp>
 #include <QDebug>
+#include <QGraphicsObject>
 #include <QWidget>
+
+#include <memory>
 
 namespace QSchematic
 {

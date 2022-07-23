@@ -1,16 +1,18 @@
 #pragma once
 
-#include <algorithm>
-#include <memory>
-#include <functional>
-#include <QGraphicsScene>
-#include <QUndoStack>
-#include <gpds/serialize.hpp>
-#include "wire_system/manager.h"
 #include "settings.h"
 #include "items/item.h"
 #include "items/wire.h"
+#include "wire_system/manager.h"
 //#include "utils/itemscustodian.h"
+
+#include <gpds/serialize.hpp>
+#include <QGraphicsScene>
+#include <QUndoStack>
+
+#include <algorithm>
+#include <memory>
+#include <functional>
 
 namespace QSchematic {
 

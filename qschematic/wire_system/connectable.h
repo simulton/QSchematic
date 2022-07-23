@@ -1,5 +1,9 @@
 #pragma once
 
+#include <QPointF>
+
+class QPointF;
+
 namespace wire_system
 {
     class connectable

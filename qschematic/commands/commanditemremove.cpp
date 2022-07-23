@@ -1,8 +1,8 @@
+#include "commands.h"
+#include "commanditemremove.h"
 #include "../items/item.h"
 #include "../items/wire.h"
 #include "../scene.h"
-#include "commands.h"
-#include "commanditemremove.h"
 
 using namespace QSchematic;
 

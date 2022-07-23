@@ -1,11 +1,13 @@
-#include <limits>
+#include "wire_system/line.h"
+#include "utils.h"
+
 #include <QPoint>
 #include <QLine>
 #include <QRectF>
 #include <QPainterPath>
 #include <QVector2D>
-#include "wire_system/line.h"
-#include "utils.h"
+
+#include <limits>
 
 using namespace QSchematic;
 

@@ -1,15 +1,17 @@
 #pragma once
 
-#include <vector>
-#include <forward_list>
-#include <map>
-#include <optional>
-#include <QJsonObject>
-#include <QJsonArray>
 #include "items/wire.h"
 #include "items/connector.h"
 #include "items/node.h"
 #include "items/label.h"
+
+#include <QJsonObject>
+#include <QJsonArray>
+
+#include <vector>
+#include <forward_list>
+#include <map>
+#include <optional>
 
 class QJsonObject;
 

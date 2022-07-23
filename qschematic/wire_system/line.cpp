@@ -1,8 +1,9 @@
+#include "line.h"
+#include "../utils.h"
+
 #include <QtGlobal>
 #include <QLineF>
 #include <QVector2D>
-#include "../utils.h"
-#include "line.h"
 
 using namespace wire_system;
 

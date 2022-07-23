@@ -1,14 +1,15 @@
+#include "connector.h"
+#include "label.h"
+#include "node.h"
+#include "wire.h"
+#include "../scene.h"
+#include "../utils.h"
+
 #include <QtMath>
 #include <QPainter>
 #include <QTransform>
 #include <QVector2D>
 #include <QGraphicsSceneHoverEvent>
-#include "connector.h"
-#include "node.h"
-#include "label.h"
-#include "../utils.h"
-#include "wire.h"
-#include "scene.h"
 
 const qreal SIZE               = 1;
 const QColor COLOR_BODY_FILL   = QColor(Qt::green);

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "qschematic/commands/commands.h"
+#include <qschematic/commands/commands.h>
 
 enum CommandType
 {

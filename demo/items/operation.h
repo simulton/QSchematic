@@ -1,8 +1,8 @@
 #pragma once
 
-#include "qschematic/items/node.h"
-
 #include "itemtypes.h"
+
+#include <qschematic/items/node.h>
 
 namespace QSchematic
 {

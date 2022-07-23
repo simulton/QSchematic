@@ -1,9 +1,10 @@
 #pragma once
 
-#include <QList>
 #include "item.h"
 #include "connector.h"
 #include "../types.h"
+
+#include <QList>
 
 class QGraphicsSceneMouseEvent;
 class QGraphicsSceneHoverEvent;

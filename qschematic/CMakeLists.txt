@@ -3,8 +3,6 @@ include(external.cmake)
 
 # CMake settings
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
 
 # List of source files
 set(SOURCES_PRIVATE

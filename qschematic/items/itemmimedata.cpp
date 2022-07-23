@@ -1,7 +1,6 @@
-#include <utility>
 #include "itemmimedata.h"
 
-#include <QDebug>
+#include <utility>
 
 using namespace QSchematic;
 

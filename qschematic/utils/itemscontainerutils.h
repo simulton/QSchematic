@@ -1,9 +1,11 @@
 #pragma once
 
+#include "../items/item.h"
+
+#include <QList>
+
 #include <vector>
 #include <memory>
-#include <QList>
-#include "items/item.h"
 
 namespace QSchematic::ItemUtils
 {

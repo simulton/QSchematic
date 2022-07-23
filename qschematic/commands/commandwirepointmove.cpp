@@ -1,8 +1,7 @@
-#include <memory>
-#include "../items/item.h"
-#include "../scene.h"
 #include "commands.h"
 #include "commandwirepointmove.h"
+#include "../scene.h"
+#include "../items/item.h"
 
 using namespace QSchematic;
 

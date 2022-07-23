@@ -1,19 +1,19 @@
+#include "operation.h"
+#include "operationconnector.h"
+#include "popup/popup_operation.hpp"
+#include "../commands/commandnodeaddconnector.h"
+
+#include <qschematic/scene.h>
+#include <qschematic/items/label.h>
+#include <qschematic/commands/commanditemremove.h>
+#include <qschematic/commands/commanditemvisibility.h>
+#include <qschematic/commands/commandlabelrename.h>
+
 #include <QPainter>
 #include <QMenu>
 #include <QGraphicsSceneContextMenuEvent>
 #include <QInputDialog>
 #include <QGraphicsDropShadowEffect>
-
-#include "qschematic/scene.h"
-#include "qschematic/items/label.h"
-#include "qschematic/commands/commanditemremove.h"
-#include "qschematic/commands/commanditemvisibility.h"
-#include "qschematic/commands/commandlabelrename.h"
-
-#include "operation.h"
-#include "operationconnector.h"
-#include "commands/commandnodeaddconnector.h"
-#include "popup/popup_operation.hpp"
 
 const QColor COLOR_BODY_FILL   = QColor( QStringLiteral( "#e0e0e0" ) );
 const QColor COLOR_BODY_BORDER = QColor(Qt::black);

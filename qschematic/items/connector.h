@@ -1,7 +1,7 @@
 #pragma once
 
 #include "item.h"
-#include "wire_system/connectable.h"
+#include "../wire_system/connectable.h"
 
 namespace QSchematic {
 

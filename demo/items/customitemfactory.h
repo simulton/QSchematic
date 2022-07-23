@@ -1,9 +1,9 @@
 #pragma once
 
+#include <qschematic/items/item.h>
+
 #include <functional>
 #include <memory>
-
-#include "qschematic/items/item.h"
 
 class QString;
 

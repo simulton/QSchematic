@@ -1,8 +1,8 @@
 #pragma once
 
-#include <QWidget>
-
 #include <qschematic/netlist.h>
+
+#include <QWidget>
 
 class Operation;
 class OperationConnector;

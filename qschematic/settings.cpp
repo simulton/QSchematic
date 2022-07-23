@@ -1,7 +1,8 @@
+#include "settings.h"
+
 #include <QPointF>
 #include <QRectF>
 #include <QVector2D>
-#include "settings.h"
 
 using namespace QSchematic;
 

@@ -1,7 +1,8 @@
 #pragma once
 
-#include <QVector>
 #include "types.h"
+
+#include <QVector>
 
 class QPoint;
 class QPointF;

@@ -1,8 +1,9 @@
 #pragma once
 
+#include "item.h"
+
 #include <functional>
 #include <memory>
-#include "item.h"
 
 class QString;
 

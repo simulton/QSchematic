@@ -1,7 +1,8 @@
-#include <memory>
-#include "../items/node.h"
 #include "commands.h"
 #include "commandnoderotate.h"
+#include "../items/node.h"
+
+#include <memory>
 
 using namespace QSchematic;
 

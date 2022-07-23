@@ -1,11 +1,12 @@
-#include <utils.h>
-#include <QVector2D>
 #include "connector.h"
-#include "../scene.h"
 #include "wirenet.h"
 #include "wire.h"
 #include "label.h"
 #include "itemfactory.h"
+#include "../scene.h"
+#include "../utils.h"
+
+#include <QVector2D>
 
 using namespace QSchematic;
 

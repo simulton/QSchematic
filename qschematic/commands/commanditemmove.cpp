@@ -1,8 +1,9 @@
-#include <memory>
-#include <items/wire.h>
-#include "../items/item.h"
 #include "commands.h"
 #include "commanditemmove.h"
+#include "../items/item.h"
+#include "../items/wire.h"
+
+#include <memory>
 
 using namespace QSchematic;
 

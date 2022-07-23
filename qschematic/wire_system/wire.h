@@ -1,10 +1,11 @@
 #pragma once
 
+#include "point.h"
+
 #include <QList>
 #include <QVector>
-#include <memory>
 
-#include "point.h"
+#include <memory>
 
 class QVector2D;
 

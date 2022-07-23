@@ -1,6 +1,7 @@
 #pragma once
 
 #include "commandbase.h"
+
 #include <memory>
 
 namespace QSchematic

@@ -1,17 +1,14 @@
+#include "node.h"
+#include "itemfactory.h"
+#include "../utils.h"
+#include "../scene.h"
+#include "../commands/commandnoderesize.h"
+#include "../commands/commandnoderotate.h"
+
 #include <QApplication>
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 #include <QtMath>
-#include "node.h"
-#include "itemfactory.h"
-#include "../commands/commandnoderesize.h"
-#include "../commands/commandnoderotate.h"
-#include "../utils.h"
-#include "../scene.h"
-
-
-#include <QDebug>
-
 
 const QColor COLOR_HIGHLIGHTED = QColor(Qt::blue);
 const QColor COLOR_BODY_FILL   = QColor(Qt::green);

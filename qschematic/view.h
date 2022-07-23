@@ -1,7 +1,8 @@
 #pragma once
 
-#include <QGraphicsView>
 #include "scene.h"
+
+#include <QGraphicsView>
 
 namespace QSchematic {
 

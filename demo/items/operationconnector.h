@@ -1,6 +1,6 @@
 #pragma once
 
-#include "qschematic/items/connector.h"
+#include <qschematic/items/connector.h>
 
 class OperationConnector : public QSchematic::Connector
 {

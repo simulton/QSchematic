@@ -1,8 +1,9 @@
 #pragma once
 
 #include "commandbase.h"
-#include <memory>
 #include "../items/wirenet.h"
+
+#include <memory>
 
 namespace QSchematic
 {

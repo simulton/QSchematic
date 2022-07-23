@@ -1,3 +1,11 @@
+#include "wire.h"
+#include "connector.h"
+#include "label.h"
+#include "node.h"
+#include "../scene.h"
+#include "../utils.h"
+#include "../commands/commandwirepointmove.h"
+
 #include <QPen>
 #include <QBrush>
 #include <QPainter>
@@ -8,13 +16,6 @@
 #include <QVector2D>
 #include <QtMath>
 #include <QMenu>
-#include "wire.h"
-#include "connector.h"
-#include "scene.h"
-#include "label.h"
-#include "node.h"
-#include "../utils.h"
-#include "../commands/commandwirepointmove.h"
 
 const qreal BOUNDING_RECT_PADDING = 6.0;
 const qreal HANDLE_SIZE = 3.0;

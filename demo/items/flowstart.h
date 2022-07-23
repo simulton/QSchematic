@@ -1,6 +1,6 @@
 #pragma once
 
-#include "qschematic/items/node.h"
+#include <qschematic/items/node.h>
 
 class FlowStart : public QSchematic::Node
 {

@@ -1,10 +1,11 @@
 #pragma once
 
-#include <memory>
 #include "commandbase.h"
+
 #include <QVector>
 #include <QVector2D>
-#include "commandbase.h"
+
+#include <memory>
 
 class QVector2D;
 

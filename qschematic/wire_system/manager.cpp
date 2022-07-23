@@ -1,10 +1,11 @@
-#include <QVector>
-#include <QVector2D>
 #include "manager.h"
 #include "net.h"
 #include "point.h"
 #include "wire.h"
 #include "connectable.h"
+
+#include <QVector>
+#include <QVector2D>
 
 using namespace wire_system;
 

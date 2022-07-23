@@ -1,8 +1,8 @@
 #pragma once
 
-#include <QFont>
-
 #include "item.h"
+
+#include <QFont>
 
 namespace QSchematic {
 

@@ -1,11 +1,11 @@
 #pragma once
 
-#include <QAction>
-
-#include "wire_system/point.h"
-#include "wire_system/wire.h"
 #include "item.h"
 #include "wirenet.h"
+#include "../wire_system/point.h"
+#include "../wire_system/wire.h"
+
+#include <QAction>
 
 class QVector2D;
 

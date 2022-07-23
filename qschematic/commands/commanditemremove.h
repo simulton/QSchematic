@@ -1,8 +1,10 @@
 #pragma once
 
-#include <memory>
 #include "commandbase.h"
+
 #include <QPointer>
+
+#include <memory>
 
 class QGraphicsItem;
 

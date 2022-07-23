@@ -1,4 +1,5 @@
 #include "splinewire.h"
+
 #include <QPainter>
 #include <QPainterPathStroker>
 #include <QtMath>

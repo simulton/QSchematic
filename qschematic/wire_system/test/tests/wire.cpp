@@ -1,8 +1,8 @@
-#include <QVector2D>
+#include "../3rdparty/doctest.h"
+#include "../../manager.h"
+#include "../../wire.h"
 
-#include "3rdparty/doctest.h"
-#include "../manager.h"
-#include "../wire.h"
+#include <QVector2D>
 
 TEST_SUITE("Wire")
 {

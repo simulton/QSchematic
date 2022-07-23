@@ -1,9 +1,10 @@
+#include "wireroundedcorners.h"
+#include "../utils.h"
+#include "../wire_system/point.h"
+#include "../wire_system/line.h"
+
 #include <QPainter>
 #include <QVector2D>
-#include "wire_system/point.h"
-#include "wire_system/line.h"
-#include "../utils.h"
-#include "wireroundedcorners.h"
 
 const qreal BOUNDING_RECT_PADDING = 6.0;
 const qreal HANDLE_SIZE           = 3.0;

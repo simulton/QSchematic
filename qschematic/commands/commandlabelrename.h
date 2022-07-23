@@ -1,6 +1,7 @@
 #pragma once
 
 #include "commandbase.h"
+
 #include <QPointer>
 
 namespace QSchematic

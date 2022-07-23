@@ -1,5 +1,3 @@
-#include "qschematic/items/itemfactory.h"
-
 #include "itemtypes.h"
 #include "operation.h"
 #include "operationconnector.h"
@@ -8,6 +6,8 @@
 #include "fancywire.h"
 #include "flowstart.h"
 #include "flowend.h"
+
+#include <qschematic/items/itemfactory.h>
 
 std::shared_ptr<QSchematic::Item> CustomItemFactory::from_container(const gpds::container& container)
 {

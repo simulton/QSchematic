@@ -1,7 +1,7 @@
-#include "../items/label.h"
-#include "../items/wire.h"
 #include "commands.h"
 #include "commandwirenetrename.h"
+#include "../items/label.h"
+#include "../items/wire.h"
 
 using namespace QSchematic;
 

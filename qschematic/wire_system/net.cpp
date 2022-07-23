@@ -1,7 +1,7 @@
 #include "net.h"
+#include "wire.h"
 
 #include <QString>
-#include "wire.h"
 
 using namespace wire_system;
 

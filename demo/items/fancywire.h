@@ -1,6 +1,6 @@
 #pragma once
 
-#include "qschematic/items/wireroundedcorners.h"
+#include <qschematic/items/wireroundedcorners.h>
 
 class FancyWire : public QSchematic::WireRoundedCorners
 {

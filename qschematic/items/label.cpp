@@ -1,9 +1,10 @@
+#include "label.h"
+#include "../scene.h"
+
 #include <QFontMetricsF>
 #include <QPainter>
 #include <QPen>
 #include <QBrush>
-#include "label.h"
-#include "../scene.h"
 
 const QColor COLOR_LABEL             = QColor("#000000");
 const QColor COLOR_LABEL_HIGHLIGHTED = QColor("#dc2479");

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "qschematic/items/item.h"
+#include <qschematic/items/item.h>
 
 enum ItemType {
     OperationType = QSchematic::Item::QSchematicItemUserType + 1,

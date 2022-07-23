@@ -1,9 +1,6 @@
 # Pull in external dependencies
 include(../qschematic/external.cmake)
 
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
-
 # Qt5
 find_package(
     Qt5

@@ -2,10 +2,10 @@
 #include <QWheelEvent>
 #include <QScrollBar>
 
-#include "commands/commanditemremove.h"
 #include "view.h"
 #include "scene.h"
 #include "settings.h"
+#include "commands/commanditemremove.h"
 
 const qreal ZOOM_FACTOR_MIN   = 0.25;
 const qreal ZOOM_FACTOR_MAX   = 10.00;

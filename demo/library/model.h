@@ -1,8 +1,8 @@
 #pragma once
 
-#include <QAbstractItemModel>
-
 #include "model_item.h"
+
+#include <QAbstractItemModel>
 
 namespace QSchematic
 {

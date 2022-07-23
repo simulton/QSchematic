@@ -1,6 +1,8 @@
-#include <memory>
-#include <QMimeData>
 #include "item.h"
+
+#include <QMimeData>
+
+#include <memory>
 
 namespace QSchematic
 {
