@@ -8,7 +8,7 @@ namespace QSchematic
 
     class Item;
 
-    class QSCHEMATIC_EXPORT CommandItemVisibility :
+    class CommandItemVisibility :
         public UndoCommand
     {
     public:

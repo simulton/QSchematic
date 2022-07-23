@@ -6,7 +6,6 @@
 #include "../types.h"
 #include "../settings.h"
 #include "itemfunctions.h"
-#include "qschematic_export.h"
 
 #include <QDebug>
 #include <QWidget>
@@ -15,7 +14,7 @@ namespace QSchematic
 {
     class Scene;
 
-    class QSCHEMATIC_EXPORT Item :
+    class Item :
         public QGraphicsObject,
         public gpds::serialize,
         public std::enable_shared_from_this<Item>

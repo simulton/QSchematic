@@ -9,7 +9,7 @@ namespace QSchematic
 {
     class Node;
 
-    class QSCHEMATIC_EXPORT CommandNodeResize :
+    class CommandNodeResize :
         public UndoCommand
     {
     public:

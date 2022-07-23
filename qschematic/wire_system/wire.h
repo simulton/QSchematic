@@ -5,7 +5,6 @@
 #include <memory>
 
 #include "point.h"
-#include "qschematic_export.h"
 
 class QVector2D;
 
@@ -15,7 +14,7 @@ namespace wire_system
     class net;
     class line;
 
-    class QSCHEMATIC_EXPORT wire
+    class wire
     {
     public:
         wire();

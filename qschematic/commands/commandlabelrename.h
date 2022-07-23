@@ -8,7 +8,7 @@ namespace QSchematic
 
     class Label;
 
-    class QSCHEMATIC_EXPORT CommandLabelRename :
+    class CommandLabelRename :
         public UndoCommand
     {
     public:

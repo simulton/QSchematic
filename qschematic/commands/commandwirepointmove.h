@@ -12,7 +12,7 @@ namespace QSchematic
 {
     class Item;
 
-    class QSCHEMATIC_EXPORT CommandWirepointMove :
+    class CommandWirepointMove :
         public UndoCommand
     {
     public:
