@@ -1,3 +1,6 @@
+# Packages
+[![Packaging status](https://repology.org/badge/vertical-allrepos/qschematic.svg)](https://repology.org/project/qschematic/versions)
+
 # Introduction
 QSchematic is a library to draw diagrams & schematics with Qt. It uses Qt's [graphics view framework](http://doc.qt.io/qt-5/graphicsview.html).
 
