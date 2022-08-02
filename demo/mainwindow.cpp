@@ -217,7 +217,7 @@ bool MainWindow::load()
 void MainWindow::createActions()
 {
     // Open
-    _actionOpen = new QAction;
+    _actionOpen = new QAction(this);
     _actionOpen->setText("Open");
     _actionOpen->setIcon( QIcon( ":/folder_open.svg" ) );
     _actionOpen->setToolTip("Open a file");
@@ -227,7 +227,7 @@ void MainWindow::createActions()
     });
 
     // Save
-    _actionSave = new QAction;
+    _actionSave = new QAction(this);
     _actionSave->setText("Save");
     _actionSave->setToolTip("Save to a file");
     _actionSave->setIcon( QIcon( ":/save.svg" ) );
@@ -237,7 +237,7 @@ void MainWindow::createActions()
     });
 
     // Print
-    _actionPrint = new QAction;
+    _actionPrint = new QAction(this);
     _actionPrint->setText("Print");
     _actionPrint->setShortcut(QKeySequence::Print);
     _actionPrint->setIcon( QIcon( ":/print.svg" ) );
@@ -278,7 +278,7 @@ void MainWindow::createActions()
     actionGroupMode->addAction(_actionModeWire);
 
     // Show grid
-    _actionShowGrid = new QAction("Toggle Grid");
+    _actionShowGrid = new QAction("Toggle Grid", this);
     _actionShowGrid->setIcon( QIcon( ":/grid.svg") );
     _actionShowGrid->setCheckable(true);
     _actionShowGrid->setChecked(_settings.showGrid);
@@ -289,13 +289,13 @@ void MainWindow::createActions()
     });
 
     // Fit all
-    _actionFitAll = new QAction("Fit All");
+    _actionFitAll = new QAction("Fit All", this);
     _actionFitAll->setIcon(QIcon(":/fit_all.svg"));
     _actionFitAll->setToolTip("Center view on all items");
     connect(_actionFitAll, &QAction::triggered, [this]{_view->fitInView();});
 
     // Route straight angles
-    _actionRouteStraightAngles = new QAction("Wire angles");
+    _actionRouteStraightAngles = new QAction("Wire angles", this);
     _actionRouteStraightAngles->setIcon( QIcon( ":/wire_rightangle.svg") );
     _actionRouteStraightAngles->setCheckable(true);
     _actionRouteStraightAngles->setChecked(_settings.routeStraightAngles);
@@ -306,7 +306,7 @@ void MainWindow::createActions()
     });
 
     // Generate netlist
-    _actionGenerateNetlist = new QAction("Generate netlist");
+    _actionGenerateNetlist = new QAction("Generate netlist", this);
     _actionGenerateNetlist->setIcon( QIcon( ":/netlist.svg" ) );
     connect(_actionGenerateNetlist, &QAction::triggered, [this]{
         QSchematic::Netlist<Operation*, OperationConnector*> netlist;
@@ -317,7 +317,7 @@ void MainWindow::createActions()
     });
 
     // Debug mode
-    _actionDebugMode = new QAction("Debug");
+    _actionDebugMode = new QAction("Debug", this);
     _actionDebugMode->setCheckable(true);
     _actionDebugMode->setIcon( QIcon( ":/bug.svg") );
     _actionDebugMode->setChecked(_settings.debug);
