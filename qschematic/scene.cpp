@@ -39,7 +39,7 @@ Scene::Scene(QObject* parent) :
     connect(m_wire_manager.get(), &wire_system::manager::wire_point_moved, this, &Scene::wirePointMoved);
 
     // Undo stack
-    _undoStack = new QUndoStack;
+    _undoStack = new QUndoStack(this);
     connect(_undoStack, &QUndoStack::cleanChanged, [this](bool isClean) {
         emit isDirtyChanged(!isClean);
     });
