@@ -1,6 +1,7 @@
 #pragma once
 
 #include "model_item.h"
+#include "iteminfo.h"
 
 #include <QAbstractItemModel>
 
@@ -31,6 +32,8 @@ namespace Library
         };
         Q_ENUM(LibraryItems)
 
+        using model_item = ModelItem<LibraryItems, ItemInfo>;
+
         explicit Model(QObject* parent = nullptr);
         ~Model() override;
 
@@ -47,12 +50,11 @@ namespace Library
         QMimeData* mimeData(const QModelIndexList& indexes) const override;
 
     private:
-        using itemType = LibraryItems;
 
         void createModel();
-        void addTreeItem(const QString& name, const QIcon& icon, const QSchematic::Item* item, ModelItem<itemType>* parent);
+        void addTreeItem(const QString& name, const QIcon& icon, const QSchematic::Item* item, model_item* parent);
 
-        ModelItem<itemType>* _rootItem = nullptr;
+        model_item* _rootItem = nullptr;
     };
 
 }

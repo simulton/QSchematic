@@ -6,11 +6,20 @@
 namespace Library
 {
 
-    template <typename T>
+    template <typename Type, typename Data>
     class ModelItem
     {
     public:
-        ModelItem(const T& type, void* data, ModelItem<T>* parent = nullptr) :
+        /**
+         * Constructor.
+         *
+         * @note Takes ownership of @data.
+         *
+         * @param type
+         * @param data
+         * @param parent
+         */
+        ModelItem(const Type& type, Data* data, ModelItem<Type, Data>* parent = nullptr) :
             _type(type),
             _parent(parent),
             _data(data)
@@ -20,10 +29,12 @@ namespace Library
         ~ModelItem()
         {
             qDeleteAll(_children);
+
+            delete _data;
         }
 
         [[nodiscard]]
-        T type() const
+        Type type() const
         {
             return _type;
         }
@@ -63,7 +74,7 @@ namespace Library
         }
 
         [[nodiscard]]
-        void* data() const
+        const Data* data() const
         {
             return _data;
         }
@@ -85,10 +96,10 @@ namespace Library
         }
 
     private:
-        T _type;
+        Type _type;
+        Data* _data = nullptr;
         ModelItem* _parent = nullptr;
         QList<ModelItem*> _children;
-        void* _data = nullptr;
     };
 
 }

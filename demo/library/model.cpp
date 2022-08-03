@@ -15,7 +15,7 @@ using namespace Library;
 Model::Model(QObject* parent) :
     QAbstractItemModel(parent)
 {
-    _rootItem = new ModelItem<itemType>(Root, nullptr);
+    _rootItem = new model_item(Root, nullptr);
 
     createModel();
 }
@@ -35,19 +35,19 @@ void Model::createModel()
     }
 
     // Root operations
-    auto rootOperations = new ModelItem<itemType>(RootOperations, nullptr, _rootItem);
+    auto rootOperations = new model_item(RootOperations, nullptr, _rootItem);
     beginInsertRows(QModelIndex(), _rootItem->childCount(), _rootItem->childCount());
     _rootItem->appendChild(rootOperations);
     endInsertRows();
 
     // Root flows
-    auto rootFlows = new ModelItem<itemType>(RootFlows, nullptr, _rootItem);
+    auto rootFlows = new model_item(RootFlows, nullptr, _rootItem);
     beginInsertRows(QModelIndex(), _rootItem->childCount(), _rootItem->childCount());
     _rootItem->appendChild(rootFlows);
     endInsertRows();
 
     // Root basics
-    auto rootBasics = new ModelItem<itemType>(RootBascis, nullptr, _rootItem);
+    auto rootBasics = new model_item(RootBascis, nullptr, _rootItem);
     beginInsertRows(QModelIndex(), _rootItem->childCount(), _rootItem->childCount());
     _rootItem->appendChild(rootBasics);
     endInsertRows();
@@ -67,9 +67,9 @@ void Model::createModel()
     addTreeItem("Label", QIcon(), label, rootBasics);
 }
 
-void Model::addTreeItem(const QString& name, const QIcon& icon, const QSchematic::Item* item, ModelItem<itemType>* parent)
+void Model::addTreeItem(const QString& name, const QIcon& icon, const QSchematic::Item* item, model_item* parent)
 {
-    auto newItem = new ModelItem<itemType>(Operation, new ItemInfo(name, icon, item), parent);
+    auto newItem = new model_item(Operation, new ItemInfo(name, icon, item), parent);
     beginInsertRows(QModelIndex(), _rootItem->childCount(), _rootItem->childCount());
     parent->appendChild(newItem);
     endInsertRows();
@@ -78,13 +78,13 @@ void Model::addTreeItem(const QString& name, const QIcon& icon, const QSchematic
 const QSchematic::Item* Model::itemFromIndex(const QModelIndex& index) const
 {
     // Retrieve the item
-    auto modelItem = static_cast<ModelItem<itemType>*>(index.internalPointer());
+    auto modelItem = static_cast<model_item*>(index.internalPointer());
     if (!modelItem) {
         return nullptr;
     }
 
     // Retrieve the item info
-    auto itemInfo = static_cast<ItemInfo*>(modelItem->data());
+    auto itemInfo = static_cast<const ItemInfo*>(modelItem->data());
     if (!itemInfo) {
         return nullptr;
     }
@@ -98,14 +98,14 @@ QModelIndex Model::index(int row, int column, const QModelIndex& parent) const
     if (!hasIndex(row, column, parent))
         return { };
 
-    ModelItem<itemType>* parentItem;
+    model_item* parentItem;
     if (!parent.isValid()) {
         parentItem = _rootItem;
     } else {
-        parentItem = static_cast<ModelItem<itemType>*>(parent.internalPointer());
+        parentItem = static_cast<model_item*>(parent.internalPointer());
     }
 
-    ModelItem<itemType>* childItem = parentItem->child(row);
+    model_item* childItem = parentItem->child(row);
     if (childItem)
         return createIndex(row, column, childItem);
     else
@@ -117,7 +117,7 @@ QModelIndex Model::parent(const QModelIndex& index) const
     if (!index.isValid())
         return { };
 
-    auto childItem = static_cast<ModelItem<itemType>*>(index.internalPointer());
+    auto childItem = static_cast<model_item*>(index.internalPointer());
     auto parentItem = childItem->parent();
 
     if (parentItem == _rootItem)
@@ -128,7 +128,7 @@ QModelIndex Model::parent(const QModelIndex& index) const
 
 int Model::rowCount(const QModelIndex& parent) const
 {
-    ModelItem<itemType>* parentItem;
+    model_item* parentItem;
     if (parent.column() > 0) {
         return 0;
     }
@@ -136,7 +136,7 @@ int Model::rowCount(const QModelIndex& parent) const
     if (!parent.isValid()) {
         parentItem = _rootItem;
     } else {
-        parentItem = static_cast<ModelItem<itemType>*>(parent.internalPointer());
+        parentItem = static_cast<model_item*>(parent.internalPointer());
     }
 
     return parentItem->childCount();
@@ -155,7 +155,7 @@ QVariant Model::data(const QModelIndex& index, int role) const
         return { };
 
     // Retrieve the model item
-    auto modelItem = static_cast<ModelItem<itemType>*>(index.internalPointer());
+    auto modelItem = static_cast<model_item*>(index.internalPointer());
     if (!modelItem)
         return { };
 
@@ -242,7 +242,7 @@ Qt::ItemFlags Model::flags(const QModelIndex& index) const
     Qt::ItemFlags flags = Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 
     // Add item specific flags
-    auto modelItem = static_cast<ModelItem<itemType>*>(index.internalPointer());
+    auto modelItem = static_cast<model_item*>(index.internalPointer());
     if (!modelItem)
         return Qt::NoItemFlags;
 
@@ -273,7 +273,7 @@ QMimeData* Model::mimeData(const QModelIndexList& indexes) const
     if (!index.isValid())
         return new QMimeData();
 
-    auto modelItem = static_cast<ModelItem<itemType>*>(index.internalPointer());
+    auto modelItem = static_cast<model_item*>(index.internalPointer());
     if (!modelItem)
         return new QMimeData();
 
@@ -281,7 +281,7 @@ QMimeData* Model::mimeData(const QModelIndexList& indexes) const
         case Operation:
         {
             // Retrieve the widget info
-            auto itemInfo = static_cast<ItemInfo*>(modelItem->data());
+            auto itemInfo = static_cast<const ItemInfo*>(modelItem->data());
             if (!itemInfo) {
                 return new QMimeData();
             }
