@@ -50,7 +50,7 @@ MainWindow::MainWindow(QWidget *parent)
     _settings.routeStraightAngles = true;
 
     // Scene (object needed in createActions())
-    _scene = new QSchematic::Scene;
+    _scene = new QSchematic::Scene(this);
 
     // Create actions
     createActions();
@@ -77,7 +77,7 @@ MainWindow::MainWindow(QWidget *parent)
     });
 
     // View
-    _view = new QSchematic::View;
+    _view = new QSchematic::View(this);
     _view->setSettings(_settings);
     _view->setScene(_scene);
 
@@ -90,14 +90,14 @@ MainWindow::MainWindow(QWidget *parent)
     addDockWidget(Qt::LeftDockWidgetArea, itemLibraryDock);
 
     // Undo view
-    _undoView = new QUndoView(_scene->undoStack());
+    _undoView = new QUndoView(_scene->undoStack(), this);
     QDockWidget* undoDockWiget = new QDockWidget;
     undoDockWiget->setWindowTitle("Command histoy");
     undoDockWiget->setWidget(_undoView);
     addDockWidget(Qt::LeftDockWidgetArea, undoDockWiget);
 
     // Netlist viewer
-    _netlistViewer = new ::Netlist::Viewer();
+    _netlistViewer = new ::Netlist::Viewer(this);
     QDockWidget* netlistviewerDockWidget = new QDockWidget;
     netlistviewerDockWidget->setWindowTitle(QStringLiteral("Netlist Viewer"));
     netlistviewerDockWidget->setWidget(_netlistViewer);
@@ -106,20 +106,20 @@ MainWindow::MainWindow(QWidget *parent)
     // Menus
     {
         // File menu
-        QMenu* fileMenu = new QMenu(QStringLiteral("&File"));
+        QMenu* fileMenu = new QMenu(QStringLiteral("&File"), this);
         fileMenu->addAction(_actionOpen);
         fileMenu->addAction(_actionSave);
         fileMenu->addSeparator();
         fileMenu->addAction(_actionPrint);
 
         // Menubar
-        QMenuBar* menuBar = new QMenuBar;
+        QMenuBar* menuBar = new QMenuBar(this);
         menuBar->addMenu(fileMenu);
         setMenuBar(menuBar);
     }
 
     // Toolbar
-    QToolBar* editorToolbar = new QToolBar;
+    QToolBar* editorToolbar = new QToolBar(this);
     editorToolbar->addAction(_actionUndo);
     editorToolbar->addAction(_actionRedo);
     editorToolbar->addSeparator();
@@ -132,13 +132,13 @@ MainWindow::MainWindow(QWidget *parent)
     addToolBar(editorToolbar);
 
     // View toolbar
-    QToolBar* viewToolbar = new QToolBar;
+    QToolBar* viewToolbar = new QToolBar(this);
     viewToolbar->addAction(_actionShowGrid);
     viewToolbar->addAction(_actionFitAll);
     addToolBar(viewToolbar);
 
     // Debug toolbar
-    QToolBar* debugToolbar = new QToolBar;
+    QToolBar* debugToolbar = new QToolBar(this);
     debugToolbar->addAction(_actionDebugMode);
     addToolBar(debugToolbar);
 
