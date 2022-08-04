@@ -41,7 +41,9 @@ jobs:
 
       - name: Install packages (via apt)
         if: runner.os == 'Linux'
-        run: sudo apt install ${{ matrix.toolchain.packages }} -y
+        run: |
+          sudo apt update
+          sudo apt install ${{ matrix.toolchain.packages }} -y
 
       - name: Configure
         run: cmake -Bbuild -GNinja -DQSCHEMATIC_BUILD_DEMO=ON -DQSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD=ON
