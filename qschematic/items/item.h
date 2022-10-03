@@ -66,7 +66,7 @@ namespace QSchematic
         }
 
         template <typename RetT = Item>
-        auto weakPtr() const -> std::weak_ptr<RetT>
+        auto weakPtr() const -> std::weak_ptr<const RetT>
         {
             if constexpr (std::is_same_v<RetT, Item>)
                 return weak_from_this();
