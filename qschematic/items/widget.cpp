@@ -28,8 +28,6 @@ Widget::Widget(int type, QWidget* widget, QGraphicsItem* parent) :
     layout->setContentsMargins(0, 0, 0, 0);
     layout->addWidget(sizeGrip, 0, Qt::AlignRight | Qt::AlignBottom);
 
-    setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
-
     // Rectangle
     update_rect();
 }

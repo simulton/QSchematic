@@ -74,9 +74,6 @@ MainWindow::MainWindow(QWidget *parent)
             break;
         }
     });
-    connect(_scene, &QSchematic::Scene::itemHighlighted, [](const auto& item){
-        qInfo() << "Item highlighted: " << item.get();
-    });
 
     // View
     _view = new QSchematic::View(this);
