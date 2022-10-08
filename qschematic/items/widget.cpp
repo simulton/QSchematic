@@ -23,6 +23,7 @@ Widget::Widget(int type, QWidget* widget, QGraphicsItem* parent) :
     m_proxy = new QGraphicsProxyWidget(this);
     m_proxy->setWidget(m_widget);
 
+    // Widget layout
     auto sizeGrip = new QSizeGrip(m_widget);
     auto layout = new QVBoxLayout(m_widget);
     layout->setContentsMargins(0, 0, 0, 0);
@@ -30,6 +31,9 @@ Widget::Widget(int type, QWidget* widget, QGraphicsItem* parent) :
 
     // Rectangle
     update_rect();
+
+    // Misc
+    setHighlightEnabled(false);
 }
 
 std::shared_ptr<Item>
