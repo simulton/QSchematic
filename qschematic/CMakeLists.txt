@@ -23,6 +23,7 @@ set(SOURCES_PRIVATE
     items/label.cpp
     items/node.cpp
     items/splinewire.cpp
+    items/widget.cpp
     items/wire.cpp
     items/wirenet.cpp
     items/wireroundedcorners.cpp
@@ -58,6 +59,7 @@ set(HEADERS_PUBLIC
     items/label.h
     items/node.h
     items/splinewire.h
+    items/widget.h
     items/wire.h
     items/wirenet.h
     items/wireroundedcorners.h

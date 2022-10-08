@@ -17,6 +17,7 @@
 #include "items/itemmimedata.h"
 #include "items/node.h"
 #include "items/label.h"
+#include "items/widget.h"
 #include "utils/itemscontainerutils.h"
 
 using namespace QSchematic;
@@ -53,7 +54,7 @@ Scene::Scene(QObject* parent) :
             return;
 
         // Get item popup
-        _popup.reset( addWidget(_highlightedItem->popup().release()) );
+        _popup.reset( QGraphicsScene::addWidget(_highlightedItem->popup().release()) );
         _popup->setZValue(100);
         _popup->setPos(_lastMousePos + QPointF{ 5, 5 });
     });
@@ -340,6 +341,44 @@ bool Scene::removeItem(const std::shared_ptr<Item> item)
     _keep_alive_an_event_loop << item;
 
     return true;
+}
+
+#include <QHBoxLayout>
+#include <QSizeGrip>
+#include <QDial>
+bool Scene::addWidget(QWidget* widget, const QPoint& pos)
+{
+#if 1
+    auto item = std::make_shared<Widget>(424242, widget);
+    item->setPos(pos);
+
+    // Add item
+    return addItem(item);
+    //return true;
+#else
+
+    auto *dial= new QDial();                                        // The widget
+    auto *handle = new QGraphicsRectItem(QRect(0, 0, 120, 120));    // Created to move and select on scene
+    auto *proxy = new QGraphicsProxyWidget(handle);                 // Adding the widget through the proxy
+
+    dial->setGeometry(0, 0, 100, 100);
+    dial->move(10, 10);
+
+    proxy->setWidget(dial);
+
+    QSizeGrip * sizeGrip = new QSizeGrip(dial);
+    QHBoxLayout *layout = new QHBoxLayout(dial);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->addWidget(sizeGrip, 0, Qt::AlignRight | Qt::AlignBottom);
+
+    handle->setPen(QPen(Qt::transparent));
+    handle->setBrush(Qt::gray);
+    handle->setFlags(QGraphicsItem::ItemIsMovable |
+                     QGraphicsItem::ItemIsSelectable);
+
+    QGraphicsScene::addItem(handle); // adding to scene
+    return true;
+#endif
 }
 
 QList<std::shared_ptr<Item>> Scene::items() const

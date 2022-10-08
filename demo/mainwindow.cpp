@@ -37,6 +37,8 @@
 
 const QString FILE_FILTERS = "XML (*.xml)";
 
+#include <QDial>
+#include <QSlider>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -141,6 +143,16 @@ MainWindow::MainWindow(QWidget *parent)
     QToolBar* debugToolbar = new QToolBar(this);
     debugToolbar->addAction(_actionDebugMode);
     addToolBar(debugToolbar);
+
+    {
+        auto _DELETEME = new QAction("Widget", this);
+        connect(_DELETEME, &QAction::triggered, [this]{
+            auto w = new QDial;
+            _scene->addWidget(w, QPoint{ 100, 100 });
+        });
+
+        debugToolbar->addAction(_DELETEME);
+    }
 
     // Central widget
     setCentralWidget(_view);
