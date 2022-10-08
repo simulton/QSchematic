@@ -2,7 +2,6 @@
 
 #include "item.h"
 
-class QGraphicsRectItem;
 class QGraphicsProxyWidget;
 
 namespace QSchematic
@@ -16,11 +15,14 @@ namespace QSchematic
         Q_DISABLE_COPY_MOVE(Widget)
 
     public:
-        Widget(int type, QWidget* widget, QGraphicsItem* parent = nullptr);
+        Widget(int type, QGraphicsItem* parent = nullptr);
         ~Widget() override = default;
 
         std::shared_ptr<Item>
         deepCopy() const override;
+
+        void
+        setWidget(QWidget* widget);
 
         QRectF
         boundingRect() const override;
@@ -31,10 +33,14 @@ namespace QSchematic
         bool
         eventFilter(QObject* obj, QEvent* event) override;
 
+    protected:
+        int m_border_width    = 10;
+        QPen m_border_pen     = QPen(Qt::NoPen);
+        QBrush m_border_brush = QBrush(Qt::gray);
+
     private:
         QRect m_rect;
         QWidget* m_widget = nullptr;
-        QGraphicsRectItem* m_handle = nullptr;
         QGraphicsProxyWidget* m_proxy = nullptr;
 
         void

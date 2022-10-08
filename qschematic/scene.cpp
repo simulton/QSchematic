@@ -345,8 +345,9 @@ bool Scene::removeItem(const std::shared_ptr<Item> item)
 
 bool Scene::addWidget(QWidget* widget, const QPoint& pos)
 {
-    // ToDo: type
-    auto item = std::make_shared<Widget>(424242, widget);
+    // Create item
+    auto item = std::make_shared<Widget>(424242);   // ToDo: type
+    item->setWidget(widget);
     item->setPos(pos);
 
     // Add item
