@@ -39,13 +39,12 @@ namespace QSchematic
         paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
     protected:
-        int m_border_width    = 10;
+        int m_border_width    = 15;
         QPen m_border_pen     = QPen(Qt::NoPen);
         QBrush m_border_brush = QBrush(Qt::gray);
 
     private:
         QRect m_rect;
-        QWidget* m_widget = nullptr;
         QGraphicsProxyWidget* m_proxy = nullptr;
 
         void

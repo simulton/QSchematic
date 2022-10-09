@@ -22,12 +22,15 @@ Widget::setWidget(QWidget* widget)
 {
     if (!widget)
         return;
+    if (widget->parent())    // Requirement according to QGraphicsProxyWidget documentation
+        return;
 
-    m_widget = widget;
-    m_widget->move(m_border_width, m_border_width);
+    widget->installEventFilter(this);
+    widget->resize(m_rect.size());
+    widget->move(m_border_width, m_border_width);
 
     // Proxy
-    m_proxy->setWidget(m_widget);
+    m_proxy->setWidget(widget);
 
     // Rectangle
     update_rect();
@@ -36,7 +39,7 @@ Widget::setWidget(QWidget* widget)
 std::shared_ptr<Item>
 Widget::deepCopy() const
 {
-    // Note: This is not copyable as we'd need a way to clone the underlying m_widget too (eg. via a user supplied
+    // Note: This is not copyable as we'd need a way to clone the underlying widget too (eg. via a user supplied
     //       factory or similar.
 
     return { };
@@ -53,8 +56,8 @@ Widget::sizeChangedEvent(QSizeF oldSize, QSizeF newSize)
 {
     update_rect();
 
-    if (m_widget)
-        m_widget->setGeometry(m_rect.adjusted(m_border_width, m_border_width, -m_border_width, -m_border_width));
+    if (auto widget = m_proxy->widget(); widget)
+        widget->setGeometry(m_rect.adjusted(m_border_width, m_border_width, -m_border_width, -m_border_width));
 }
 
 void
