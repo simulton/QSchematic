@@ -1,7 +1,8 @@
-#include "node.h"
-#include "itemfactory.h"
+#include "rectitem.h"
 #include "../utils.h"
 #include "../scene.h"
+#include "../commands/commandrectitemresize.h"
+#include "../commands/commandrectitemrotate.h"
 
 #include <QApplication>
 #include <QGraphicsSceneMouseEvent>
@@ -18,43 +19,18 @@ using namespace QSchematic;
 const int DEFAULT_WIDTH     = 160;
 const int DEFAULT_HEIGHT    = 240;
 
-Node::Node(int type, QGraphicsItem* parent) :
+RectItem::RectItem(int type, QGraphicsItem* parent) :
     Item(type, parent),
     _mode(None),
     _size(DEFAULT_WIDTH, DEFAULT_HEIGHT),
     _allowMouseResize(true),
-    _allowMouseRotate(true),
-    _connectorsMovable(false),
-    _connectorsSnapPolicy(Connector::NodeSizerectOutline),
-    _connectorsSnapToGrid(true)
+    _allowMouseRotate(true)
 {
-    connect(this, &Node::settingsChanged, this, &Node::propagateSettings);
 }
 
-Node::~Node()
+gpds::container
+RectItem::to_container() const
 {
-    dissociate_items(_connectors);
-    dissociate_items(_specialConnectors);
-}
-
-gpds::container Node::to_container() const
-{
-    // Connectors configuration
-    gpds::container connectorsConfigurationContainer;
-    connectorsConfigurationContainer.add_value("movable", connectorsMovable());
-    connectorsConfigurationContainer.add_value("snap_policy", static_cast<int>(connectorsSnapPolicy()));
-    connectorsConfigurationContainer.add_value("snap_to_grid", connectorsSnapToGrid());
-
-    // Connectors
-    gpds::container connectorsContainer;
-    for (const auto& connector : connectors()) {
-        if ( _specialConnectors.contains( connector ) ) {
-            continue;
-        }
-
-        connectorsContainer.add_value("connector", connector->to_container());
-    }
-
     // Root
     gpds::container root;
     addItemTypeIdToContainer(root);
@@ -63,67 +39,31 @@ gpds::container Node::to_container() const
     root.add_value("height", size().height());
     root.add_value("allow_mouse_resize", allowMouseResize());
     root.add_value("allow_mouse_rotate", allowMouseRotate());
-    root.add_value("connectors_configuration", connectorsConfigurationContainer);
-    root.add_value("connectors", connectorsContainer);
 
     return root;
 }
 
-void Node::from_container(const gpds::container& container)
+void RectItem::from_container(const gpds::container& container)
 {
     // Root
     Item::from_container(*container.get_value<gpds::container*>("item").value());
     setSize(container.get_value<double>("width").value_or(0), container.get_value<double>("height").value_or(0));
     setAllowMouseResize(container.get_value<bool>("allow_mouse_resize").value_or(true));
     setAllowMouseRotate(container.get_value<bool>("allow_mouse_rotate").value_or(true));
-
-    // Connectors configuration
-    const gpds::container* connectorsConfigurationContainer = container.get_value<gpds::container*>("connectors_configuration").value_or(nullptr);
-    if (connectorsConfigurationContainer) {
-        setConnectorsMovable(connectorsConfigurationContainer->get_value<bool>("movable").value_or(true));
-        setConnectorsSnapPolicy(static_cast<Connector::SnapPolicy>( connectorsConfigurationContainer->get_value<int>("snap_policy").value_or(Connector::SnapPolicy::Anywhere)));
-        setConnectorsSnapToGrid(connectorsConfigurationContainer->get_value<bool>("snap_to_grid").value_or(true));
-    }
-
-    // Connectors
-    const gpds::container* connectorsContainer = container.get_value<gpds::container*>("connectors").value_or(nullptr);
-    if (connectorsContainer) {
-        clearConnectors();
-        for (const gpds::container* connectorContainer : connectorsContainer->get_values<gpds::container*>("connector")) {
-            auto connector = std::dynamic_pointer_cast<Connector>(ItemFactory::instance().from_container(*connectorContainer));
-            if (!connector) {
-                continue;
-            }
-            connector->from_container(*connectorContainer);
-            addConnector(connector);
-        }
-    }
 }
 
-std::shared_ptr<Item> Node::deepCopy() const
+std::shared_ptr<Item> RectItem::deepCopy() const
 {
-    auto clone = std::make_shared<Node>(type(), parentItem());
+    auto clone = std::make_shared<RectItem>(type(), parentItem());
     copyAttributes(*clone);
 
     return clone;
 }
 
-void Node::copyAttributes(Node& dest) const
+void RectItem::copyAttributes(RectItem& dest) const
 {
     // Base class
     Item::copyAttributes(dest);
-
-    // Connectors
-    dest.clearConnectors();
-    for (const auto& connector : _connectors) {
-        if ( _specialConnectors.contains( connector ) ) {
-            continue;
-        }
-
-        auto connectorClone = std::dynamic_pointer_cast<Connector>(connector->deepCopy());
-        connectorClone->setParentItem(&dest);
-        dest._connectors << connectorClone;
-    }
 
     // Attributes
     dest._mode = _mode;
@@ -132,18 +72,14 @@ void Node::copyAttributes(Node& dest) const
     dest._size = _size;
     dest._allowMouseResize = _allowMouseResize;
     dest._allowMouseRotate = _allowMouseRotate;
-    dest._connectorsMovable = _connectorsMovable;
-    dest._connectorsSnapPolicy = _connectorsSnapPolicy;
-    dest._connectorsSnapToGrid = _connectorsSnapToGrid;
-    dest._specialConnectors = _specialConnectors;
 }
 
-Node::Mode Node::mode() const
+RectItem::Mode RectItem::mode() const
 {
     return _mode;
 }
 
-void Node::setSize(const QSizeF& size)
+void RectItem::setSize(const QSizeF& size)
 {
     // short circuit when no effective change at all times as a manner of policy
     if (size == _size) {
@@ -162,6 +98,8 @@ void Node::setSize(const QSizeF& size)
     _size = size;
 
     // Move connectors
+#warning ToDo
+#if 0
     for (const auto& connector: connectors()) {
         if (qFuzzyCompare(connector->posX(), oldSize.width()) ||
             connector->posX() > size.width())
@@ -174,6 +112,7 @@ void Node::setSize(const QSizeF& size)
             connector->setY(size.height());
         }
     }
+#endif
 
     setTransformOriginPoint(sizeRect().center());
 
@@ -181,73 +120,62 @@ void Node::setSize(const QSizeF& size)
     emit sizeChanged();
 }
 
-void Node::setSize(qreal width, qreal height)
+void RectItem::setSize(qreal width, qreal height)
 {
     return setSize(QSizeF(width, height));
 }
 
-void Node::setWidth(qreal width)
+void RectItem::setWidth(qreal width)
 {
     setSize( width, size().height() );
 }
 
-void Node::setHeight(qreal height)
+void RectItem::setHeight(qreal height)
 {
     setSize( size().width(), height );
 }
 
-QSizeF Node::size() const
+QSizeF RectItem::size() const
 {
     return _size;
 }
 
-QRectF Node::sizeRect() const
+QRectF RectItem::sizeRect() const
 {
     return QRectF(0, 0, _size.width(), _size.height());
 }
 
-qreal Node::width() const
+qreal RectItem::width() const
 {
     return _size.width();
 }
 
-qreal Node::height() const
+qreal RectItem::height() const
 {
     return _size.height();
 }
 
-void Node::setAllowMouseResize(bool enabled)
+void RectItem::setAllowMouseResize(bool enabled)
 {
     _allowMouseResize = enabled;
 }
 
-void Node::setAllowMouseRotate(bool enabled)
+void RectItem::setAllowMouseRotate(bool enabled)
 {
     _allowMouseRotate = enabled;
 }
 
-bool Node::allowMouseResize() const
+bool RectItem::allowMouseResize() const
 {
     return _allowMouseResize;
 }
 
-bool Node::allowMouseRotate() const
+bool RectItem::allowMouseRotate() const
 {
     return _allowMouseRotate;
 }
 
-void Node::addSpecialConnector(const std::shared_ptr<Connector>& connector)
-{
-    // Sanity check
-    if (!connector)
-        return;
-
-    _specialConnectors.push_back( connector );
-
-    addConnector( connector );
-}
-
-QMap<RectanglePoint, QRectF> Node::resizeHandles() const
+QMap<RectanglePoint, QRectF> RectItem::resizeHandles() const
 {
     QMap<RectanglePoint, QRectF> map;
     const int& resizeHandleSize = _settings.resizeHandleSize;
@@ -273,164 +201,19 @@ QMap<RectanglePoint, QRectF> Node::resizeHandles() const
     return map;
 }
 
-QRectF Node::rotationHandle() const
+QRectF RectItem::rotationHandle() const
 {
     const QRectF& r = sizeRect();
     const int& resizeHandleSize = _settings.resizeHandleSize;
     return QRectF(Utils::centerPoint(r.topRight(), r.topLeft())+QPointF(1,-resizeHandleSize*3)-QPointF(resizeHandleSize, resizeHandleSize), QSizeF(2*resizeHandleSize, 2*resizeHandleSize));
 }
 
-bool Node::addConnector(const std::shared_ptr<Connector>& connector)
-{
-    if (!connector) {
-        return false;
-    }
-
-    connector->setParentItem(this);
-    connector->setMovable(_connectorsMovable);
-    connector->setSnapPolicy(_connectorsSnapPolicy);
-    connector->setSnapToGrid(_connectorsSnapToGrid);
-    connector->setSettings(_settings);
-
-    _connectors << connector;
-
-    return true;
-}
-
-bool Node::removeConnector(const std::shared_ptr<Connector>& connector)
-{
-    if (!connector) {
-        return false;
-    }
-    if (!_connectors.contains(connector) && !_specialConnectors.contains(connector)) {
-        return false;
-    }
-
-    connector->setParentItem(nullptr);
-
-    _connectors.removeAll(connector);
-    _specialConnectors.removeAll(connector);
-
-    return true;
-}
-
-void Node::clearConnectors()
-{
-    // Remove from scene
-    auto s = scene();
-    if (s) {
-        for (auto connector : _connectors) {
-            s->removeItem(connector);
-        }
-    }
-
-    // Clear the local list
-    _connectors.clear();
-}
-
-QList<std::shared_ptr<Connector>> Node::connectors() const
-{
-    return _connectors;
-}
-
-QList<QPointF> Node::connectionPointsRelative() const
-{
-    QList<QPointF> list;
-
-    for (const auto& connector : _connectors) {
-        // Ignore hidden connectors
-        if (!connector->isVisible())
-            continue;
-
-        // Rotate the position around to the node's origin
-        QPointF pos = connector->pos();
-        {
-            QPointF d = transformOriginPoint() - pos;
-            qreal angle = rotation() * M_PI / 180;
-            QPointF rotated;
-            rotated.setX(qCos(angle) * d.rx() - qSin(angle) * d.ry());
-            rotated.setY(qSin(angle) * d.rx() + qCos(angle) * d.ry());
-            pos = transformOriginPoint() - rotated;
-        }
-        list << connector->connectionPoint() + pos;
-    }
-
-    return list;
-}
-
-QList<QPointF> Node::connectionPointsAbsolute() const
-{
-    QList<QPointF> list(connectionPointsRelative());
-
-    for (QPointF& point : list) {
-        point += pos();
-    }
-
-    return list;
-}
-
-void Node::setConnectorsMovable(bool enabled)
-{
-    // Update connectors
-    for (auto connector : _connectors) {
-        connector->setMovable(enabled);
-    }
-
-    // Update local
-    _connectorsMovable = enabled;
-}
-
-bool Node::connectorsMovable() const
-{
-    return _connectorsMovable;
-}
-
-void Node::setConnectorsSnapPolicy(Connector::SnapPolicy policy)
-{
-    // Update connectors
-    for (auto connector : _connectors) {
-        connector->setSnapPolicy(policy);
-    }
-
-    // Update local
-    _connectorsSnapPolicy = policy;
-}
-
-Connector::SnapPolicy Node::connectorsSnapPolicy() const
-{
-    return _connectorsSnapPolicy;
-}
-
-void Node::setConnectorsSnapToGrid(bool enabled)
-{
-    // Update connectors
-    for (auto connector : _connectors) {
-        connector->setSnapToGrid(enabled);
-    }
-
-    // Update local
-    _connectorsSnapToGrid = enabled;
-}
-
-bool Node::connectorsSnapToGrid() const
-{
-    return _connectorsSnapToGrid;
-}
-
-void Node::alignConnectorLabels() const
-{
-    for (auto connector : _connectors) {
-        Q_ASSERT(connector);
-        connector->alignLabel();
-    }
-}
-
-auto Node::sizeChangedEvent() -> void
+void RectItem::sizeChangedEvent()
 {
     // default implementation is noop
 }
 
-void Node::mousePressEvent(QGraphicsSceneMouseEvent* event)
+void RectItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     event->accept();
 
@@ -463,14 +246,14 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent* event)
     }
 }
 
-void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+void RectItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
     event->accept();
     Item::mouseReleaseEvent(event);
     _mode = None;
 }
 
-void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
+void RectItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
     Q_ASSERT( scene() );
 
@@ -490,7 +273,7 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
     {
         // Sanity check
         if (!_allowMouseResize) {
-            qFatal("Node::mouseMoveEvent(): _mode is 'Resize' although _allowMouseResize is false");
+            qFatal("RectItem::mouseMoveEvent(): _mode is 'Resize' although _allowMouseResize is false");
             break;
         }
 
@@ -602,7 +385,7 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             newPos += correction;
 
             // Apply
-            //scene()->undoStack()->push(new CommandNodeResize(this, newPos, newSize));
+            scene()->undoStack()->push(new CommandRectItemResize(this, newPos, newSize));
         }
 
         break;
@@ -611,7 +394,7 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
     {
         // Sanity check
         if (!_allowMouseRotate) {
-            qFatal("Node::mouseMoveEvent(): _mode is 'Rotate' although _allowMouseRotate is false");
+            qFatal("RectItem::mouseMoveEvent(): _mode is 'Rotate' although _allowMouseRotate is false");
             break;
         }
 
@@ -621,24 +404,26 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
         if (QApplication::keyboardModifiers() == Qt::ShiftModifier) {
             angle = qRound(angle/15)*15;
         }
-        //scene()->undoStack()->push(new CommandNodeRotate(this, angle));
+
+        // Apply
+        scene()->undoStack()->push(new CommandRectItemRotate(this, angle));
     }
     }
 }
 
-void Node::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
+void RectItem::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 {
     Item::hoverEnterEvent(event);
 }
 
-void Node::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
+void RectItem::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
 {
     Item::hoverLeaveEvent(event);
 
     unsetCursor();
 }
 
-void Node::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
+void RectItem::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
 {
     Item::hoverMoveEvent(event);
 
@@ -686,7 +471,7 @@ void Node::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
     }
 }
 
-QRectF Node::boundingRect() const
+QRectF RectItem::boundingRect() const
 {
     // Body rect
     QRectF rect = QRectF(QPoint(0, 0), _size);
@@ -717,7 +502,7 @@ QRectF Node::boundingRect() const
     return rect;
 }
 
-void Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
+void RectItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     Q_UNUSED(option)
     Q_UNUSED(widget)
@@ -777,7 +562,7 @@ void Node::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     }
 }
 
-void Node::update()
+void RectItem::update()
 {
     // The item class sets the origin to the center of the bounding box
     // but in this case we want to rotate around the center of the body
@@ -785,13 +570,13 @@ void Node::update()
     QGraphicsObject::update();
 }
 
-bool Node::canSnapToGrid() const
+bool RectItem::canSnapToGrid() const
 {
     // Only snap when the rotation is a multiple of 90
     return Item::snapToGrid() && fmod(rotation(), 90) == 0;
 }
 
-QVariant Node::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
+QVariant RectItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
 {
     switch (change)
     {
@@ -820,7 +605,7 @@ QVariant Node::itemChange(QGraphicsItem::GraphicsItemChange change, const QVaria
     }
 }
 
-void Node::paintResizeHandles(QPainter& painter)
+void RectItem::paintResizeHandles(QPainter& painter)
 {
     for (const QRectF& rect : resizeHandles()) {
         // Handle pen
@@ -846,7 +631,7 @@ void Node::paintResizeHandles(QPainter& painter)
     }
 }
 
-void Node::paintRotateHandle(QPainter& painter)
+void RectItem::paintRotateHandle(QPainter& painter)
 {
     auto rect = rotationHandle();
 
@@ -870,11 +655,4 @@ void Node::paintRotateHandle(QPainter& painter)
     handleBrush.setColor(Qt::white);
     painter.setBrush(handleBrush);
     painter.drawEllipse(rect.adjusted(-handlePen.width()+adj, -handlePen.width()+adj, (handlePen.width()/2)-adj, (handlePen.width()/2)-adj));
-}
-
-void Node::propagateSettings()
-{
-    for (const auto& connector : connectors()) {
-        connector->setSettings(_settings);
-    }
 }

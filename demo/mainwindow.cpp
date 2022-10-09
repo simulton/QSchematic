@@ -35,6 +35,10 @@
 #include <memory>
 #include <sstream>
 
+
+#warning TEMPORARY
+#include <qschematic/items/rectitem.h>
+
 const QString FILE_FILTERS = "XML (*.xml)";
 
 MainWindow::MainWindow(QWidget *parent)
@@ -141,6 +145,15 @@ MainWindow::MainWindow(QWidget *parent)
     QToolBar* debugToolbar = new QToolBar(this);
     debugToolbar->addAction(_actionDebugMode);
     addToolBar(debugToolbar);
+
+    {
+        auto _deleteme = new QAction("RectItem");
+        debugToolbar->addAction(_deleteme);
+        connect(_deleteme, &QAction::triggered, [this]{
+            auto item = std::make_shared<QSchematic::RectItem>(1337);
+            _scene->addItem(item);
+        });
+    }
 
     // Central widget
     setCentralWidget(_view);

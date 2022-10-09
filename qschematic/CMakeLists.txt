@@ -12,8 +12,8 @@ set(SOURCES_PRIVATE
     commands/commanditemremove.cpp
     commands/commanditemvisibility.cpp
     commands/commandlabelrename.cpp
-    commands/commandnoderesize.cpp
-    commands/commandnoderotate.cpp
+    commands/commandrectitemresize.cpp
+    commands/commandrectitemrotate.cpp
     commands/commandwirenetrename.cpp
     commands/commandwirepointmove.cpp
     items/connector.cpp
@@ -22,6 +22,7 @@ set(SOURCES_PRIVATE
     items/itemmimedata.cpp
     items/label.cpp
     items/node.cpp
+    items/rectitem.cpp
     items/splinewire.cpp
     items/wire.cpp
     items/wirenet.cpp
@@ -45,8 +46,8 @@ set(HEADERS_PUBLIC
     commands/commanditemremove.h
     commands/commanditemvisibility.h
     commands/commandlabelrename.h
-    commands/commandnoderesize.h
-    commands/commandnoderotate.h
+    commands/commandrectitemresize.h
+    commands/commandrectitemrotate.h
     commands/commands.h
     commands/commandwirenetrename.h
     commands/commandwirepointmove.h
@@ -57,6 +58,7 @@ set(HEADERS_PUBLIC
     items/itemmimedata.h
     items/label.h
     items/node.h
+    items/rectitem.h
     items/splinewire.h
     items/wire.h
     items/wirenet.h

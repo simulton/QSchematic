@@ -8,13 +8,13 @@
 
 namespace QSchematic
 {
-    class Node;
+    class RectItem;
 
-    class CommandNodeResize :
+    class CommandRectItemRotate :
         public UndoCommand
     {
     public:
-        CommandNodeResize(QPointer<Node> node, const QPointF& newPos, const QSizeF& newSize, QUndoCommand* parent = nullptr);
+        CommandRectItemRotate(QPointer<RectItem> item, qreal rotation, QUndoCommand* parent = nullptr);
 
         int id() const override;
         bool mergeWith(const QUndoCommand* command) override;
@@ -24,11 +24,9 @@ namespace QSchematic
     private:
         void updateText();
 
-        QPointer<Node> _node;
-        QPointF _oldPos;
-        QPointF _newPos;
-        QSizeF _oldSize;
-        QSizeF _newSize;
+        QPointer<RectItem> _item;
+        qreal _oldAngle;
+        qreal _newAngle;
     };
 
 }

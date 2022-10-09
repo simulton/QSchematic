@@ -7,9 +7,9 @@ namespace QSchematic
         ItemAddCommandType,
         ItemRemoveCommandType,
         ItemVisibilityCommandType,
-        NodeResizeCommandType,
         LabelRenameCommandType,
-        NodeRotateCommandType,
+        RectItemResizeCommandType,
+        RectItemRotateCommandType,
         WireNetRenameCommandType,
         WirePointMoveCommandType,
 
