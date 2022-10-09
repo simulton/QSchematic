@@ -82,14 +82,12 @@ RectItem::Mode RectItem::mode() const
 void RectItem::setSize(const QSizeF& size)
 {
     // short circuit when no effective change at all times as a manner of policy
-    if (size == _size) {
+    if (size == _size)
         return;
-    }
 
     // Boundary checks
-    if (size.width() < 1 || size.height() < 1) {
+    if (size.width() < 1 || size.height() < 1)
         return;
-    }
 
     QSizeF oldSize = _size;
 
@@ -97,26 +95,9 @@ void RectItem::setSize(const QSizeF& size)
 
     _size = size;
 
-    // Move connectors
-#warning ToDo
-#if 0
-    for (const auto& connector: connectors()) {
-        if (qFuzzyCompare(connector->posX(), oldSize.width()) ||
-            connector->posX() > size.width())
-        {
-            connector->setX(size.width());
-        }
-        if (qFuzzyCompare(connector->posY(), oldSize.height()) ||
-            connector->posY() > size.height())
-        {
-            connector->setY(size.height());
-        }
-    }
-#endif
-
     setTransformOriginPoint(sizeRect().center());
 
-    sizeChangedEvent();
+    sizeChangedEvent(oldSize, _size);
     emit sizeChanged();
 }
 
@@ -208,8 +189,10 @@ QRectF RectItem::rotationHandle() const
     return QRectF(Utils::centerPoint(r.topRight(), r.topLeft())+QPointF(1,-resizeHandleSize*3)-QPointF(resizeHandleSize, resizeHandleSize), QSizeF(2*resizeHandleSize, 2*resizeHandleSize));
 }
 
-void RectItem::sizeChangedEvent()
+void RectItem::sizeChangedEvent(QSizeF oldSize, QSizeF newSize)
 {
+    Q_UNUSED(oldSize)
+    Q_UNUSED(newSize)
     // default implementation is noop
 }
 

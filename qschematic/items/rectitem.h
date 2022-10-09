@@ -54,9 +54,9 @@ namespace QSchematic
         /**
          * @brief not really an event per se, but this seems the best way to
          * name it, all things considered. There are many items currently
-         * that need to react to size-change and signal to self is boilerplaty
+         * that need to react to size-change and signal to self is boilerplate
          */
-        virtual auto sizeChangedEvent() -> void;
+        virtual void sizeChangedEvent(QSizeF oldSize, QSizeF newSize);
 
         void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
         void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
