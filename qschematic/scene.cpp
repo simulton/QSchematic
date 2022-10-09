@@ -17,6 +17,7 @@
 #include "items/itemmimedata.h"
 #include "items/node.h"
 #include "items/label.h"
+#include "items/widget.h"
 #include "utils/itemscontainerutils.h"
 
 using namespace QSchematic;
@@ -53,7 +54,7 @@ Scene::Scene(QObject* parent) :
             return;
 
         // Get item popup
-        _popup.reset( addWidget(_highlightedItem->popup().release()) );
+        _popup.reset( QGraphicsScene::addWidget(_highlightedItem->popup().release()) );
         _popup->setZValue(100);
         _popup->setPos(_lastMousePos + QPointF{ 5, 5 });
     });
@@ -340,6 +341,17 @@ bool Scene::removeItem(const std::shared_ptr<Item> item)
     _keep_alive_an_event_loop << item;
 
     return true;
+}
+
+bool Scene::addWidget(QWidget* widget, const QPoint& pos)
+{
+    // Create item
+    auto item = std::make_shared<Widget>(424242);   // ToDo: type
+    item->setWidget(widget);
+    item->setPos(pos);
+
+    // Add item
+    return addItem(item);
 }
 
 QList<std::shared_ptr<Item>> Scene::items() const
