@@ -38,6 +38,8 @@
 
 #warning TEMPORARY
 #include <qschematic/items/rectitem.h>
+#include <qschematic/items/widget.h>
+#include <QDial>
 
 const QString FILE_FILTERS = "XML (*.xml)";
 
@@ -151,6 +153,14 @@ MainWindow::MainWindow(QWidget *parent)
         debugToolbar->addAction(_deleteme);
         connect(_deleteme, &QAction::triggered, [this]{
             auto item = std::make_shared<QSchematic::RectItem>(1337);
+            _scene->addItem(item);
+        });
+
+        auto _deleteme2 = new QAction("Widget");
+        debugToolbar->addAction(_deleteme2);
+        connect(_deleteme2, &QAction::triggered, [this]{
+            auto item = std::make_shared<QSchematic::Widget>(4242);
+            item->setWidget(new QDial);
             _scene->addItem(item);
         });
     }
