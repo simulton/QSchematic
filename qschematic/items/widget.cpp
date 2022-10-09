@@ -25,12 +25,14 @@ Widget::setWidget(QWidget* widget)
     if (widget->parent())    // Requirement according to QGraphicsProxyWidget documentation
         return;
 
-    widget->installEventFilter(this);
-    widget->resize(m_rect.size());
+    // Widget
     widget->move(m_border_width, m_border_width);
 
     // Proxy
     m_proxy->setWidget(widget);
+
+    // Resize ourselves
+    setSize(widget->size());
 
     // Rectangle
     update_rect();
