@@ -813,7 +813,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 
         // Highlight the item under the cursor
         Item* item = dynamic_cast<Item*>(itemAt(newMousePos, QTransform()));
-        if (item) {
+        if (item && item->highlightEnabled()) {
             // Skip if the item is already highlighted
             if (item == _highlightedItem) {
                 break;
