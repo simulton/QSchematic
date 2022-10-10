@@ -9,20 +9,22 @@
 #include <QPainter>
 #include <QtMath>
 
-const QColor COLOR_HIGHLIGHTED = QColor(Qt::blue);
-const QColor COLOR_BODY_FILL   = QColor(Qt::green);
-const QColor COLOR_BODY_BORDER = QColor(Qt::black);
-const qreal PEN_WIDTH          = 1.5;
+const QColor COLOR_HIGHLIGHTED   = QColor(Qt::blue);
+const QColor COLOR_BODY_FILL     = QColor(Qt::green);
+const QColor COLOR_BODY_BORDER   = QColor(Qt::black);
+const qreal PEN_WIDTH            = 1.5;
+const int DEFAULT_WIDTH          = 160;
+const int DEFAULT_HEIGHT         = 240;
+const int DEFAULT_MINIMUM_WIDTH  = 40;
+const int DEFAULT_MINIMUM_HEIGHT = 40;
 
 using namespace QSchematic;
-
-const int DEFAULT_WIDTH     = 160;
-const int DEFAULT_HEIGHT    = 240;
 
 RectItem::RectItem(int type, QGraphicsItem* parent) :
     Item(type, parent),
     _mode(None),
     _size(DEFAULT_WIDTH, DEFAULT_HEIGHT),
+    _minimumSize(DEFAULT_MINIMUM_WIDTH, DEFAULT_MINIMUM_HEIGHT),
     _allowMouseResize(true),
     _allowMouseRotate(true)
 {
@@ -37,6 +39,8 @@ RectItem::to_container() const
     root.add_value("item", Item::to_container());
     root.add_value("width", size().width());
     root.add_value("height", size().height());
+    root.add_value("minimum_width", _minimumSize.width());
+    root.add_value("minimum_height", _minimumSize.height());
     root.add_value("allow_mouse_resize", allowMouseResize());
     root.add_value("allow_mouse_rotate", allowMouseRotate());
 
@@ -48,6 +52,7 @@ void RectItem::from_container(const gpds::container& container)
     // Root
     Item::from_container(*container.get_value<gpds::container*>("item").value());
     setSize(container.get_value<double>("width").value_or(0), container.get_value<double>("height").value_or(0));
+    setMinimumSize(QSizeF{container.get_value<double>("minimum_width").value_or(0), container.get_value<double>("minimum_height").value_or(0)});
     setAllowMouseResize(container.get_value<bool>("allow_mouse_resize").value_or(true));
     setAllowMouseRotate(container.get_value<bool>("allow_mouse_rotate").value_or(true));
 }
@@ -79,8 +84,17 @@ RectItem::Mode RectItem::mode() const
     return _mode;
 }
 
-void RectItem::setSize(const QSizeF& size)
+void RectItem::setMinimumSize(const QSizeF& size)
 {
+    _minimumSize = size;
+}
+
+void RectItem::setSize(QSizeF size)
+{
+    // Honor minimum size
+    size.setWidth(std::max(size.width(), _minimumSize.width()));
+    size.setHeight(std::max(size.height(), _minimumSize.height()));
+
     // short circuit when no effective change at all times as a manner of policy
     if (size == _size)
         return;
@@ -346,16 +360,16 @@ void RectItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             }
 
             // Minimum size
-            if (newSize.height() < 1) {
-                newSize.setHeight(1);
+            if (newSize.height() < _minimumSize.height()) {
+                newSize.setHeight(_minimumSize.height());
                 if (!qFuzzyCompare(newPos.ry(), pos().ry())) {
-                    newPos.setY(posY() + _size.height() - 1);
+                    newPos.setY(posY() + _size.height() - _minimumSize.height());
                 }
             }
-            if (newSize.width() < 1) {
-                newSize.setWidth(1);
+            if (newSize.width() < _minimumSize.width()) {
+                newSize.setWidth(_minimumSize.width());
                 if (!qFuzzyCompare(newPos.rx(), pos().rx())) {
-                    newPos.setX(posX() + _size.width() - 1);
+                    newPos.setX(posX() + _size.width() - _minimumSize.width());
                 }
             }
 

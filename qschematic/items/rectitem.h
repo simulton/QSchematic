@@ -38,7 +38,8 @@ namespace QSchematic
         std::shared_ptr<Item> deepCopy() const override;
 
         Mode mode() const;
-        void setSize(const QSizeF& size);
+        void setMinimumSize(const QSizeF& size);
+        void setSize(QSizeF size);
         void setSize(qreal width, qreal height);
         void setWidth(qreal width);
         void setHeight(qreal height);
@@ -81,6 +82,7 @@ namespace QSchematic
         Mode _mode;
         QPointF _lastMousePosWithGridMove;
         RectanglePoint _resizeHandle;
+        QSizeF _minimumSize;
         QSizeF _size;
         bool _allowMouseResize;
         bool _allowMouseRotate;
