@@ -208,12 +208,6 @@ QVariant Connector::itemChange(QGraphicsItem::GraphicsItemChange change, const Q
     }
 
     case QGraphicsItem::ItemPositionHasChanged:
-    {
-        calculateTextDirection();
-        alignLabel();
-        break;
-    }
-
     case QGraphicsItem::ItemParentHasChanged:
     {
         calculateTextDirection();
