@@ -74,6 +74,7 @@ void RectItem::copyAttributes(RectItem& dest) const
     dest._mode = _mode;
     dest._lastMousePosWithGridMove = _lastMousePosWithGridMove;
     dest._resizeHandle = _resizeHandle;
+    dest._minimumSize = _minimumSize;
     dest._size = _size;
     dest._allowMouseResize = _allowMouseResize;
     dest._allowMouseRotate = _allowMouseRotate;
