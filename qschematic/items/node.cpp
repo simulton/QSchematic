@@ -100,7 +100,7 @@ std::shared_ptr<Item> Node::deepCopy() const
 void Node::copyAttributes(Node& dest) const
 {
     // Base class
-    Item::copyAttributes(dest);
+    RectItem::copyAttributes(dest);
 
     // Connectors
     dest.clearConnectors();
