@@ -37,7 +37,6 @@
 
 
 #warning TEMPORARY
-#include <qschematic/items/rectitem.h>
 #include <qschematic/items/widget.h>
 #include <QDial>
 
@@ -95,7 +94,7 @@ MainWindow::MainWindow(QWidget *parent)
     // Undo view
     _undoView = new QUndoView(_scene->undoStack(), this);
     QDockWidget* undoDockWiget = new QDockWidget;
-    undoDockWiget->setWindowTitle("Command histoy");
+    undoDockWiget->setWindowTitle("Command History");
     undoDockWiget->setWidget(_undoView);
     addDockWidget(Qt::LeftDockWidgetArea, undoDockWiget);
 
@@ -146,13 +145,6 @@ MainWindow::MainWindow(QWidget *parent)
     addToolBar(debugToolbar);
 
     {
-        auto _deleteme = new QAction("RectItem");
-        debugToolbar->addAction(_deleteme);
-        connect(_deleteme, &QAction::triggered, [this]{
-            auto item = std::make_shared<QSchematic::RectItem>(1337);
-            _scene->addItem(item);
-        });
-
         auto _deleteme2 = new QAction("Widget");
         debugToolbar->addAction(_deleteme2);
         connect(_deleteme2, &QAction::triggered, [this]{
