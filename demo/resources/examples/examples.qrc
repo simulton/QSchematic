@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="demo_01.xml">demo_01.xml</file>
+    </qresource>
+</RCC>

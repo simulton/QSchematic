@@ -16,6 +16,7 @@ set(SOURCES_PRIVATE
 
 # Resources files
 set(RESOURCES
+    resources/examples/examples.qrc
     resources/icons/icons.qrc
 )
 

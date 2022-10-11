@@ -45,6 +45,7 @@ public:
 
     bool save();
     bool load();
+    bool load(const QString& filepath);
     void createActions();
     void demo();
 

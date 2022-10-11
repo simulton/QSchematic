@@ -204,11 +204,16 @@ bool MainWindow::load()
         return false;
     }
 
+    return load(path);
+}
+
+bool MainWindow::load(const QString& filepath)
+{
     // Get rid of everything existing
     _scene->clear();
 
     // Open the file
-    QFile file(path);
+    QFile file(filepath);
     file.open(QFile::ReadOnly);
     if (!file.isOpen()) {
         return false;
@@ -365,47 +370,5 @@ void MainWindow::demo()
     _scene->clear();
     _scene->setSceneRect(-500, -500, 3000, 3000);
 
-    auto o1 = std::make_shared<Operation>();
-    o1->addConnector(std::make_shared<OperationConnector>(QPoint(0, 2), QStringLiteral("in")));
-    o1->addConnector(std::make_shared<OperationConnector>(QPoint(8, 2), QStringLiteral("out")));
-    o1->setGridPos(0, 0);
-    o1->setSize(160, 80);
-    o1->setConnectorsMovable(true);
-    o1->setText(QStringLiteral("Operation 1"));
-    o1->label()->setPos(0, 110);
-    _scene->addItem(o1);
-
-    auto o2 = std::make_shared<Operation>();
-    o2->addConnector(std::make_shared<OperationConnector>(QPoint(0, 2), QStringLiteral("in")));
-    o2->addConnector(std::make_shared<OperationConnector>(QPoint(8, 2), QStringLiteral("out")));
-    o2->setGridPos(-14, 9);
-    o2->setSize(160, 80);
-    o2->setConnectorsMovable(true);
-    o2->setText(QStringLiteral("Operation 2"));
-    o2->label()->setPos(0, 110);
-    _scene->addItem(o2);
-
-    auto o3 = std::make_shared<Operation>();
-    o3->setSize(160, 120);
-    o3->addConnector(std::make_shared<OperationConnector>(QPoint(0, 2), QStringLiteral("in 1")));
-    o3->addConnector(std::make_shared<OperationConnector>(QPoint(0, 4), QStringLiteral("in 2")));
-    o3->addConnector(std::make_shared<OperationConnector>(QPoint(8, 3), QStringLiteral("out")));
-    o3->setGridPos(18, -8);
-    o3->setConnectorsMovable(true);
-    o3->setText(QStringLiteral("Operation 3"));
-    o3->label()->setPos(0, 150);
-    _scene->addItem(o3);
-
-    auto o4 = std::make_shared<Operation>();
-    o4->setSize(160, 120);
-    o4->addConnector(std::make_shared<OperationConnector>(QPoint(0, 2), QStringLiteral("in 1")));
-    o4->addConnector(std::make_shared<OperationConnector>(QPoint(0, 4), QStringLiteral("in 2")));
-    o4->addConnector(std::make_shared<OperationConnector>(QPoint(8, 3), QStringLiteral("out")));
-    o4->setGridPos(18, 10);
-    o4->setConnectorsMovable(true);
-    o4->setText(QStringLiteral("Operation 4"));
-    o4->label()->setPos(0, 150);
-    _scene->addItem(o4);
-
-    _scene->undoStack()->clear();
+    load(":/demo_01.xml");
 }
