@@ -92,9 +92,11 @@ void View::keyPressEvent(QKeyEvent* event)
         return;
 
     case Qt::Key_Backspace:
-        if (_scene && _scene->mode() == Scene::WireMode) {
+        if (_scene && _scene->mode() == Scene::WireMode)
             _scene->removeLastWirePoint();
-        }
+        else
+            QGraphicsView::keyPressEvent(event);
+
         return;
 
     default:
