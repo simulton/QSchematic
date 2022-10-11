@@ -22,6 +22,7 @@ Feature overview:
       - Square
       - Spline / Bezier
     - Connectors
+    - Widgets (embed any `QWidget` into the scene)
 
 Technical stuff:
   - Written in C++17
