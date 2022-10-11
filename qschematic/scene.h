@@ -54,7 +54,6 @@ namespace QSchematic {
         void clear();
         bool addItem(const std::shared_ptr<Item>& item);
         bool removeItem(const std::shared_ptr<Item> item);
-        bool addWidget(QWidget* widget, const QPoint& pos);
         QList<std::shared_ptr<Item>> items() const;
         QList<std::shared_ptr<Item>> items(int itemType) const;
 
