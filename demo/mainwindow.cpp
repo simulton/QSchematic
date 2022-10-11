@@ -158,7 +158,7 @@ MainWindow::MainWindow(QWidget *parent)
     setCentralWidget(_view);
 
     // Misc
-    setWindowTitle("Schematic Editor");
+    setWindowTitle("QSchematic Editor");
     resize( WINDOW_WIDTH, WINDOW_HEIGHT );
 #ifdef WINDOW_MAXIMIZE
     setWindowState(Qt::WindowMaximized);
