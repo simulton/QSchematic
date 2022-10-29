@@ -131,7 +131,17 @@ void OperationConnector::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         QAction* text = new QAction;
         text->setText("Rename ...");
         connect(text, &QAction::triggered, [this] {
-            const QString& newText = QInputDialog::getText(nullptr, "Rename Connector", "New connector text", QLineEdit::Normal, label()->text());
+            bool ok = false;
+            const QString& newText = QInputDialog::getText(
+                nullptr,
+                "Rename Connector",
+                "New connector text",
+                QLineEdit::Normal,
+                label()->text(),
+                &ok
+            );
+            if (!ok)
+                return;
 
             if (scene()) {
                 scene()->undoStack()->push(new QSchematic::CommandLabelRename(label().get(), newText));
