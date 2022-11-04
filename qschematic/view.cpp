@@ -1,6 +1,7 @@
 #include <QKeyEvent>
 #include <QWheelEvent>
 #include <QScrollBar>
+#include <QtMath>
 
 #include "view.h"
 #include "scene.h"
@@ -109,12 +110,20 @@ void View::keyPressEvent(QKeyEvent* event)
 
 void View::wheelEvent(QWheelEvent* event)
 {
+    // CTRL + wheel to zoom
     if (event->modifiers() & Qt::ControlModifier) {
-        if (event->angleDelta().y() > 0 && _scaleFactor < ZOOM_FACTOR_MAX) {
+
+        // Zoom in (clip)
+        if (event->angleDelta().y() > 0) {
             _scaleFactor += ZOOM_FACTOR_STEPS;
-        } else if (event->angleDelta().y() < 0 && _scaleFactor > ZOOM_FACTOR_MIN) {
+        }
+
+        // Zoom out (clip)
+        else if (event->angleDelta().y() < 0) {
             _scaleFactor -= ZOOM_FACTOR_STEPS;
         }
+
+        _scaleFactor = qBound(0.0, _scaleFactor, 1.0);
 
         updateScale();
     }
@@ -196,17 +205,23 @@ void View::setSettings(const Settings& settings)
 
 void View::setZoomValue(qreal factor)
 {
-    _scaleFactor = factor;
+    _scaleFactor = qLn(ZOOM_FACTOR_MIN/factor) / qLn(ZOOM_FACTOR_MIN / ZOOM_FACTOR_MAX);
 
     updateScale();
 }
 
 void View::updateScale()
 {
-    // Apply the new scale
-    setTransform(QTransform::fromScale(_scaleFactor, _scaleFactor));
+    // Exponential interpolation
+    float logMinZoom = qLn(ZOOM_FACTOR_MIN);
+    float logMaxZoom = qLn(ZOOM_FACTOR_MAX);
+    float logZoom = logMinZoom + (logMaxZoom - logMinZoom) * _scaleFactor;
+    float zoom = qExp(logZoom);
 
-    emit zoomChanged(_scaleFactor);
+    // Apply the new scale
+    setTransform(QTransform::fromScale(zoom, zoom));
+
+    emit zoomChanged(zoom);
 }
 
 void View::setMode(Mode newMode)
