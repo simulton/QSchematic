@@ -51,7 +51,7 @@ void View::keyPressEvent(QKeyEvent* event)
             return;
 
         case Qt::Key_0:
-            _scaleFactor = 1.0;
+            setZoomValue(1.0);
             updateScale();
             return;
 
