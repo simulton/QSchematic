@@ -437,7 +437,7 @@ void manager::connector_moved(const connectable* connector)
 /**
  * Returns whether the wire's point is attached to a connector
  */
-bool manager::point_is_attached(wire_system::wire* wire, int index)
+bool manager::point_is_attached(wire_system::wire* wire, int index) const
 {
     for (const auto& wire_point : m_connections.values()) {
         if (wire_point.first != wire) {

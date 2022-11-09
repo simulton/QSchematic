@@ -57,7 +57,7 @@ public:
     void detach_wire(const connectable* connector);
     [[nodiscard]] std::shared_ptr<wire> wire_with_extremity_at(const QPointF& point);
     void point_inserted(const wire* wire, int index);
-    [[nodiscard]] bool point_is_attached(wire_system::wire* wire, int index);
+    [[nodiscard]] bool point_is_attached(wire_system::wire* wire, int index) const;
     void set_settings(const Settings& settings);
     [[nodiscard]] Settings settings() const;
     void point_removed(const wire* wire, int index);
