@@ -70,8 +70,13 @@ void FancyWire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
     // Base class
     QSchematic::WireRoundedCorners::paint(painter, option, widget);
 
-    // Nothing to do if we can't retrieve a list of all available connection points
+    // Nothing to do if we can't retrieve the wire manager
     if (!scene())
+        return;
+
+    // Get the wire manager
+    const auto& wireManager = scene()->wire_manager();
+    if (!wireManager)
         return;
 
     QPen pen(Qt::NoPen);
@@ -80,19 +85,19 @@ void FancyWire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
     brush.setColor(Qt::black);
     brush.setStyle(Qt::SolidPattern);
 
-    // Retrieve a list of all available connection points in the scene
-    const auto& connectionPoints = scene()->connectionPoints();
-
     // Make points fancy if they are on top of one of our connectors
     painter->setPen(pen);
     painter->setBrush(brush);
 
-    for (const auto& point: pointsRelative()) {
-        for (const auto& connector: connectionPoints) {
-            if (qFuzzyCompare(QVector2D(connector), QVector2D(point + pos()))) {
-                painter->drawEllipse(point, SIZE, SIZE);
-                break;
-            }
-        }
+    const auto& points = pointsRelative();
+
+    // Sanity check!
+    if (points.size() != points_count())
+        return;
+
+    // Draw a circle on wire points connected to a connectable
+    for (int i = 0; i < points_count(); i++) {
+        if (wireManager->point_is_attached(this, i))
+            painter->drawEllipse(points.at(i), SIZE, SIZE);
     }
 }
