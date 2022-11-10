@@ -42,6 +42,20 @@ Connector::Connector(int type, const QPoint& gridPoint, const QString& text, QGr
     connect(this, &Connector::moved, [this]{ calculateTextDirection(); });
     connect(this, &Connector::movedInScene, this, &Connector::notify_wire_manager);
 
+    // In case the connector gets hidden, we have to inform the wire manager to
+    // disconnect any previous connection(s).
+    connect(this, &QGraphicsObject::visibleChanged, [this]{
+        auto s = scene();
+        if (!s)
+            return;
+
+        auto wireManager = s->wire_manager();
+        if (!wireManager)
+            return;
+
+        wireManager->detach_wire(this);
+    });
+
     // Misc
     setGridPos(gridPoint);
     calculateSymbolRect();
