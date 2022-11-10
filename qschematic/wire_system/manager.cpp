@@ -372,6 +372,7 @@ void manager::point_removed(const wire* wire, int index)
 
 void manager::detach_wire(const connectable* connector)
 {
+    // ToDo: This doesn't seem robust at all
     const auto& wire = m_connections.value(connector).first;
     m_connections.remove(connector);
 }
