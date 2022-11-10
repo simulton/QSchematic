@@ -42,6 +42,7 @@ Connector::Connector(int type, const QPoint& gridPoint, const QString& text, QGr
     connect(this, &Connector::moved, [this]{ calculateTextDirection(); });
     connect(this, &Connector::movedInScene, this, &Connector::notify_wire_manager);
 
+    // ToDo: Maybe move this to Connector::itemChange()
     connect(this, &QGraphicsObject::visibleChanged, [this]{
         // In case the connector gets hidden, we have to inform the wire manager to
         // disconnect any previous connection(s).
@@ -380,5 +381,6 @@ void Connector::notify_wire_manager()
     }
 
     // Notify the wire system when the connector moves
+    // ToDo: This is not robust, need wire_manager() nullptr check
     scene()->wire_manager()->connector_moved(this);
 }
