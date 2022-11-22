@@ -44,7 +44,6 @@ namespace QSchematic {
         std::shared_ptr<Label> label() const;
         void alignLabel();
         QRectF boundingRect() const override;
-        QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value) override;
         void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
         // Connectable
@@ -52,10 +51,12 @@ namespace QSchematic {
 
     protected:
         void copyAttributes(Connector& dest) const;
+        QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value) override;
 
     private:
         void calculateSymbolRect();
         void calculateTextDirection();
+        void disconnect_all_wires();
         void notify_wire_manager();
 
         SnapPolicy _snapPolicy;

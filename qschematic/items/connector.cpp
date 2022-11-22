@@ -42,23 +42,6 @@ Connector::Connector(int type, const QPoint& gridPoint, const QString& text, QGr
     connect(this, &Connector::moved, [this]{ calculateTextDirection(); });
     connect(this, &Connector::movedInScene, this, &Connector::notify_wire_manager);
 
-    // ToDo: Maybe move this to Connector::itemChange()
-    connect(this, &QGraphicsObject::visibleChanged, [this]{
-        // In case the connector gets hidden, we have to inform the wire manager to
-        // disconnect any previous connection(s).
-        if (!isVisible()) {
-            auto s = scene();
-            if (!s)
-                return;
-
-            auto wireManager = s->wire_manager();
-            if (!wireManager)
-                return;
-
-            wireManager->detach_wire(this);
-        }
-    });
-
     // Misc
     setGridPos(gridPoint);
     calculateSymbolRect();
@@ -69,6 +52,9 @@ Connector::~Connector()
 {
     // So it's definitely removed via the shared_ptr (which we have by way of the item-allocation contracts being shptr all through
     dissociate_item(_label);
+
+    // Disconnect all wires
+    disconnect_all_wires();
 }
 
 gpds::container Connector::to_container() const
@@ -232,6 +218,19 @@ QVariant Connector::itemChange(QGraphicsItem::GraphicsItemChange change, const Q
         break;
     }
 
+    case QGraphicsItem::ItemVisibleHasChanged:
+    {
+        if (!isVisible())
+            disconnect_all_wires();
+        break;
+    }
+
+    case QGraphicsItem::ItemSceneChange:
+    {
+        disconnect_all_wires();
+        break;
+    }
+
     default:
         break;
     }
@@ -371,6 +370,19 @@ void Connector::calculateTextDirection()
 QPointF Connector::position() const
 {
     return scenePos();
+}
+
+void Connector::disconnect_all_wires()
+{
+    auto s = scene();
+    if (!s)
+        return;
+
+    auto wireManager = s->wire_manager();
+    if (!wireManager)
+        return;
+
+    wireManager->detach_wire(this);
 }
 
 void Connector::notify_wire_manager()
