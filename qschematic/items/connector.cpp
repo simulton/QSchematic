@@ -387,12 +387,14 @@ void Connector::disconnect_all_wires()
 
 void Connector::notify_wire_manager()
 {
-    // Ignore if it's not in a scene
-    if (!scene()) {
+    auto s = scene();
+    if (!s)
         return;
-    }
+
+    auto wireManager = s->wire_manager();
+    if (!wireManager)
+        return;
 
     // Notify the wire system when the connector moves
-    // ToDo: This is not robust, need wire_manager() nullptr check
-    scene()->wire_manager()->connector_moved(this);
+    wireManager->connector_moved(this);
 }
