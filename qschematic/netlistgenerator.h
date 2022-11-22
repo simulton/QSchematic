@@ -54,7 +54,7 @@ namespace QSchematic
                         createNewNet = true;
                         break;
                     }
-                    if (QString::compare(globalNet.name, wireNet->name()) == 0) {
+                    if (QString::compare(globalNet.name, wireNet->name(), Qt::CaseSensitive) == 0) {
                         globalNet.wireNets.append(wireNet);
                         createNewNet = false;
                         break;
