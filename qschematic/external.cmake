@@ -1,6 +1,8 @@
 include(FetchContent)
 
+########################################################################################################################
 # GPDS
+########################################################################################################################
 if (QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD)
     FetchContent_Declare(
         gpds
@@ -26,12 +28,30 @@ else()
     )
 endif()
 
-# Qt5
+
+########################################################################################################################
+# Qt
+########################################################################################################################
+
+# Try to find Qt6
 find_package(
-    Qt5
-    REQUIRED
+    Qt6
     COMPONENTS
         Core
         Gui
         Widgets
 )
+
+# If Qt6 was not found, fallback to Qt5
+# Require minimum Qt 5.15 for versionless cmake targets. This can be relaxed down to Qt 5.6 (?) if needed by modifying
+# The CMake target linking statements as demonstrated in the Qt documentation.
+if (NOT Qt6_FOUND)
+    find_package(
+        Qt5 5.15
+        REQUIRED
+        COMPONENTS
+            Core
+            Gui
+            Widgets
+    )
+endif()

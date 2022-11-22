@@ -1,12 +1,20 @@
 # Pull in external dependencies
 include(../qschematic/external.cmake)
 
-# Qt5
+# Qt
 find_package(
-    Qt5
+    Qt6
     COMPONENTS
         PrintSupport
 )
+if (NOT Qt6_FOUND)
+    find_package(
+        Qt5
+        REQUIRED
+        COMPONENTS
+            PrintSupport
+    )
+endif()
 
 # Source files
 set(SOURCES_PRIVATE
