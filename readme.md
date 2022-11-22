@@ -86,7 +86,7 @@ include(FetchContent)
 FetchContent_Declare(
     qschematic
     GIT_REPOSITORY https://github.com/simulton/qschematic
-    GIT_TAG        1.0.1
+    GIT_TAG        master
 )
 FetchContent_MakeAvailable(qschematic)
 
@@ -97,12 +97,13 @@ target_link_libraries(
         qschematic-static
 )
 ```
+Note that any serious consumer might want to specify an actual git tag or a commit hash via `GIT_TAG` rather than a branch name.
 To change options & variables, the call to `FetchContent_MakeAvailable()` shown above can be replaced with:
 ```cmake
 FetchContent_Declare(
     qschematic
     GIT_REPOSITORY https://github.com/simulton/qschematic
-    GIT_TAG        1.0.1
+    GIT_TAG        master
 )
 FetchContent_GetProperties(qschematic)
 if(NOT qschematic_POPULATED)
@@ -114,8 +115,6 @@ if(NOT qschematic_POPULATED)
     
     add_subdirectory(${qschematic_SOURCE_DIR} ${qschematic_BINARY_DIR})
 endif()
-
-
 ```
 
 #### find_package()
