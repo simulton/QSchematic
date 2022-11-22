@@ -76,7 +76,7 @@ QVector<QLineF>::const_iterator Utils::lineClosestToPoint(const QVector<QLineF>&
     // Sanity check
     if (lines.isEmpty()) {
         qFatal("Utils::lineClosestToPoint(): lines vector must not be empty");
-        return nullptr;
+        return { };
     }
 
     // Figure out to which line we're closest to
