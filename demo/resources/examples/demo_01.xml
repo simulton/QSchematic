@@ -340,8 +340,8 @@
                     <rotation direction="cw" unit="degrees">0.</rotation>
                     <snap_to_grid>false</snap_to_grid>
                     <visible>true</visible>
-                    <x>27.333333</x>
-                    <y>-14.666667</y>
+                    <x>43.</x>
+                    <y>-10.</y>
                 </item>
                 <text>Operation 1</text>
             </label>
@@ -373,7 +373,7 @@
                                     <snap_to_grid>false</snap_to_grid>
                                     <visible>true</visible>
                                     <x>15.</x>
-                                    <y>6.5</y>
+                                    <y>4.75</y>
                                 </item>
                                 <text>in</text>
                             </label>
@@ -404,8 +404,8 @@
                                     <rotation direction="cw" unit="degrees">0.</rotation>
                                     <snap_to_grid>false</snap_to_grid>
                                     <visible>true</visible>
-                                    <x>-47.</x>
-                                    <y>6.5</y>
+                                    <x>-39.</x>
+                                    <y>4.75</y>
                                 </item>
                                 <text>out</text>
                             </label>
@@ -452,8 +452,8 @@
                     <rotation direction="cw" unit="degrees">0.</rotation>
                     <snap_to_grid>false</snap_to_grid>
                     <visible>true</visible>
-                    <x>27.333333</x>
-                    <y>-14.</y>
+                    <x>43.</x>
+                    <y>-10.</y>
                 </item>
                 <text>Operation 2</text>
             </label>
@@ -485,7 +485,7 @@
                                     <snap_to_grid>false</snap_to_grid>
                                     <visible>true</visible>
                                     <x>15.</x>
-                                    <y>6.5</y>
+                                    <y>4.75</y>
                                 </item>
                                 <text>in</text>
                             </label>
@@ -516,8 +516,8 @@
                                     <rotation direction="cw" unit="degrees">0.</rotation>
                                     <snap_to_grid>false</snap_to_grid>
                                     <visible>true</visible>
-                                    <x>-47.</x>
-                                    <y>6.5</y>
+                                    <x>-39.</x>
+                                    <y>4.75</y>
                                 </item>
                                 <text>out</text>
                             </label>
@@ -564,8 +564,8 @@
                     <rotation direction="cw" unit="degrees">0.</rotation>
                     <snap_to_grid>false</snap_to_grid>
                     <visible>true</visible>
-                    <x>26.666667</x>
-                    <y>-19.333333</y>
+                    <x>43.</x>
+                    <y>-10.</y>
                 </item>
                 <text>Operation 3</text>
             </label>
@@ -597,7 +597,7 @@
                                     <snap_to_grid>false</snap_to_grid>
                                     <visible>true</visible>
                                     <x>15.</x>
-                                    <y>6.5</y>
+                                    <y>4.75</y>
                                 </item>
                                 <text>in 1</text>
                             </label>
@@ -629,7 +629,7 @@
                                     <snap_to_grid>false</snap_to_grid>
                                     <visible>true</visible>
                                     <x>15.</x>
-                                    <y>6.5</y>
+                                    <y>4.75</y>
                                 </item>
                                 <text>in 2</text>
                             </label>
@@ -660,8 +660,8 @@
                                     <rotation direction="cw" unit="degrees">0.</rotation>
                                     <snap_to_grid>false</snap_to_grid>
                                     <visible>true</visible>
-                                    <x>-47.</x>
-                                    <y>6.5</y>
+                                    <x>-39.</x>
+                                    <y>4.75</y>
                                 </item>
                                 <text>out</text>
                             </label>
@@ -773,8 +773,8 @@
                         <rotation direction="cw" unit="degrees">0.</rotation>
                         <snap_to_grid>false</snap_to_grid>
                         <visible>true</visible>
-                        <x>42.666667</x>
-                        <y>-22.</y>
+                        <x>55.5</x>
+                        <y>-10.</y>
                     </item>
                     <text>Demo 1</text>
                 </label>
@@ -806,7 +806,7 @@
                                         <snap_to_grid>false</snap_to_grid>
                                         <visible>true</visible>
                                         <x>15.</x>
-                                        <y>6.5</y>
+                                        <y>4.75</y>
                                     </item>
                                     <text>in 1</text>
                                 </label>
@@ -838,7 +838,7 @@
                                         <snap_to_grid>false</snap_to_grid>
                                         <visible>true</visible>
                                         <x>15.</x>
-                                        <y>6.5</y>
+                                        <y>4.75</y>
                                     </item>
                                     <text>in 2</text>
                                 </label>
@@ -870,7 +870,7 @@
                                         <snap_to_grid>false</snap_to_grid>
                                         <visible>true</visible>
                                         <x>15.</x>
-                                        <y>6.5</y>
+                                        <y>4.75</y>
                                     </item>
                                     <text>in 3</text>
                                 </label>
@@ -901,8 +901,8 @@
                                         <rotation direction="cw" unit="degrees">0.</rotation>
                                         <snap_to_grid>false</snap_to_grid>
                                         <visible>true</visible>
-                                        <x>-47.</x>
-                                        <y>6.5</y>
+                                        <x>-39.</x>
+                                        <y>4.75</y>
                                     </item>
                                     <text>out</text>
                                 </label>

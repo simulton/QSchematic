@@ -34,6 +34,7 @@ Operation::Operation(int type, QGraphicsItem* parent) :
     _label->setText(QStringLiteral("Generic"));
     connect(this, &QSchematic::Node::sizeChanged, [this]{
         label()->setConnectionPoint(sizeRect().center());
+        alignLabel();
     });
     connect(this, &QSchematic::Item::settingsChanged, [this]{
         label()->setConnectionPoint(sizeRect().center());
@@ -99,6 +100,18 @@ void Operation::copyAttributes(Operation& dest) const
     // Label
     dest._label = std::dynamic_pointer_cast<QSchematic::Label>(_label->deepCopy());
     dest._label->setParentItem(&dest);
+}
+
+void Operation::alignLabel()
+{
+    if (!_label)
+        return;
+
+    const QRectF& tr = _label->textRect();
+    const qreal x = (width() - tr.width()) / 2.0;
+    const qreal y = -10.0;
+
+    _label->setPos(x, y);
 }
 
 std::shared_ptr<QSchematic::Label> Operation::label() const
@@ -209,6 +222,13 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         });
 
         // Align label
+        QAction* alignLabel = new QAction;
+        alignLabel->setText("Align label");
+        connect(alignLabel, &QAction::triggered, [this] {
+            this->alignLabel();
+        });
+
+        // Align connector labels
         QAction* alignConnectorLabels = new QAction;
         alignConnectorLabels->setText("Align connector labels");
         connect(alignConnectorLabels, &QAction::triggered, [this] {
@@ -276,6 +296,7 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         // Assemble
         menu.addAction(text);
         menu.addAction(labelVisibility);
+        menu.addAction(alignLabel);
         menu.addSeparator();
         menu.addAction(newConnector);
         menu.addAction(alignConnectorLabels);
