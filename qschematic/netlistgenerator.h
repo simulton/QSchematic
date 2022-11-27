@@ -15,8 +15,15 @@ namespace QSchematic
     class NetlistGenerator
     {
     public:
-        template<typename TNode = Node*, typename TConnector = Connector*, typename TWire = Wire*, typename TNet = Net<TWire, TNode, TConnector>>
-        static bool generate(Netlist<TNode, TConnector, TWire, TNet>& netlist, const Scene& scene)
+        template<
+            typename TNode = Node*,
+            typename TConnector = Connector*,
+            typename TWire = Wire*,
+            typename TNet = Net<TWire, TNode, TConnector>
+        >
+        static
+        bool
+        generate(Netlist<TNode, TConnector, TWire, TNet>& netlist, const Scene& scene)
         {
             struct GlobalNet
             {
@@ -26,11 +33,10 @@ namespace QSchematic
 
             // Add all nodes
             std::vector<TNode> nodes;
-            for ( const auto& node : scene.nodes() ) {
+            for (const auto& node : scene.nodes()) {
                 // Sanity check
-                if ( !node ) {
+                if (!node)
                     continue;
-                }
 
                 nodes.push_back( static_cast<TNode>( node.get() ) );
             }
@@ -43,9 +49,8 @@ namespace QSchematic
                 auto wireNet = std::dynamic_pointer_cast<WireNet>(net);
 
                 // Sanity check
-                if (!wireNet) {
+                if (!wireNet)
                     continue;
-                }
 
                 // Figure out whether we need a new global net
                 bool createNewNet = true;
@@ -68,9 +73,8 @@ namespace QSchematic
                     newGlobalNet.name = wireNet->name();
 
                     // Prevent empty names
-                    if (newGlobalNet.name.isEmpty()) {
+                    if (newGlobalNet.name.isEmpty())
                         newGlobalNet.name = QString("N%1").arg(anonNetCounter++, 3, 10, QChar('0'));
-                    }
 
                     globalNets.push_back(newGlobalNet);
                 }
@@ -91,9 +95,8 @@ namespace QSchematic
                     // Store wires
                     for ( const auto& wire : wireNet->wires()) {
                         TWire w = qobject_cast<TWire>( std::dynamic_pointer_cast<Wire>(wire).get() );
-                        if ( w ) {
+                        if (w)
                             net.wires.push_back( w );
-                        }
                     }
                 }
 
@@ -101,17 +104,15 @@ namespace QSchematic
                 for (auto& node : scene.nodes()) {
                     // Convert to template node type
                     TNode templateNode = qgraphicsitem_cast<TNode>(node.get());
-                    if (!templateNode) {
+                    if (!templateNode)
                         continue;
-                    }
 
                     // Loop through all Node's connectors
                     for (auto& connector : node->connectors()) {
                         // Convert to template connector type
                         TConnector templateConnector = qgraphicsitem_cast<TConnector>(connector.get());
-                        if (!templateConnector) {
+                        if (!templateConnector)
                             continue;
-                        }
 
                         // Create the Connector/Node pairs
                         const auto* wire = scene.wire_manager()->attached_wire(connector.get());
@@ -133,7 +134,8 @@ namespace QSchematic
             }
 
             // Set the netlist
-            netlist.set( std::move( nodes ), std::move( nets ) );
+            netlist.nodes = std::move(nodes);
+            netlist.nets = std::move(nets);
 
             return true;
         }

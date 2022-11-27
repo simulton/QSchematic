@@ -18,16 +18,16 @@ void Model::setNetlist(const QSchematic::Netlist<Operation*, OperationConnector*
     clear();
 
     // Make sure that there are nets available
-    if ( netlist.nets().empty() ) {
+    if ( netlist.nets.empty() ) {
         return;
     }
 
     // Create three model
     {
         Q_ASSERT( _rootItem );
-        beginInsertRows( QModelIndex(), 0, static_cast<int>( netlist.nets().size() )-1 );
+        beginInsertRows( QModelIndex(), 0, static_cast<int>( netlist.nets.size() )-1 );
 
-        for ( const auto& net : netlist.nets() ) {
+        for ( const auto& net : netlist.nets ) {
 
             // Net
             TreeItem* netItem = new TreeItem( { net.name, pointerToString( &net ) } );
