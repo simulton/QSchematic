@@ -38,7 +38,7 @@ void Model::setNetlist(const QSchematic::Netlist<Operation*, OperationConnector*
             netItem->appendChild( nodesItem );
             for ( const auto& node : net.nodes ) {
                 Q_ASSERT( node );
-                TreeItem* nodeItem = new TreeItem( { node->text(), pointerToString( &node ) } );
+                TreeItem* nodeItem = new TreeItem({ node->text() }, nullptr);//( { node->text(), pointerToString( &node ) } );
                 nodesItem->appendChild( nodeItem );
             }
 

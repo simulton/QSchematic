@@ -32,6 +32,7 @@ Widget::setWidget(QWidget* widget)
     m_proxy->setWidget(widget);
 
     // Resize ourselves
+    setMinimumSize(widget->minimumSize());
     setSize(widget->size());
 
     // Rectangle

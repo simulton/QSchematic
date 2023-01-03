@@ -24,6 +24,7 @@ set(SOURCES_PRIVATE
     items/node.cpp
     items/rectitem.cpp
     items/splinewire.cpp
+    items/subgraph.cpp
     items/widget.cpp
     items/wire.cpp
     items/wirenet.cpp
@@ -60,6 +61,7 @@ set(HEADERS_PUBLIC
     items/label.h
     items/node.h
     items/rectitem.h
+    items/subgraph.h
     items/splinewire.h
     items/widget.h
     items/wire.h

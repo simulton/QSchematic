@@ -37,6 +37,7 @@
 
 
 #warning TEMPORARY
+#include <qschematic/items/subgraph.h>
 #include <qschematic/items/widget.h>
 #include <QDial>
 
@@ -148,8 +149,18 @@ MainWindow::MainWindow(QWidget *parent)
         auto _deleteme2 = new QAction("Widget");
         debugToolbar->addAction(_deleteme2);
         connect(_deleteme2, &QAction::triggered, [this]{
+            auto dial = new QDial;
+            dial->setMinimumSize(300, 300);
+
             auto item = std::make_shared<QSchematic::Widget>(4242);
-            item->setWidget(new QDial);
+            item->setWidget(dial);
+            _scene->addItem(item);
+        });
+
+        auto actAddSubgraph = new QAction("Subgraph");
+        debugToolbar->addAction(actAddSubgraph);
+        connect(actAddSubgraph, &QAction::triggered, [this]{
+            auto item = std::make_shared<QSchematic::SubGraph>();
             _scene->addItem(item);
         });
     }

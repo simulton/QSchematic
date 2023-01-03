@@ -31,6 +31,7 @@ namespace QSchematic
             ConnectorType,
             LabelType,
             SplineWireType,
+            SubGraphType,
 
             QSchematicItemUserType = QGraphicsItem::UserType + 100
         };
