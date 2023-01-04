@@ -588,6 +588,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
     _lastMousePos = event->scenePos();
 }
 
+#include "items/subgraph.h"
 void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
     event->accept();
@@ -644,9 +645,34 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
                 _undoStack->push(new CommandItemMove(itemsToMove, moveByList));
             }
             for (const auto& item : itemsToMove) {
-                const Node* node = dynamic_cast<const Node*>(item.get());
+                Node* node = dynamic_cast<Node*>(item.get());
                 if (node) {
                     updateNodeConnections(node);
+
+                    auto subgraphs = items<QSchematic::Items::SubGraph>();
+                    for (auto& sg : subgraphs) {
+
+                        if (sg.get() == node)
+                            continue;
+
+                        const QRectF sg_rect = { sg->x(), sg->y(), sg->width(), sg->height() };
+                        const QRectF n_rect  = { node->x(), node->y(), node->width(), node->height() };
+
+                        if (sg_rect.contains(n_rect)) {
+                            qDebug() << "YES";
+
+                            node->setParentItem(sg.get());
+                            node->setPos(node->pos() - sg->pos());
+                        }
+                        else {
+                            qDebug() << "NO";
+
+                            if (node->parentItem()) {
+                                node->setParentItem(nullptr);
+                                node->setPos(node->pos() + sg->pos());
+                            }
+                        }
+                    }
                 }
             }
 

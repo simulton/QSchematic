@@ -162,6 +162,7 @@ MainWindow::MainWindow(QWidget *parent)
         debugToolbar->addAction(actAddSubgraph);
         connect(actAddSubgraph, &QAction::triggered, [this]{
             auto item = std::make_shared<QSchematic::Items::SubGraph>();
+            item->setSize(40 * 20, 20 * 20);
             _scene->addItem(item);
         });
     }
@@ -391,5 +392,5 @@ void MainWindow::demo()
     _scene->clear();
     _scene->setSceneRect(-500, -500, 3000, 3000);
 
-    load(":/demo_01.xml");
+    //load(":/demo_01.xml");
 }
