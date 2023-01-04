@@ -160,7 +160,7 @@ MainWindow::MainWindow(QWidget *parent)
         auto actAddSubgraph = new QAction("Subgraph");
         debugToolbar->addAction(actAddSubgraph);
         connect(actAddSubgraph, &QAction::triggered, [this]{
-            auto item = std::make_shared<QSchematic::SubGraph>();
+            auto item = std::make_shared<QSchematic::Items::SubGraph>();
             _scene->addItem(item);
         });
     }

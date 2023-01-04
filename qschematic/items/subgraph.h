@@ -2,7 +2,7 @@
 
 #include "node.h"
 
-namespace QSchematic
+namespace QSchematic::Items
 {
 
     class SubGraph :
