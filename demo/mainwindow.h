@@ -70,5 +70,6 @@ private:
     QAction* _actionFitAll;
     QAction* _actionRouteStraightAngles;
     QAction* _actionGenerateNetlist;
+    QAction* _actionClear;
     QAction* _actionDebugMode;
 };

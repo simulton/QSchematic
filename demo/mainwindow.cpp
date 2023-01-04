@@ -132,6 +132,7 @@ MainWindow::MainWindow(QWidget *parent)
     editorToolbar->addAction(_actionRouteStraightAngles);
     editorToolbar->addSeparator();
     editorToolbar->addAction(_actionGenerateNetlist);
+    editorToolbar->addAction(_actionClear);
     addToolBar(editorToolbar);
 
     // View toolbar
@@ -342,6 +343,15 @@ void MainWindow::createActions()
 
         Q_ASSERT( _netlistViewerWidget );
         _netlistViewerWidget->setNetlist( netlist );
+    });
+
+    // Clear
+    _actionClear = new QAction("Clear", this);
+    _actionClear->setIcon(QIcon(":/clean.svg"));
+    connect(_actionClear, &QAction::triggered, [this]{
+        Q_ASSERT(_scene);
+
+        _scene->clear();
     });
 
     // Debug mode
