@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
+        <file alias="clean.svg">svg/clean.svg</file>
         <file alias="undo.svg">svg/undo.svg</file>
         <file alias="redo.svg">svg/redo.svg</file>
         <file alias="grid.svg">svg/grid.svg</file>
