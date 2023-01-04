@@ -30,7 +30,7 @@ namespace Library
 
 namespace Netlist
 {
-    class Viewer;
+    class Widget;
 }
 
 class MainWindow :
@@ -58,7 +58,7 @@ private:
     QSchematic::Settings _settings;
     Library::Widget* _itemLibraryWidget;
     QUndoView* _undoView;
-    ::Netlist::Viewer* _netlistViewer;
+    ::Netlist::Widget* _netlistViewerWidget;
     QAction* _actionOpen;
     QAction* _actionSave;
     QAction* _actionPrint;

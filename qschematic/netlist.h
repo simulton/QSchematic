@@ -5,15 +5,10 @@
 #include "items/node.h"
 #include "items/label.h"
 
-#include <QJsonObject>
-#include <QJsonArray>
-
 #include <vector>
 #include <forward_list>
 #include <map>
 #include <optional>
-
-class QJsonObject;
 
 namespace QSchematic
 {
@@ -51,42 +46,8 @@ namespace QSchematic
         Netlist(Netlist&& other) = default;
         virtual ~Netlist() = default;
 
-        Netlist<TNode, TConnector, TWire, TNet>& operator=(const Netlist<TNode, TConnector, TWire, TNet>& rhs) = default;
-
-        QJsonObject
-        toJson() const
-        {
-            QJsonObject object;
-
-            // Nets
-            QJsonArray netsArray;
-            for (const auto& net : nets) {
-                QJsonObject netObject;
-
-                // Net name
-                netObject.insert("name", net.name);
-
-                // Connectors
-                QJsonArray connectorsArray;
-                for (const auto& connector : net.connectors)
-                    connectorsArray.append(connector->label()->text());
-                netObject.insert("connectors", connectorsArray);
-
-                // ConnectorNodePairs
-                QJsonArray netConnectionsArray;
-                for (auto it = net.connectorNodePairs.cbegin(); it != net.connectorNodePairs.cend(); it++) {
-                    QJsonObject connection;
-                    connection.insert("connector text", it->first->text());
-                    netConnectionsArray.append(connection);
-                }
-                netObject.insert("connector node pairs", netConnectionsArray);
-
-                netsArray.append(netObject);
-            }
-            object.insert("nets", netsArray);
-
-            return object;
-        }
+        Netlist<TNode, TConnector, TWire, TNet>&
+        operator=(const Netlist<TNode, TConnector, TWire, TNet>& rhs) = default;
 
         std::forward_list<TNet>
         netsWithNode(const TNode node) const

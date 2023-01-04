@@ -11,7 +11,10 @@ Feature overview:
   - Connect nodes with wires
   - Undo/redo
   - Drag'n'Drop
-  - Template based netlist generation
+  - Netlist generator
+    - In-memory template generator
+    - JSON writer
+    - Custom writers
   - Serialization to/from XML
   - Completely customizable by inheriting from the provided classes
   - Items
