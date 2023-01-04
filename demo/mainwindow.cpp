@@ -4,7 +4,7 @@
 #include "items/operationconnector.h"
 #include "items/fancywire.h"
 #include "library/widget.h"
-#include "netlist/viewer.h"
+#include "netlist/widget.h"
 
 #include <gpds/archiver_xml.hpp>
 #include <qschematic/scene.h>
@@ -98,11 +98,11 @@ MainWindow::MainWindow(QWidget *parent)
     undoDockWiget->setWidget(_undoView);
     addDockWidget(Qt::LeftDockWidgetArea, undoDockWiget);
 
-    // Netlist viewer
-    _netlistViewer = new ::Netlist::Viewer(this);
+    // Netlist viewer widget
+    _netlistViewerWidget = new ::Netlist::Widget(this);
     QDockWidget* netlistviewerDockWidget = new QDockWidget;
     netlistviewerDockWidget->setWindowTitle(QStringLiteral("Netlist Viewer"));
-    netlistviewerDockWidget->setWidget(_netlistViewer);
+    netlistviewerDockWidget->setWidget(_netlistViewerWidget);
     addDockWidget(Qt::LeftDockWidgetArea, netlistviewerDockWidget);
 
     // Menus
@@ -329,8 +329,8 @@ void MainWindow::createActions()
         QSchematic::Netlist<Operation*, OperationConnector*> netlist;
         QSchematic::NetlistGenerator::generate(netlist, *_scene);
 
-        Q_ASSERT( _netlistViewer );
-        _netlistViewer->setNetlist( netlist );
+        Q_ASSERT( _netlistViewerWidget );
+        _netlistViewerWidget->setNetlist( netlist );
     });
 
     // Debug mode

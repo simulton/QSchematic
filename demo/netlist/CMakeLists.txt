@@ -7,4 +7,6 @@ target_sources(
         viewer.h
         view.cpp
         view.h
+        widget.cpp
+        widget.h
 )
