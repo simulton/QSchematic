@@ -253,17 +253,17 @@ namespace QSchematic
 
         QPixmap _backgroundPixmap;
         std::function<std::shared_ptr<Wire>()> _wireFactory;
-        int _mode;
+        int _mode = NormalMode;
         std::shared_ptr<Wire> _newWire;
-        bool _newWireSegment;
-        bool _invertWirePosture;
-        bool _movingNodes;
+        bool _newWireSegment = false;
+        bool _invertWirePosture = true;
+        bool _movingNodes = false;
         QPointF _lastMousePos;
         QMap<std::shared_ptr<Item>, QPointF> _initialItemPositions;
         QPointF _initialCursorPosition;
         QUndoStack* _undoStack;
         std::shared_ptr<wire_system::manager> m_wire_manager;
-        Item* _highlightedItem;
+        Item* _highlightedItem = nullptr;
         QTimer* _popupTimer;
         std::shared_ptr<QGraphicsProxyWidget> _popup;
     };

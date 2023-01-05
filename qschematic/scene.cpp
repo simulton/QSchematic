@@ -23,12 +23,7 @@
 using namespace QSchematic;
 
 Scene::Scene(QObject* parent) :
-    QGraphicsScene(parent),
-    _mode(NormalMode),
-    _newWireSegment(false),
-    _invertWirePosture(true),
-    _movingNodes(false),
-    _highlightedItem(nullptr)
+    QGraphicsScene(parent)
 {
     // NOTE: still needed, BSP-indexer still crashes on a scene load when
     // the scene is already populated
@@ -491,8 +486,8 @@ Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             QGraphicsScene::mousePressEvent(event);
 
             // Check if moving nodes
-            QGraphicsItem* item = itemAt(event->scenePos(), QTransform());
-            if (item){
+            _movingNodes = false;
+            if (QGraphicsItem* item = itemAt(event->scenePos(), QTransform()); item) {
                 Node* node = dynamic_cast<Node*>(item);
                 if (node && node->mode() == Node::None)
                     _movingNodes = true;
@@ -500,20 +495,18 @@ Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
                     _movingNodes = false;
 
                 // Prevent the scene from detecting changes in the wires origin
-                // when the bouding rect is resized by a wire_point that moved
-                Wire* wire = dynamic_cast<Wire*>(item);
-                if (wire) {
+                // when the bounding rect is resized by a wire_point that moved
+                if (Wire* wire = dynamic_cast<Wire*>(item); wire) {
                     if (wire->movingWirePoint())
                         _movingNodes = false;
                     else
                         _movingNodes = true;
                 }
+
+                // Label
                 Label* label = dynamic_cast<Label*>(item);
                 if (label && selectedTopLevelItems().size() > 0)
                     _movingNodes = true;
-            }
-            else {
-                _movingNodes = false;
             }
 
             // Store the initial position of all the selected items
@@ -599,7 +592,6 @@ Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
             QGraphicsScene::mouseReleaseEvent(event);
 
             for (const auto& net : m_wire_manager->nets()) {
-
                 // Make sure it's a WireNet
                 auto wire_net = std::dynamic_pointer_cast<WireNet>(net);
                 if (!wire_net)
@@ -788,7 +780,9 @@ Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                                 itemsToMove << item;
                         }
                     }
+
                     itemsToMove = wiresToMove << itemsToMove;
+
                     for (const auto& item : itemsToMove) {
                         // Calculate by how much the item was moved
                         QPointF moveBy = _initialItemPositions.value(item) + newMousePos - _initialCursorPosition - item->pos();
@@ -801,12 +795,11 @@ Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                     for (auto& wire : m_wire_manager->wires())
                         wire->simplify();
                 }
-                else {
+                else
                     QGraphicsScene::mouseMoveEvent(event);
-                }
-            } else {
-                QGraphicsScene::mouseMoveEvent(event);
             }
+            else
+                QGraphicsScene::mouseMoveEvent(event);
 
             // Highlight the item under the cursor
             Item* item = dynamic_cast<Item*>(itemAt(newMousePos, QTransform()));
@@ -823,6 +816,7 @@ Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                     emit _highlightedItem->highlightChanged(*_highlightedItem, false);
                     _highlightedItem = nullptr;
                 }
+
                 // Highlight the item
                 item->setHighlighted(true);
                 itemHoverEnter(item->shared_from_this());
@@ -872,7 +866,8 @@ Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                     _newWire->append_point(snappedPos);
 
                     _newWireSegment = false;
-                } else {
+                }
+                else {
                     // Create the intermediate point that creates the straight angle
                     point p1(_newWire->pointsAbsolute().at(_newWire->pointsAbsolute().count() - 3));
                     QPointF p2(p1.x(), snappedPos.y());
@@ -886,7 +881,8 @@ Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                     _newWire->move_point_to(_newWire->pointsAbsolute().count() - 2, p2);
                     _newWire->move_point_to(_newWire->pointsAbsolute().count() - 1, p3);
                 }
-            } else {
+            }
+            else {
                 // Don't care about angles and stuff. Fuck geometry, right?
                 if (_newWire->pointsAbsolute().count() > 1)
                     _newWire->move_point_to(_newWire->pointsAbsolute().count() - 1, snappedPos);
