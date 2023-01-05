@@ -8,11 +8,6 @@
 #include "settings.h"
 #include "commands/commanditemremove.h"
 
-const qreal ZOOM_FACTOR_MIN   = 0.25;
-const qreal ZOOM_FACTOR_MAX   = 10.00;
-const qreal ZOOM_FACTOR_STEPS = 0.10;
-const qreal FIT_ALL_PADDING   = 20.00;
-
 using namespace QSchematic;
 
 View::View(QWidget* parent) :
@@ -39,12 +34,12 @@ View::keyPressEvent(QKeyEvent* event)
 
         switch (event->key()) {
             case Qt::Key_Plus:
-                _scaleFactor += ZOOM_FACTOR_STEPS;
+                _scaleFactor += zoom_factor_step;
                 updateScale();
                 return;
 
             case Qt::Key_Minus:
-                _scaleFactor -= ZOOM_FACTOR_STEPS;
+                _scaleFactor -= zoom_factor_step;
                 updateScale();
                 return;
 
@@ -110,11 +105,11 @@ View::wheelEvent(QWheelEvent* event)
 
         // Zoom in (clip)
         if (event->angleDelta().y() > 0)
-            _scaleFactor += ZOOM_FACTOR_STEPS;
+            _scaleFactor += zoom_factor_step;
 
         // Zoom out (clip)
         else if (event->angleDelta().y() < 0)
-            _scaleFactor -= ZOOM_FACTOR_STEPS;
+            _scaleFactor -= zoom_factor_step;
 
         _scaleFactor = qBound(0.0, _scaleFactor, 1.0);
 
@@ -205,7 +200,7 @@ View::setSettings(const Settings& settings)
 void
 View::setZoomValue(qreal factor)
 {
-    _scaleFactor = qLn(ZOOM_FACTOR_MIN/factor) / qLn(ZOOM_FACTOR_MIN / ZOOM_FACTOR_MAX);
+    _scaleFactor = qLn(zoom_factor_min/factor) / qLn(zoom_factor_min / zoom_factor_max);
 
     updateScale();
 }
@@ -214,8 +209,8 @@ void
 View::updateScale()
 {
     // Exponential interpolation
-    float logMinZoom = qLn(ZOOM_FACTOR_MIN);
-    float logMaxZoom = qLn(ZOOM_FACTOR_MAX);
+    float logMinZoom = qLn(zoom_factor_min);
+    float logMaxZoom = qLn(zoom_factor_max);
     float logZoom = logMinZoom + (logMaxZoom - logMinZoom) * _scaleFactor;
     float zoom = qExp(logZoom);
 
@@ -255,7 +250,7 @@ View::fitInView()
     }
 
     // Add some padding
-    const auto& adj = std::max(0.0, FIT_ALL_PADDING);
+    const auto& adj = std::max(0.0, fitall_padding);
     rect.adjust(-adj, -adj, adj, adj);
 
     // Update and cap the scale factor
