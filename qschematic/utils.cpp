@@ -79,10 +79,8 @@ QVector<QLineF>::const_iterator
 Utils::lineClosestToPoint(const QVector<QLineF>& lines, const QPointF& point)
 {
     // Sanity check
-    if (lines.isEmpty()) {
-        qFatal("Utils::lineClosestToPoint(): lines vector must not be empty");
+    if (lines.isEmpty())
         return { };
-    }
 
     // Figure out to which line we're closest to
     QPair<QVector<QLineF>::const_iterator, qreal> nearest(lines.constBegin(), std::numeric_limits<qreal>::max());
