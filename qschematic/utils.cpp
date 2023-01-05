@@ -11,17 +11,20 @@
 
 using namespace QSchematic;
 
-QPoint Utils::centerPoint(const QPoint& p1, const QPoint& p2)
+QPoint
+Utils::centerPoint(const QPoint& p1, const QPoint& p2)
 {
     return (p1 + p2) / 2;
 }
 
-QPointF Utils::centerPoint(const QPointF& p1, const QPointF& p2)
+QPointF
+Utils::centerPoint(const QPointF& p1, const QPointF& p2)
 {
     return (p1 + p2) / 2;
 }
 
-QPointF Utils::clipPointToRect(QPointF point, const QRectF& rect)
+QPointF
+Utils::clipPointToRect(QPointF point, const QRectF& rect)
 {
     // Clip
     point.rx() = qBound(rect.x(), point.x(), rect.width());
@@ -30,7 +33,8 @@ QPointF Utils::clipPointToRect(QPointF point, const QRectF& rect)
     return point;
 }
 
-QPointF Utils::clipPointToRectOutline(QPointF point, const QRectF& rect)
+QPointF
+Utils::clipPointToRectOutline(QPointF point, const QRectF& rect)
 {
     // Create list of edges
     QVector<QLineF> edges(4);
@@ -49,7 +53,8 @@ QPointF Utils::clipPointToRectOutline(QPointF point, const QRectF& rect)
     return point;
 }
 
-QPointF Utils::pointOnLineClosestToPoint(const QPointF& p1, const QPointF& p2, const QPointF& point)
+QPointF
+Utils::pointOnLineClosestToPoint(const QPointF& p1, const QPointF& p2, const QPointF& point)
 {
     // Algorithm based on: http://nic-gamedev.blogspot.ch/2011/11/using-vector-mathematics-and-bit-of_08.html
     QVector2D lineDiffVector = QVector2D(p2 - p1);
@@ -61,39 +66,37 @@ QPointF Utils::pointOnLineClosestToPoint(const QPointF& p1, const QPointF& p2, c
     float percAlongLine = dotProduct / lineSegSqrLength;
 
     // Return the end points
-    if (percAlongLine <= 0.0f) {
+    if (percAlongLine <= 0.0f)
         return p1;
-    } else if (percAlongLine >= 1.0f) {
+    else if (percAlongLine >= 1.0f)
         return p2;
-    }
 
     // Return the point along the line
     return ( p1 + ( static_cast<qreal>(percAlongLine) * ( p2 - p1 )));
 }
 
-QVector<QLineF>::const_iterator Utils::lineClosestToPoint(const QVector<QLineF>& lines, const QPointF& point)
+QVector<QLineF>::const_iterator
+Utils::lineClosestToPoint(const QVector<QLineF>& lines, const QPointF& point)
 {
     // Sanity check
-    if (lines.isEmpty()) {
-        qFatal("Utils::lineClosestToPoint(): lines vector must not be empty");
+    if (lines.isEmpty())
         return { };
-    }
 
     // Figure out to which line we're closest to
     QPair<QVector<QLineF>::const_iterator, qreal> nearest(lines.constBegin(), std::numeric_limits<qreal>::max());
     for (QVector<QLineF>::const_iterator it = lines.constBegin(); it != lines.constEnd(); it++) {
         QPointF pointOnEdge = Utils::pointOnLineClosestToPoint(it->p1(), it->p2(), point);
         qreal distance = QLineF(pointOnEdge, point).length();
-        if (distance < nearest.second) {
+        if (distance < nearest.second)
             nearest = QPair<QVector<QLineF>::const_iterator, qreal>(it, distance);
-        }
     }
 
     // Snap to that edge
     return nearest.first;
 }
 
-QVector<QPointF> Utils::rectanglePoints(const QRectF& rect, RectanglePointTypes pointTypes)
+QVector<QPointF>
+Utils::rectanglePoints(const QRectF& rect, RectanglePointTypes pointTypes)
 {
     QVector<QPointF> points;
 
@@ -118,17 +121,20 @@ QVector<QPointF> Utils::rectanglePoints(const QRectF& rect, RectanglePointTypes 
     return points;
 }
 
-bool Utils::lineIsHorizontal(const QPointF& p1, const QPointF& p2)
+bool
+Utils::lineIsHorizontal(const QPointF& p1, const QPointF& p2)
 {
     return qFuzzyCompare(p1.y(), p2.y());
 }
 
-bool Utils::lineIsVertical(const QPointF& p1, const QPointF& p2)
+bool
+Utils::lineIsVertical(const QPointF& p1, const QPointF& p2)
 {
     return qFuzzyCompare(p1.x(), p2.x());
 }
 
-bool Utils::pointIsOnLine(const QLineF& line, const QPointF& point)
+bool
+Utils::pointIsOnLine(const QLineF& line, const QPointF& point)
 {
     /*
      * Convert both two neighbouring points to a translation vector (i.e. substract the second from the first)

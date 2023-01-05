@@ -1,6 +1,7 @@
 #pragma once
 
-namespace QSchematic {
+namespace QSchematic
+{
 
     enum Direction {
         LeftToRight = 0,

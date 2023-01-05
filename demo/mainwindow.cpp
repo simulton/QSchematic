@@ -9,6 +9,7 @@
 #include <gpds/archiver_xml.hpp>
 #include <qschematic/scene.h>
 #include <qschematic/view.h>
+#include <qschematic/commands/commanditemadd.h>
 #include <qschematic/items/node.h>
 #include <qschematic/items/itemfactory.h>
 #include <qschematic/netlist.h>
@@ -150,20 +151,28 @@ MainWindow::MainWindow(QWidget *parent)
         auto _deleteme2 = new QAction("Widget");
         debugToolbar->addAction(_deleteme2);
         connect(_deleteme2, &QAction::triggered, [this]{
+            // Create widget
             auto dial = new QDial;
             dial->setMinimumSize(300, 300);
 
+            // Create widget item
             auto item = std::make_shared<QSchematic::Widget>(4242);
             item->setWidget(dial);
-            _scene->addItem(item);
+
+            // Add item to scene
+            _scene->undoStack()->push(new QSchematic::CommandItemAdd(_scene, std::move(item)));
         });
 
         auto actAddSubgraph = new QAction("Subgraph");
         debugToolbar->addAction(actAddSubgraph);
         connect(actAddSubgraph, &QAction::triggered, [this]{
+            // Create item
             auto item = std::make_shared<QSchematic::Items::SubGraph>();
             item->setSize(40 * 20, 20 * 20);
             _scene->addItem(item);
+
+            // Add to scene
+            _scene->undoStack()->push(new QSchematic::CommandItemAdd(_scene, std::move(item)));
         });
     }
 

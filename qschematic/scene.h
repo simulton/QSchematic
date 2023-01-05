@@ -14,7 +14,8 @@
 #include <memory>
 #include <functional>
 
-namespace QSchematic {
+namespace QSchematic
+{
 
     class Node;
     class Connector;
@@ -51,11 +52,61 @@ namespace QSchematic {
         bool isDirty() const;
         void clearIsDirty();
 
-        void clear();
-        bool addItem(const std::shared_ptr<Item>& item);
-        bool removeItem(const std::shared_ptr<Item> item);
-        QList<std::shared_ptr<Item>> items() const;
-        QList<std::shared_ptr<Item>> items(int itemType) const;
+        /**
+         * Clears the scene.
+         *
+         * @note Consuming applications should always use this instead of the base class QGraphicsScene::clear() as we
+         * have to update internal bookkeeping.
+         */
+        void
+        clear();
+
+        /**
+         * Adds an item to the scene.
+         *
+         * @note This does not generate an undo/redo command. Consuming applications that want to add items should generally
+         *       create an instance of `CommandItemAdd` and push that to the scene's command stack.
+         *
+         * @note Only top-level items should be added via this function. Child items should be added via the underlying
+         *       parent/child relation ship (eg. `QGraphicsItem::setParentItem()`).
+         *
+         * @param item The item to add.
+         * @return Success indicator.
+         */
+        bool
+        addItem(const std::shared_ptr<Item>& item);
+
+        /**
+         * Removes an item from the scene.
+         *
+         * @note This does not generate an undo/redo command. Consuming applications that want to remove items should generally
+         *       create an instance of `CommandItemRemove` and push that to the scene's command stack.
+         *
+         * @param item The item to remove.
+         *
+         * @return Success indicator.
+         */
+        bool
+        removeItem(const std::shared_ptr<Item> item);
+
+        /**
+         * Get a list of all top-level items.
+         *
+         * @return The list of top-level items.
+         */
+        [[nodiscard]]
+        QList<std::shared_ptr<Item>>
+        items() const;
+
+        /**
+         * Get a list of all top-level items of a specified type.
+         *
+         * @param itemType The item type.
+         * @return The list of top-level items.
+         */
+        [[nodiscard]]
+        QList<std::shared_ptr<Item>>
+        items(int itemType) const;
 
         /**
          * Get list of items of a certain type.
@@ -65,7 +116,8 @@ namespace QSchematic {
          */
         template<typename T>
         [[nodiscard]]
-        std::vector<std::shared_ptr<T>> items() const
+        std::vector<std::shared_ptr<T>>
+        items() const
         {
             const auto& itms = items();
 
@@ -95,9 +147,28 @@ namespace QSchematic {
         bool removeWire(const std::shared_ptr<Wire>& wire);
         QList<std::shared_ptr<WireNet>> nets(const std::shared_ptr<net> wireNet) const;
 
-        void undo();
-        void redo();
-        QUndoStack* undoStack() const;
+        /**
+         * Undo to last command.
+         */
+        void
+        undo();
+
+        /**
+         * Redo the last command.
+         */
+        void
+        redo();
+
+        /**
+         * Get the command (undo/redo) stack.
+         *
+         * @note The scene guarantees that this is a valid pointer as long as the scene itself is valid (alive).
+         *
+         * @return The command stack.
+         */
+        [[nodiscard]]
+        QUndoStack*
+        undoStack() const;
 
     signals:
         void modeChanged(int newMode);
@@ -120,10 +191,14 @@ namespace QSchematic {
         void dropEvent(QGraphicsSceneDragDropEvent* event) override;
         void drawBackground(QPainter* painter, const QRectF& rect) override;
 
-        /* This gets called just before the item is actually being moved by moveBy. Subclasses may
+        /**
+         * This gets called just before the item is actually being moved by moveBy. Subclasses may
          * implement this to implement snapping to elements other than the grid
          */
-        virtual QVector2D itemsMoveSnap(const std::shared_ptr<Item>& item, const QVector2D& moveBy) const;
+        [[nodiscard]]
+        virtual
+        QVector2D
+        itemsMoveSnap(const std::shared_ptr<Item>& item, const QVector2D& moveBy) const;
 
         /**
          * Renders the background.
@@ -131,7 +206,13 @@ namespace QSchematic {
          * @param rect The scene rectangle. This is guaranteed to be non-null & valid.
          */
         [[nodiscard]]
-        virtual QPixmap renderBackground(const QRect& rect) const;
+        virtual
+        QPixmap
+        renderBackground(const QRect& rect) const;
+
+    private slots:
+        void updateNodeConnections(const Node* node) const;
+        void wirePointMoved(wire& rawWire, int index);
 
     private:
         void renderCachedBackground();
@@ -172,23 +253,19 @@ namespace QSchematic {
 
         QPixmap _backgroundPixmap;
         std::function<std::shared_ptr<Wire>()> _wireFactory;
-        int _mode;
+        int _mode = NormalMode;
         std::shared_ptr<Wire> _newWire;
-        bool _newWireSegment;
-        bool _invertWirePosture;
-        bool _movingNodes;
+        bool _newWireSegment = false;
+        bool _invertWirePosture = true;
+        bool _movingNodes = false;
         QPointF _lastMousePos;
         QMap<std::shared_ptr<Item>, QPointF> _initialItemPositions;
         QPointF _initialCursorPosition;
         QUndoStack* _undoStack;
         std::shared_ptr<wire_system::manager> m_wire_manager;
-        Item* _highlightedItem;
+        Item* _highlightedItem = nullptr;
         QTimer* _popupTimer;
         std::shared_ptr<QGraphicsProxyWidget> _popup;
-
-    private slots:
-        void updateNodeConnections(const Node* node) const;
-        void wirePointMoved(wire& rawWire, int index);
     };
 
 }
