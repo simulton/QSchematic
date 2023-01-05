@@ -21,5 +21,8 @@ bool ItemMimeData::hasFormat(const QString& mimetype) const
 
 std::shared_ptr<QSchematic::Item> ItemMimeData::item() const
 {
-    return _item->deepCopy();
+    if (_item)
+        return _item->deepCopy();
+
+    return { };
 }
