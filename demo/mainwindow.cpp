@@ -168,7 +168,6 @@ MainWindow::MainWindow(QWidget *parent)
 #ifdef WINDOW_MAXIMIZE
     setWindowState(Qt::WindowMaximized);
 #endif
-    _view->setZoomValue(1.5);
 
     demo();
 }
