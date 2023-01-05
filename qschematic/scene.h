@@ -52,7 +52,32 @@ namespace QSchematic {
         void clearIsDirty();
 
         void clear();
-        bool addItem(const std::shared_ptr<Item>& item);
+
+        /**
+         * Adds an item to the scene without creating an undo/redo command.
+         *
+         * @details Adds a top-level item to the scene.
+         * @note Children of existing items should be added via the parent/child relationship instead.
+         *
+         * @param item The item to add.
+         * @return Whether the item was added to the scene.
+         */
+        bool
+        addItem(const std::shared_ptr<Item>& item);
+
+        /**
+         * Adds an item to the scene by creating an undo/redo command.
+         *
+         * @details Adds a top-level item to the scene.
+         * @note Children of existing items should be added via the parent/child relationship instead.
+         *
+         * @param item The item to add.
+         *
+         * @sa addItem()
+         */
+        void
+        addItemCommand(std::shared_ptr<Item> item);
+
         bool removeItem(const std::shared_ptr<Item> item);
         QList<std::shared_ptr<Item>> items() const;
         QList<std::shared_ptr<Item>> items(int itemType) const;
