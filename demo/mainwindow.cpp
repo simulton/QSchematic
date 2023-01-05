@@ -151,7 +151,7 @@ MainWindow::MainWindow(QWidget *parent)
         connect(_deleteme2, &QAction::triggered, [this]{
             auto item = std::make_shared<QSchematic::Widget>(4242);
             item->setWidget(new QDial);
-            _scene->addItemCommand(item);
+            _scene->addItem(item);
         });
     }
 

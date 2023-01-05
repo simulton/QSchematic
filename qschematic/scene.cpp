@@ -279,8 +279,16 @@ void Scene::clear()
     clearIsDirty();
 }
 
-bool
-Scene::addItem(const std::shared_ptr<Item>& item)
+/**
+ * Adds an item to the scene
+ * \remark When adding an Item to the Scene, there are two possibilities. If the
+ * Item is a "Top-Level" Item (it has no parent), then you should use
+ * Scene::addItem(). If the Item is the child of another Item then you need to
+ * use the superclass' implementation QGraphicsItem::addItem().
+ * This is needed to determine which Items should be moved by the scene and which
+ * are moved by their parent.
+ */
+bool Scene::addItem(const std::shared_ptr<Item>& item)
 {
     // Sanity check
     if (!item) {
@@ -300,12 +308,6 @@ Scene::addItem(const std::shared_ptr<Item>& item)
     emit itemAdded(item);
 
     return true;
-}
-
-void
-Scene::addItemCommand(std::shared_ptr<Item> item)
-{
-    _undoStack->push(new CommandItemAdd(this, std::move(item)));
 }
 
 bool Scene::removeItem(const std::shared_ptr<Item> item)
@@ -1009,7 +1011,7 @@ void Scene::dropEvent(QGraphicsSceneDragDropEvent* event)
 
         // Add to the scene
         item->setPos(event->scenePos());
-        addItemCommand(std::move(item));
+        _undoStack->push(new CommandItemAdd(this, std::move(item)));
     }
 }
 
