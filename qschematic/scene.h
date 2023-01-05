@@ -14,7 +14,8 @@
 #include <memory>
 #include <functional>
 
-namespace QSchematic {
+namespace QSchematic
+{
 
     class Node;
     class Connector;

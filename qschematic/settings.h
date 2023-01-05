@@ -9,7 +9,8 @@ class QVector2D;
 class QSize;
 class QSizeF;
 
-namespace QSchematic {
+namespace QSchematic
+{
 
     class Settings
     {
@@ -35,12 +36,25 @@ namespace QSchematic {
         Settings& operator=(const Settings& rhs) = default;
         Settings& operator=(Settings&& rhs) = delete;
 
-        // Generic
-        QPoint toGridPoint(const QPointF& point) const;
-        QPoint toScenePoint(const QPoint& gridPoint) const;
-        QPoint snapToGrid(const QPointF& scenePoint) const;
-        QVector2D snapToGrid(const QVector2D& sceneVector) const;
-        QSize snapToGrid(const QSizeF& sceneSize) const;
+        [[nodiscard]]
+        QPoint
+        toGridPoint(const QPointF& point) const;
+
+        [[nodiscard]]
+        QPoint
+        toScenePoint(const QPoint& gridPoint) const;
+
+        [[nodiscard]]
+        QPoint
+        snapToGrid(const QPointF& scenePoint) const;
+
+        [[nodiscard]]
+        QVector2D
+        snapToGrid(const QVector2D& sceneVector) const;
+
+        [[nodiscard]]
+        QSize
+        snapToGrid(const QSizeF& sceneSize) const;
     };
 
 }
