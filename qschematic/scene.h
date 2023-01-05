@@ -146,9 +146,28 @@ namespace QSchematic {
         bool removeWire(const std::shared_ptr<Wire>& wire);
         QList<std::shared_ptr<WireNet>> nets(const std::shared_ptr<net> wireNet) const;
 
-        void undo();
-        void redo();
-        QUndoStack* undoStack() const;
+        /**
+         * Undo to last command.
+         */
+        void
+        undo();
+
+        /**
+         * Redo the last command.
+         */
+        void
+        redo();
+
+        /**
+         * Get the command (undo/redo) stack.
+         *
+         * @note The scene guarantees that this is a valid pointer as long as the scene itself is valid (alive).
+         *
+         * @return The command stack.
+         */
+        [[nodiscard]]
+        QUndoStack*
+        undoStack() const;
 
     signals:
         void modeChanged(int newMode);
@@ -171,10 +190,14 @@ namespace QSchematic {
         void dropEvent(QGraphicsSceneDragDropEvent* event) override;
         void drawBackground(QPainter* painter, const QRectF& rect) override;
 
-        /* This gets called just before the item is actually being moved by moveBy. Subclasses may
+        /**
+         * This gets called just before the item is actually being moved by moveBy. Subclasses may
          * implement this to implement snapping to elements other than the grid
          */
-        virtual QVector2D itemsMoveSnap(const std::shared_ptr<Item>& item, const QVector2D& moveBy) const;
+        [[nodiscard]]
+        virtual
+        QVector2D
+        itemsMoveSnap(const std::shared_ptr<Item>& item, const QVector2D& moveBy) const;
 
         /**
          * Renders the background.
@@ -182,7 +205,13 @@ namespace QSchematic {
          * @param rect The scene rectangle. This is guaranteed to be non-null & valid.
          */
         [[nodiscard]]
-        virtual QPixmap renderBackground(const QRect& rect) const;
+        virtual
+        QPixmap
+        renderBackground(const QRect& rect) const;
+
+    private slots:
+        void updateNodeConnections(const Node* node) const;
+        void wirePointMoved(wire& rawWire, int index);
 
     private:
         void renderCachedBackground();
@@ -236,10 +265,6 @@ namespace QSchematic {
         Item* _highlightedItem;
         QTimer* _popupTimer;
         std::shared_ptr<QGraphicsProxyWidget> _popup;
-
-    private slots:
-        void updateNodeConnections(const Node* node) const;
-        void wirePointMoved(wire& rawWire, int index);
     };
 
 }
