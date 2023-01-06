@@ -3,9 +3,10 @@
 #include "../items/item.h"
 
 using namespace QSchematic;
+using namespace QSchematic::Commands;
 
-CommandItemVisibility::CommandItemVisibility(const std::shared_ptr<Item>& item, bool newVisibility, QUndoCommand* parent) :
-    UndoCommand(parent),
+ItemVisibility::ItemVisibility(const std::shared_ptr<QSchematic::Item>& item, bool newVisibility, QUndoCommand* parent) :
+    Base(parent),
     _item(item),
     _newVisibility(newVisibility)
 {
@@ -13,41 +14,41 @@ CommandItemVisibility::CommandItemVisibility(const std::shared_ptr<Item>& item, 
     setText(tr("Change visibility"));
 }
 
-int CommandItemVisibility::id() const
+int
+ItemVisibility::id() const
 {
     return ItemVisibilityCommandType;
 }
 
-bool CommandItemVisibility::mergeWith(const QUndoCommand* command)
+bool
+ItemVisibility::mergeWith(const QUndoCommand* command)
 {
-    if (id() != command->id()) {
+    if (id() != command->id())
         return false;
-    }
 
-    const CommandItemVisibility* myCommand = dynamic_cast<const CommandItemVisibility*>(command);
-    if (!myCommand || _item != myCommand->_item) {
+    const ItemVisibility* myCommand = dynamic_cast<const ItemVisibility*>(command);
+    if (!myCommand || _item != myCommand->_item)
         return false;
-    }
 
     _newVisibility = myCommand->_newVisibility;
 
     return true;
 }
 
-void CommandItemVisibility::undo()
+void
+ItemVisibility::undo()
 {
-    if (!_item) {
+    if (!_item)
         return;
-    }
 
     _item->setVisible(_oldVisibility);
 }
 
-void CommandItemVisibility::redo()
+void
+ItemVisibility::redo()
 {
-    if (!_item) {
+    if (!_item)
         return;
-    }
 
     _item->setVisible(_newVisibility);
 }

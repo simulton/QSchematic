@@ -10,16 +10,20 @@
 
 class QVector2D;
 
-namespace QSchematic
+namespace QSchematic::Commands
 {
-    class Item;
 
-    class CommandWirepointMove :
-        public UndoCommand
+    class WirepointMove :
+        public Base
     {
     public:
-        CommandWirepointMove(Scene* scene, const std::shared_ptr<Wire>& wire, int index,
-                             const QPointF& pos, QUndoCommand* parent = nullptr);
+        WirepointMove(
+            Scene* scene,
+            const std::shared_ptr<Wire>& wire,
+            int index,
+            const QPointF& pos,
+            QUndoCommand* parent = nullptr
+        );
 
         int id() const override;
         bool mergeWith(const QUndoCommand* command) override;

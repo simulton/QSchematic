@@ -14,11 +14,15 @@ namespace QSchematic
 namespace Commands
 {
 
-    class CommandNodeAddConnector :
-        public QSchematic::UndoCommand
+    class NodeAddConnector :
+        public QSchematic::Commands::Base
     {
     public:
-        CommandNodeAddConnector(const QPointer<QSchematic::Node>& node, std::shared_ptr<QSchematic::Connector> connector, QUndoCommand* parent = nullptr);
+        NodeAddConnector(
+            const QPointer<QSchematic::Node>& node,
+            std::shared_ptr<QSchematic::Connector> connector,
+            QUndoCommand* parent = nullptr
+        );
 
         int id() const override;
         bool mergeWith(const QUndoCommand* command) override;

@@ -7,14 +7,17 @@
 
 namespace QSchematic
 {
-
     class Label;
+}
 
-    class CommandWirenetRename :
-        public UndoCommand
+namespace QSchematic::Commands
+{
+
+    class WirenetRename :
+        public Base
     {
     public:
-        CommandWirenetRename(const std::shared_ptr<WireNet>& net, const QString& newText, QUndoCommand* parent = nullptr);
+        WirenetRename(const std::shared_ptr<WireNet>& net, const QString& newText, QUndoCommand* parent = nullptr);
 
         int id() const override;
         bool mergeWith(const QUndoCommand* command) override;

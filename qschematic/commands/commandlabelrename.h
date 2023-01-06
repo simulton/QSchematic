@@ -6,14 +6,17 @@
 
 namespace QSchematic
 {
-
     class Label;
+}
 
-    class CommandLabelRename :
-        public UndoCommand
+namespace QSchematic::Commands
+{
+
+    class LabelRename :
+        public Base
     {
     public:
-        CommandLabelRename(const QPointer<Label>& label, const QString& newText, QUndoCommand* parent = nullptr);
+        LabelRename(const QPointer<Label>& label, const QString& newText, QUndoCommand* parent = nullptr);
 
         int id() const override;
         bool mergeWith(const QUndoCommand* command) override;

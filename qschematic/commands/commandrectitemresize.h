@@ -9,12 +9,16 @@
 namespace QSchematic
 {
     class RectItem;
+}
 
-    class CommandRectItemResize :
-        public UndoCommand
+namespace QSchematic::Commands
+{
+
+    class RectItemResize :
+        public Base
     {
     public:
-        CommandRectItemResize(QPointer<RectItem> item, const QPointF& newPos, const QSizeF& newSize, QUndoCommand* parent = nullptr);
+        RectItemResize(QPointer<RectItem> item, const QPointF& newPos, const QSizeF& newSize, QUndoCommand* parent = nullptr);
 
         int id() const override;
         bool mergeWith(const QUndoCommand* command) override;
@@ -22,8 +26,6 @@ namespace QSchematic
         void redo() override;
 
     private:
-        void updateText();
-
         QPointer<RectItem> _item;
         QPointF _oldPos;
         QPointF _newPos;

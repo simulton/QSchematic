@@ -1,6 +1,6 @@
 #pragma once
 
-namespace QSchematic
+namespace QSchematic::Commands
 {
     enum CommandType {
         ItemMoveCommandType      = 0,

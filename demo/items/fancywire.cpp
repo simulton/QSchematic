@@ -30,7 +30,7 @@ FancyWire::FancyWire(QGraphicsItem* parent) :
             return;
 
         if (auto wireNet = std::dynamic_pointer_cast<WireNet>(net())) {
-            scene()->undoStack()->push(new QSchematic::CommandWirenetRename(wireNet, name));
+            scene()->undoStack()->push(new QSchematic::Commands::WirenetRename(wireNet, name));
         }
     });
     setRenameAction(action);

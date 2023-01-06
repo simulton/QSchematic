@@ -2,21 +2,31 @@
 
 #include <QUndoCommand>
 
-namespace QSchematic
+namespace QSchematic::Commands
 {
-    class Scene;
-    class Item;
-
-    class UndoCommand :
+    class Base :
         public QObject,
         public QUndoCommand
     {
     public:
-        UndoCommand(QUndoCommand* parent = nullptr);
-        virtual ~UndoCommand() = default;
+        explicit
+        Base(QUndoCommand* parent = nullptr);
 
-        auto connectDependencyDestroySignal(const QObject* dependency) -> void;
-        auto handleDependencyDestruction(const QObject* dependency) -> void;
+        virtual
+        ~Base() = default;
+
+        /**
+         * @brief Pure convenience — reduce boilerplate clutter.
+         */
+        void
+        connectDependencyDestroySignal(const QObject* dependency);
+
+        /**
+         * @brief Sole purpose is to make it dead simple to tie a signal to obsoletion
+         * while maintaining destroy tracking of `this`
+         */
+        void
+        handleDependencyDestruction(const QObject* dependency);
     };
 
 }

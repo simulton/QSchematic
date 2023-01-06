@@ -155,7 +155,7 @@ MainWindow::MainWindow(QWidget *parent)
             item->setWidget(new QDial);
 
             // Add to scene
-            _scene->undoStack()->push(new QSchematic::CommandItemAdd(_scene, std::move(item)));
+            _scene->undoStack()->push(new QSchematic::Commands::ItemAdd(_scene, std::move(item)));
         });
     }
 

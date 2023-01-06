@@ -9,12 +9,15 @@ namespace QSchematic
 {
     class Scene;
     class Item;
+}
 
-    class CommandItemAdd :
-        public UndoCommand
+namespace QSchematic::Commands
+{
+    class ItemAdd :
+        public Base
     {
     public:
-        CommandItemAdd(const QPointer<Scene>& scene, const std::shared_ptr<Item>& item, QUndoCommand* parent = nullptr);
+        ItemAdd(const QPointer<Scene>& scene, const std::shared_ptr<Item>& item, QUndoCommand* parent = nullptr);
 
         int id() const  override;
         bool mergeWith(const QUndoCommand* command)  override;

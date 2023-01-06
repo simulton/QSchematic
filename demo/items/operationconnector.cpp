@@ -109,7 +109,7 @@ void OperationConnector::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         visibility->setText("Visible");
         connect(visibility, &QAction::toggled, [this](const bool enabled) {
             if (scene())
-                scene()->undoStack()->push(new QSchematic::CommandItemVisibility(this->shared_from_this(), enabled));
+                scene()->undoStack()->push(new QSchematic::Commands::ItemVisibility(this->shared_from_this(), enabled));
             else
                 setVisible(enabled);
         });
@@ -121,7 +121,7 @@ void OperationConnector::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         labelVisibility->setText("Label visible");
         connect(labelVisibility, &QAction::toggled, [this](bool enabled) {
             if (scene()) {
-                scene()->undoStack()->push(new QSchematic::CommandItemVisibility(label(), enabled));
+                scene()->undoStack()->push(new QSchematic::Commands::ItemVisibility(label(), enabled));
             } else {
                 label()->setVisible(enabled);
             }
@@ -144,7 +144,7 @@ void OperationConnector::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
                 return;
 
             if (scene()) {
-                scene()->undoStack()->push(new QSchematic::CommandLabelRename(label().get(), newText));
+                scene()->undoStack()->push(new QSchematic::Commands::LabelRename(label().get(), newText));
             } else {
                 label()->setText(newText);
             }
@@ -184,7 +184,7 @@ void OperationConnector::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
                 }
 
                 // Issue command
-                scene()->undoStack()->push(new QSchematic::CommandItemRemove(scene(), itemPointer));
+                scene()->undoStack()->push(new QSchematic::Commands::ItemRemove(scene(), itemPointer));
             }
         });
 

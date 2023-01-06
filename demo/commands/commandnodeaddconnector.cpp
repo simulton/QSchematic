@@ -6,28 +6,35 @@
 
 using namespace Commands;
 
-CommandNodeAddConnector::CommandNodeAddConnector(const QPointer<QSchematic::Node>& node, std::shared_ptr<QSchematic::Connector> connector, QUndoCommand* parent) :
-    UndoCommand(parent),
+NodeAddConnector::NodeAddConnector(
+    const QPointer<QSchematic::Node>& node,
+    std::shared_ptr<QSchematic::Connector> connector,
+    QUndoCommand* parent
+) :
+    QSchematic::Commands::Base(parent),
     _node(node),
     _connector(std::move(connector))
 {
-    connect(_node.data(), &QObject::destroyed, this, &UndoCommand::handleDependencyDestruction);
+    connect(_node.data(), &QObject::destroyed, this, &QSchematic::Commands::Base::handleDependencyDestruction);
     setText(QStringLiteral("Add connector"));
 }
 
-int CommandNodeAddConnector::id() const
+int
+NodeAddConnector::id() const
 {
     return NodeAddConnectorCommandType;
 }
 
-bool CommandNodeAddConnector::mergeWith(const QUndoCommand* command)
+bool
+NodeAddConnector::mergeWith(const QUndoCommand* command)
 {
     Q_UNUSED(command)
 
     return false;
 }
 
-void CommandNodeAddConnector::undo()
+void
+NodeAddConnector::undo()
 {
     if (!_node || !_connector)
         return;
@@ -36,7 +43,8 @@ void CommandNodeAddConnector::undo()
     _connector->setVisible(false);
 }
 
-void CommandNodeAddConnector::redo()
+void
+NodeAddConnector::redo()
 {
     if (!_node || !_connector)
         return;

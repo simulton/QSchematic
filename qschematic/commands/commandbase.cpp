@@ -1,26 +1,23 @@
 #include "commands.h"
 #include "commandbase.h"
 
-using namespace QSchematic;
+using namespace QSchematic::Commands;
 
-UndoCommand::UndoCommand(QUndoCommand* parent) : QUndoCommand(parent)
+Base::Base(QUndoCommand* parent) :
+    QUndoCommand(parent)
 {
 }
 
-/**
- * @brief Pure convenience — reduce boilerplate clutter.
- */
-void UndoCommand::connectDependencyDestroySignal(const QObject* dependency)
+void
+Base::connectDependencyDestroySignal(const QObject* dependency)
 {
-    connect(dependency, &QObject::destroyed, this, &UndoCommand::handleDependencyDestruction);
+    connect(dependency, &QObject::destroyed, this, &Base::handleDependencyDestruction);
 }
 
-/**
- * @brief Sole purpose is to make it dead simple to tie a signal to obsoletion
- * while maintaining destroy tracking of `this`
- */
-auto UndoCommand::handleDependencyDestruction(const QObject* dependency) -> void
+void
+Base::handleDependencyDestruction(const QObject* dependency)
 {
     Q_UNUSED(dependency)
+
     setObsolete(true);
 }

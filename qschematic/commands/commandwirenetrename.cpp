@@ -4,9 +4,10 @@
 #include "../items/wire.h"
 
 using namespace QSchematic;
+using namespace QSchematic::Commands;
 
-CommandWirenetRename::CommandWirenetRename(const std::shared_ptr<WireNet>& net, const QString& newText, QUndoCommand* parent) :
-    UndoCommand(parent),
+WirenetRename::WirenetRename(const std::shared_ptr<WireNet>& net, const QString& newText, QUndoCommand* parent) :
+    Base(parent),
     _newText(newText)
 {
     _net = net;
@@ -14,41 +15,41 @@ CommandWirenetRename::CommandWirenetRename(const std::shared_ptr<WireNet>& net, 
     setText(tr("Rename wirenet"));
 }
 
-int CommandWirenetRename::id() const
+int
+WirenetRename::id() const
 {
     return WireNetRenameCommandType;
 }
 
-bool CommandWirenetRename::mergeWith(const QUndoCommand* command)
+bool
+WirenetRename::mergeWith(const QUndoCommand* command)
 {
-    if (id() != command->id()) {
+    if (id() != command->id())
         return false;
-    }
 
-    auto myCommand = dynamic_cast<const CommandWirenetRename*>(command);
-    if (!myCommand || _net != myCommand->_net) {
+    auto myCommand = dynamic_cast<const WirenetRename*>(command);
+    if (!myCommand || _net != myCommand->_net)
         return false;
-    }
 
     _newText = myCommand->_newText;
 
     return true;
 }
 
-void CommandWirenetRename::undo()
+void
+WirenetRename::undo()
 {
-    if (!_net) {
+    if (!_net)
         return;
-    }
 
     _net->set_name(_oldText);
 }
 
-void CommandWirenetRename::redo()
+void
+WirenetRename::redo()
 {
-    if (!_net) {
+    if (!_net)
         return;
-    }
 
     _net->set_name(_newText);
 }

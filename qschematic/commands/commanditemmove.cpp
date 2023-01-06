@@ -6,71 +6,75 @@
 #include <memory>
 
 using namespace QSchematic;
+using namespace QSchematic::Commands;
 
-CommandItemMove::CommandItemMove(const QVector<std::shared_ptr<Item>>& items, const QVector<QVector2D>& moveBy, QUndoCommand* parent) :
-    UndoCommand(parent),
+ItemMove::ItemMove(
+    const QVector<std::shared_ptr<Item>>& items,
+    const QVector<QVector2D>& moveBy,
+    QUndoCommand* parent
+) :
+    Base(parent),
     _items(items),
     _moveBy(moveBy)
 {
-    if (_items.count() > 1) {
+    if (_items.count() > 1)
         setText(tr("Move items"));
-    } else {
+    else
         setText(tr("Move item"));
-    }
 }
 
-int CommandItemMove::id() const
+int
+ItemMove::id() const
 {
     return ItemMoveCommandType;
 }
 
-bool CommandItemMove::mergeWith(const QUndoCommand* command)
+bool
+ItemMove::mergeWith(const QUndoCommand* command)
 {
     // Check id
-    if (id() != command->id()) {
+    if (id() != command->id())
         return false;
-    }
 
     // Check items
-    const auto myCommand = static_cast<const CommandItemMove*>(command);
-    if (_items.count() != myCommand->_items.count()) {
+    const auto myCommand = static_cast<const ItemMove*>(command);
+    if (_items.count() != myCommand->_items.count())
         return false;
-    }
-    if (_items != myCommand->_items) {
+    if (_items != myCommand->_items)
         return false;
-    }
 
     // Merge
-    for (int i = 0; i < _items.count(); i++) {
+    for (int i = 0; i < _items.count(); i++)
         _moveBy[i] += myCommand->_moveBy[i];
-    }
 
     return true;
 }
 
-void CommandItemMove::undo()
+void
+ItemMove::undo()
 {
-    for (int i = 0; i < _items.count(); i++) {
+    for (int i = 0; i < _items.count(); i++)
         _items[i]->moveBy(-_moveBy[i]);
-    }
+
     // Simplify the wires
     simplifyWires();
 }
 
-void CommandItemMove::redo()
+void
+ItemMove::redo()
 {
-    for (int i = 0; i < _items.count(); i++) {
+    for (int i = 0; i < _items.count(); i++)
         _items[i]->moveBy(_moveBy[i]);
-    }
+
     // Simplify the wires
     simplifyWires();
 }
 
-void CommandItemMove::simplifyWires() const
+void
+ItemMove::simplifyWires() const
 {
     for (const auto& item : _items) {
-        if (auto wire = item->sharedPtr<Wire>()) {
+        if (auto wire = item->sharedPtr<Wire>())
             wire->simplify();
-        }
     }
 }

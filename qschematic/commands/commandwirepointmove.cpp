@@ -4,53 +4,57 @@
 #include "../items/item.h"
 
 using namespace QSchematic;
+using namespace QSchematic::Commands;
 
-CommandWirepointMove::CommandWirepointMove(Scene* scene, const std::shared_ptr<Wire>& wire,
-                                           int index,
-                                           const QPointF& pos, QUndoCommand* parent) :
-        _scene(scene),
-        UndoCommand(parent),
-        _wire(wire)
+WirepointMove::WirepointMove(
+    Scene* scene,
+    const std::shared_ptr<Wire>& wire,
+    int index,
+    const QPointF& pos,
+    QUndoCommand* parent
+) :
+    Base(parent),
+    _scene(scene),
+    _wire(wire)
 {
     _oldPos = _wire->pointsAbsolute();
-    if (_oldPos[index] == pos) {
+    if (_oldPos[index] == pos)
         setObsolete(true);
-    }
     _newPos = _wire->pointsAbsolute();
     _newPos[index] = pos;
     _oldNet = _wire->net();
     setText(tr("Move wire point"));
 }
 
-int CommandWirepointMove::id() const
+int
+WirepointMove::id() const
 {
     return WirePointMoveCommandType;
 }
 
-bool CommandWirepointMove::mergeWith(const QUndoCommand* command)
+bool
+WirepointMove::mergeWith(const QUndoCommand* command)
 {
     // Check id
-    if (id() != command->id()) {
+    if (id() != command->id())
         return false;
-    }
 
     // Check items
-    const auto myCommand = static_cast<const CommandWirepointMove*>(command);
-    if (_wire != myCommand->_wire) {
+    const auto myCommand = static_cast<const WirepointMove*>(command);
+    if (_wire != myCommand->_wire)
         return false;
-    }
 
     _newPos = myCommand->_newPos;
     _newNet = myCommand->_newNet;
 
-    if (_oldPos == _newPos) {
+    if (_oldPos == _newPos)
         setObsolete(true);
-    }
 
     return true;
 }
 
-void CommandWirepointMove::undo()
+void
+WirepointMove::undo()
 {
     _newNet = _wire->net();
     // The wire might get simplified after this action is executed. In most
@@ -91,7 +95,8 @@ void CommandWirepointMove::undo()
     }
 }
 
-void CommandWirepointMove::redo()
+void
+WirepointMove::redo()
 {
     for (int i = 0; i < _newPos.count(); i++) {
         if (_newPos[i] != _oldPos[i]) {
