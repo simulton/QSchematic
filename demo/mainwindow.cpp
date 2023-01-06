@@ -160,7 +160,7 @@ MainWindow::MainWindow(QWidget *parent)
             item->setWidget(dial);
 
             // Add item to scene
-            _scene->undoStack()->push(new QSchematic::CommandItemAdd(_scene, std::move(item)));
+            _scene->undoStack()->push(new QSchematic::Commands::ItemAdd(_scene, std::move(item)));
         });
 
         auto actAddSubgraph = new QAction("Subgraph");
