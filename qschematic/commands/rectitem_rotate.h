@@ -1,6 +1,6 @@
 #pragma once
 
-#include "commandbase.h"
+#include "base.h"
 
 #include <QPointer>
 #include <QPoint>
@@ -9,12 +9,16 @@
 namespace QSchematic
 {
     class RectItem;
+}
 
-    class CommandRectItemRotate :
-        public UndoCommand
+namespace QSchematic::Commands
+{
+
+    class RectItemRotate :
+        public Base
     {
     public:
-        CommandRectItemRotate(QPointer<RectItem> item, qreal rotation, QUndoCommand* parent = nullptr);
+        RectItemRotate(QPointer<RectItem> item, qreal rotation, QUndoCommand* parent = nullptr);
 
         int id() const override;
         bool mergeWith(const QUndoCommand* command) override;
@@ -22,8 +26,6 @@ namespace QSchematic
         void redo() override;
 
     private:
-        void updateText();
-
         QPointer<RectItem> _item;
         qreal _oldAngle;
         qreal _newAngle;

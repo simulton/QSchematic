@@ -1,8 +1,8 @@
 #include "rectitem.h"
 #include "../utils.h"
 #include "../scene.h"
-#include "../commands/commandrectitemresize.h"
-#include "../commands/commandrectitemrotate.h"
+#include "../commands/rectitem_resize.h"
+#include "../commands/rectitem_rotate.h"
 
 #include <QApplication>
 #include <QGraphicsSceneMouseEvent>
@@ -383,7 +383,7 @@ void RectItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             newPos += correction;
 
             // Apply
-            scene()->undoStack()->push(new CommandRectItemResize(this, newPos, newSize));
+            scene()->undoStack()->push(new Commands::RectItemResize(this, newPos, newSize));
         }
 
         break;
@@ -404,7 +404,7 @@ void RectItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
         }
 
         // Apply
-        scene()->undoStack()->push(new CommandRectItemRotate(this, angle));
+        scene()->undoStack()->push(new Commands::RectItemRotate(this, angle));
     }
     }
 }

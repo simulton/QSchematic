@@ -6,7 +6,7 @@
 #include "view.h"
 #include "scene.h"
 #include "settings.h"
-#include "commands/commanditemremove.h"
+#include "commands/item_remove.h"
 
 using namespace QSchematic;
 
@@ -74,7 +74,7 @@ View::keyPressEvent(QKeyEvent* event)
             if (_scene) {
                 if (_scene->mode() == Scene::NormalMode) {
                     for (auto item : _scene->selectedTopLevelItems())
-                        _scene->undoStack()->push(new CommandItemRemove(_scene, item));
+                        _scene->undoStack()->push(new Commands::ItemRemove(_scene, item));
                 }
                 else
                     _scene->removeLastWirePoint();

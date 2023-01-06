@@ -1,7 +1,7 @@
 #include "itemtypes.h"
 #include "fancywire.h"
 
-#include <qschematic/commands/commandwirenetrename.h>
+#include <qschematic/commands/wirenet_rename.h>
 #include <qschematic/wire_system/point.h>
 #include <qschematic/items/connector.h>
 #include <qschematic/scene.h>
@@ -30,7 +30,7 @@ FancyWire::FancyWire(QGraphicsItem* parent) :
             return;
 
         if (auto wireNet = std::dynamic_pointer_cast<WireNet>(net())) {
-            scene()->undoStack()->push(new QSchematic::CommandWirenetRename(wireNet, name));
+            scene()->undoStack()->push(new QSchematic::Commands::WirenetRename(wireNet, name));
         }
     });
     setRenameAction(action);

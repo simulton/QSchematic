@@ -9,7 +9,7 @@
 #include <gpds/archiver_xml.hpp>
 #include <qschematic/scene.h>
 #include <qschematic/view.h>
-#include <qschematic/commands/commanditemadd.h>
+#include <qschematic/commands/item_add.h>
 #include <qschematic/items/node.h>
 #include <qschematic/items/itemfactory.h>
 #include <qschematic/netlist.h>
@@ -172,7 +172,7 @@ MainWindow::MainWindow(QWidget *parent)
             _scene->addItem(item);
 
             // Add to scene
-            _scene->undoStack()->push(new QSchematic::CommandItemAdd(_scene, std::move(item)));
+            _scene->undoStack()->push(new QSchematic::Commands::ItemAdd(_scene, std::move(item)));
         });
     }
 

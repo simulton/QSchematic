@@ -6,16 +6,16 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 # List of source files
 set(SOURCES_PRIVATE
-    commands/commandbase.cpp
-    commands/commanditemadd.cpp
-    commands/commanditemmove.cpp
-    commands/commanditemremove.cpp
-    commands/commanditemvisibility.cpp
-    commands/commandlabelrename.cpp
-    commands/commandrectitemresize.cpp
-    commands/commandrectitemrotate.cpp
-    commands/commandwirenetrename.cpp
-    commands/commandwirepointmove.cpp
+    commands/base.cpp
+    commands/item_add.cpp
+    commands/item_move.cpp
+    commands/item_remove.cpp
+    commands/item_visibility.cpp
+    commands/label_rename.cpp
+    commands/rectitem_resize.cpp
+    commands/rectitem_rotate.cpp
+    commands/wirenet_rename.cpp
+    commands/wirepoint_move.cpp
     items/connector.cpp
     items/item.cpp
     items/itemfactory.cpp
@@ -42,17 +42,17 @@ set(SOURCES_PRIVATE
 
 # List of header files
 set(HEADERS_PUBLIC
-    commands/commandbase.h
-    commands/commanditemadd.h
-    commands/commanditemmove.h
-    commands/commanditemremove.h
-    commands/commanditemvisibility.h
-    commands/commandlabelrename.h
-    commands/commandrectitemresize.h
-    commands/commandrectitemrotate.h
+    commands/base.h
+    commands/item_add.h
+    commands/item_move.h
+    commands/item_remove.h
+    commands/item_visibility.h
+    commands/label_rename.h
+    commands/rectitem_resize.h
+    commands/rectitem_rotate.h
     commands/commands.h
-    commands/commandwirenetrename.h
-    commands/commandwirepointmove.h
+    commands/wirenet_rename.h
+    commands/wirepoint_move.h
     items/itemfunctions.h
     items/connector.h
     items/item.h

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "commandbase.h"
+#include "base.h"
 
 #include <QVector>
 #include <QVector2D>
@@ -12,12 +12,20 @@ class QVector2D;
 namespace QSchematic
 {
     class Item;
+}
 
-    class CommandItemMove :
-        public UndoCommand
+namespace QSchematic::Commands
+{
+
+    class ItemMove :
+        public Base
     {
     public:
-        CommandItemMove(const QVector<std::shared_ptr<Item>>& item, const QVector<QVector2D>& moveBy, QUndoCommand* parent = nullptr);
+        ItemMove(
+            const QVector<std::shared_ptr<Item>>& item,
+            const QVector<QVector2D>& moveBy,
+            QUndoCommand* parent = nullptr
+        );
 
         int id() const override;
         bool mergeWith(const QUndoCommand* command) override;
@@ -27,7 +35,9 @@ namespace QSchematic
     private:
         QVector<std::shared_ptr<Item>> _items;
         QVector<QVector2D> _moveBy;
-        void simplifyWires() const;
+
+        void
+        simplifyWires() const;
     };
 
 }

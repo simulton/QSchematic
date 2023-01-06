@@ -1,13 +1,14 @@
 #include "commands.h"
-#include "commandrectitemrotate.h"
+#include "rectitem_rotate.h"
 #include "../items/rectitem.h"
 
 #include <memory>
 
 using namespace QSchematic;
+using namespace QSchematic::Commands;
 
-CommandRectItemRotate::CommandRectItemRotate(QPointer<RectItem> item, qreal newAngle, QUndoCommand* parent) :
-    UndoCommand(parent),
+RectItemRotate::RectItemRotate(QPointer<RectItem> item, qreal newAngle, QUndoCommand* parent) :
+    Base(parent),
     _item(item),
     _newAngle(newAngle)
 {
@@ -16,23 +17,23 @@ CommandRectItemRotate::CommandRectItemRotate(QPointer<RectItem> item, qreal newA
     setText(tr("RectItem rotate"));
 }
 
-int CommandRectItemRotate::id() const
+int
+RectItemRotate::id() const
 {
     return RectItemRotateCommandType;
 }
 
-bool CommandRectItemRotate::mergeWith(const QUndoCommand* command)
+bool
+RectItemRotate::mergeWith(const QUndoCommand* command)
 {
     // Check id
-    if (id() != command->id()) {
+    if (id() != command->id())
         return false;
-    }
 
     // Check item
-    const CommandRectItemRotate* myCommand = static_cast<const CommandRectItemRotate*>(command);
-    if (_item != myCommand->_item) {
+    const RectItemRotate* myCommand = static_cast<const RectItemRotate*>(command);
+    if (_item != myCommand->_item)
         return false;
-    }
 
     // Merge
     _newAngle = myCommand->_newAngle;
@@ -40,28 +41,28 @@ bool CommandRectItemRotate::mergeWith(const QUndoCommand* command)
     return true;
 }
 
-void CommandRectItemRotate::undo()
+void
+RectItemRotate::undo()
 {
-    if (!_item) {
+    if (!_item)
         return;
-    }
 
     _item->setRotation(_oldAngle);
+
     // Recalculate position
-    if (_item->canSnapToGrid()) {
+    if (_item->canSnapToGrid())
         _item->setPos(_item->itemChange(QGraphicsItem::ItemPositionChange, _item->pos()).toPointF());
-    }
 }
 
-void CommandRectItemRotate::redo()
+void
+RectItemRotate::redo()
 {
-    if (!_item) {
+    if (!_item)
         return;
-    }
 
     _item->setRotation(_newAngle);
+
     // Recalculate position
-    if (_item->canSnapToGrid()) {
+    if (_item->canSnapToGrid())
         _item->setPos(_item->itemChange(QGraphicsItem::ItemPositionChange, _item->pos()).toPointF());
-    }
 }

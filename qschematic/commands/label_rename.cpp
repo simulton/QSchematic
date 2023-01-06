@@ -1,11 +1,12 @@
 #include "commands.h"
-#include "commandlabelrename.h"
+#include "label_rename.h"
 #include "../items/label.h"
 
 using namespace QSchematic;
+using namespace QSchematic::Commands;
 
-CommandLabelRename::CommandLabelRename(const QPointer<Label>& label, const QString& newText, QUndoCommand* parent) :
-    UndoCommand(parent),
+LabelRename::LabelRename(const QPointer<Label>& label, const QString& newText, QUndoCommand* parent) :
+    Base(parent),
     _label(label),
     _newText(newText)
 {
@@ -14,42 +15,42 @@ CommandLabelRename::CommandLabelRename(const QPointer<Label>& label, const QStri
     setText(tr("Rename label"));
 }
 
-int CommandLabelRename::id() const
+int
+LabelRename::id() const
 {
     return LabelRenameCommandType;
 }
 
-bool CommandLabelRename::mergeWith(const QUndoCommand* command)
+bool
+LabelRename::mergeWith(const QUndoCommand* command)
 {
-    if (id() != command->id()) {
+    if (id() != command->id())
         return false;
-    }
 
-    const CommandLabelRename* myCommand = dynamic_cast<const CommandLabelRename*>(command);
-    if (!myCommand || _label != myCommand->_label) {
+    const LabelRename* myCommand = dynamic_cast<const LabelRename*>(command);
+    if (!myCommand || _label != myCommand->_label)
         return false;
-    }
 
     _newText = myCommand->_newText;
 
     return true;
 }
 
-void CommandLabelRename::undo()
+void
+LabelRename::undo()
 {
-    if (!_label) {
+    if (!_label)
         return;
-    }
 
     _label->setText(_oldText);
     _label->update();
 }
 
-void CommandLabelRename::redo()
+void
+LabelRename::redo()
 {
-    if (!_label) {
+    if (!_label)
         return;
-    }
 
     _label->setText(_newText);
     _label->update();

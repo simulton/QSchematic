@@ -4,7 +4,7 @@
 #include "node.h"
 #include "../scene.h"
 #include "../utils.h"
-#include "../commands/commandwirepointmove.h"
+#include "../commands/wirepoint_move.h"
 
 #include <QPen>
 #include <QBrush>
@@ -339,7 +339,7 @@ void Wire::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 
         // Move
         auto wire = this->sharedPtr<Wire>();
-        auto command = new CommandWirepointMove(scene(), wire, _pointToMoveIndex, curPos);
+        auto command = new Commands::WirepointMove(scene(), wire, _pointToMoveIndex, curPos);
         scene()->undoStack()->push(command);
     }
 

@@ -1,13 +1,13 @@
 #include "operation.h"
 #include "operationconnector.h"
 #include "popup/popup_operation.hpp"
-#include "../commands/commandnodeaddconnector.h"
+#include "../commands/node_add_connector.h"
 
 #include <qschematic/scene.h>
 #include <qschematic/items/label.h>
-#include <qschematic/commands/commanditemremove.h>
-#include <qschematic/commands/commanditemvisibility.h>
-#include <qschematic/commands/commandlabelrename.h>
+#include <qschematic/commands/item_remove.h>
+#include <qschematic/commands/item_visibility.h>
+#include <qschematic/commands/label_rename.h>
 
 #include <QPainter>
 #include <QMenu>
@@ -206,7 +206,7 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
             if (!ok)
                 return;
 
-            scene()->undoStack()->push(new QSchematic::CommandLabelRename(label().get(), newText));
+            scene()->undoStack()->push(new QSchematic::Commands::LabelRename(label().get(), newText));
         });
 
         // Label visibility
@@ -218,7 +218,7 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
             if (!scene())
                 return;
 
-            scene()->undoStack()->push(new QSchematic::CommandItemVisibility(label(), enabled));
+            scene()->undoStack()->push(new QSchematic::Commands::ItemVisibility(label(), enabled));
         });
 
         // Align label
@@ -243,7 +243,7 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
                 return;
 
             for (const std::shared_ptr<Connector>& conn : connectors())
-                scene()->undoStack()->push(new QSchematic::CommandItemVisibility(conn, true));
+                scene()->undoStack()->push(new QSchematic::Commands::ItemVisibility(conn, true));
         });
 
         // Add connector
@@ -255,7 +255,7 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 
             auto connector = std::make_shared<OperationConnector>(event->pos().toPoint(), QStringLiteral("Unnamed"), this);
 
-            scene()->undoStack()->push(new Commands::CommandNodeAddConnector(this, connector));
+            scene()->undoStack()->push(new ::Commands::NodeAddConnector(this, connector));
         });
 
         // Duplicate
@@ -290,7 +290,7 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
             }
 
             // Issue command
-            scene()->undoStack()->push(new QSchematic::CommandItemRemove(scene(), itemPointer));
+            scene()->undoStack()->push(new QSchematic::Commands::ItemRemove(scene(), itemPointer));
         });
 
         // Assemble

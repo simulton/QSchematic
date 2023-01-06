@@ -9,9 +9,9 @@
 #include <QTimer>
 
 #include "scene.h"
-#include "commands/commanditemmove.h"
-#include "commands/commanditemadd.h"
-#include "commands/commanditemremove.h"
+#include "commands/item_move.h"
+#include "commands/item_add.h"
+#include "commands/item_remove.h"
 #include "items/itemfactory.h"
 #include "items/item.h"
 #include "items/itemmimedata.h"
@@ -531,7 +531,7 @@ Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
                 // Start a new wire if there isn't already one. Else continue the current one.
                 if (!_newWire) {
                     _newWire = make_wire();
-                    _undoStack->push(new CommandItemAdd(this, _newWire));
+                    _undoStack->push(new Commands::ItemAdd(this, _newWire));
                     _newWire->setPos(_settings.snapToGrid(event->scenePos()));
                 }
 
@@ -635,7 +635,7 @@ Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 
                 // Apply the translation
                 if (needsToMove)
-                    _undoStack->push(new CommandItemMove(itemsToMove, moveByList));
+                    _undoStack->push(new Commands::ItemMove(itemsToMove, moveByList));
 
                 for (const auto& item : itemsToMove) {
                     Node* node = dynamic_cast<Node*>(item.get());
@@ -1029,7 +1029,7 @@ Scene::dropEvent(QGraphicsSceneDragDropEvent* event)
 
         // Add to the scene
         item->setPos(event->scenePos());
-        _undoStack->push(new CommandItemAdd(this, std::move(item)));
+        _undoStack->push(new Commands::ItemAdd(this, std::move(item)));
     }
 }
 
@@ -1292,7 +1292,7 @@ Scene::removeUnconnectedWires()
 
     // Remove the wires that have to be removed
     for (const auto& wire : wiresToRemove)
-        _undoStack->push(new CommandItemRemove(this, wire));
+        _undoStack->push(new Commands::ItemRemove(this, wire));
 }
 
 bool

@@ -4,5 +4,5 @@
 
 enum CommandType
 {
-    NodeAddConnectorCommandType = QSchematic::QSchematicCommandUserType + 1,
+    NodeAddConnectorCommandType = QSchematic::Commands::QSchematicCommandUserType + 1,
 };
