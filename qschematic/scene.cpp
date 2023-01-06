@@ -603,12 +603,13 @@ Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
             // Reset the position for every selected item and
             // apply the translation through the undostack
             if (_movingNodes) {
+                // Get list of items that need to be moved
+                // Note: We want/need to ensure that all `Wire` items are first in the list!
                 QVector<std::shared_ptr<Item>> wiresToMove;
                 QVector<std::shared_ptr<Item>> itemsToMove;
                 for (const auto& item : selectedTopLevelItems()) {
                     if (item->isMovable() && _initialItemPositions.contains(item)) {
-                        Wire* wire = dynamic_cast<Wire*>(item.get());
-                        if (wire)
+                        if (std::dynamic_pointer_cast<Wire>(item))
                             wiresToMove << item;
                         else
                             itemsToMove << item;
@@ -685,12 +686,13 @@ Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             if (event->buttons() & Qt::LeftButton) {
                 // Move all selected items
                 if (_movingNodes) {
+                    // Get list of items that need to be moved
+                    // Note: We want/need to ensure that all `Wire` items are first in the list!
                     QVector<std::shared_ptr<Item>> wiresToMove;
                     QVector<std::shared_ptr<Item>> itemsToMove;
                     for (const auto& item : selectedTopLevelItems()) {
                         if (item->isMovable()) {
-                            Wire* wire = dynamic_cast<Wire*>(item.get());
-                            if (wire)
+                            if (std::dynamic_pointer_cast<Wire>(item))
                                 wiresToMove << item;
                             else
                                 itemsToMove << item;
