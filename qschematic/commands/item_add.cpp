@@ -1,5 +1,5 @@
 #include "commands.h"
-#include "commanditemadd.h"
+#include "item_add.h"
 #include "../items/item.h"
 #include "../items/wire.h"
 #include "../scene.h"

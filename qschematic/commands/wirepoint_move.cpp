@@ -1,5 +1,5 @@
 #include "commands.h"
-#include "commandwirepointmove.h"
+#include "wirepoint_move.h"
 #include "../scene.h"
 #include "../items/item.h"
 

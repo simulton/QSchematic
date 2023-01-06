@@ -9,9 +9,9 @@
 #include <QTimer>
 
 #include "scene.h"
-#include "commands/commanditemmove.h"
-#include "commands/commanditemadd.h"
-#include "commands/commanditemremove.h"
+#include "commands/item_move.h"
+#include "commands/item_add.h"
+#include "commands/item_remove.h"
 #include "items/itemfactory.h"
 #include "items/item.h"
 #include "items/itemmimedata.h"

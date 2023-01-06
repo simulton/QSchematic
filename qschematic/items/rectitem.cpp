@@ -1,8 +1,8 @@
 #include "rectitem.h"
 #include "../utils.h"
 #include "../scene.h"
-#include "../commands/commandrectitemresize.h"
-#include "../commands/commandrectitemrotate.h"
+#include "../commands/rectitem_resize.h"
+#include "../commands/rectitem_rotate.h"
 
 #include <QApplication>
 #include <QGraphicsSceneMouseEvent>

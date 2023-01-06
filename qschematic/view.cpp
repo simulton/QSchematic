@@ -6,7 +6,7 @@
 #include "view.h"
 #include "scene.h"
 #include "settings.h"
-#include "commands/commanditemremove.h"
+#include "commands/item_remove.h"
 
 using namespace QSchematic;
 

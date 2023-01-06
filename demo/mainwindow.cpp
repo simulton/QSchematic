@@ -9,7 +9,7 @@
 #include <gpds/archiver_xml.hpp>
 #include <qschematic/scene.h>
 #include <qschematic/view.h>
-#include <qschematic/commands/commanditemadd.h>
+#include <qschematic/commands/item_add.h>
 #include <qschematic/items/node.h>
 #include <qschematic/items/itemfactory.h>
 #include <qschematic/netlist.h>

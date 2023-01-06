@@ -4,7 +4,7 @@
 #include "node.h"
 #include "../scene.h"
 #include "../utils.h"
-#include "../commands/commandwirepointmove.h"
+#include "../commands/wirepoint_move.h"
 
 #include <QPen>
 #include <QBrush>

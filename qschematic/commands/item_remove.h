@@ -1,24 +1,27 @@
 #pragma once
 
-#include "commandbase.h"
+#include "base.h"
+
+#include <QPointer>
 
 #include <memory>
 
+class QGraphicsItem;
+
 namespace QSchematic
 {
+    class Scene;
     class Item;
 }
 
 namespace QSchematic::Commands
 {
 
-    class Item;
-
-    class ItemVisibility :
+    class ItemRemove :
         public Base
     {
     public:
-        ItemVisibility(const std::shared_ptr<QSchematic::Item>& item, bool newVisibility, QUndoCommand* parent = nullptr);
+        ItemRemove(const QPointer<Scene>& scene, const std::shared_ptr<Item>& item, QUndoCommand* parent = nullptr);
 
         int id() const override;
         bool mergeWith(const QUndoCommand* command) override;
@@ -26,9 +29,9 @@ namespace QSchematic::Commands
         void redo() override;
 
     private:
-        std::shared_ptr<QSchematic::Item> _item;
-        bool _oldVisibility;
-        bool _newVisibility;
+        QPointer<Scene> _scene;
+        std::shared_ptr<Item> _item;
+        QGraphicsItem* _itemParent;
     };
 
 }

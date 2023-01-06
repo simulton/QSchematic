@@ -4,9 +4,9 @@
 
 #include <qschematic/items/label.h>
 #include <qschematic/scene.h>
-#include <qschematic/commands/commanditemremove.h>
-#include <qschematic/commands/commanditemvisibility.h>
-#include <qschematic/commands/commandlabelrename.h>
+#include <qschematic/commands/item_remove.h>
+#include <qschematic/commands/item_visibility.h>
+#include <qschematic/commands/label_rename.h>
 
 #include <QPainter>
 #include <QGraphicsSceneContextMenuEvent>

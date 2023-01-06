@@ -1,6 +1,6 @@
 #pragma once
 
-#include "commandbase.h"
+#include "base.h"
 
 #include <QPointer>
 #include <memory>

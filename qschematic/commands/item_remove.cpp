@@ -1,5 +1,5 @@
 #include "commands.h"
-#include "commanditemremove.h"
+#include "item_remove.h"
 #include "../items/item.h"
 #include "../items/wire.h"
 #include "../scene.h"

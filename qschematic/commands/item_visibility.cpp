@@ -1,4 +1,4 @@
-#include "commanditemvisibility.h"
+#include "item_visibility.h"
 #include "commands.h"
 #include "../items/item.h"
 

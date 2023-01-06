@@ -1,5 +1,5 @@
 #include "commands.h"
-#include "commandrectitemrotate.h"
+#include "rectitem_rotate.h"
 #include "../items/rectitem.h"
 
 #include <memory>

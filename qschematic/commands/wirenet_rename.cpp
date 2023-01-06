@@ -1,5 +1,5 @@
 #include "commands.h"
-#include "commandwirenetrename.h"
+#include "wirenet_rename.h"
 #include "../items/label.h"
 #include "../items/wire.h"
 

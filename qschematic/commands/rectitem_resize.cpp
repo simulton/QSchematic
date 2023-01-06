@@ -1,6 +1,6 @@
 #include "../items/rectitem.h"
 #include "commands.h"
-#include "commandrectitemresize.h"
+#include "rectitem_resize.h"
 
 using namespace QSchematic;
 using namespace QSchematic::Commands;

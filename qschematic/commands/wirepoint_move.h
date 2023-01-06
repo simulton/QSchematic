@@ -1,6 +1,6 @@
 #pragma once
 
-#include "commandbase.h"
+#include "base.h"
 #include "../items/wire.h"
 
 #include <QVector>

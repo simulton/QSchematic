@@ -1,9 +1,8 @@
 #pragma once
 
-#include "commandbase.h"
-#include "../items/wirenet.h"
+#include "base.h"
 
-#include <memory>
+#include <QPointer>
 
 namespace QSchematic
 {
@@ -13,11 +12,11 @@ namespace QSchematic
 namespace QSchematic::Commands
 {
 
-    class WirenetRename :
+    class LabelRename :
         public Base
     {
     public:
-        WirenetRename(const std::shared_ptr<WireNet>& net, const QString& newText, QUndoCommand* parent = nullptr);
+        LabelRename(const QPointer<Label>& label, const QString& newText, QUndoCommand* parent = nullptr);
 
         int id() const override;
         bool mergeWith(const QUndoCommand* command) override;
@@ -25,7 +24,7 @@ namespace QSchematic::Commands
         void redo() override;
 
     private:
-        std::shared_ptr<WireNet> _net;
+        QPointer<Label> _label;
         QString _oldText;
         QString _newText;
     };

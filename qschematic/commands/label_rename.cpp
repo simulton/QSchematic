@@ -1,5 +1,5 @@
 #include "commands.h"
-#include "commandlabelrename.h"
+#include "label_rename.h"
 #include "../items/label.h"
 
 using namespace QSchematic;
