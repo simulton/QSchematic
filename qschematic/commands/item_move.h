@@ -23,7 +23,7 @@ namespace QSchematic::Commands
     public:
         ItemMove(
             const QVector<std::shared_ptr<Item>>& item,
-            const QVector<QVector2D>& moveBy,
+            QVector2D moveBy,
             QUndoCommand* parent = nullptr
         );
 
@@ -34,7 +34,7 @@ namespace QSchematic::Commands
 
     private:
         QVector<std::shared_ptr<Item>> _items;
-        QVector<QVector2D> _moveBy;
+        QVector2D _moveBy;
 
         void
         simplifyWires() const;

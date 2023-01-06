@@ -605,7 +605,6 @@ Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
             if (_movingNodes) {
                 QVector<std::shared_ptr<Item>> wiresToMove;
                 QVector<std::shared_ptr<Item>> itemsToMove;
-
                 for (const auto& item : selectedTopLevelItems()) {
                     if (item->isMovable() && _initialItemPositions.contains(item)) {
                         Wire* wire = dynamic_cast<Wire*>(item.get());
@@ -615,25 +614,20 @@ Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
                             itemsToMove << item;
                     }
                 }
-
                 itemsToMove = wiresToMove << itemsToMove;
-                bool needsToMove = false;
-                QVector<QVector2D> moveByList;
 
+                QVector2D moveBy;
                 for (const auto& item : itemsToMove) {
                     // Move the item if it is movable and it was previously registered by the mousePressEvent
-                    QVector2D moveBy(item->pos() - _initialItemPositions.value(item));
+                    moveBy = QVector2D(item->pos() - _initialItemPositions.value(item));
+
                     // Move the item to its initial position
                     item->setPos(_initialItemPositions.value(item));
-                    // Add the moveBy to the list
-                    moveByList << moveBy;
-                    if (!moveBy.isNull())
-                        needsToMove = true;
                 }
 
                 // Apply the translation
-                if (needsToMove)
-                    _undoStack->push(new Commands::ItemMove(itemsToMove, moveByList));
+                if (!moveBy.isNull())
+                    _undoStack->push(new Commands::ItemMove(itemsToMove, moveBy));
 
                 for (const auto& item : itemsToMove) {
                     if (const Node* node = dynamic_cast<const Node*>(item.get()); node)
@@ -702,12 +696,12 @@ Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                                 itemsToMove << item;
                         }
                     }
-
                     itemsToMove = wiresToMove << itemsToMove;
 
                     for (const auto& item : itemsToMove) {
                         // Calculate by how much the item was moved
                         QPointF moveBy = _initialItemPositions.value(item) + newMousePos - _initialCursorPosition - item->pos();
+                        
                         // Apply the custom scene snapping
                         moveBy = itemsMoveSnap(item, QVector2D(moveBy)).toPointF();
                         item->setPos(item->pos() + moveBy);
