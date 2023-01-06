@@ -52,6 +52,7 @@ public:
 private:
     void settingsChanged();
     void print();
+    void generateNetlist();
 
     QSchematic::Scene* _scene;
     QSchematic::View* _view;

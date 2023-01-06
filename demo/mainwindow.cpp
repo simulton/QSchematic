@@ -330,11 +330,7 @@ void MainWindow::createActions()
     _actionGenerateNetlist = new QAction("Generate netlist", this);
     _actionGenerateNetlist->setIcon( QIcon( ":/netlist.svg" ) );
     connect(_actionGenerateNetlist, &QAction::triggered, [this]{
-        QSchematic::Netlist<Operation*, OperationConnector*> netlist;
-        QSchematic::NetlistGenerator::generate(netlist, *_scene);
-
-        Q_ASSERT( _netlistViewerWidget );
-        _netlistViewerWidget->setNetlist( netlist );
+        generateNetlist();
     });
 
     // Clear
@@ -378,10 +374,21 @@ void MainWindow::print()
 #endif // QT_NO_PRINTER
 }
 
+void MainWindow::generateNetlist()
+{
+    QSchematic::Netlist<Operation*, OperationConnector*> netlist;
+    QSchematic::NetlistGenerator::generate(netlist, *_scene);
+
+    Q_ASSERT( _netlistViewerWidget );
+    _netlistViewerWidget->setNetlist( netlist );
+}
+
 void MainWindow::demo()
 {
     _scene->clear();
     _scene->setSceneRect(-500, -500, 3000, 3000);
 
     load(":/demo_01.xml");
+
+    generateNetlist();
 }
