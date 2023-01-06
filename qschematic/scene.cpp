@@ -605,17 +605,16 @@ Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
             if (_movingNodes) {
                 // Get list of items that need to be moved
                 // Note: We want/need to ensure that all `Wire` items are first in the list!
-                QVector<std::shared_ptr<Item>> wiresToMove;
                 QVector<std::shared_ptr<Item>> itemsToMove;
-                for (const auto& item : selectedTopLevelItems()) {
-                    if (item->isMovable() && _initialItemPositions.contains(item)) {
-                        if (std::dynamic_pointer_cast<Wire>(item))
-                            wiresToMove << item;
-                        else
-                            itemsToMove << item;
+                for (const auto& item : selectedTopLevelItems())
+                    itemsToMove << item;
+                std::partition(
+                    std::begin(itemsToMove),
+                    std::end(itemsToMove),
+                    [](const std::shared_ptr<Item>& item) -> bool {
+                        return std::dynamic_pointer_cast<Wire>(item) != nullptr;
                     }
-                }
-                itemsToMove = wiresToMove << itemsToMove;
+                );
 
                 QVector2D moveBy;
                 for (const auto& item : itemsToMove) {
@@ -688,25 +687,24 @@ Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                 if (_movingNodes) {
                     // Get list of items that need to be moved
                     // Note: We want/need to ensure that all `Wire` items are first in the list!
-                    QVector<std::shared_ptr<Item>> wiresToMove;
                     QVector<std::shared_ptr<Item>> itemsToMove;
-                    for (const auto& item : selectedTopLevelItems()) {
-                        if (item->isMovable()) {
-                            if (std::dynamic_pointer_cast<Wire>(item))
-                                wiresToMove << item;
-                            else
-                                itemsToMove << item;
+                    for (const auto& item : selectedTopLevelItems())
+                        itemsToMove << item;
+                    std::partition(
+                        std::begin(itemsToMove),
+                        std::end(itemsToMove),
+                        [](const std::shared_ptr<Item>& item) -> bool {
+                            return std::dynamic_pointer_cast<Wire>(item) != nullptr;
                         }
-                    }
-                    itemsToMove = wiresToMove << itemsToMove;
+                    );
 
                     for (const auto& item : itemsToMove) {
                         // Calculate by how much the item was moved
-                        QPointF moveBy = _initialItemPositions.value(item) + newMousePos - _initialCursorPosition - item->pos();
+                        QVector2D moveBy{ _initialItemPositions.value(item) + newMousePos - _initialCursorPosition - item->pos() };
                         
                         // Apply the custom scene snapping
-                        moveBy = itemsMoveSnap(item, QVector2D(moveBy)).toPointF();
-                        item->setPos(item->pos() + moveBy);
+                        moveBy = itemsMoveSnap(item, moveBy);
+                        item->setPos(item->pos() + moveBy.toPointF());
                     }
 
                     // Simplify all the wires
