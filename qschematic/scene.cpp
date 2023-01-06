@@ -672,84 +672,6 @@ Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 }
 
 void
-Scene::updateNodeConnections(const Node* node) const
-{
-    // Check if a connector lays on a wirepoint
-    for (auto& connector : node->connectors()) {
-        // Skip hidden connectors
-        if (!connector->isVisible())
-            continue;
-        
-        // If the connector already has a wire attached, skip
-        if (m_wire_manager->attached_wire(connector.get()) != nullptr)
-            continue;
-
-        // Find if there is a point to connect to
-        for (const auto& wire : m_wire_manager->wires()) {
-            int index = -1;
-
-            if (wire->points().first().toPoint() == connector->scenePos().toPoint())
-                index = 0;
-            else if (wire->points().last().toPoint() == connector->scenePos().toPoint())
-                index = wire->points().count() - 1;
-
-            if (index != -1) {
-                // Ignore if it's a junction
-                if (wire->points().at(index).is_junction())
-                    continue;
-
-                // Check if it isn't already connected to another connector
-                bool alreadyConnected = false;
-                for (const auto& otherConnector : connectors()) {
-                    if (otherConnector == connector)
-                        continue;
-
-                    if (m_wire_manager->attached_wire(connector.get()) == wire.get() &&
-                        m_wire_manager->attached_point(otherConnector.get()) == index) {
-                        alreadyConnected = true;
-                        break;
-                    }
-                }
-
-                // If it's not already connected, connect it
-                if (!alreadyConnected)
-                    m_wire_manager->attach_wire_to_connector(wire.get(), index, connector.get());
-            }
-        }
-    }
-}
-
-void
-Scene::wirePointMoved(wire& rawWire, int index)
-{
-    // Detach from connector
-    for (const auto& node: nodes()) {
-        for (const auto& connector: node->connectors()) {
-            const wire* wire = m_wire_manager->attached_wire(connector.get());
-            if (!wire)
-                continue;
-
-            if (wire != &rawWire)
-                continue;
-
-            if (m_wire_manager->attached_point(connector.get()) == index) {
-                if (connector->scenePos().toPoint() != rawWire.points().at(index).toPoint())
-                    m_wire_manager->detach_wire(connector.get());
-            }
-        }
-    }
-
-    // Attach to connector
-    point point = rawWire.points().at(index);
-    for (const auto& node: nodes()) {
-        for (const auto& connector: node->connectors()) {
-            if (connector->scenePos().toPoint() == point.toPoint())
-                m_wire_manager->attach_wire_to_connector(&rawWire, index, connector.get());
-        }
-    }
-}
-
-void
 Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
     event->accept();
@@ -1088,6 +1010,86 @@ Scene::renderCachedBackground()
 
     // Update
     update();
+}
+
+
+
+void
+Scene::updateNodeConnections(const Node* node) const
+{
+    // Check if a connector lays on a wirepoint
+    for (auto& connector : node->connectors()) {
+        // Skip hidden connectors
+        if (!connector->isVisible())
+            continue;
+
+        // If the connector already has a wire attached, skip
+        if (m_wire_manager->attached_wire(connector.get()) != nullptr)
+            continue;
+
+        // Find if there is a point to connect to
+        for (const auto& wire : m_wire_manager->wires()) {
+            int index = -1;
+
+            if (wire->points().first().toPoint() == connector->scenePos().toPoint())
+                index = 0;
+            else if (wire->points().last().toPoint() == connector->scenePos().toPoint())
+                index = wire->points().count() - 1;
+
+            if (index != -1) {
+                // Ignore if it's a junction
+                if (wire->points().at(index).is_junction())
+                    continue;
+
+                // Check if it isn't already connected to another connector
+                bool alreadyConnected = false;
+                for (const auto& otherConnector : connectors()) {
+                    if (otherConnector == connector)
+                        continue;
+
+                    if (m_wire_manager->attached_wire(connector.get()) == wire.get() &&
+                        m_wire_manager->attached_point(otherConnector.get()) == index) {
+                        alreadyConnected = true;
+                        break;
+                    }
+                }
+
+                // If it's not already connected, connect it
+                if (!alreadyConnected)
+                    m_wire_manager->attach_wire_to_connector(wire.get(), index, connector.get());
+            }
+        }
+    }
+}
+
+void
+Scene::wirePointMoved(wire& rawWire, int index)
+{
+    // Detach from connector
+    for (const auto& node: nodes()) {
+        for (const auto& connector: node->connectors()) {
+            const wire* wire = m_wire_manager->attached_wire(connector.get());
+            if (!wire)
+                continue;
+
+            if (wire != &rawWire)
+                continue;
+
+            if (m_wire_manager->attached_point(connector.get()) == index) {
+                if (connector->scenePos().toPoint() != rawWire.points().at(index).toPoint())
+                    m_wire_manager->detach_wire(connector.get());
+            }
+        }
+    }
+
+    // Attach to connector
+    point point = rawWire.points().at(index);
+    for (const auto& node: nodes()) {
+        for (const auto& connector: node->connectors()) {
+            if (connector->scenePos().toPoint() == point.toPoint())
+                m_wire_manager->attach_wire_to_connector(&rawWire, index, connector.get());
+        }
+    }
 }
 
 void
