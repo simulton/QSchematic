@@ -1012,8 +1012,6 @@ Scene::renderCachedBackground()
     update();
 }
 
-
-
 void
 Scene::updateNodeConnections(const Node* node) const
 {
