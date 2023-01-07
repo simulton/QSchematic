@@ -605,37 +605,31 @@ Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
             // Reset the position for every selected item and
             // apply the translation through the undostack
             if (_movingNodes) {
-                QVector<std::shared_ptr<Item>> wiresToMove;
+                // Get list of items that need to be moved
+                // Note: We want/need to ensure that all `Wire` items are first in the list!
                 QVector<std::shared_ptr<Item>> itemsToMove;
-
-                for (const auto& item : selectedTopLevelItems()) {
-                    if (item->isMovable() && _initialItemPositions.contains(item)) {
-                        Wire* wire = dynamic_cast<Wire*>(item.get());
-                        if (wire)
-                            wiresToMove << item;
-                        else
-                            itemsToMove << item;
+                for (const auto& item : selectedTopLevelItems())
+                    itemsToMove << item;
+                std::partition(
+                    std::begin(itemsToMove),
+                    std::end(itemsToMove),
+                    [](const std::shared_ptr<Item>& item) -> bool {
+                        return std::dynamic_pointer_cast<Wire>(item) != nullptr;
                     }
-                }
+                );
 
-                itemsToMove = wiresToMove << itemsToMove;
-                bool needsToMove = false;
-                QVector<QVector2D> moveByList;
-
+                QVector2D moveBy;
                 for (const auto& item : itemsToMove) {
                     // Move the item if it is movable and it was previously registered by the mousePressEvent
-                    QVector2D moveBy(item->pos() - _initialItemPositions.value(item));
+                    moveBy = QVector2D(item->pos() - _initialItemPositions.value(item));
+
                     // Move the item to its initial position
                     item->setPos(_initialItemPositions.value(item));
-                    // Add the moveBy to the list
-                    moveByList << moveBy;
-                    if (!moveBy.isNull())
-                        needsToMove = true;
                 }
 
                 // Apply the translation
-                if (needsToMove)
-                    _undoStack->push(new Commands::ItemMove(itemsToMove, moveByList));
+                if (!moveBy.isNull())
+                    _undoStack->push(new Commands::ItemMove(itemsToMove, moveBy));
 
                 for (const auto& item : itemsToMove) {
                     Node* node = dynamic_cast<Node*>(item.get());
@@ -700,84 +694,6 @@ Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 }
 
 void
-Scene::updateNodeConnections(const Node* node) const
-{
-    // Check if a connector lays on a wirepoint
-    for (auto& connector : node->connectors()) {
-        // Skip hidden connectors
-        if (!connector->isVisible())
-            continue;
-        
-        // If the connector already has a wire attached, skip
-        if (m_wire_manager->attached_wire(connector.get()) != nullptr)
-            continue;
-
-        // Find if there is a point to connect to
-        for (const auto& wire : m_wire_manager->wires()) {
-            int index = -1;
-
-            if (wire->points().first().toPoint() == connector->scenePos().toPoint())
-                index = 0;
-            else if (wire->points().last().toPoint() == connector->scenePos().toPoint())
-                index = wire->points().count() - 1;
-
-            if (index != -1) {
-                // Ignore if it's a junction
-                if (wire->points().at(index).is_junction())
-                    continue;
-
-                // Check if it isn't already connected to another connector
-                bool alreadyConnected = false;
-                for (const auto& otherConnector : connectors()) {
-                    if (otherConnector == connector)
-                        continue;
-
-                    if (m_wire_manager->attached_wire(connector.get()) == wire.get() &&
-                        m_wire_manager->attached_point(otherConnector.get()) == index) {
-                        alreadyConnected = true;
-                        break;
-                    }
-                }
-
-                // If it's not already connected, connect it
-                if (!alreadyConnected)
-                    m_wire_manager->attach_wire_to_connector(wire.get(), index, connector.get());
-            }
-        }
-    }
-}
-
-void
-Scene::wirePointMoved(wire& rawWire, int index)
-{
-    // Detach from connector
-    for (const auto& node: nodes()) {
-        for (const auto& connector: node->connectors()) {
-            const wire* wire = m_wire_manager->attached_wire(connector.get());
-            if (!wire)
-                continue;
-
-            if (wire != &rawWire)
-                continue;
-
-            if (m_wire_manager->attached_point(connector.get()) == index) {
-                if (connector->scenePos().toPoint() != rawWire.points().at(index).toPoint())
-                    m_wire_manager->detach_wire(connector.get());
-            }
-        }
-    }
-
-    // Attach to connector
-    point point = rawWire.points().at(index);
-    for (const auto& node: nodes()) {
-        for (const auto& connector: node->connectors()) {
-            if (connector->scenePos().toPoint() == point.toPoint())
-                m_wire_manager->attach_wire_to_connector(&rawWire, index, connector.get());
-        }
-    }
-}
-
-void
 Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
     event->accept();
@@ -797,26 +713,26 @@ Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             if (event->buttons() & Qt::LeftButton) {
                 // Move all selected items
                 if (_movingNodes) {
-                    QVector<std::shared_ptr<Item>> wiresToMove;
+                    // Get list of items that need to be moved
+                    // Note: We want/need to ensure that all `Wire` items are first in the list!
                     QVector<std::shared_ptr<Item>> itemsToMove;
-                    for (const auto& item : selectedTopLevelItems()) {
-                        if (item->isMovable()) {
-                            Wire* wire = dynamic_cast<Wire*>(item.get());
-                            if (wire)
-                                wiresToMove << item;
-                            else
-                                itemsToMove << item;
+                    for (const auto& item : selectedTopLevelItems())
+                        itemsToMove << item;
+                    std::partition(
+                        std::begin(itemsToMove),
+                        std::end(itemsToMove),
+                        [](const std::shared_ptr<Item>& item) -> bool {
+                            return std::dynamic_pointer_cast<Wire>(item) != nullptr;
                         }
-                    }
-
-                    itemsToMove = wiresToMove << itemsToMove;
+                    );
 
                     for (const auto& item : itemsToMove) {
                         // Calculate by how much the item was moved
-                        QPointF moveBy = _initialItemPositions.value(item) + newMousePos - _initialCursorPosition - item->pos();
+                        QVector2D moveBy{ _initialItemPositions.value(item) + newMousePos - _initialCursorPosition - item->pos() };
+                        
                         // Apply the custom scene snapping
-                        moveBy = itemsMoveSnap(item, QVector2D(moveBy)).toPointF();
-                        item->setPos(item->pos() + moveBy);
+                        moveBy = itemsMoveSnap(item, moveBy);
+                        item->setPos(item->pos() + moveBy.toPointF());
                     }
 
                     // Simplify all the wires
@@ -1116,6 +1032,84 @@ Scene::renderCachedBackground()
 
     // Update
     update();
+}
+
+void
+Scene::updateNodeConnections(const Node* node) const
+{
+    // Check if a connector lays on a wirepoint
+    for (auto& connector : node->connectors()) {
+        // Skip hidden connectors
+        if (!connector->isVisible())
+            continue;
+
+        // If the connector already has a wire attached, skip
+        if (m_wire_manager->attached_wire(connector.get()) != nullptr)
+            continue;
+
+        // Find if there is a point to connect to
+        for (const auto& wire : m_wire_manager->wires()) {
+            int index = -1;
+
+            if (wire->points().first().toPoint() == connector->scenePos().toPoint())
+                index = 0;
+            else if (wire->points().last().toPoint() == connector->scenePos().toPoint())
+                index = wire->points().count() - 1;
+
+            if (index != -1) {
+                // Ignore if it's a junction
+                if (wire->points().at(index).is_junction())
+                    continue;
+
+                // Check if it isn't already connected to another connector
+                bool alreadyConnected = false;
+                for (const auto& otherConnector : connectors()) {
+                    if (otherConnector == connector)
+                        continue;
+
+                    if (m_wire_manager->attached_wire(connector.get()) == wire.get() &&
+                        m_wire_manager->attached_point(otherConnector.get()) == index) {
+                        alreadyConnected = true;
+                        break;
+                    }
+                }
+
+                // If it's not already connected, connect it
+                if (!alreadyConnected)
+                    m_wire_manager->attach_wire_to_connector(wire.get(), index, connector.get());
+            }
+        }
+    }
+}
+
+void
+Scene::wirePointMoved(wire& rawWire, int index)
+{
+    // Detach from connector
+    for (const auto& node: nodes()) {
+        for (const auto& connector: node->connectors()) {
+            const wire* wire = m_wire_manager->attached_wire(connector.get());
+            if (!wire)
+                continue;
+
+            if (wire != &rawWire)
+                continue;
+
+            if (m_wire_manager->attached_point(connector.get()) == index) {
+                if (connector->scenePos().toPoint() != rawWire.points().at(index).toPoint())
+                    m_wire_manager->detach_wire(connector.get());
+            }
+        }
+    }
+
+    // Attach to connector
+    point point = rawWire.points().at(index);
+    for (const auto& node: nodes()) {
+        for (const auto& connector: node->connectors()) {
+            if (connector->scenePos().toPoint() == point.toPoint())
+                m_wire_manager->attach_wire_to_connector(&rawWire, index, connector.get());
+        }
+    }
 }
 
 void

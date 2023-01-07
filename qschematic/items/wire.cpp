@@ -26,17 +26,6 @@ const QColor COLOR_SELECTED            = QColor("#0f16af");
 
 using namespace QSchematic;
 
-class PointWithIndex {
-public:
-    PointWithIndex(int index, const QPoint& point) : index(index), point(point) {}
-    int index;
-    QPoint point;
-
-    bool operator<(const PointWithIndex& other) const {
-        return index < other.index;
-    }
-};
-
 Wire::Wire(int type, QGraphicsItem* parent) :
     Item(type, parent), _renameAction(nullptr)
 {

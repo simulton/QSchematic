@@ -48,7 +48,13 @@ namespace wire_system
     protected:
         void move_junctions_to_new_segment(const line& oldSegment, const line& newSegment);
         void move_line_segment_by(int index, const QVector2D& moveBy);
-        class manager* manager();
+
+        [[nodiscard]]
+        class manager*
+        manager() noexcept
+        {
+            return m_manager;
+        }
 
         QVector<point> m_points;
 

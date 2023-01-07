@@ -38,7 +38,6 @@
 
 
 #warning TEMPORARY
-#include <qschematic/items/subgraph.h>
 #include <qschematic/items/widget.h>
 #include <QDial>
 
@@ -151,25 +150,9 @@ MainWindow::MainWindow(QWidget *parent)
         auto _deleteme2 = new QAction("Widget");
         debugToolbar->addAction(_deleteme2);
         connect(_deleteme2, &QAction::triggered, [this]{
-            // Create widget
-            auto dial = new QDial;
-            dial->setMinimumSize(300, 300);
-
-            // Create widget item
-            auto item = std::make_shared<QSchematic::Widget>(4242);
-            item->setWidget(dial);
-
-            // Add item to scene
-            _scene->undoStack()->push(new QSchematic::Commands::ItemAdd(_scene, std::move(item)));
-        });
-
-        auto actAddSubgraph = new QAction("Subgraph");
-        debugToolbar->addAction(actAddSubgraph);
-        connect(actAddSubgraph, &QAction::triggered, [this]{
             // Create item
-            auto item = std::make_shared<QSchematic::Items::SubGraph>();
-            item->setSize(40 * 20, 20 * 20);
-            _scene->addItem(item);
+            auto item = std::make_shared<QSchematic::Widget>(4242);
+            item->setWidget(new QDial);
 
             // Add to scene
             _scene->undoStack()->push(new QSchematic::Commands::ItemAdd(_scene, std::move(item)));
@@ -347,11 +330,7 @@ void MainWindow::createActions()
     _actionGenerateNetlist = new QAction("Generate netlist", this);
     _actionGenerateNetlist->setIcon( QIcon( ":/netlist.svg" ) );
     connect(_actionGenerateNetlist, &QAction::triggered, [this]{
-        QSchematic::Netlist<Operation*, OperationConnector*> netlist;
-        QSchematic::NetlistGenerator::generate(netlist, *_scene);
-
-        Q_ASSERT( _netlistViewerWidget );
-        _netlistViewerWidget->setNetlist( netlist );
+        generateNetlist();
     });
 
     // Clear
@@ -395,10 +374,21 @@ void MainWindow::print()
 #endif // QT_NO_PRINTER
 }
 
+void MainWindow::generateNetlist()
+{
+    QSchematic::Netlist<Operation*, OperationConnector*> netlist;
+    QSchematic::NetlistGenerator::generate(netlist, *_scene);
+
+    Q_ASSERT( _netlistViewerWidget );
+    _netlistViewerWidget->setNetlist( netlist );
+}
+
 void MainWindow::demo()
 {
     _scene->clear();
     _scene->setSceneRect(-500, -500, 3000, 3000);
 
-    //load(":/demo_01.xml");
+    load(":/demo_01.xml");
+
+    generateNetlist();
 }

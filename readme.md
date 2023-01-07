@@ -9,7 +9,7 @@ The library provides base classes for objects such as nodes and wires and implem
 Feature overview:
   - Add, remove, move, resize nodes
   - Connect nodes with wires
-  - Undo/redo
+  - Command stack for undo/redo
   - Drag'n'Drop
   - Netlist generator
     - In-memory template generator

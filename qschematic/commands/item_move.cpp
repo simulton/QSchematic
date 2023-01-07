@@ -10,12 +10,12 @@ using namespace QSchematic::Commands;
 
 ItemMove::ItemMove(
     const QVector<std::shared_ptr<Item>>& items,
-    const QVector<QVector2D>& moveBy,
+    QVector2D moveBy,
     QUndoCommand* parent
 ) :
     Base(parent),
-    _items(items),
-    _moveBy(moveBy)
+    _items{ items },
+    _moveBy{ std::move(moveBy) }
 {
     if (_items.count() > 1)
         setText(tr("Move items"));
@@ -38,14 +38,11 @@ ItemMove::mergeWith(const QUndoCommand* command)
 
     // Check items
     const auto myCommand = static_cast<const ItemMove*>(command);
-    if (_items.count() != myCommand->_items.count())
-        return false;
     if (_items != myCommand->_items)
         return false;
 
     // Merge
-    for (int i = 0; i < _items.count(); i++)
-        _moveBy[i] += myCommand->_moveBy[i];
+    _moveBy += myCommand->_moveBy;
 
     return true;
 }
@@ -53,20 +50,18 @@ ItemMove::mergeWith(const QUndoCommand* command)
 void
 ItemMove::undo()
 {
-    for (int i = 0; i < _items.count(); i++)
-        _items[i]->moveBy(-_moveBy[i]);
+    for (auto& item : _items)
+        item->moveBy(-_moveBy);
 
-    // Simplify the wires
     simplifyWires();
 }
 
 void
 ItemMove::redo()
 {
-    for (int i = 0; i < _items.count(); i++)
-        _items[i]->moveBy(_moveBy[i]);
+    for (auto& item : _items)
+        item->moveBy(_moveBy);
 
-    // Simplify the wires
     simplifyWires();
 }
 

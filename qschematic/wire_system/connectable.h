@@ -1,14 +1,21 @@
 #pragma once
 
-#include <QPointF>
-
 class QPointF;
 
 namespace wire_system
 {
-    class connectable
+
+    /**
+     * An abstract connectable.
+     *
+     * @details A connectable is anything capable of reporting a 2D position connection point to which wires can connect to.
+     */
+    struct connectable
     {
-    public:
-        [[nodiscard]] virtual QPointF position() const = 0;
+        [[nodiscard]]
+        virtual
+        QPointF
+        position() const = 0;
     };
+
 }

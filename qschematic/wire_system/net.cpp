@@ -93,8 +93,3 @@ void net::set_manager(class manager* manager)
 {
     m_manager = manager;
 }
-
-manager* net::manager() const
-{
-    return m_manager;
-}

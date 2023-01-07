@@ -211,12 +211,12 @@ namespace QSchematic
         renderBackground(const QRect& rect) const;
 
     private slots:
-        void updateNodeConnections(const Node* node) const;
         void wirePointMoved(wire& rawWire, int index);
 
     private:
         void renderCachedBackground();
         void setupNewItem(Item& item);
+        void updateNodeConnections(const Node* node) const;
         void generateConnections();
         void finishCurrentWire();
 

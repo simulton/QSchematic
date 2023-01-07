@@ -1,8 +1,9 @@
 #pragma once
 
-#include <qschematic/items/node.h>
+#include "operation.h"
 
-class FlowStart : public QSchematic::Node
+class FlowStart :
+    public Operation
 {
     Q_OBJECT
     Q_DISABLE_COPY_MOVE(FlowStart)

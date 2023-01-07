@@ -15,16 +15,19 @@ const qreal SHADOW_OFFSET      = 7;
 const qreal SHADOW_BLUR_RADIUS = 10;
 
 FlowEnd::FlowEnd() :
-    QSchematic::Node(::ItemType::FlowEndType)
+    Operation(::ItemType::FlowEndType)
 {
-    const int sz = _settings.gridSize;
-
     // Symbol polygon
+    const int sz = _settings.gridSize;
     _symbolPolygon << QPoint(1*sz, -1*sz);
     _symbolPolygon << QPoint(0*sz, 0*sz);
     _symbolPolygon << QPoint(1*sz, 1*sz);
     _symbolPolygon << QPoint(3*sz, 1*sz);
     _symbolPolygon << QPoint(3*sz, -1*sz);
+
+    // Label
+    if (auto l = label(); l)
+        l->hide();
 
     // Connector
     auto connector = std::make_shared<OperationConnector>();

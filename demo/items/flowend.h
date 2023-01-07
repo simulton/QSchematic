@@ -1,10 +1,11 @@
 #pragma once
 
-#include <qschematic/items/node.h>
+#include "operation.h"
 
 class OperationConnector;
 
-class FlowEnd : public QSchematic::Node
+class FlowEnd :
+    public Operation
 {
     Q_OBJECT
     Q_DISABLE_COPY_MOVE(FlowEnd)

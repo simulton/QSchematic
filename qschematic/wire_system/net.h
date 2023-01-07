@@ -33,7 +33,12 @@ namespace wire_system
         void set_manager(wire_system::manager* manager);
 
     protected:
-        class manager* manager() const;
+        [[nodiscard]]
+        class manager*
+        manager() const noexcept
+        {
+            return m_manager;
+        }
 
     private:
         QList<std::weak_ptr<wire>> m_wires;
