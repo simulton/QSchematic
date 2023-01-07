@@ -2,12 +2,16 @@
 
 #include "../connectable.h"
 
-struct connector : public wire_system::connectable
+#include <QPointF>
+
+struct connector :
+    wire_system::connectable
 {
-    QPointF position() const override
+    QPointF pos;
+
+    QPointF
+    position() const override
     {
         return pos;
     }
-
-    QPointF pos;
 };
