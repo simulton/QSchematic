@@ -602,11 +602,6 @@ void wire::disconnectWire(wire* wire)
     m_connectedWires.removeAll(wire);
 }
 
-manager* wire::manager()
-{
-    return m_manager;
-}
-
 void wire::remove_point(int index)
 {
     about_to_change();
