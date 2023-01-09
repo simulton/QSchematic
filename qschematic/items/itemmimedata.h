@@ -4,19 +4,19 @@
 
 #include <memory>
 
-namespace QSchematic
+namespace QSchematic::Items
 {
     const QString MIME_TYPE_NODE = "qschematic/node";
 
-    class ItemMimeData :
+    class MimeData :
         public QMimeData
     {
         Q_OBJECT
-        Q_DISABLE_COPY_MOVE(ItemMimeData)
+        Q_DISABLE_COPY_MOVE(MimeData)
 
     public:
-        explicit ItemMimeData(std::shared_ptr<Item> item);
-        ~ItemMimeData() override = default;
+        explicit MimeData(std::shared_ptr<Item> item);
+        ~MimeData() override = default;
 
         QStringList formats() const override;
         bool hasFormat(const QString& mimetype) const override;

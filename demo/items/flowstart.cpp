@@ -54,17 +54,17 @@ gpds::container FlowStart::to_container() const
     // Root
     gpds::container root;
     addItemTypeIdToContainer(root);
-    root.add_value("node", QSchematic::Node::to_container());
+    root.add_value("node", QSchematic::Items::Node::to_container());
 
     return root;
 }
 
 void FlowStart::from_container(const gpds::container& container)
 {
-    QSchematic::Node::from_container(*container.get_value<gpds::container*>("node").value());
+    QSchematic::Items::Node::from_container(*container.get_value<gpds::container*>("node").value());
 }
 
-std::shared_ptr<QSchematic::Item> FlowStart::deepCopy() const
+std::shared_ptr<QSchematic::Items::Item> FlowStart::deepCopy() const
 {
     auto clone = std::make_shared<FlowStart>();
     copyAttributes(*clone);
@@ -74,7 +74,7 @@ std::shared_ptr<QSchematic::Item> FlowStart::deepCopy() const
 
 void FlowStart::copyAttributes(FlowStart& dest) const
 {
-    QSchematic::Node::copyAttributes(dest);
+    QSchematic::Items::Node::copyAttributes(dest);
 }
 
 QRectF FlowStart::boundingRect() const

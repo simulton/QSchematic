@@ -8,7 +8,7 @@
 
 #include <QVector2D>
 
-using namespace QSchematic;
+using namespace QSchematic::Items;
 
 WireNet::WireNet(QObject* parent) :
     QObject(parent), _scene(nullptr)
@@ -80,7 +80,7 @@ void WireNet::from_container(const gpds::container& container)
         for (const gpds::container* wireContainer : wiresContainer.get_values<gpds::container*>("wire")) {
             Q_ASSERT(wireContainer);
 
-            auto newWire = ItemFactory::instance().from_container(*wireContainer);
+            auto newWire = Items::Factory::instance().from_container(*wireContainer);
             auto sharedNewWire = std::dynamic_pointer_cast<Wire>( newWire );
             if (!sharedNewWire) {
                 continue;

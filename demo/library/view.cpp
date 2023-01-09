@@ -40,7 +40,7 @@ void View::startDrag(Qt::DropActions supportedActions)
     }
 
     // Retrieve the ItemMimeData to get the pixmap
-    QSchematic::ItemMimeData* m = qobject_cast<QSchematic::ItemMimeData*>(data);
+    QSchematic::Items::MimeData* m = qobject_cast<QSchematic::Items::MimeData*>(data);
     if (!m) {
         return;
     }

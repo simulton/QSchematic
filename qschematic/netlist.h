@@ -12,13 +12,11 @@
 
 namespace QSchematic
 {
-    class Node;
-    class Connector;
 
     template<
-        typename TWire = Wire*,
-        typename TNode = Node*,
-        typename TConnector = Connector*
+        typename TWire = Items::Wire*,
+        typename TNode = Items::Node*,
+        typename TConnector = Items::Connector*
     >
     struct Net
     {
@@ -30,9 +28,9 @@ namespace QSchematic
     };
 
     template<
-        typename TNode = Node*,
-        typename TConnector = Connector*,
-        typename TWire = Wire*,
+        typename TNode = Items::Node*,
+        typename TConnector = Items::Connector*,
+        typename TWire = Items::Wire*,
         typename TNet = Net<TWire, TNode, TConnector>
     >
     class Netlist

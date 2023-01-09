@@ -9,7 +9,7 @@
 
 class QVector2D;
 
-namespace QSchematic
+namespace QSchematic::Items
 {
     class Item;
 }
@@ -22,7 +22,7 @@ namespace QSchematic::Commands
     {
     public:
         ItemMove(
-            const QVector<std::shared_ptr<Item>>& item,
+            const QVector<std::shared_ptr<Items::Item>>& item,
             QVector2D moveBy,
             QUndoCommand* parent = nullptr
         );
@@ -33,7 +33,7 @@ namespace QSchematic::Commands
         void redo() override;
 
     private:
-        QVector<std::shared_ptr<Item>> _items;
+        QVector<std::shared_ptr<Items::Item>> _items;
         QVector2D _moveBy;
 
         void

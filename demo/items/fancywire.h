@@ -2,7 +2,7 @@
 
 #include <qschematic/items/wireroundedcorners.h>
 
-class FancyWire : public QSchematic::WireRoundedCorners
+class FancyWire : public QSchematic::Items::WireRoundedCorners
 {
     Q_OBJECT
     Q_DISABLE_COPY_MOVE(FancyWire)
@@ -13,7 +13,7 @@ public:
 
     gpds::container to_container() const override;
     void from_container(const gpds::container& container) override;
-    std::shared_ptr<QSchematic::Item> deepCopy() const override;
+    std::shared_ptr<QSchematic::Items::Item> deepCopy() const override;
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
 
 protected:

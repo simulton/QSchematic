@@ -6,7 +6,7 @@
 #include <QPoint>
 #include <QSize>
 
-namespace QSchematic
+namespace QSchematic::Items
 {
     class RectItem;
 }
@@ -18,7 +18,7 @@ namespace QSchematic::Commands
         public Base
     {
     public:
-        RectItemResize(QPointer<RectItem> item, const QPointF& newPos, const QSizeF& newSize, QUndoCommand* parent = nullptr);
+        RectItemResize(QPointer<Items::RectItem> item, const QPointF& newPos, const QSizeF& newSize, QUndoCommand* parent = nullptr);
 
         int id() const override;
         bool mergeWith(const QUndoCommand* command) override;
@@ -26,7 +26,7 @@ namespace QSchematic::Commands
         void redo() override;
 
     private:
-        QPointer<RectItem> _item;
+        QPointer<Items::RectItem> _item;
         QPointF _oldPos;
         QPointF _newPos;
         QSizeF _oldSize;

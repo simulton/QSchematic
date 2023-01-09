@@ -8,7 +8,7 @@ using namespace QSchematic::Commands;
 
 WirepointMove::WirepointMove(
     Scene* scene,
-    const std::shared_ptr<Wire>& wire,
+    const std::shared_ptr<Items::Wire>& wire,
     int index,
     const QPointF& pos,
     QUndoCommand* parent

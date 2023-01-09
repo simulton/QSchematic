@@ -2,7 +2,7 @@
 
 #include <qschematic/items/connector.h>
 
-class OperationConnector : public QSchematic::Connector
+class OperationConnector : public QSchematic::Items::Connector
 {
     Q_OBJECT
     Q_DISABLE_COPY_MOVE(OperationConnector)
@@ -13,7 +13,7 @@ public:
 
     gpds::container to_container() const override;
     void from_container(const gpds::container& container) override;
-    std::shared_ptr<QSchematic::Item> deepCopy() const override;
+    std::shared_ptr<QSchematic::Items::Item> deepCopy() const override;
     std::unique_ptr<QWidget> popup() const override;
     QRectF boundingRect() const override;
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;

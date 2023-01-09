@@ -48,7 +48,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     // Setup the custom item factory
     auto func = std::bind(&CustomItemFactory::from_container, std::placeholders::_1);
-    QSchematic::ItemFactory::instance().setCustomItemsFactory(func);
+    QSchematic::Items::Factory::instance().setCustomItemsFactory(func);
 
     // Settings
     _settings.debug = false;
@@ -151,7 +151,7 @@ MainWindow::MainWindow(QWidget *parent)
         debugToolbar->addAction(_deleteme2);
         connect(_deleteme2, &QAction::triggered, [this]{
             // Create item
-            auto item = std::make_shared<QSchematic::Widget>(4242);
+            auto item = std::make_shared<QSchematic::Items::Widget>(4242);
             item->setWidget(new QDial);
 
             // Add to scene

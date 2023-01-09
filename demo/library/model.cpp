@@ -61,13 +61,13 @@ void Model::createModel()
     addTreeItem("End", QIcon(), new ::FlowEnd, rootFlows);
 
     // Basics
-    auto label = new QSchematic::Label;
+    auto label = new QSchematic::Items::Label;
     label->setHasConnectionPoint(false);
     label->setText(QStringLiteral("Label"));
     addTreeItem("Label", QIcon(), label, rootBasics);
 }
 
-void Model::addTreeItem(const QString& name, const QIcon& icon, const QSchematic::Item* item, model_item* parent)
+void Model::addTreeItem(const QString& name, const QIcon& icon, const QSchematic::Items::Item* item, model_item* parent)
 {
     auto newItem = new model_item(Operation, new ItemInfo(name, icon, item), parent);
     beginInsertRows(QModelIndex(), _rootItem->childCount(), _rootItem->childCount());
@@ -75,7 +75,7 @@ void Model::addTreeItem(const QString& name, const QIcon& icon, const QSchematic
     endInsertRows();
 }
 
-const QSchematic::Item* Model::itemFromIndex(const QModelIndex& index) const
+const QSchematic::Items::Item* Model::itemFromIndex(const QModelIndex& index) const
 {
     // Retrieve the item
     auto modelItem = static_cast<model_item*>(index.internalPointer());
@@ -261,7 +261,7 @@ Qt::ItemFlags Model::flags(const QModelIndex& index) const
 
 QStringList Model::mimeTypes() const
 {
-    return { QSchematic::MIME_TYPE_NODE };
+    return { QSchematic::Items::MIME_TYPE_NODE };
 }
 
 QMimeData* Model::mimeData(const QModelIndexList& indexes) const
@@ -289,7 +289,7 @@ QMimeData* Model::mimeData(const QModelIndexList& indexes) const
             // Clone the item
             auto itemClone = itemInfo->item->deepCopy();
 
-            return new QSchematic::ItemMimeData(std::move(itemClone));
+            return new QSchematic::Items::MimeData(std::move(itemClone));
         }
 
         default:

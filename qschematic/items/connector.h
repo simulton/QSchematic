@@ -3,7 +3,8 @@
 #include "item.h"
 #include "../wire_system/connectable.h"
 
-namespace QSchematic {
+namespace QSchematic::Items
+{
 
     class Label;
     class Wire;

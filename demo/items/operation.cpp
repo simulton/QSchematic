@@ -23,20 +23,20 @@ const qreal SHADOW_OFFSET      = 7;
 const qreal SHADOW_BLUR_RADIUS = 10;
 
 Operation::Operation(int type, QGraphicsItem* parent) :
-    QSchematic::Node(type, parent)
+    QSchematic::Items::Node(type, parent)
 {
     // Label
-    _label = std::make_shared<QSchematic::Label>();
+    _label = std::make_shared<QSchematic::Items::Label>();
     _label->setParentItem(this);
     _label->setVisible(true);
     _label->setMovable(true);
     _label->setPos(0, 120);
     _label->setText(QStringLiteral("Generic"));
-    connect(this, &QSchematic::Node::sizeChanged, [this]{
+    connect(this, &QSchematic::Items::Node::sizeChanged, [this]{
         label()->setConnectionPoint(sizeRect().center());
         alignLabel();
     });
-    connect(this, &QSchematic::Item::settingsChanged, [this]{
+    connect(this, &QSchematic::Items::Item::settingsChanged, [this]{
         label()->setConnectionPoint(sizeRect().center());
         label()->setSettings(_settings);
     });
@@ -46,7 +46,7 @@ Operation::Operation(int type, QGraphicsItem* parent) :
     setAllowMouseResize(true);
     setAllowMouseRotate(true);
     setConnectorsMovable(true);
-    setConnectorsSnapPolicy(QSchematic::Connector::NodeSizerectOutline);
+    setConnectorsSnapPolicy(QSchematic::Items::Connector::NodeSizerectOutline);
     setConnectorsSnapToGrid(true);
 
     // Drop shadow
@@ -67,7 +67,7 @@ gpds::container Operation::to_container() const
     // Root
     gpds::container root;
     addItemTypeIdToContainer(root);
-    root.add_value("node", QSchematic::Node::to_container());
+    root.add_value("node", QSchematic::Items::Node::to_container());
     root.add_value("label", _label->to_container());
 
     return root;
@@ -76,7 +76,7 @@ gpds::container Operation::to_container() const
 void Operation::from_container(const gpds::container& container)
 {
     // Root
-    QSchematic::Node::from_container(*container.get_value<gpds::container*>("node").value());
+    QSchematic::Items::Node::from_container(*container.get_value<gpds::container*>("node").value());
     _label->from_container(*container.get_value<gpds::container*>("label").value());
 }
 
@@ -85,7 +85,7 @@ std::unique_ptr<QWidget> Operation::popup() const
     return std::make_unique<PopupOperation>(*this);
 }
 
-std::shared_ptr<QSchematic::Item> Operation::deepCopy() const
+std::shared_ptr<QSchematic::Items::Item> Operation::deepCopy() const
 {
     auto clone = std::make_shared<Operation>(::ItemType::OperationType, parentItem());
     copyAttributes(*clone);
@@ -95,10 +95,10 @@ std::shared_ptr<QSchematic::Item> Operation::deepCopy() const
 
 void Operation::copyAttributes(Operation& dest) const
 {
-    QSchematic::Node::copyAttributes(dest);
+    QSchematic::Items::Node::copyAttributes(dest);
 
     // Label
-    dest._label = std::dynamic_pointer_cast<QSchematic::Label>(_label->deepCopy());
+    dest._label = std::dynamic_pointer_cast<QSchematic::Items::Label>(_label->deepCopy());
     dest._label->setParentItem(&dest);
 }
 
@@ -114,7 +114,7 @@ void Operation::alignLabel()
     _label->setPos(x, y);
 }
 
-std::shared_ptr<QSchematic::Label> Operation::label() const
+std::shared_ptr<QSchematic::Items::Label> Operation::label() const
 {
     return _label;
 }
@@ -242,7 +242,7 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
             if (!scene())
                 return;
 
-            for (const std::shared_ptr<Connector>& conn : connectors())
+            for (const std::shared_ptr<Items::Connector>& conn : connectors())
                 scene()->undoStack()->push(new QSchematic::Commands::ItemVisibility(conn, true));
         });
 
@@ -278,7 +278,7 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
                 return;
 
             // Retrieve smart pointer
-            std::shared_ptr<QSchematic::Item> itemPointer;
+            std::shared_ptr<QSchematic::Items::Item> itemPointer;
             for (auto& i : scene()->items()) {
                 if (i.get() == this) {
                     itemPointer = i;

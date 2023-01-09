@@ -7,8 +7,8 @@
 using namespace Commands;
 
 NodeAddConnector::NodeAddConnector(
-    const QPointer<QSchematic::Node>& node,
-    std::shared_ptr<QSchematic::Connector> connector,
+    const QPointer<QSchematic::Items::Node>& node,
+    std::shared_ptr<QSchematic::Items::Connector> connector,
     QUndoCommand* parent
 ) :
     QSchematic::Commands::Base(parent),

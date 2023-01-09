@@ -19,7 +19,7 @@ namespace QSchematic::Commands
     public:
         WirepointMove(
             Scene* scene,
-            const std::shared_ptr<Wire>& wire,
+            const std::shared_ptr<Items::Wire>& wire,
             int index,
             const QPointF& pos,
             QUndoCommand* parent = nullptr
@@ -31,7 +31,7 @@ namespace QSchematic::Commands
         void redo() override;
 
     private:
-        std::shared_ptr<Wire> _wire;
+        std::shared_ptr<Items::Wire> _wire;
         QVector<QPointF> _oldPos;
         QVector<QPointF> _newPos;
         std::shared_ptr<net> _oldNet;

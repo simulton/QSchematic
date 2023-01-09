@@ -5,7 +5,7 @@
 using namespace QSchematic;
 using namespace QSchematic::Commands;
 
-RectItemResize::RectItemResize(QPointer<RectItem> item, const QPointF& newPos, const QSizeF& newSize, QUndoCommand* parent) :
+RectItemResize::RectItemResize(QPointer<Items::RectItem> item, const QPointF& newPos, const QSizeF& newSize, QUndoCommand* parent) :
     Base(parent),
     _item(item),
     _newPos(newPos),

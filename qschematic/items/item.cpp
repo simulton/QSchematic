@@ -9,7 +9,7 @@
 #include <QWidget>
 
 using namespace QSchematic;
-
+using namespace QSchematic::Items;
 
 Item::Item(int type, QGraphicsItem* parent) :
     QGraphicsObject(parent),
@@ -93,9 +93,9 @@ void Item::addItemTypeIdToContainer(gpds::container& container) const
     container.add_attribute( "type_id", type() );
 }
 
-Scene* Item::scene() const
+QSchematic::Scene* Item::scene() const
 {
-    return qobject_cast<Scene*>(QGraphicsObject::scene());
+    return qobject_cast<QSchematic::Scene*>(QGraphicsObject::scene());
 }
 
 int Item::type() const

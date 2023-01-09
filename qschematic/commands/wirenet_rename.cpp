@@ -2,11 +2,12 @@
 #include "wirenet_rename.h"
 #include "../items/label.h"
 #include "../items/wire.h"
+#include "../items/wirenet.h"
 
 using namespace QSchematic;
 using namespace QSchematic::Commands;
 
-WirenetRename::WirenetRename(const std::shared_ptr<WireNet>& net, const QString& newText, QUndoCommand* parent) :
+WirenetRename::WirenetRename(const std::shared_ptr<Items::WireNet>& net, const QString& newText, QUndoCommand* parent) :
     Base(parent),
     _newText(newText)
 {

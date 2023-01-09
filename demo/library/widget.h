@@ -2,7 +2,7 @@
 
 #include <QWidget>
 
-namespace QSchematic
+namespace QSchematic::Items
 {
     class Item;
 }
@@ -26,7 +26,7 @@ namespace Library
         void expandAll();
 
     signals:
-        void itemClicked(const QSchematic::Item* item);
+        void itemClicked(const QSchematic::Items::Item* item);
 
     public slots:
         void setPixmapScale(qreal scale);

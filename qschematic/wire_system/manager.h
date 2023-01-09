@@ -9,7 +9,7 @@
 #include <memory>
 #include <optional>
 
-namespace QSchematic
+namespace QSchematic::Items
 {
     class Connector;
 }

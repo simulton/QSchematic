@@ -11,6 +11,10 @@ class QGraphicsItem;
 namespace QSchematic
 {
     class Scene;
+}
+
+namespace QSchematic::Items
+{
     class Item;
 }
 
@@ -21,7 +25,7 @@ namespace QSchematic::Commands
         public Base
     {
     public:
-        ItemRemove(const QPointer<Scene>& scene, const std::shared_ptr<Item>& item, QUndoCommand* parent = nullptr);
+        ItemRemove(const QPointer<Scene>& scene, const std::shared_ptr<Items::Item>& item, QUndoCommand* parent = nullptr);
 
         int id() const override;
         bool mergeWith(const QUndoCommand* command) override;
@@ -30,7 +34,7 @@ namespace QSchematic::Commands
 
     private:
         QPointer<Scene> _scene;
-        std::shared_ptr<Item> _item;
+        std::shared_ptr<Items::Item> _item;
         QGraphicsItem* _itemParent;
     };
 

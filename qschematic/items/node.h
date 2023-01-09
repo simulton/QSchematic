@@ -9,7 +9,8 @@
 class QGraphicsSceneMouseEvent;
 class QGraphicsSceneHoverEvent;
 
-namespace QSchematic {
+namespace QSchematic::Items
+{
 
     class Connector;
 

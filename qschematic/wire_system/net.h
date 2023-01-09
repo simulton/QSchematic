@@ -4,11 +4,6 @@
 
 #include <memory>
 
-namespace QSchematic
-{
-    class Wire;
-}
-
 namespace wire_system
 {
     class wire;

@@ -5,7 +5,7 @@
 #include <QGraphicsProxyWidget>
 #include <QPainter>
 
-using namespace QSchematic;
+using namespace QSchematic::Items;
 
 Widget::Widget(int type, QGraphicsItem* parent) :
     RectItem(type, parent)

@@ -9,7 +9,8 @@
 
 class QVector2D;
 
-namespace QSchematic {
+namespace QSchematic::Items
+{
 
     /**
      * IMPORTANT NOTE: The points coordinates are RELATIVE and in SCENE COORDINATES.

@@ -13,7 +13,7 @@ const QColor COLOR_BODY_FILL   = QColor(Qt::green);
 const QColor COLOR_BODY_BORDER = QColor(Qt::black);
 const qreal PEN_WIDTH          = 1.5;
 
-using namespace QSchematic;
+using namespace QSchematic::Items;
 
 const int DEFAULT_WIDTH     = 160;
 const int DEFAULT_HEIGHT    = 240;
@@ -86,7 +86,7 @@ void Node::from_container(const gpds::container& container)
     if (connectorsContainer) {
         clearConnectors();
         for (const gpds::container* connectorContainer : connectorsContainer->get_values<gpds::container*>("connector")) {
-            auto connector = std::dynamic_pointer_cast<Connector>(ItemFactory::instance().from_container(*connectorContainer));
+            auto connector = std::dynamic_pointer_cast<Connector>(Items::Factory::instance().from_container(*connectorContainer));
             if (!connector) {
                 continue;
             }

@@ -4,7 +4,8 @@
 
 #include <QFont>
 
-namespace QSchematic {
+namespace QSchematic::Items
+{
 
     class Label :
         public Item

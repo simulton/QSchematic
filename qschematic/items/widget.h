@@ -4,9 +4,8 @@
 
 class QGraphicsProxyWidget;
 
-namespace QSchematic
+namespace QSchematic::Items
 {
-    class Scene;
 
     /**
      * QWidget wrapper.

@@ -9,7 +9,7 @@ using namespace QSchematic;
 using namespace QSchematic::Commands;
 
 ItemMove::ItemMove(
-    const QVector<std::shared_ptr<Item>>& items,
+    const QVector<std::shared_ptr<Items::Item>>& items,
     QVector2D moveBy,
     QUndoCommand* parent
 ) :
@@ -69,7 +69,7 @@ void
 ItemMove::simplifyWires() const
 {
     for (const auto& item : _items) {
-        if (auto wire = item->sharedPtr<Wire>())
+        if (auto wire = item->sharedPtr<Items::Wire>())
             wire->simplify();
     }
 }
