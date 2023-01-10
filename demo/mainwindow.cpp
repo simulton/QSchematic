@@ -39,6 +39,7 @@
 
 #warning TEMPORARY
 #include <qschematic/items/widget.h>
+#include <qschematic/items/subgraph.h>
 #include <QDial>
 
 const QString FILE_FILTERS = "XML (*.xml)";
@@ -157,6 +158,17 @@ MainWindow::MainWindow(QWidget *parent)
             // Add to scene
             _scene->undoStack()->push(new QSchematic::Commands::ItemAdd(_scene, std::move(item)));
         });
+
+        auto actAddSubgraph = new QAction("Subgraph");
+        connect(actAddSubgraph, &QAction::triggered, [this]{
+            // Create item
+            auto item = std::make_shared<QSchematic::Items::SubGraph>();
+            item->setSize(35*20, 20*20);
+
+            // Add to scene
+            _scene->undoStack()->push(new QSchematic::Commands::ItemAdd(_scene, std::move(item)));
+        });
+        debugToolbar->addAction(actAddSubgraph);
     }
 
     // Central widget
@@ -388,7 +400,9 @@ void MainWindow::demo()
     _scene->clear();
     _scene->setSceneRect(-500, -500, 3000, 3000);
 
+#if 0
     load(":/demo_01.xml");
 
     generateNetlist();
+#endif
 }

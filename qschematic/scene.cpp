@@ -617,6 +617,18 @@ Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
                         return std::dynamic_pointer_cast<Wire>(item) != nullptr;
                     }
                 );
+#if 0
+                itemsToMove.erase(
+                    std::remove_if(
+                        std::begin(itemsToMove),
+                        std::end(itemsToMove),
+                        [](const std::shared_ptr<Item>& item) -> bool {
+                            return item->parentItem() != nullptr;
+                        }
+                    ),
+                    std::end(itemsToMove)
+                );
+#endif
 
                 QVector2D moveBy;
                 for (const auto& item : itemsToMove) {
@@ -646,19 +658,22 @@ Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
                         const QRectF n_rect  = { node->x(), node->y(), node->width(), node->height() };
 
                         if (sg_rect.contains(n_rect)) {
-                            qDebug() << "YES";
-
-                            node->setParentItem(sg.get());
-                            node->setPos(node->pos() - sg->pos());
-                        }
-                        else {
-                            qDebug() << "NO";
-
-                            if (node->parentItem()) {
-                                node->setParentItem(nullptr);
-                                node->setPos(node->pos() + sg->pos());
+                            if (node->parentItem() != sg.get()) {
+                                //_undoStack->push(new Commands::SubgraphItemAdd(item, sg));
+                                sg->addChild(item);
+                                break;
                             }
                         }
+                        else {
+                            qDebug() << "outside";
+                            if (node->parentItem() == sg.get()) {
+                            qDebug() << "removing";
+                                //_undoStack->push(new Commands::SubgraphItemRemove(item, sg));
+                                sg->removeChild(item);
+                                break;
+                            }
+                        }
+                        qDebug() << "";
                     }
                 }
 
@@ -725,6 +740,18 @@ Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                             return std::dynamic_pointer_cast<Wire>(item) != nullptr;
                         }
                     );
+#if 0
+                    itemsToMove.erase(
+                        std::remove_if(
+                            std::begin(itemsToMove),
+                            std::end(itemsToMove),
+                            [](const std::shared_ptr<Item>& item) -> bool {
+                                return item->parentItem();
+                            }
+                        ),
+                        std::end(itemsToMove)
+                    );
+#endif
 
                     for (const auto& item : itemsToMove) {
                         // Calculate by how much the item was moved
