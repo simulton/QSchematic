@@ -21,7 +21,7 @@ const QColor COLOR_BODY_BORDER = QColor(Qt::black);
 const qreal PEN_WIDTH          = 1.5;
 
 OperationConnector::OperationConnector(const QPoint& gridPoint, const QString& text, QGraphicsItem* parent) :
-    QSchematic::Connector(::ItemType::OperationConnectorType, gridPoint, text, parent)
+    QSchematic::Items::Connector(::ItemType::OperationConnectorType, gridPoint, text, parent)
 {
     label()->setVisible(true);
     setForceTextDirection(false);
@@ -32,7 +32,7 @@ gpds::container OperationConnector::to_container() const
     // Root
     gpds::container root;
     addItemTypeIdToContainer(root);
-    root.add_value("connector", QSchematic::Connector::to_container());
+    root.add_value("connector", QSchematic::Items::Connector::to_container());
 
     return root;
 }
@@ -40,10 +40,10 @@ gpds::container OperationConnector::to_container() const
 void OperationConnector::from_container(const gpds::container& container)
 {
     // Root
-    QSchematic::Connector::from_container(*container.get_value<gpds::container*>("connector").value());
+    QSchematic::Items::Connector::from_container(*container.get_value<gpds::container*>("connector").value());
 }
 
-std::shared_ptr<QSchematic::Item> OperationConnector::deepCopy() const
+std::shared_ptr<QSchematic::Items::Item> OperationConnector::deepCopy() const
 {
     auto clone = std::make_shared<OperationConnector>(gridPos(), text(), parentItem());
     copyAttributes(*clone);
@@ -53,7 +53,7 @@ std::shared_ptr<QSchematic::Item> OperationConnector::deepCopy() const
 
 void OperationConnector::copyAttributes(OperationConnector& dest) const
 {
-    QSchematic::Connector::copyAttributes(dest);
+    QSchematic::Items::Connector::copyAttributes(dest);
 }
 
 std::unique_ptr<QWidget> OperationConnector::popup() const
@@ -163,7 +163,7 @@ void OperationConnector::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         connect(deleteFromModel, &QAction::triggered, [this] {
             if (scene()) {
                 // Retrieve smart pointer
-                std::shared_ptr<QSchematic::Item> itemPointer;
+                std::shared_ptr<QSchematic::Items::Item> itemPointer;
                 {
                     // Retrieve parent (Operation)
                     const Operation* operation = qgraphicsitem_cast<const Operation*>(parentItem());

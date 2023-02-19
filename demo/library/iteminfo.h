@@ -1,11 +1,11 @@
 #pragma once
 
-#include <qschematic/items/item.h>
-
 #include <QIcon>
 #include <QString>
 
-namespace QSchematic
+#include <qschematic/items/item.h>
+
+namespace QSchematic::Items
 {
     class Item;
 }
@@ -26,7 +26,7 @@ namespace Library
          * @param icon_
          * @param item_
          */
-        ItemInfo(QString name_, QIcon icon_, const QSchematic::Item* item_) :
+        ItemInfo(QString name_, QIcon icon_, const QSchematic::Items::Item* item_) :
             item(item_),
             name(std::move(name_)),
             icon(std::move(icon_))
@@ -45,7 +45,7 @@ namespace Library
         ItemInfo& operator=(const ItemInfo& rhs) = default;
         ItemInfo& operator=(ItemInfo&& rhs) noexcept = default;
 
-        const QSchematic::Item* item = nullptr;
+        const QSchematic::Items::Item* item = nullptr;
         QString name;
         QIcon icon;
     };

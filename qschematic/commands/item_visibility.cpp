@@ -5,7 +5,7 @@
 using namespace QSchematic;
 using namespace QSchematic::Commands;
 
-ItemVisibility::ItemVisibility(const std::shared_ptr<QSchematic::Item>& item, bool newVisibility, QUndoCommand* parent) :
+ItemVisibility::ItemVisibility(const std::shared_ptr<Items::Item>& item, bool newVisibility, QUndoCommand* parent) :
     Base(parent),
     _item(item),
     _newVisibility(newVisibility)

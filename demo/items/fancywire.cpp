@@ -14,7 +14,7 @@
 #define SIZE (_settings.gridSize/3)
 
 FancyWire::FancyWire(QGraphicsItem* parent) :
-    QSchematic::WireRoundedCorners(::ItemType::FancyWireType, parent)
+    QSchematic::Items::WireRoundedCorners(::ItemType::FancyWireType, parent)
 {
     auto action = new QAction("Rename ...", this);
     connect(action, &QAction::triggered, this, [=] {
@@ -29,7 +29,7 @@ FancyWire::FancyWire(QGraphicsItem* parent) :
         if (!ok)
             return;
 
-        if (auto wireNet = std::dynamic_pointer_cast<WireNet>(net())) {
+        if (auto wireNet = std::dynamic_pointer_cast<Items::WireNet>(net())) {
             scene()->undoStack()->push(new QSchematic::Commands::WirenetRename(wireNet, name));
         }
     });
@@ -42,17 +42,17 @@ gpds::container FancyWire::to_container() const
     // Root
     gpds::container root;
     addItemTypeIdToContainer(root);
-    root.add_value("wire", QSchematic::Wire::to_container());
+    root.add_value("wire", QSchematic::Items::Wire::to_container());
 
     return root;
 }
 
 void FancyWire::from_container(const gpds::container& container)
 {
-    QSchematic::Wire::from_container(*container.get_value<gpds::container*>("wire").value());
+    QSchematic::Items::Wire::from_container(*container.get_value<gpds::container*>("wire").value());
 }
 
-std::shared_ptr<QSchematic::Item> FancyWire::deepCopy() const
+std::shared_ptr<QSchematic::Items::Item> FancyWire::deepCopy() const
 {
     auto clone = std::make_shared<FancyWire>(parentItem());
     copyAttributes(*clone);
@@ -62,13 +62,13 @@ std::shared_ptr<QSchematic::Item> FancyWire::deepCopy() const
 
 void FancyWire::copyAttributes(FancyWire& dest) const
 {
-    QSchematic::WireRoundedCorners::copyAttributes(dest);
+    QSchematic::Items::WireRoundedCorners::copyAttributes(dest);
 }
 
 void FancyWire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     // Base class
-    QSchematic::WireRoundedCorners::paint(painter, option, widget);
+    QSchematic::Items::WireRoundedCorners::paint(painter, option, widget);
 
     // Nothing to do if we can't retrieve the wire manager
     if (!scene())

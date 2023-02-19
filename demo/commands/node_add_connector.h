@@ -5,7 +5,7 @@
 
 #include <memory>
 
-namespace QSchematic
+namespace QSchematic::Items
 {
     class Node;
     class Connector;
@@ -19,8 +19,8 @@ namespace Commands
     {
     public:
         NodeAddConnector(
-            const QPointer<QSchematic::Node>& node,
-            std::shared_ptr<QSchematic::Connector> connector,
+            const QPointer<QSchematic::Items::Node>& node,
+            std::shared_ptr<QSchematic::Items::Connector> connector,
             QUndoCommand* parent = nullptr
         );
 
@@ -30,8 +30,8 @@ namespace Commands
         void redo() override;
 
     private:
-        QPointer<QSchematic::Node> _node;
-        std::shared_ptr<QSchematic::Connector> _connector;
+        QPointer<QSchematic::Items::Node> _node;
+        std::shared_ptr<QSchematic::Items::Connector> _connector;
     };
 
 }

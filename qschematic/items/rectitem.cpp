@@ -18,7 +18,7 @@ const int DEFAULT_HEIGHT         = 240;
 const int DEFAULT_MINIMUM_WIDTH  = 40;
 const int DEFAULT_MINIMUM_HEIGHT = 40;
 
-using namespace QSchematic;
+using namespace QSchematic::Items;
 
 RectItem::RectItem(int type, QGraphicsItem* parent) :
     Item(type, parent),

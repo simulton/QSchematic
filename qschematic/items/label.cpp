@@ -10,7 +10,7 @@ const QColor COLOR_LABEL             = QColor("#000000");
 const QColor COLOR_LABEL_HIGHLIGHTED = QColor("#dc2479");
 const qreal LABEL_TEXT_PADDING = 2;
 
-using namespace QSchematic;
+using namespace QSchematic::Items;
 
 Label::Label(int type, QGraphicsItem* parent) :
     Item(type, parent),

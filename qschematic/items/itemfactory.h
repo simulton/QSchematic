@@ -7,24 +7,24 @@
 
 class QString;
 
-namespace QSchematic
+namespace QSchematic::Items
 {
 
     class Item;
 
-    class ItemFactory
+    class Factory
     {
     public:
-        static ItemFactory& instance();
+        static Factory& instance();
 
         void setCustomItemsFactory(const std::function<std::shared_ptr<Item>(const gpds::container&)>& factory);
         std::shared_ptr<Item> from_container(const gpds::container& container) const;
         static Item::ItemType extractType(const gpds::container& container);
 
     private:
-        ItemFactory() = default;
-        ItemFactory(const ItemFactory& other) = default;
-        ItemFactory(ItemFactory&& other) = default;
+        Factory() = default;
+        Factory(const Factory& other) = default;
+        Factory(Factory&& other) = default;
 
         std::function<std::shared_ptr<Item>(const gpds::container&)> _customItemFactory;
     };

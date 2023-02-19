@@ -28,7 +28,7 @@ namespace QSchematic
             struct GlobalNet
             {
                 QString name;
-                QList<std::shared_ptr<WireNet>> wireNets;
+                QList<std::shared_ptr<Items::WireNet>> wireNets;
             };
 
             // Add all nodes
@@ -46,7 +46,7 @@ namespace QSchematic
             unsigned anonNetCounter = 0;
             for (const auto& net : scene.wire_manager()->nets()) {
 
-                auto wireNet = std::dynamic_pointer_cast<WireNet>(net);
+                auto wireNet = std::dynamic_pointer_cast<Items::WireNet>(net);
 
                 // Sanity check
                 if (!wireNet)
@@ -94,7 +94,7 @@ namespace QSchematic
 
                     // Store wires
                     for ( const auto& wire : wireNet->wires()) {
-                        TWire w = qobject_cast<TWire>( std::dynamic_pointer_cast<Wire>(wire).get() );
+                        TWire w = qobject_cast<TWire>( std::dynamic_pointer_cast<Items::Wire>(wire).get() );
                         if (w)
                             net.wires.push_back( w );
                     }

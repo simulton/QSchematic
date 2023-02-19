@@ -14,7 +14,7 @@ const QColor COLOR                = QColor("#000000");
 const QColor COLOR_HIGHLIGHTED    = QColor("#dc2479");
 const QColor COLOR_SELECTED       = QColor("#0f16af");
 
-using namespace QSchematic;
+using namespace QSchematic::Items;
 
 WireRoundedCorners::WireRoundedCorners(int type, QGraphicsItem* parent) :
     Wire(type, parent)

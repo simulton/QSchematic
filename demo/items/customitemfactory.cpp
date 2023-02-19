@@ -9,10 +9,10 @@
 
 #include <qschematic/items/itemfactory.h>
 
-std::shared_ptr<QSchematic::Item> CustomItemFactory::from_container(const gpds::container& container)
+std::shared_ptr<QSchematic::Items::Item> CustomItemFactory::from_container(const gpds::container& container)
 {
     // Extract the type
-    QSchematic::Item::ItemType type = QSchematic::ItemFactory::extractType(container);
+    QSchematic::Items::Item::ItemType type = QSchematic::Items::Factory::extractType(container);
 
     switch (static_cast<ItemType>(type)) {
     case ItemType::OperationType:

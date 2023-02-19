@@ -2,11 +2,11 @@
 
 #include "wire.h"
 
-namespace QSchematic
+namespace QSchematic::Items
 {
 
     class WireRoundedCorners :
-        public QSchematic::Wire
+        public Wire
     {
         Q_OBJECT
         Q_DISABLE_COPY_MOVE(WireRoundedCorners)

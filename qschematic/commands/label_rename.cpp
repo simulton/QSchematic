@@ -5,7 +5,7 @@
 using namespace QSchematic;
 using namespace QSchematic::Commands;
 
-LabelRename::LabelRename(const QPointer<Label>& label, const QString& newText, QUndoCommand* parent) :
+LabelRename::LabelRename(const QPointer<Items::Label>& label, const QString& newText, QUndoCommand* parent) :
     Base(parent),
     _label(label),
     _newText(newText)

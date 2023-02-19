@@ -7,18 +7,20 @@
 
 class QString;
 
-namespace QSchematic {
+namespace QSchematic::Items
+{
     class Item;
 }
 
-namespace gpds {
+namespace gpds
+{
     class container;
 }
 
 class CustomItemFactory
 {
 public:
-    static std::shared_ptr<QSchematic::Item> from_container(const gpds::container& container);
+    static std::shared_ptr<QSchematic::Items::Item> from_container(const gpds::container& container);
 
 private:
     CustomItemFactory() = default;

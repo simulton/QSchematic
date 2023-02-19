@@ -9,19 +9,26 @@
 
 #include <memory>
 
-namespace wire_system {
+namespace wire_system
+{
     class point;
 }
 
 using namespace wire_system;
 
-namespace QSchematic {
+namespace QSchematic
+{
+    class Scene;
+}
+
+namespace QSchematic::Items
+{
 
     class Item;
     class Wire;
     class Label;
-    class Scene;
 
+    // ToDo: Technically, this class does not belong into the `Items` namespace
     class WireNet :
         public QObject,
         public gpds::serialize,

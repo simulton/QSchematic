@@ -17,7 +17,7 @@ const QColor COLOR_BODY_BORDER = QColor(Qt::black);
 const qreal PEN_WIDTH          = 1.5;
 const int TEXT_PADDING         = 15;
 
-using namespace QSchematic;
+using namespace QSchematic::Items;
 
 Connector::Connector(int type, const QPoint& gridPoint, const QString& text, QGraphicsItem* parent) :
     Item(type, parent),
@@ -96,7 +96,7 @@ void Connector::copyAttributes(Connector& dest) const
     Item::copyAttributes(dest);
 
     // Label
-    dest._label = std::dynamic_pointer_cast<QSchematic::Label>(_label->deepCopy());
+    dest._label = std::dynamic_pointer_cast<Label>(_label->deepCopy());
     dest._label->setParentItem(&dest);
 
     // Attributes

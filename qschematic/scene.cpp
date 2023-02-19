@@ -31,7 +31,7 @@ Scene::Scene(QObject* parent) :
 
     // Wire system
     m_wire_manager = std::make_shared<wire_system::manager>();
-    m_wire_manager->set_net_factory([=] { return std::make_shared<WireNet>(); });
+    m_wire_manager->set_net_factory([=] { return std::make_shared<Items::WireNet>(); });
     connect(m_wire_manager.get(), &wire_system::manager::wire_point_moved, this, &Scene::wirePointMoved);
 
     // Undo stack
@@ -89,7 +89,7 @@ Scene::to_container() const
     for (const auto& net : m_wire_manager->nets()) {
 
         // Make sure it's a WireNet
-        auto wire_net = std::dynamic_pointer_cast<WireNet>(net);
+        auto wire_net = std::dynamic_pointer_cast<Items::WireNet>(net);
         if (!wire_net)
             continue;
 
@@ -132,7 +132,7 @@ Scene::from_container(const gpds::container& container)
         for (const auto& nodeContainer : nodesContainer->get_values<gpds::container*>("node")) {
             Q_ASSERT(nodeContainer);
 
-            auto node = ItemFactory::instance().from_container(*nodeContainer);
+            auto node = Items::Factory::instance().from_container(*nodeContainer);
             if (!node) {
                 qWarning("Scene::from_container(): Couldn't restore node. Skipping.");
                 continue;
@@ -150,7 +150,7 @@ Scene::from_container(const gpds::container& container)
         for (const gpds::container* netContainer : netsContainer->get_values<gpds::container*>("net")) {
             Q_ASSERT( netContainer );
 
-            auto net = std::make_shared<WireNet>();
+            auto net = std::make_shared<Items::WireNet>();
             net->setScene(this);
             net->set_manager(wire_manager().get());
             net->from_container( *netContainer );
@@ -188,7 +188,7 @@ Scene::setSettings(const Settings& settings)
 }
 
 void
-Scene::setWireFactory(const std::function<std::shared_ptr<Wire>()>& factory)
+Scene::setWireFactory(const std::function<std::shared_ptr<Items::Wire>()>& factory)
 {
     _wireFactory = factory;
 }
@@ -278,7 +278,7 @@ Scene::clear()
 }
 
 bool
-Scene::addItem(const std::shared_ptr<Item>& item)
+Scene::addItem(const std::shared_ptr<Items::Item>& item)
 {
     // Sanity check
     if (!item)
@@ -300,7 +300,7 @@ Scene::addItem(const std::shared_ptr<Item>& item)
 }
 
 bool
-Scene::removeItem(const std::shared_ptr<Item> item)
+Scene::removeItem(const std::shared_ptr<Items::Item> item)
 {
     // Sanity check
     if (!item)
@@ -333,22 +333,22 @@ Scene::removeItem(const std::shared_ptr<Item> item)
     return true;
 }
 
-QList<std::shared_ptr<Item>>
+QList<std::shared_ptr<Items::Item>>
 Scene::items() const
 {
     return _items;
 }
 
-QList<std::shared_ptr<Item>>
+QList<std::shared_ptr<Items::Item>>
 Scene::itemsAt(const QPointF &scenePos, Qt::SortOrder order) const
 {
     return ItemUtils::mapItemListToSharedPtrList<QList>(QGraphicsScene::items(scenePos, Qt::IntersectsItemShape, order));
 }
 
-QList<std::shared_ptr<Item>>
+QList<std::shared_ptr<Items::Item>>
 Scene::items(int itemType) const
 {
-    QList<std::shared_ptr<Item>> items;
+    QList<std::shared_ptr<Items::Item>> items;
 
     for (auto& item : _items) {
         if (item->type() != itemType)
@@ -360,7 +360,7 @@ Scene::items(int itemType) const
     return items;
 }
 
-std::vector<std::shared_ptr<Item>>
+std::vector<std::shared_ptr<Items::Item>>
 Scene::selectedItems() const
 {
 
@@ -371,7 +371,7 @@ Scene::selectedItems() const
     // 222
     // const auto& rawItems = QGraphicsScene::selectedItems();
     // // Retrieve corresponding smart pointers
-    // auto items = std::vector<std::shared_ptr<Item>>{};
+    // auto items = std::vector<std::shared_ptr<Items::Item>>{};
     // items.reserve(rawItems.count());
     // for ( auto item_ptr : rawItems ) {
     //     if ( auto qs_item = dynamic_cast<Item*>(item_ptr) ) {
@@ -398,11 +398,11 @@ Scene::selectedItems() const
  * Items that should not be top-level items need to be added by using QGraphicsScene::addItem
  * \returns List of selected top-level items
  */
-std::vector<std::shared_ptr<Item>>
+std::vector<std::shared_ptr<Items::Item>>
 Scene::selectedTopLevelItems() const
 {
     const auto& rawItems = QGraphicsScene::selectedItems();
-    std::vector<std::shared_ptr<Item>> items;
+    std::vector<std::shared_ptr<Items::Item>> items;
 
     for (auto& item : _items) {
         if (rawItems.contains(item.get()))
@@ -412,13 +412,13 @@ Scene::selectedTopLevelItems() const
     return items;
 }
 
-QList<std::shared_ptr<Node>>
+QList<std::shared_ptr<Items::Node>>
 Scene::nodes() const
 {
-    QList<std::shared_ptr<Node>> nodes;
+    QList<std::shared_ptr<Items::Node>> nodes;
 
     for (auto& item : _items) {
-        auto node = std::dynamic_pointer_cast<Node>(item);
+        auto node = std::dynamic_pointer_cast<Items::Node>(item);
         if (!node)
             continue;
 
@@ -428,8 +428,8 @@ Scene::nodes() const
     return nodes;
 }
 
-std::shared_ptr<Node>
-Scene::nodeFromConnector(const QSchematic::Connector& connector) const
+std::shared_ptr<Items::Node>
+Scene::nodeFromConnector(const QSchematic::Items::Connector& connector) const
 {
     for (auto node : nodes()) {
         const auto& connectors = node->connectors();
@@ -488,15 +488,15 @@ Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             // Check if moving nodes
             _movingNodes = false;
             if (QGraphicsItem* item = itemAt(event->scenePos(), QTransform()); item) {
-                Node* node = dynamic_cast<Node*>(item);
-                if (node && node->mode() == Node::None)
+                Items::Node* node = dynamic_cast<Items::Node*>(item);
+                if (node && node->mode() == Items::Node::Mode::None)
                     _movingNodes = true;
                 else
                     _movingNodes = false;
 
                 // Prevent the scene from detecting changes in the wires origin
                 // when the bounding rect is resized by a wire_point that moved
-                if (Wire* wire = dynamic_cast<Wire*>(item); wire) {
+                if (Items::Wire* wire = dynamic_cast<Items::Wire*>(item); wire) {
                     if (wire->movingWirePoint())
                         _movingNodes = false;
                     else
@@ -504,7 +504,7 @@ Scene::mousePressEvent(QGraphicsSceneMouseEvent* event)
                 }
 
                 // Label
-                Label* label = dynamic_cast<Label*>(item);
+                Items::Label* label = dynamic_cast<Items::Label*>(item);
                 if (label && selectedTopLevelItems().size() > 0)
                     _movingNodes = true;
             }
@@ -595,7 +595,7 @@ Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 
             for (const auto& net : m_wire_manager->nets()) {
                 // Make sure it's a WireNet
-                auto wire_net = std::dynamic_pointer_cast<WireNet>(net);
+                auto wire_net = std::dynamic_pointer_cast<Items::WireNet>(net);
                 if (!wire_net)
                     continue;
 
@@ -607,14 +607,14 @@ Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
             if (_movingNodes) {
                 // Get list of items that need to be moved
                 // Note: We want/need to ensure that all `Wire` items are first in the list!
-                QVector<std::shared_ptr<Item>> itemsToMove;
+                QVector<std::shared_ptr<Items::Item>> itemsToMove;
                 for (const auto& item : selectedTopLevelItems())
                     itemsToMove << item;
                 std::partition(
                     std::begin(itemsToMove),
                     std::end(itemsToMove),
-                    [](const std::shared_ptr<Item>& item) -> bool {
-                        return std::dynamic_pointer_cast<Wire>(item) != nullptr;
+                    [](const std::shared_ptr<Items::Item>& item) -> bool {
+                        return std::dynamic_pointer_cast<Items::Wire>(item) != nullptr;
                     }
                 );
 #if 0
@@ -644,41 +644,41 @@ Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
                     _undoStack->push(new Commands::ItemMove(itemsToMove, moveBy));
 
                 for (const auto& item : itemsToMove) {
-                    Node* node = dynamic_cast<Node*>(item.get());
-                    if (node)
+                    if (const Items::Node* node = dynamic_cast<const Items::Node*>(item.get()); node) {
                         updateNodeConnections(node);
 
-                    auto subgraphs = items<QSchematic::Items::SubGraph>();
-                    for (auto& sg : subgraphs) {
+                        auto subgraphs = items<QSchematic::Items::SubGraph>();
+                        for (auto& sg : subgraphs) {
 
-                        if (sg.get() == node)
-                            continue;
+                            if (sg.get() == node)
+                                continue;
 
-                        const QRectF sg_rect = { sg->x(), sg->y(), sg->width(), sg->height() };
-                        const QRectF n_rect  = { node->x(), node->y(), node->width(), node->height() };
+                            const QRectF sg_rect = { sg->x(), sg->y(), sg->width(), sg->height() };
+                            const QRectF n_rect  = { node->x(), node->y(), node->width(), node->height() };
 
-                        if (sg_rect.contains(n_rect)) {
-                            if (node->parentItem() != sg.get()) {
-                                //_undoStack->push(new Commands::SubgraphItemAdd(item, sg));
-                                sg->addChild(item);
-                                break;
+                            if (sg_rect.contains(n_rect)) {
+                                if (node->parentItem() != sg.get()) {
+                                    //_undoStack->push(new Commands::SubgraphItemAdd(item, sg));
+                                    sg->addChild(item);
+                                    break;
+                                }
                             }
-                        }
-                        else {
-                            qDebug() << "outside";
-                            if (node->parentItem() == sg.get()) {
-                            qDebug() << "removing";
-                                //_undoStack->push(new Commands::SubgraphItemRemove(item, sg));
-                                sg->removeChild(item);
-                                break;
+                            else {
+                                qDebug() << "outside";
+                                if (node->parentItem() == sg.get()) {
+                                qDebug() << "removing";
+                                    //_undoStack->push(new Commands::SubgraphItemRemove(item, sg));
+                                    sg->removeChild(item);
+                                    break;
+                                }
                             }
+                            qDebug() << "";
                         }
-                        qDebug() << "";
                     }
                 }
 
                 for (auto& item : m_wire_manager->wires()) {
-                    Wire* wire = dynamic_cast<Wire*>(item.get());
+                    Items::Wire* wire = dynamic_cast<Items::Wire*>(item.get());
                     if (wire) {
                         // wire->updatePosition();
                         wire->simplify();
@@ -730,14 +730,14 @@ Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                 if (_movingNodes) {
                     // Get list of items that need to be moved
                     // Note: We want/need to ensure that all `Wire` items are first in the list!
-                    QVector<std::shared_ptr<Item>> itemsToMove;
+                    QVector<std::shared_ptr<Items::Item>> itemsToMove;
                     for (const auto& item : selectedTopLevelItems())
                         itemsToMove << item;
                     std::partition(
                         std::begin(itemsToMove),
                         std::end(itemsToMove),
-                        [](const std::shared_ptr<Item>& item) -> bool {
-                            return std::dynamic_pointer_cast<Wire>(item) != nullptr;
+                        [](const std::shared_ptr<Items::Item>& item) -> bool {
+                            return std::dynamic_pointer_cast<Items::Wire>(item) != nullptr;
                         }
                     );
 #if 0
@@ -773,7 +773,7 @@ Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                 QGraphicsScene::mouseMoveEvent(event);
 
             // Highlight the item under the cursor
-            Item* item = dynamic_cast<Item*>(itemAt(newMousePos, QTransform()));
+            Items::Item* item = dynamic_cast<Items::Item*>(itemAt(newMousePos, QTransform()));
             if (item && item->highlightEnabled()) {
                 // Skip if the item is already highlighted
                 if (item == _highlightedItem)
@@ -921,7 +921,7 @@ Scene::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
 {
     // Create a list of mime formats we can handle
     QStringList mimeFormatsWeCanHandle {
-        MIME_TYPE_NODE,
+        Items::MIME_TYPE_NODE,
     };
 
     // Check whether we can handle this drag/drop
@@ -959,9 +959,9 @@ Scene::dropEvent(QGraphicsSceneDragDropEvent* event)
         return;
 
     // Nodes
-    if (mimeData->hasFormat(MIME_TYPE_NODE)) {
+    if (mimeData->hasFormat(Items::MIME_TYPE_NODE)) {
         // Get the ItemMimeData
-        const ItemMimeData* mimeData = qobject_cast<const ItemMimeData*>(event->mimeData());
+        const Items::MimeData* mimeData = qobject_cast<const Items::MimeData*>(event->mimeData());
         if (!mimeData)
             return;
 
@@ -985,7 +985,7 @@ Scene::drawBackground(QPainter* painter, const QRectF& rect)
 }
 
 QVector2D
-Scene::itemsMoveSnap(const std::shared_ptr<Item>& items, const QVector2D& moveBy) const
+Scene::itemsMoveSnap(const std::shared_ptr<Items::Item>& items, const QVector2D& moveBy) const
 {
     Q_UNUSED(items);
 
@@ -1062,7 +1062,7 @@ Scene::renderCachedBackground()
 }
 
 void
-Scene::updateNodeConnections(const Node* node) const
+Scene::updateNodeConnections(const Items::Node* node) const
 {
     // Check if a connector lays on a wirepoint
     for (auto& connector : node->connectors()) {
@@ -1140,7 +1140,7 @@ Scene::wirePointMoved(wire& rawWire, int index)
 }
 
 void
-Scene::setupNewItem(Item& item)
+Scene::setupNewItem(Items::Item& item)
 {
     // Set settings
     item.setSettings(_settings);
@@ -1173,13 +1173,13 @@ Scene::finishCurrentWire()
     _newWire.reset();
 }
 
-std::shared_ptr<Wire>
+std::shared_ptr<Items::Wire>
 Scene::make_wire() const
 {
     if (_wireFactory)
         return _wireFactory();
     else
-        return std::make_shared<Wire>();
+        return std::make_shared<Items::Wire>();
 }
 
 QList<QPointF>
@@ -1193,10 +1193,10 @@ Scene::connectionPoints() const
     return list;
 }
 
-QList<std::shared_ptr<Connector>>
+QList<std::shared_ptr<Items::Connector>>
 Scene::connectors() const
 {
-    QList<std::shared_ptr<Connector>> list;
+    QList<std::shared_ptr<Items::Connector>> list;
 
     for (const auto& node : nodes())
         list << node->connectors();
@@ -1205,7 +1205,7 @@ Scene::connectors() const
 }
 
 void
-Scene::itemHoverEnter(const std::shared_ptr<const Item>& item)
+Scene::itemHoverEnter(const std::shared_ptr<const Items::Item>& item)
 {
     emit itemHighlighted(item);
 
@@ -1214,7 +1214,7 @@ Scene::itemHoverEnter(const std::shared_ptr<const Item>& item)
 }
 
 void
-Scene::itemHoverLeave([[maybe_unused]] const std::shared_ptr<const Item>& item)
+Scene::itemHoverLeave([[maybe_unused]] const std::shared_ptr<const Items::Item>& item)
 {
     // ToDo: clear _highlightedItem ?
 
@@ -1273,7 +1273,7 @@ Scene::removeLastWirePoint()
 void
 Scene::removeUnconnectedWires()
 {
-    QList<std::shared_ptr<Wire>> wiresToRemove;
+    QList<std::shared_ptr<Items::Wire>> wiresToRemove;
 
     for (const auto& wire : m_wire_manager->wires()) {
         // If it has wires attached to it, go to the next wire
@@ -1307,7 +1307,7 @@ Scene::removeUnconnectedWires()
             continue;
 
         // The wire has to be removed, add it to the list
-        if (auto wireItem = std::dynamic_pointer_cast<Wire>(wire))
+        if (auto wireItem = std::dynamic_pointer_cast<Items::Wire>(wire))
             wiresToRemove << wireItem;
     }
 
@@ -1317,7 +1317,7 @@ Scene::removeUnconnectedWires()
 }
 
 bool
-Scene::addWire(const std::shared_ptr<Wire>& wire)
+Scene::addWire(const std::shared_ptr<Items::Wire>& wire)
 {
     if (!m_wire_manager->add_wire(wire))
         return false;
@@ -1334,7 +1334,7 @@ Scene::addWire(const std::shared_ptr<Wire>& wire)
 }
 
 bool
-Scene::removeWire(const std::shared_ptr<Wire>& wire)
+Scene::removeWire(const std::shared_ptr<Items::Wire>& wire)
 {
     // Remove the wire from the scene
     removeItem(wire);

@@ -13,7 +13,7 @@ public:
 
     gpds::container to_container() const override;
     void from_container(const gpds::container& container) override;
-    std::shared_ptr<QSchematic::Item> deepCopy() const override;
+    std::shared_ptr<QSchematic::Items::Item> deepCopy() const override;
 
 private:
     void copyAttributes(OperationDemo1& dest) const;

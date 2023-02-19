@@ -14,6 +14,10 @@
 namespace QSchematic
 {
     class Scene;
+}
+
+namespace QSchematic::Items
+{
 
     class Item :
         public QGraphicsObject,

@@ -6,7 +6,7 @@
 #include <QPoint>
 #include <QSize>
 
-namespace QSchematic
+namespace QSchematic::Items
 {
     class RectItem;
 }
@@ -18,7 +18,7 @@ namespace QSchematic::Commands
         public Base
     {
     public:
-        RectItemRotate(QPointer<RectItem> item, qreal rotation, QUndoCommand* parent = nullptr);
+        RectItemRotate(QPointer<Items::RectItem> item, qreal rotation, QUndoCommand* parent = nullptr);
 
         int id() const override;
         bool mergeWith(const QUndoCommand* command) override;
@@ -26,7 +26,7 @@ namespace QSchematic::Commands
         void redo() override;
 
     private:
-        QPointer<RectItem> _item;
+        QPointer<Items::RectItem> _item;
         qreal _oldAngle;
         qreal _newAngle;
     };

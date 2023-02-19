@@ -7,7 +7,7 @@
 using namespace QSchematic;
 using namespace QSchematic::Commands;
 
-RectItemRotate::RectItemRotate(QPointer<RectItem> item, qreal newAngle, QUndoCommand* parent) :
+RectItemRotate::RectItemRotate(QPointer<Items::RectItem> item, qreal newAngle, QUndoCommand* parent) :
     Base(parent),
     _item(item),
     _newAngle(newAngle)

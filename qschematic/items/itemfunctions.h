@@ -3,7 +3,7 @@
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 
-namespace QSchematic
+namespace QSchematic::Items
 {
 
     template <typename T>

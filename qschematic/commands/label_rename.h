@@ -4,7 +4,7 @@
 
 #include <QPointer>
 
-namespace QSchematic
+namespace QSchematic::Items
 {
     class Label;
 }
@@ -16,7 +16,7 @@ namespace QSchematic::Commands
         public Base
     {
     public:
-        LabelRename(const QPointer<Label>& label, const QString& newText, QUndoCommand* parent = nullptr);
+        LabelRename(const QPointer<Items::Label>& label, const QString& newText, QUndoCommand* parent = nullptr);
 
         int id() const override;
         bool mergeWith(const QUndoCommand* command) override;
@@ -24,7 +24,7 @@ namespace QSchematic::Commands
         void redo() override;
 
     private:
-        QPointer<Label> _label;
+        QPointer<Items::Label> _label;
         QString _oldText;
         QString _newText;
     };

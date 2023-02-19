@@ -17,9 +17,13 @@
 namespace QSchematic
 {
 
-    class Node;
-    class Connector;
-    class WireNet;
+    namespace Items
+    {
+        class Node;
+        class Connector;
+        class Wire;
+        class WireNet;
+    }
 
     class Scene :
         public QGraphicsScene,
@@ -44,7 +48,7 @@ namespace QSchematic
         void from_container(const gpds::container& container) override;
 
         void setSettings(const Settings& settings);
-        void setWireFactory(const std::function<std::shared_ptr<Wire>()>& factory);
+        void setWireFactory(const std::function<std::shared_ptr<Items::Wire>()>& factory);
         void setMode(int mode);
         int mode() const;
         void toggleWirePosture();
@@ -74,7 +78,7 @@ namespace QSchematic
          * @return Success indicator.
          */
         bool
-        addItem(const std::shared_ptr<Item>& item);
+        addItem(const std::shared_ptr<Items::Item>& item);
 
         /**
          * Removes an item from the scene.
@@ -87,7 +91,7 @@ namespace QSchematic
          * @return Success indicator.
          */
         bool
-        removeItem(const std::shared_ptr<Item> item);
+        removeItem(const std::shared_ptr<Items::Item> item);
 
         /**
          * Get a list of all top-level items.
@@ -95,7 +99,7 @@ namespace QSchematic
          * @return The list of top-level items.
          */
         [[nodiscard]]
-        QList<std::shared_ptr<Item>>
+        QList<std::shared_ptr<Items::Item>>
         items() const;
 
         /**
@@ -105,7 +109,7 @@ namespace QSchematic
          * @return The list of top-level items.
          */
         [[nodiscard]]
-        QList<std::shared_ptr<Item>>
+        QList<std::shared_ptr<Items::Item>>
         items(int itemType) const;
 
         /**
@@ -131,21 +135,21 @@ namespace QSchematic
             return ret;
         }
 
-        QList<std::shared_ptr<Item>> itemsAt(const QPointF& scenePos, Qt::SortOrder order = Qt::DescendingOrder) const;
-        std::vector<std::shared_ptr<Item>> selectedItems() const;
-        std::vector<std::shared_ptr<Item>> selectedTopLevelItems() const;
-        QList<std::shared_ptr<Node>> nodes() const;
-        [[nodiscard]] std::shared_ptr<Node> nodeFromConnector(const QSchematic::Connector& connector) const;
+        QList<std::shared_ptr<Items::Item>> itemsAt(const QPointF& scenePos, Qt::SortOrder order = Qt::DescendingOrder) const;
+        std::vector<std::shared_ptr<Items::Item>> selectedItems() const;
+        std::vector<std::shared_ptr<Items::Item>> selectedTopLevelItems() const;
+        QList<std::shared_ptr<Items::Node>> nodes() const;
+        [[nodiscard]] std::shared_ptr<Items::Node> nodeFromConnector(const Items::Connector& connector) const;
         QList<QPointF> connectionPoints() const;
-        QList<std::shared_ptr<Connector>> connectors() const;
+        QList<std::shared_ptr<Items::Connector>> connectors() const;
         std::shared_ptr<wire_system::manager> wire_manager() const;
-        void itemHoverEnter(const std::shared_ptr<const Item>& item);
-        void itemHoverLeave(const std::shared_ptr<const Item>& item);
+        void itemHoverEnter(const std::shared_ptr<const Items::Item>& item);
+        void itemHoverLeave(const std::shared_ptr<const Items::Item>& item);
         void removeLastWirePoint();
         void removeUnconnectedWires();
-        bool addWire(const std::shared_ptr<Wire>& wire);
-        bool removeWire(const std::shared_ptr<Wire>& wire);
-        QList<std::shared_ptr<WireNet>> nets(const std::shared_ptr<net> wireNet) const;
+        bool addWire(const std::shared_ptr<Items::Wire>& wire);
+        bool removeWire(const std::shared_ptr<Items::Wire>& wire);
+        QList<std::shared_ptr<Items::WireNet>> nets(const std::shared_ptr<net> wireNet) const;
 
         /**
          * Undo to last command.
@@ -173,9 +177,9 @@ namespace QSchematic
     signals:
         void modeChanged(int newMode);
         void isDirtyChanged(bool isDirty);
-        void itemAdded(std::shared_ptr<Item> item);
-        void itemRemoved(std::shared_ptr<Item> item);
-        void itemHighlighted(const std::shared_ptr<const Item>& item);
+        void itemAdded(std::shared_ptr<Items::Item> item);
+        void itemRemoved(std::shared_ptr<Items::Item> item);
+        void itemHighlighted(const std::shared_ptr<const Items::Item>& item);
 
     protected:
         Settings _settings;
@@ -198,7 +202,7 @@ namespace QSchematic
         [[nodiscard]]
         virtual
         QVector2D
-        itemsMoveSnap(const std::shared_ptr<Item>& item, const QVector2D& moveBy) const;
+        itemsMoveSnap(const std::shared_ptr<Items::Item>& item, const QVector2D& moveBy) const;
 
         /**
          * Renders the background.
@@ -215,8 +219,8 @@ namespace QSchematic
 
     private:
         void renderCachedBackground();
-        void setupNewItem(Item& item);
-        void updateNodeConnections(const Node* node) const;
+        void setupNewItem(Items::Item& item);
+        void updateNodeConnections(const Items::Node* node) const;
         void generateConnections();
         void finishCurrentWire();
 
@@ -229,11 +233,11 @@ namespace QSchematic
          * @return The new wire.
          */
         [[nodiscard]]
-        std::shared_ptr<Wire>
+        std::shared_ptr<Items::Wire>
         make_wire() const;
 
         // TODO add to "central" sh-ptr management
-        QList<std::shared_ptr<Item>> _keep_alive_an_event_loop;
+        QList<std::shared_ptr<Items::Item>> _keep_alive_an_event_loop;
 
         /**
          * Used to store a list of "Top-Level" items. These are the only items
@@ -241,7 +245,7 @@ namespace QSchematic
          * this list. Items that are children of another Item should
          * not be in the list.
          */
-        QList<std::shared_ptr<Item>> _items;
+        QList<std::shared_ptr<Items::Item>> _items;
 
         // Note: haven't investigated destructor specification, but it seems
         // this can be skipped, although it would be: explicit, more efficient,
@@ -252,18 +256,18 @@ namespace QSchematic
         // ItemUtils::ItemsCustodian<WireNet> m_nets;
 
         QPixmap _backgroundPixmap;
-        std::function<std::shared_ptr<Wire>()> _wireFactory;
+        std::function<std::shared_ptr<Items::Wire>()> _wireFactory;
         int _mode = NormalMode;
-        std::shared_ptr<Wire> _newWire;
+        std::shared_ptr<Items::Wire> _newWire;
         bool _newWireSegment = false;
         bool _invertWirePosture = true;
         bool _movingNodes = false;
         QPointF _lastMousePos;
-        QMap<std::shared_ptr<Item>, QPointF> _initialItemPositions;
+        QMap<std::shared_ptr<Items::Item>, QPointF> _initialItemPositions;
         QPointF _initialCursorPosition;
         QUndoStack* _undoStack;
         std::shared_ptr<wire_system::manager> m_wire_manager;
-        Item* _highlightedItem = nullptr;
+        Items::Item* _highlightedItem = nullptr;
         QTimer* _popupTimer;
         std::shared_ptr<QGraphicsProxyWidget> _popup;
     };

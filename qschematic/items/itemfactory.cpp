@@ -6,21 +6,21 @@
 #include "connector.h"
 #include "label.h"
 
-using namespace QSchematic;
+using namespace QSchematic::Items;
 
-ItemFactory& ItemFactory::instance()
+Factory& Factory::instance()
 {
-    static ItemFactory instance;
+    static Factory instance;
 
     return instance;
 }
 
-void ItemFactory::setCustomItemsFactory(const std::function<std::shared_ptr<Item>(const gpds::container&)>& factory)
+void Factory::setCustomItemsFactory(const std::function<std::shared_ptr<Item>(const gpds::container&)>& factory)
 {
     _customItemFactory = factory;
 }
 
-std::shared_ptr<Item> ItemFactory::from_container(const gpds::container& container) const
+std::shared_ptr<Item> Factory::from_container(const gpds::container& container) const
 {
     // First, try custom types
     if (_customItemFactory) {
@@ -30,7 +30,7 @@ std::shared_ptr<Item> ItemFactory::from_container(const gpds::container& contain
     }
 
     // Extract the type
-    auto type = ItemFactory::extractType(container);
+    auto type = Factory::extractType(container);
 
     // Fall back to internal types
     switch (type) {
@@ -59,7 +59,7 @@ std::shared_ptr<Item> ItemFactory::from_container(const gpds::container& contain
     return {};
 }
 
-Item::ItemType ItemFactory::extractType(const gpds::container& container)
+Item::ItemType Factory::extractType(const gpds::container& container)
 {
     return static_cast<Item::ItemType>( container.get_attribute<int>( "type_id" ).value_or( -1 ) );
 }

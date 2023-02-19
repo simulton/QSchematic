@@ -2,10 +2,11 @@
 
 #include "wire.h"
 
-namespace QSchematic
+namespace QSchematic::Items
 {
+
     class SplineWire :
-        public QSchematic::Wire
+        public QSchematic::Items::Wire
     {
         Q_OBJECT
         Q_DISABLE_COPY_MOVE(SplineWire)
@@ -18,4 +19,5 @@ namespace QSchematic
         QPainterPath shape() const override;
         QRectF boundingRect() const override;
     };
+
 }
