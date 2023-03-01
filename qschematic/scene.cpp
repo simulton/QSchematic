@@ -650,28 +650,48 @@ Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
                         auto subgraphs = items<QSchematic::Items::SubGraph>();
                         for (auto& sg : subgraphs) {
 
+                            // A subgraph is a node itself. Don't check against ourselves.
                             if (sg.get() == node)
                                 continue;
 
-                            const QRectF sg_rect = { sg->x(), sg->y(), sg->width(), sg->height() };
-                            const QRectF n_rect  = { node->x(), node->y(), node->width(), node->height() };
+                            // Calculate the node rect and subgraph rect in scene coordinates
+                            // ToDo: No need to calculate n_rect on each invocation of this inner loop
+                            const QRectF sg_rect{ sg->scenePosX(), sg->scenePosY(), sg->width(), sg->height() };
+                            const QRectF n_rect{ node->scenePosX(), node->scenePosY(), node->width(), node->height() };
 
-                            if (sg_rect.contains(n_rect)) {
-                                if (node->parentItem() != sg.get()) {
+                            auto printRects = [&sg_rect, &n_rect]{
+                                qDebug() << "sg_rect = " << sg_rect;
+                                qDebug() << "n_rect  = " << n_rect;
+                                qDebug() << "";
+                            };
+
+                            // If the node is already in the subgraph, check whether we should remove it
+                            if (sg->containsChild(item)) {
+                                if (!sg_rect.contains(n_rect)) {
+                                    qDebug() << "removing";
+
+                                    printRects();
+
+                                    //_undoStack->push(new Commands::SubgraphItemRemove(item, sg));
+                                    sg->removeChild(item);
+                                    break;
+
+                                }
+                            }
+
+                            // If the node is not currently in the subgraph, check whether we should add it
+                            else {
+                                if (sg_rect.contains(n_rect)) {
+                                    qDebug() << "adding";
+
+                                    printRects();
+
                                     //_undoStack->push(new Commands::SubgraphItemAdd(item, sg));
                                     sg->addChild(item);
                                     break;
                                 }
                             }
-                            else {
-                                qDebug() << "outside";
-                                if (node->parentItem() == sg.get()) {
-                                qDebug() << "removing";
-                                    //_undoStack->push(new Commands::SubgraphItemRemove(item, sg));
-                                    sg->removeChild(item);
-                                    break;
-                                }
-                            }
+
                             qDebug() << "";
                         }
                     }

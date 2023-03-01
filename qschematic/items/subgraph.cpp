@@ -40,3 +40,26 @@ SubGraph::removeChild(std::shared_ptr<Item> item)
         std::end(m_items)
     );
 }
+
+std::vector<std::shared_ptr<Item>>
+SubGraph::children() const
+{
+    return m_items;
+}
+
+bool
+SubGraph::containsChild(const std::shared_ptr<Item>& item) const
+{
+    if (!item)
+        return false;
+
+    const auto it = std::find_if(
+        std::cbegin(m_items),
+        std::cend(m_items),
+        [&item](const auto& i) {
+            return i == item;
+        }
+    );
+
+    return it != std::cend(m_items);
+}

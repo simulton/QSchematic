@@ -27,6 +27,14 @@ namespace QSchematic::Items
         void
         removeChild(std::shared_ptr<Item> item);
 
+        [[nodiscard]]
+        std::vector<std::shared_ptr<Item>>
+        children() const;
+
+        [[nodiscard]]
+        bool
+        containsChild(const std::shared_ptr<Item>& item) const;
+
     private:
         std::vector<std::shared_ptr<Item>> m_items;
     };
