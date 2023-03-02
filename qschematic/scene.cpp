@@ -18,6 +18,7 @@
 #include "items/node.h"
 #include "items/label.h"
 #include "items/widget.h"
+#include "utils.h"
 #include "utils/itemscontainerutils.h"
 
 using namespace QSchematic;
@@ -618,6 +619,7 @@ Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
                     }
                 );
 #if 0
+                // Subgraph stuff
                 itemsToMove.erase(
                     std::remove_if(
                         std::begin(itemsToMove),
@@ -656,8 +658,8 @@ Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 
                             // Calculate the node rect and subgraph rect in scene coordinates
                             // ToDo: No need to calculate n_rect on each invocation of this inner loop
-                            const QRectF sg_rect{ sg->scenePosX(), sg->scenePosY(), sg->width(), sg->height() };
-                            const QRectF n_rect{ node->scenePosX(), node->scenePosY(), node->width(), node->height() };
+                            const QRectF& sg_rect = sg->sceneRect();
+                            const QRectF& n_rect = node->sceneRect();
 
                             auto printRects = [&sg_rect, &n_rect]{
                                 qDebug() << "sg_rect = " << sg_rect;
@@ -1190,6 +1192,73 @@ Scene::finishCurrentWire()
     _newWire->setFlag(QGraphicsItem::ItemIsSelectable, true);
     _newWire->simplify();
 //    _newWire->updatePosition();
+
+    // If any part of a wire is inside of a SubGraph, we have some homework to do
+    // ToDo: This currently doesn't work if connecting from one subgraph to another subgraph
+    // ToDo: We need to split the wire at the border of the subgraph and insert a connector. This is needed
+    //       to better handle the re-parenting to the subgraph and to generate a reasonable netlist.
+    auto wps = _newWire->pointsAbsolute();
+    auto subgraphs = items<QSchematic::Items::SubGraph>();
+    for (const auto& sg : subgraphs) {
+        // Get the subgraph's scene rect
+        const QRectF& sg_rect = sg->sceneRect();
+
+        // Split the set of wire points into a group that is inside the subgraph and a group that is outside of it.
+        // `partition_it` will point to the first element in the second group.
+        //
+        // Note: We cannot use std::partition() nor std::stable_partition here as we must preserve the order of the
+        //       wire points.
+        auto partition_it = std::begin(wps);
+        {
+            // ToDo: Can be checked outside the loop.
+            if (wps.size() < 2)
+                continue;
+
+            for (std::size_t i = 0; i < wps.size()-1; i++) {
+                const auto& p1 = wps.at(i);
+                const auto& p2 = wps.at(i+1);
+
+                if ((sg_rect.contains(p1) && !sg_rect.contains(p2)) || !sg_rect.contains(p1) && sg_rect.contains(p2)) {
+                    partition_it += i+1;
+                    break;
+                }
+            }
+        }
+
+        // At least one wire point is within the subgraph.
+        // Our task is now to find the wire segment which crosses the subgraph boundary, splitting the wire into two (one
+        // wire entirely inside, the other one entirely outside and inserting a connector.
+        if (partition_it != std::begin(wps) && partition_it != std::cend(wps)) {
+            // Alias the two points that form the line intersecting the subgraph
+            const auto& p1 = *(partition_it - 1);
+            const auto& p2 = *(partition_it);
+
+            addEllipse(p1.x() - 10, p1.y() - 10, 20, 20, QPen(Qt::blue), QBrush(Qt::blue));
+            addEllipse(p2.x() - 10, p2.y() - 10, 20, 20, QPen(Qt::blue), QBrush(Qt::blue));
+
+            const auto& point = Utils::intersectionPoint(sg_rect, QLineF{p1, p2});
+            if (point) {
+                addEllipse(point->x() - 10, point->y() - 10, 20, 20, QPen(Qt::red), QBrush(Qt::red));
+                break;
+            }
+
+            // ToDo: We found our point, now do the actual splitting and inserting of the connector!
+        }
+
+            /*
+            // At this point we know that at least one
+            // Re-parent wire
+            //_undoStack->push(new Commands::SubgraphItemAdd(item, sg));
+            sg->addChild(_newWire);
+
+            // Lets assume that we're only inside one subgraph. This will come back bite us in the ass once we actually
+            // want to support nested subgraphs. Watch out!
+            // ToDo: See comment above
+            break;
+            */
+    }
+
+    // We're done with this wire
     _newWire.reset();
 }
 
