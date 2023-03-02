@@ -8,19 +8,22 @@
 
 using namespace QSchematic::Items;
 
-Factory& Factory::instance()
+Factory&
+Factory::instance()
 {
     static Factory instance;
 
     return instance;
 }
 
-void Factory::setCustomItemsFactory(const std::function<std::shared_ptr<Item>(const gpds::container&)>& factory)
+void
+Factory::setCustomItemsFactory(const std::function<std::shared_ptr<Item>(const gpds::container&)>& factory)
 {
     _customItemFactory = factory;
 }
 
-std::shared_ptr<Item> Factory::from_container(const gpds::container& container) const
+std::shared_ptr<Item>
+        Factory::from_container(const gpds::container& container) const
 {
     // First, try custom types
     if (_customItemFactory) {
@@ -59,7 +62,8 @@ std::shared_ptr<Item> Factory::from_container(const gpds::container& container) 
     return {};
 }
 
-Item::ItemType Factory::extractType(const gpds::container& container)
+Item::ItemType
+Factory::extractType(const gpds::container& container)
 {
     return static_cast<Item::ItemType>( container.get_attribute<int>( "type_id" ).value_or( -1 ) );
 }
