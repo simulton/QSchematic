@@ -47,6 +47,7 @@ namespace QSchematic::Items
         QRectF sizeRect() const;
         qreal width() const;
         qreal height() const;
+        QRectF sceneRect() const;
         void setAllowMouseResize(bool enabled);
         void setAllowMouseRotate(bool enabled);
         bool allowMouseResize() const;

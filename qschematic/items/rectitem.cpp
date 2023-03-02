@@ -151,6 +151,11 @@ qreal RectItem::height() const
     return _size.height();
 }
 
+QRectF RectItem::sceneRect() const
+{
+    return QRectF{ scenePos().x(), scenePos().y(), width(), height() };
+}
+
 void RectItem::setAllowMouseResize(bool enabled)
 {
     _allowMouseResize = enabled;
