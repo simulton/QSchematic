@@ -151,3 +151,19 @@ Utils::pointIsOnLine(const QLineF& line, const QPointF& point)
     return qFuzzyCompare(dotProduct, absProduct);
 }
 
+std::vector<QLineF>
+Utils::linesFromPoints(const QVector<QPointF>& points, const bool closeLoop)
+{
+    if (points.size() < 2)
+        return { };
+
+    const std::size_t lines_cnt = (closeLoop ? points.size() : points.size()-1);
+    std::vector<QLineF> lines{lines_cnt};
+    for (std::size_t i = 0; i < points.size()-1; i++) {
+        lines[i] = QLineF{points.at(i), points.at(i+1)};
+    }
+    if (closeLoop)
+        lines[lines_cnt-1] = QLineF{points.at(points.size()-1), points.at(0)};
+
+    return lines;
+}
