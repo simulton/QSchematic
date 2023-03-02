@@ -15,11 +15,22 @@ namespace QSchematic::Items
     class Factory
     {
     public:
-        static Factory& instance();
+        [[nodiscard]]
+        static
+        Factory&
+        instance();
 
-        void setCustomItemsFactory(const std::function<std::shared_ptr<Item>(const gpds::container&)>& factory);
-        std::shared_ptr<Item> from_container(const gpds::container& container) const;
-        static Item::ItemType extractType(const gpds::container& container);
+        void
+        setCustomItemsFactory(const std::function<std::shared_ptr<Item>(const gpds::container&)>& factory);
+
+        [[nodiscard]]
+        std::shared_ptr<Item>
+        from_container(const gpds::container& container) const;
+
+        [[nodiscard]]
+        static
+        Item::ItemType
+        extractType(const gpds::container& container);
 
     private:
         Factory() = default;
