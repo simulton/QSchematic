@@ -167,3 +167,24 @@ Utils::linesFromPoints(const QVector<QPointF>& points, const bool closeLoop)
 
     return lines;
 }
+
+std::optional<QPointF>
+Utils::intersectionPoint(const QRectF& rect, const QLineF& line)
+{
+    // Get the corner points of the rectangle
+    // The order here matters - we need to generate a continuous (sorted) loop!
+    QVector<QPointF> rp{4};
+    rp[0] = rect.topLeft();
+    rp[1] = rect.topRight();
+    rp[2] = rect.bottomRight();
+    rp[3] = rect.bottomLeft();
+
+    for (const QLineF& rect_line : linesFromPoints(rp, true)) {
+        QPointF point;
+        const auto type = line.intersects(rect_line, &point);
+        if (type == QLineF::IntersectionType::BoundedIntersection)
+            return point;
+    }
+
+    return { };
+}

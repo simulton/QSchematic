@@ -4,6 +4,8 @@
 
 #include <QVector>
 
+#include <optional>
+
 class QPoint;
 class QPointF;
 class QLineF;
@@ -42,6 +44,17 @@ namespace QSchematic
         static
         std::vector<QLineF>
         linesFromPoints(const QVector<QPointF>& points, bool closeLoop);
+
+        /**
+         * Returns the point of intersection between a line and a rectangle.
+         *
+         * @note This assumes that the line only has one intersection point with the rectangle.
+         */
+        [[nodiscard]]
+        static
+        std::optional<QPointF>
+        intersectionPoint(const QRectF& rect, const QLineF& line);
+
     private:
         Utils() = default;
         Utils(const Utils& other) = default;
