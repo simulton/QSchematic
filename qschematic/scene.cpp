@@ -1208,7 +1208,7 @@ Scene::finishCurrentWire()
         //
         // Note: We cannot use std::partition() nor std::stable_partition here as we must preserve the order of the
         //       wire points.
-        auto partition_it = std::begin(wps);
+        auto partition_it = std::cbegin(wps);
         {
             // ToDo: Can be checked outside the loop.
             if (wps.size() < 2)
@@ -1228,34 +1228,63 @@ Scene::finishCurrentWire()
         // At least one wire point is within the subgraph.
         // Our task is now to find the wire segment which crosses the subgraph boundary, splitting the wire into two (one
         // wire entirely inside, the other one entirely outside and inserting a connector.
-        if (partition_it != std::begin(wps) && partition_it != std::cend(wps)) {
+        if (partition_it != std::cbegin(wps) && partition_it != std::cend(wps)) {
             // Alias the two points that form the line intersecting the subgraph
             const auto& p1 = *(partition_it - 1);
             const auto& p2 = *(partition_it);
 
+            // ToDo: Enable via debug setting
             addEllipse(p1.x() - 10, p1.y() - 10, 20, 20, QPen(Qt::blue), QBrush(Qt::blue));
             addEllipse(p2.x() - 10, p2.y() - 10, 20, 20, QPen(Qt::blue), QBrush(Qt::blue));
 
-            const auto& point = Utils::intersectionPoint(sg_rect, QLineF{p1, p2});
-            if (point) {
-                addEllipse(point->x() - 10, point->y() - 10, 20, 20, QPen(Qt::red), QBrush(Qt::red));
+            const std::optional<QPointF>& point = Utils::intersectionPoint(sg_rect, QLineF{p1, p2});
+            if (!point)
                 break;
-            }
+
+            // ToDo: Enable via debug setting
+            addEllipse(point->x() - 10, point->y() - 10, 20, 20, QPen(Qt::red), QBrush(Qt::red));
 
             // ToDo: We found our point, now do the actual splitting and inserting of the connector!
+
+            // Create connector
+            auto conn = std::make_shared<Items::Connector>();
+            conn->setPos(sg->mapFromScene(*point));
+            sg->addConnector(conn);
+
+            // Split wire
+            {
+                // Wire 1
+
+                // Wire 2
+
+                // Get rid of previous wire
+            }
+
+            qDebug("partially");
+
+            // Only support a single subgraph for now. This will come bite us in the ass later. Beware.
+            // ToDo: Allow connecting wires between nodes in two different subgraphs.
+            break;
         }
 
-            /*
-            // At this point we know that at least one
+        // Here, the wire is entirely inside of the subgraph
+        else if (std::all_of(
+            std::cbegin(wps),
+            std::cend(wps),
+            [&sg_rect](const QPointF& p) {
+                return sg_rect.contains(p);
+            }
+        )) {
+            qDebug() << "entirely";
+
             // Re-parent wire
             //_undoStack->push(new Commands::SubgraphItemAdd(item, sg));
             sg->addChild(_newWire);
 
-            // Lets assume that we're only inside one subgraph. This will come back bite us in the ass once we actually
-            // want to support nested subgraphs. Watch out!
-            // ToDo: See comment above
+            // Only support a single subgraph for now. This will come bite us in the ass later. Beware.
+            // ToDo: Allow connecting wires between nodes in two different subgraphs.
             break;
-            */
+        }
     }
 
     // We're done with this wire
