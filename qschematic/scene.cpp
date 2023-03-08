@@ -239,17 +239,17 @@ Scene::toggleWirePosture()
 bool
 Scene::isDirty() const
 {
-    Q_ASSERT(_undoStack);
+    if (_undoStack)
+        return !_undoStack->isClean();
 
-    return !_undoStack->isClean();
+    return false;
 }
 
 void
 Scene::clearIsDirty()
 {
-    Q_ASSERT(_undoStack);
-
-    _undoStack->setClean();
+    if (_undoStack)
+        _undoStack->setClean();
 }
 
 void
