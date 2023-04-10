@@ -15,6 +15,8 @@ Widget::Widget(int type, QGraphicsItem* parent) :
     setHighlightEnabled(false);
     setAllowMouseResize(true);
     setAllowMouseRotate(false);
+
+    setZValue(10);
 }
 
 void
