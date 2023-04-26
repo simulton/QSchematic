@@ -130,10 +130,8 @@ Scene::from_container(const gpds::container& container)
                 continue;
 
             auto node = Items::Factory::instance().from_container(*nodeContainer);
-            if (!node) {
-                qWarning("Scene::from_container(): Couldn't restore node. Skipping.");
+            if (!node)
                 continue;
-            }
             node->from_container(*nodeContainer);
             addItem(node);
         }

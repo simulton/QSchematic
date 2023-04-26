@@ -23,13 +23,12 @@ Factory::setCustomItemsFactory(const std::function<std::shared_ptr<Item>(const g
 }
 
 std::shared_ptr<Item>
-        Factory::from_container(const gpds::container& container) const
+Factory::from_container(const gpds::container& container) const
 {
     // First, try custom types
     if (_customItemFactory) {
-        if (auto item = _customItemFactory(container)) {
+        if (auto item = _customItemFactory(container); item)
             return item;
-        }
     }
 
     // Extract the type
@@ -59,7 +58,7 @@ std::shared_ptr<Item>
         break;
     }
 
-    return {};
+    return { };
 }
 
 Item::ItemType
