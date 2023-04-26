@@ -109,10 +109,7 @@ void
 Scene::from_container(const gpds::container& container)
 {
     // Scene
-    {
-        const gpds::container* sceneContainer = container.get_value<gpds::container*>("scene").value_or(nullptr);
-        Q_ASSERT( sceneContainer );
-
+    if (const gpds::container* sceneContainer = container.get_value<gpds::container*>("scene").value_or(nullptr); sceneContainer) {
         // Rect
         const gpds::container* rectContainer = sceneContainer->get_value<gpds::container*>("rect").value_or(nullptr);
         if ( rectContainer ) {
@@ -127,10 +124,10 @@ Scene::from_container(const gpds::container& container)
     }
 
     // Nodes
-    const gpds::container* nodesContainer = container.get_value<gpds::container*>("nodes").value_or(nullptr);
-    if ( nodesContainer ) {
+    if (const gpds::container* nodesContainer = container.get_value<gpds::container*>("nodes").value_or(nullptr); nodesContainer) {
         for (const auto& nodeContainer : nodesContainer->get_values<gpds::container*>("node")) {
-            Q_ASSERT(nodeContainer);
+            if (!nodeContainer)
+                continue;
 
             auto node = Items::Factory::instance().from_container(*nodeContainer);
             if (!node) {
@@ -143,12 +140,10 @@ Scene::from_container(const gpds::container& container)
     }
 
     // Nets
-    const gpds::container* netsContainer = container.get_value<gpds::container*>("nets").value_or(nullptr);
-    if ( netsContainer ) {
-        Q_ASSERT( netsContainer );
-
+    if (const gpds::container* netsContainer = container.get_value<gpds::container*>("nets").value_or(nullptr); netsContainer) {
         for (const gpds::container* netContainer : netsContainer->get_values<gpds::container*>("net")) {
-            Q_ASSERT( netContainer );
+            if (!netContainer)
+                continue;
 
             auto net = std::make_shared<Items::WireNet>();
             net->setScene(this);
