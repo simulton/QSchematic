@@ -33,6 +33,8 @@ namespace QSchematic
         Q_DISABLE_COPY_MOVE(Scene)
 
     public:
+        static constexpr const char* gpds_name = "qschematic";
+
         enum Mode {
             NormalMode,
             WireMode,

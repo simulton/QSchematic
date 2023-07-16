@@ -27,6 +27,7 @@
 #include <QGraphicsSceneContextMenuEvent>
 #include <QInputDialog>
 #include <QFileDialog>
+#include <QtDebug>
 #ifndef QT_NO_PRINTER
     #include <QPrinter>
     #include <QPrintDialog>
@@ -175,27 +176,16 @@ MainWindow::MainWindow(QWidget *parent)
 bool MainWindow::save()
 {
     // Prompt for a path
-    QString path = QFileDialog::getSaveFileName(this, "Save to file", QDir::homePath(), FILE_FILTERS);
-    if (path.isEmpty()) {
+    const std::filesystem::path path = QFileDialog::getSaveFileName(this, "Save to file", QDir::homePath(), FILE_FILTERS).toStdString();
+    if (path.empty())
+        return false;
+
+    // Serialize with GPDS
+    const auto& [success, message] = gpds::to_file<gpds::archiver_xml>(path, *_scene);
+    if (!success) {
+        qWarning() << "could not save to file: " << QString::fromStdString(message);
         return false;
     }
-
-    // Open the file
-    QFile file(path);
-    file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate);
-    if (!file.isOpen()) {
-        return false;
-    }
-
-    // Archiver
-    gpds::archiver_xml ar;
-    std::stringstream stream;
-    ar.save(stream, *_scene, "qschematic");
-
-    // Write file
-    file.write( QByteArray::fromStdString( stream.str() ) );
-    file.flush();
-    file.close();
 
     return true;
 }
@@ -204,15 +194,17 @@ bool MainWindow::load()
 {
     // Prompt for a path
     QString path = QFileDialog::getOpenFileName(this, "Load from file", QDir::homePath(), FILE_FILTERS);
-    if (path.isEmpty()) {
+    if (path.isEmpty())
         return false;
-    }
 
     return load(path);
 }
 
 bool MainWindow::load(const QString& filepath)
 {
+    // Note: We don't use gpds::from_file() in here because we're potentially loading demo files from Qt's resource
+    //       system. In such a case, those files can't be accessed via std::filesystem::path.
+
     // Get rid of everything existing
     _scene->clear();
 
@@ -227,7 +219,7 @@ bool MainWindow::load(const QString& filepath)
     gpds::archiver_xml ar;
     std::stringstream stream;
     stream << file.readAll().data();
-    ar.load(stream, *_scene, "qschematic");
+    ar.load(stream, *_scene, QSchematic::Scene::gpds_name);
 
     // Clean up
     file.close();
