@@ -150,6 +150,21 @@ Direction Connector::textDirection() const
     return _textDirection;
 }
 
+bool Connector::hasConnection() const
+{
+    // Get scene
+    const auto s = scene();
+    if (!s)
+        return false;
+
+    // Get scene manager
+    auto wm = s->wire_manager();
+    if (!wm)
+        return false;
+
+    return (wm->attached_wire(this) != nullptr);
+}
+
 void Connector::update()
 {
     calculateSymbolRect();

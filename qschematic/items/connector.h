@@ -41,6 +41,14 @@ namespace QSchematic::Items
         Direction textDirection() const;
         void update() override;
 
+        /**
+         * Checks whether a wire is connected to this connector.
+         *
+         * @return Whether a wire is connected to this connector.
+         */
+        bool
+        hasConnection() const;
+
         QPointF connectionPoint() const;
         std::shared_ptr<Label> label() const;
         void alignLabel();
