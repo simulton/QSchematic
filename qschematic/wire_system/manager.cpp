@@ -313,7 +313,7 @@ void manager::attach_wire_to_connector(wire* wire, int index, const connectable*
         return;
     }
 
-    m_connections.insert(connector, {wire, index });
+    m_connections.insert(connector, {wire, index});
 }
 
 /**
