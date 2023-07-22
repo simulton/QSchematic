@@ -15,7 +15,7 @@ Feature overview:
     - In-memory template generator
     - JSON writer
     - Custom writers
-  - Serialization to/from XML
+  - Serialization to/from XML or YAML
   - Completely customizable by inheriting from the provided classes
   - Items
     - All items support "highlighted" and an optional pop-up widget on hover
