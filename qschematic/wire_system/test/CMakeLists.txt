@@ -30,10 +30,12 @@ set(TESTS
 	tests/line.cpp
 )
 
-add_executable(wire_system-tests)
+set(TARGET qschematic-wiresystem-tests)
+
+add_executable(${TARGET})
 
 target_sources(
-	wire_system-tests
+	${TARGET}
 	PRIVATE
 		3rdparty/doctest.h
 		test_main.cpp
@@ -42,13 +44,14 @@ target_sources(
 		${TESTS}
 )
 
-target_compile_features(wire_system-tests
+target_compile_features(
+	${TARGET}
 	PUBLIC
 		cxx_std_17
 )
 
 target_link_libraries(
-	wire_system-tests
+	${TARGET}
 	PUBLIC
 		qschematic-static
 )
