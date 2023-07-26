@@ -9,6 +9,7 @@ qschematic/*.a
 qschematic/*.dll
 
 # IDE stuff
+.vs
 .vscode
 .idea
 .vscode
