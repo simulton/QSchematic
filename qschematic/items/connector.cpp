@@ -76,7 +76,7 @@ void Connector::from_container(const gpds::container& container)
     Item::from_container(*container.get_value<gpds::container*>("item").value());
     setSnapPolicy(static_cast<SnapPolicy>(container.get_value<int>("snap_policy").value_or(Anywhere)));
     setForceTextDirection(container.get_value<bool>("force_text_direction").value_or(false));
-    _textDirection = static_cast<Direction>(container.get_value<int>("text_direction").value_or(LeftToRight));
+    _textDirection = static_cast<Direction>(container.get_value<int>("text_direction").value_or(static_cast<int>(Direction::LeftToRight)));
     _label->from_container(*container.get_value<gpds::container*>("label").value());
 }
 
@@ -294,25 +294,25 @@ void Connector::alignLabel()
     const QRectF& textRect = _label->textRect();
 
     switch (_textDirection) {
-        case LeftToRight:
+        case Direction::LeftToRight:
             labelNewPos.rx() = TEXT_PADDING;
             labelNewPos.ry() = textRect.height()/4;
             t.rotate(0);
             break;
 
-        case RightToLeft:
+        case Direction::RightToLeft:
             labelNewPos.rx() = -textRect.width() - TEXT_PADDING;
             labelNewPos.ry() = textRect.height()/4;
             t.rotate(0);
             break;
 
-        case TopToBottom:
+        case Direction::TopToBottom:
             labelNewPos.rx() = textRect.height()/4;
             labelNewPos.ry() = textRect.width() + TEXT_PADDING;
             t.rotate(-90);
             break;
 
-        case BottomToTop:
+        case Direction::BottomToTop:
             labelNewPos.rx() = textRect.height()/4;
             labelNewPos.ry() = - TEXT_PADDING;
             t.rotate(-90);
@@ -337,13 +337,13 @@ void Connector::calculateTextDirection()
 
     // Nothing to do if there's no text
     if (text().isEmpty()) {
-        _textDirection = LeftToRight;
+        _textDirection = Direction::LeftToRight;
         return;
     }
 
     // Figure out the text direction
     {
-        _textDirection = LeftToRight;
+        _textDirection = Direction::LeftToRight;
         const Node* parentNode = qgraphicsitem_cast<const Node*>(parentItem());
         if (parentNode) {
 
@@ -362,20 +362,20 @@ void Connector::calculateTextDirection()
             // Set the correct text direction
             switch (edgeIndex) {
             case 0:
-                _textDirection = TopToBottom;
+                _textDirection = Direction::TopToBottom;
                 break;
 
             case 1:
-                _textDirection = RightToLeft;
+                _textDirection = Direction::RightToLeft;
                 break;
 
             case 2:
-                _textDirection = BottomToTop;
+                _textDirection = Direction::BottomToTop;
                 break;
 
             case 3:
             default:
-                _textDirection = LeftToRight;
+                _textDirection = Direction::LeftToRight;
                 break;
             }
         }

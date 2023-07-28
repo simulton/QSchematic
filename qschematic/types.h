@@ -3,7 +3,8 @@
 namespace QSchematic
 {
 
-    enum Direction {
+    enum class Direction
+    {
         LeftToRight = 0,
         RightToLeft,
         TopToBottom,
