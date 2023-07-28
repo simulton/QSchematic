@@ -4,84 +4,8 @@ include(external.cmake)
 # CMake settings
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
-# List of source files
-set(SOURCES_PRIVATE
-    commands/base.cpp
-    commands/item_add.cpp
-    commands/item_move.cpp
-    commands/item_remove.cpp
-    commands/item_visibility.cpp
-    commands/label_rename.cpp
-    commands/rectitem_resize.cpp
-    commands/rectitem_rotate.cpp
-    commands/wirenet_rename.cpp
-    commands/wirepoint_move.cpp
-    items/connector.cpp
-    items/item.cpp
-    items/itemfactory.cpp
-    items/itemmimedata.cpp
-    items/label.cpp
-    items/node.cpp
-    items/rectitem.cpp
-    items/splinewire.cpp
-    items/widget.cpp
-    items/wire.cpp
-    items/wirenet.cpp
-    items/wireroundedcorners.cpp
-    wire_system/line.cpp
-    wire_system/manager.cpp
-    wire_system/wire.cpp
-    wire_system/point.cpp
-    wire_system/net.cpp
-    scene.cpp
-    settings.cpp
-    utils.cpp
-    view.cpp
-)
-
-# List of header files
-set(HEADERS_PUBLIC
-    commands/base.h
-    commands/item_add.h
-    commands/item_move.h
-    commands/item_remove.h
-    commands/item_visibility.h
-    commands/label_rename.h
-    commands/rectitem_resize.h
-    commands/rectitem_rotate.h
-    commands/commands.h
-    commands/wirenet_rename.h
-    commands/wirepoint_move.h
-    items/itemfunctions.h
-    items/connector.h
-    items/item.h
-    items/itemfactory.h
-    items/itemmimedata.h
-    items/label.h
-    items/node.h
-    items/rectitem.h
-    items/splinewire.h
-    items/widget.h
-    items/wire.h
-    items/wirenet.h
-    items/wireroundedcorners.h
-    utils/itemscontainerutils.h
-    utils/itemscustodian.h
-    wire_system/connectable.h
-    wire_system/line.h
-    wire_system/manager.h
-    wire_system/wire.h
-    wire_system/point.h
-    wire_system/net.h
-    netlist.h
-    netlist_writer_json.h
-    netlistgenerator.h
-    scene.h
-    settings.h
-    types.h
-    utils.h
-    view.h
-)
+# Define directory base path for FILE_SET
+set(QSCHEMATIC_BASE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Add the wire system
 add_subdirectory(wire_system)
@@ -101,8 +25,84 @@ function(setup_target_common target)
 
     target_sources(
         ${target}
+        PUBLIC
+        FILE_SET
+            HEADERS
+            BASE_DIRS ${QSCHEMATIC_BASE_DIR}
+            FILES
+                commands/base.h
+                commands/item_add.h
+                commands/item_move.h
+                commands/item_remove.h
+                commands/item_visibility.h
+                commands/label_rename.h
+                commands/rectitem_resize.h
+                commands/rectitem_rotate.h
+                commands/commands.h
+                commands/wirenet_rename.h
+                commands/wirepoint_move.h
+                items/itemfunctions.h
+                items/connector.h
+                items/item.h
+                items/itemfactory.h
+                items/itemmimedata.h
+                items/label.h
+                items/node.h
+                items/rectitem.h
+                items/splinewire.h
+                items/widget.h
+                items/wire.h
+                items/wirenet.h
+                items/wireroundedcorners.h
+                utils/itemscontainerutils.h
+                utils/itemscustodian.h
+                wire_system/connectable.h
+                wire_system/line.h
+                wire_system/manager.h
+                wire_system/wire.h
+                wire_system/point.h
+                wire_system/net.h
+                netlist.h
+                netlist_writer_json.h
+                netlistgenerator.h
+                scene.h
+                settings.h
+                types.h
+                utils.h
+                view.h
+
         PRIVATE
-            ${SOURCES_PRIVATE}
+            commands/base.cpp
+            commands/item_add.cpp
+            commands/item_move.cpp
+            commands/item_remove.cpp
+            commands/item_visibility.cpp
+            commands/label_rename.cpp
+            commands/rectitem_resize.cpp
+            commands/rectitem_rotate.cpp
+            commands/wirenet_rename.cpp
+            commands/wirepoint_move.cpp
+            items/connector.cpp
+            items/item.cpp
+            items/itemfactory.cpp
+            items/itemmimedata.cpp
+            items/label.cpp
+            items/node.cpp
+            items/rectitem.cpp
+            items/splinewire.cpp
+            items/widget.cpp
+            items/wire.cpp
+            items/wirenet.cpp
+            items/wireroundedcorners.cpp
+            wire_system/line.cpp
+            wire_system/manager.cpp
+            wire_system/wire.cpp
+            wire_system/point.cpp
+            wire_system/net.cpp
+            scene.cpp
+            settings.cpp
+            utils.cpp
+            view.cpp
     )
 
     target_include_directories(
@@ -170,18 +170,15 @@ include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/cmake/qschematic)
 
-# Install headers
-foreach( file ${HEADERS_PUBLIC} )
-    get_filename_component( dir ${file} DIRECTORY )
-    install( FILES ${file} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/qschematic/${dir} )
-endforeach()
-
 # Targets
 install(
     TARGETS
         ${TARGET_STATIC}
         ${TARGET_SHARED}
     EXPORT qschematic-targets
+    FILE_SET
+        HEADERS
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/qschematic
     LIBRARY
         DESTINATION ${CMAKE_INSTALL_LIBDIR}
         COMPONENT lib
@@ -191,8 +188,6 @@ install(
     RUNTIME
         DESTINATION ${CMAKE_INSTALL_BINDIR}
         COMPONENT bin
-    INCLUDES
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/qschematic
 )
 
 # Package version
