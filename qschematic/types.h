@@ -10,15 +10,16 @@ namespace QSchematic
         BottomToTop
     };
 
-    enum RectanglePoint {
-        RectanglePointTopLeft = 0,
-        RectanglePointTop,
-        RectanglePointTopRight,
-        RectanglePointRight,
-        RectanglePointBottomRight,
-        RectanglePointBottom,
-        RectanglePointBottomLeft,
-        RectanglePointLeft
+    enum class RectanglePoint
+    {
+        TopLeft = 0,
+        Top,
+        TopRight,
+        Right,
+        BottomRight,
+        Bottom,
+        BottomLeft,
+        Left,
     };
 
 }
