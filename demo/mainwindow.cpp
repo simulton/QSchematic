@@ -12,12 +12,14 @@
 #include <qschematic/commands/item_add.h>
 #include <qschematic/items/node.h>
 #include <qschematic/items/itemfactory.h>
+#include <qschematic/items/widget.h>
 #include <qschematic/netlist.h>
 #include <qschematic/netlistgenerator.h>
 
 #include <QToolBar>
 #include <QAction>
 #include <QActionGroup>
+#include <QDial>    // For QSchematic::Items::Widget demo
 #include <QFile>
 #include <QDir>
 #include <QMenuBar>
@@ -36,11 +38,6 @@
 #include <functional>
 #include <memory>
 #include <sstream>
-
-
-#warning TEMPORARY
-#include <qschematic/items/widget.h>
-#include <QDial>
 
 const QString FILE_FILTERS = "XML (*.xml)";
 
