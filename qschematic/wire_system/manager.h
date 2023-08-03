@@ -21,7 +21,7 @@ namespace wire_system
 
 class net;
 class wire;
-class connectable;
+struct connectable;
 
 class manager :
     public QObject
