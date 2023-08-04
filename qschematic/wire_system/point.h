@@ -2,7 +2,8 @@
 
 #include <QPointF>
 
-namespace wire_system {
+namespace wire_system
+{
 
     class point :
         private QPointF
@@ -34,6 +35,7 @@ namespace wire_system {
     private:
         bool m_is_junction;
     };
+
 }
 
 bool operator==(const wire_system::point& a, const wire_system::point& b);

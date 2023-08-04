@@ -6,6 +6,7 @@
 
 namespace wire_system
 {
+
     class wire;
     class manager;
 
@@ -40,4 +41,5 @@ namespace wire_system
         class manager* m_manager;
         QString m_name;
     };
+
 }

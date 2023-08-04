@@ -4,8 +4,12 @@
 
 class QLineF;
 
-namespace wire_system {
+namespace wire_system
+{
 
+    /**
+     * A straight line between two points.
+     */
     class line
     {
     public:

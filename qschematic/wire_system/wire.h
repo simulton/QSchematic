@@ -15,6 +15,12 @@ namespace wire_system
     class net;
     class line;
 
+    /**
+     * A wire to connect to connectables and other wires.
+     *
+     * @details A wire consists of zero or more line segments. A line segment's point can connect to connectables or
+     *          other wire segments.
+     */
     class wire
     {
     public:
