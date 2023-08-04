@@ -12,6 +12,9 @@ class QSizeF;
 namespace QSchematic
 {
 
+    /**
+     * Settings for the QSchematic scene.
+     */
     class Settings
     {
     public:

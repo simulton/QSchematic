@@ -3,6 +3,9 @@
 namespace QSchematic
 {
 
+    /**
+     * Text direction.
+     */
     enum class Direction
     {
         LeftToRight = 0,
@@ -11,6 +14,9 @@ namespace QSchematic
         BottomToTop
     };
 
+    /**
+     * Enum to identify eight different points on a rectangle.
+     */
     enum class RectanglePoint
     {
         TopLeft = 0,
