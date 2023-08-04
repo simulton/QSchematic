@@ -6,7 +6,7 @@ namespace QSchematic
     /**
      * Text direction.
      */
-    enum class Direction
+    enum class TextDirection
     {
         LeftToRight = 0,
         RightToLeft,

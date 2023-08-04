@@ -37,8 +37,8 @@ namespace QSchematic::Items
         QString text() const;
         void setForceTextDirection(bool enabled);
         bool forceTextDirection() const;
-        void setForcedTextDirection(Direction direction);
-        Direction textDirection() const;
+        void setForcedTextDirection(TextDirection direction);
+        TextDirection textDirection() const;
         void update() override;
 
         /**
@@ -71,7 +71,7 @@ namespace QSchematic::Items
         SnapPolicy _snapPolicy;
         QRectF _symbolRect;
         bool _forceTextDirection;
-        Direction _textDirection;
+        TextDirection _textDirection;
         std::shared_ptr<Label> _label;
     };
 
