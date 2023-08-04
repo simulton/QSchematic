@@ -105,7 +105,7 @@ void wire::move_junctions_to_new_segment(const line& oldSegment, const line& new
                     // Move the point along the segment so that it stays at the same proportional distance from the two points
                 else {
                     QPointF d = point.toPointF() - oldSegment.p1();
-                    qreal ratio = QVector2D(d).length() / oldSegment.lenght();
+                    qreal ratio = QVector2D(d).length() / oldSegment.length();
                     QPointF pos = newSegment.toLineF().pointAt(ratio);
                     wire->move_point_by(jIndex, QVector2D(pos - point.toPointF()));
                 }
@@ -349,7 +349,7 @@ void wire::move_point_by(int index, const QVector2D& moveBy)
         // Only do this if we're not moving in the direction of the line. Because in that case
         // this is unnecessary as we're just moving one of the two points.
         if (!line.is_null() && (moveVertically || moveHorizontally)) {
-            qreal lineLength = line.lenght();
+            qreal lineLength = line.length();
             QPointF p;
 
             // The line is horizontal
@@ -396,7 +396,7 @@ void wire::move_point_by(int index, const QVector2D& moveBy)
             line line(prevPoint, currPoint);
 
             // Make sure that two wire points never collide
-            if (points_count() > 3 && index >= 2 && wire_system::line(currPoint + moveBy.toPointF(), prevPoint).lenght() <= 2) {
+            if (points_count() > 3 && index >= 2 && wire_system::line(currPoint + moveBy.toPointF(), prevPoint).length() <= 2) {
                 move_line_segment_by(index - 2, moveBy);
             }
 
@@ -436,7 +436,7 @@ void wire::move_point_by(int index, const QVector2D& moveBy)
             line line(currPoint, nextPoint);
 
             // Make sure that two wire points never collide
-            if (points_count() > 3 && wire_system::line(currPoint + moveBy.toPointF(), nextPoint).lenght() <= 2) {
+            if (points_count() > 3 && wire_system::line(currPoint + moveBy.toPointF(), nextPoint).length() <= 2) {
                 move_line_segment_by(index + 1, moveBy);
             }
 

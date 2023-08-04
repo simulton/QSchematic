@@ -28,7 +28,7 @@ namespace wire_system
         [[nodiscard]] bool is_null() const;
         [[nodiscard]] bool is_horizontal() const;
         [[nodiscard]] bool is_vertical() const;
-        [[nodiscard]] qreal lenght() const;
+        [[nodiscard]] qreal length() const;
         [[nodiscard]] QPointF mid_point() const;
         [[nodiscard]] bool contains_point(const QPointF& point, qreal tolerance = 0) const;
         [[nodiscard]] QPointF point_on_line_closest_to(const QPointF& point);

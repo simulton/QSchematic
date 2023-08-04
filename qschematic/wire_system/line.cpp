@@ -56,7 +56,7 @@ bool line::is_vertical() const
     return qFuzzyCompare(m_p1.x(), m_p2.x());
 }
 
-qreal line::lenght() const
+qreal line::length() const
 {
     return ::QLineF(m_p1, m_p2).length();
 }

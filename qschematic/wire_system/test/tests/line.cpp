@@ -35,19 +35,19 @@ TEST_SUITE("Line")
         SUBCASE("line 1")
         {
             wire_system::line line(QPointF(0, 0), QPointF(0, 10));
-            CHECK_EQ(line.lenght(), doctest::Approx(10));
+            CHECK_EQ(line.length(), doctest::Approx(10));
         }
 
         SUBCASE("line 2")
         {
             wire_system::line line(QPointF(0, 0), QPointF(0, -10));
-            CHECK_EQ(line.lenght(), doctest::Approx(10));
+            CHECK_EQ(line.length(), doctest::Approx(10));
         }
 
         SUBCASE("line 3")
         {
             wire_system::line line(QPointF(12.534, -123.643), QPointF(62.3, 15.535));
-            CHECK_EQ(line.lenght(), doctest::Approx(147.8).epsilon(0.01));
+            CHECK_EQ(line.length(), doctest::Approx(147.8).epsilon(0.01));
         }
     }
 }
