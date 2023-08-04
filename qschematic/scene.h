@@ -25,6 +25,12 @@ namespace QSchematic
         class WireNet;
     }
 
+    /**
+     * The QSchematic Scene.
+     *
+     * @details This type holds & represents the actual diagram/schematic/graph. This would be analogous to a proper
+     *          "document" type.
+     */
     class Scene :
         public QGraphicsScene,
         public gpds::serialize
