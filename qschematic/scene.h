@@ -50,7 +50,7 @@ namespace QSchematic
         Q_ENUM(Mode)
 
         explicit Scene(QObject* parent = nullptr);
-        ~Scene() override = default;
+        ~Scene() override;
 
         gpds::container to_container() const override;
         void from_container(const gpds::container& container) override;

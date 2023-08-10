@@ -63,6 +63,11 @@ Scene::Scene(QObject* parent) :
     renderCachedBackground();
 }
 
+Scene::~Scene()
+{
+    clear();
+}
+
 gpds::container
 Scene::to_container() const
 {
