@@ -55,11 +55,11 @@ This is built using `cmake`.
 ## Building
 The following targets are provided:
 
-| Target | Description |
-| --- | --- |
-| `qschematic-static` | Builds a static library. | 
-| `qschematic-shared` | Builds a shared/dynamic library. | 
-| `qschematic-demo` | Builds a simple demo application. | 
+| Target              | Description                       |
+|---------------------|-----------------------------------|
+| `qschematic-static` | Builds a static library.          | 
+| `qschematic-shared` | Builds a shared/dynamic library.  | 
+| `qschematic-demo`   | Builds a simple demo application. | 
 
 Dependencies:
   - Qt5 (>= 5.15) or Qt6
