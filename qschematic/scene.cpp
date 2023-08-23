@@ -686,8 +686,13 @@ Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                     // Get list of items that need to be moved
                     // Note: We want/need to ensure that all `Wire` items are first in the list!
                     QVector<std::shared_ptr<Items::Item>> itemsToMove;
-                    for (const auto& item : selectedTopLevelItems())
+                    for (const auto& item : selectedTopLevelItems()) {
+                        // Ignore items not marked as movable
+                        if (!item->isMovable())
+                            continue;
+
                         itemsToMove << item;
+                    }
                     std::partition(
                         std::begin(itemsToMove),
                         std::end(itemsToMove),
