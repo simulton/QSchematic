@@ -7,7 +7,6 @@ include(CMakeFindDependencyMacro)
 set(QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD @QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD@)
 
 # Qt
-# ToDo: Support Qt6
 find_dependency(
     Qt6
     COMPONENTS
