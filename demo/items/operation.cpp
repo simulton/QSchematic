@@ -209,6 +209,14 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
             scene()->undoStack()->push(new QSchematic::Commands::LabelRename(label().get(), newText));
         });
 
+        QAction* isMovable = new QAction;
+        isMovable->setCheckable(true);
+        isMovable->setChecked(this->isMovable());
+        isMovable->setText("Is Movable");
+        connect(isMovable, &QAction::toggled, [this](bool enabled) {
+            setMovable(enabled);
+        });
+
         // Label visibility
         QAction* labelVisibility = new QAction;
         labelVisibility->setCheckable(true);
@@ -304,6 +312,8 @@ void Operation::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         menu.addSeparator();
         menu.addAction(duplicate);
         menu.addAction(deleteFromModel);
+        menu.addSeparator();
+        menu.addAction(isMovable);
     }
 
     // Sow the menu
