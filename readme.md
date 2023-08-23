@@ -63,7 +63,7 @@ The following targets are provided:
 
 Dependencies:
   - Qt5 (>= 5.15) or Qt6
-  - [GPDS](https://gpds.simulton.com) for (de)serialization.
+  - [GPDS](https://github.com/simulton/gpds) for (de)serialization.
 
 If the cmake option `QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD` is enabled (default), cmake will automatically pull the `GPDS` dependency.
 Therefore, assuming a system with a working Qt5 or Qt6 installation, all you have to do is:
