@@ -16,6 +16,9 @@ option(QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD "Whether to pull the GPDS dependency 
 set(QSCHEMATIC_DEPENDENCY_GPDS_TARGET "gpds::gpds-static" CACHE STRING "The CMake target of the GPDS library to use")
 set(CMAKE_DEBUG_POSTFIX d)
 
+# Project requirements
+set(QSCHEMATIC_DEPENDENCY_GPDS_MINIMUM_VERSION "1.6.0")
+
 # Include the library
 add_subdirectory(qschematic)
 

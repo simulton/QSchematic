@@ -5,6 +5,7 @@ include(CMakeFindDependencyMacro)
 ########################################################################################################################
 
 set(QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD @QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD@)
+set(QSCHEMATIC_DEPENDENCY_GPDS_MINIMUM_VERSION @QSCHEMATIC_DEPENDENCY_GPDS_MINIMUM_VERSION@)
 
 # Qt
 find_dependency(
@@ -27,7 +28,11 @@ endif()
 
 # GPDS
 if (NOT QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD)
-    find_dependency(gpds)
+    find_dependency(
+        gpds
+        ${QSCHEMATIC_DEPENDENCY_GPDS_MINIMUM_VERSION}
+        REQUIRED
+    )
 endif()
 
 # Add the targets file
