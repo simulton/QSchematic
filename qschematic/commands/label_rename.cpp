@@ -1,6 +1,6 @@
-#include "commands.h"
-#include "label_rename.h"
-#include "../items/label.h"
+#include "commands.hpp"
+#include "label_rename.hpp"
+#include "../items/label.hpp"
 
 using namespace QSchematic;
 using namespace QSchematic::Commands;

@@ -2,7 +2,7 @@ target_sources(
     ${TARGET}
     PRIVATE
         treeitem.cpp
-        treeitem.h
+        treeitem.hpp
         treemodel.cpp
-        treemodel.h
+        treemodel.hpp
 )

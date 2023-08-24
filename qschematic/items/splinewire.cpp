@@ -1,4 +1,4 @@
-#include "splinewire.h"
+#include "splinewire.hpp"
 
 #include <QPainter>
 #include <QPainterPathStroker>

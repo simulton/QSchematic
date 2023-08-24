@@ -1,10 +1,10 @@
-#include "itemfactory.h"
-#include "node.h"
-#include "wire.h"
-#include "wireroundedcorners.h"
-#include "splinewire.h"
-#include "connector.h"
-#include "label.h"
+#include "itemfactory.hpp"
+#include "node.hpp"
+#include "wire.hpp"
+#include "wireroundedcorners.hpp"
+#include "splinewire.hpp"
+#include "connector.hpp"
+#include "label.hpp"
 
 using namespace QSchematic::Items;
 

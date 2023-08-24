@@ -1,5 +1,5 @@
-#include "line.h"
-#include "../utils.h"
+#include "line.hpp"
+#include "../utils.hpp"
 
 #include <QtGlobal>
 #include <QLineF>

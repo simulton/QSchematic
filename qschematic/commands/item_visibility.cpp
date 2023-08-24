@@ -1,6 +1,6 @@
-#include "item_visibility.h"
-#include "commands.h"
-#include "../items/item.h"
+#include "item_visibility.hpp"
+#include "commands.hpp"
+#include "../items/item.hpp"
 
 using namespace QSchematic;
 using namespace QSchematic::Commands;

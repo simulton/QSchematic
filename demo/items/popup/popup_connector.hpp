@@ -1,9 +1,9 @@
 #pragma once
 
 #include "popup.hpp"
-#include "../operationconnector.h"
+#include "../operationconnector.hpp"
 
-#include <qschematic/items/label.h>
+#include <qschematic/items/label.hpp>
 
 #include <QFormLayout>
 #include <QLabel>

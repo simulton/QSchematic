@@ -1,10 +1,10 @@
-#include "wire.h"
-#include "connector.h"
-#include "label.h"
-#include "node.h"
-#include "../scene.h"
-#include "../utils.h"
-#include "../commands/wirepoint_move.h"
+#include "wire.hpp"
+#include "connector.hpp"
+#include "label.hpp"
+#include "node.hpp"
+#include "../scene.hpp"
+#include "../utils.hpp"
+#include "../commands/wirepoint_move.hpp"
 
 #include <QPen>
 #include <QBrush>

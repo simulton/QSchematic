@@ -8,17 +8,17 @@
 #include <QtMath>
 #include <QTimer>
 
-#include "scene.h"
-#include "commands/item_move.h"
-#include "commands/item_add.h"
-#include "commands/item_remove.h"
-#include "items/itemfactory.h"
-#include "items/item.h"
-#include "items/itemmimedata.h"
-#include "items/node.h"
-#include "items/label.h"
-#include "items/widget.h"
-#include "utils/itemscontainerutils.h"
+#include "scene.hpp"
+#include "commands/item_move.hpp"
+#include "commands/item_add.hpp"
+#include "commands/item_remove.hpp"
+#include "items/itemfactory.hpp"
+#include "items/item.hpp"
+#include "items/itemmimedata.hpp"
+#include "items/node.hpp"
+#include "items/label.hpp"
+#include "items/widget.hpp"
+#include "utils/itemscontainerutils.hpp"
 
 using namespace QSchematic;
 

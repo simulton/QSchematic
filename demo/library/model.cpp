@@ -1,12 +1,12 @@
-#include "model.h"
-#include "iteminfo.h"
-#include "../items/operation.h"
-#include "../items/operationdemo1.h"
-#include "../items/flowstart.h"
-#include "../items/flowend.h"
+#include "model.hpp"
+#include "iteminfo.hpp"
+#include "../items/operation.hpp"
+#include "../items/operationdemo1.hpp"
+#include "../items/flowstart.hpp"
+#include "../items/flowend.hpp"
 
-#include <qschematic/items/itemmimedata.h>
-#include <qschematic/items/label.h>
+#include <qschematic/items/itemmimedata.hpp>
+#include <qschematic/items/label.hpp>
 
 #include <QMimeData>
 

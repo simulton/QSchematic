@@ -1,8 +1,8 @@
 #include <QBoxLayout>
 
-#include "widget.h"
-#include "model.h"
-#include "view.h"
+#include "widget.hpp"
+#include "model.hpp"
+#include "view.hpp"
 
 using namespace Library;
 

@@ -1,8 +1,8 @@
-#include "manager.h"
-#include "net.h"
-#include "point.h"
-#include "wire.h"
-#include "connectable.h"
+#include "manager.hpp"
+#include "net.hpp"
+#include "point.hpp"
+#include "wire.hpp"
+#include "connectable.hpp"
 
 #include <QVector>
 #include <QVector2D>

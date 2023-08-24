@@ -4,18 +4,18 @@ target_sources(
     ${TARGET}
     PRIVATE
         customitemfactory.cpp
-        customitemfactory.h
+        customitemfactory.hpp
         fancywire.cpp
-        fancywire.h
+        fancywire.hpp
         flowend.cpp
-        flowend.h
+        flowend.hpp
         flowstart.cpp
-        flowstart.h
-        itemtypes.h
+        flowstart.hpp
+        itemtypes.hpp
         operation.cpp
-        operation.h
+        operation.hpp
         operationconnector.cpp
-        operationconnector.h
+        operationconnector.hpp
         operationdemo1.cpp
-        operationdemo1.h
+        operationdemo1.hpp
 )

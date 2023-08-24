@@ -1,9 +1,9 @@
-#include "widget.h"
-#include "viewer.h"
-#include "../items/operation.h"
-#include "../items/operationconnector.h"
+#include "widget.hpp"
+#include "viewer.hpp"
+#include "../items/operation.hpp"
+#include "../items/operationconnector.hpp"
 
-#include <qschematic/netlist_writer_json.h>
+#include <qschematic/netlist_writer_json.hpp>
 
 #include <QJsonDocument>
 #include <QVBoxLayout>

@@ -1,7 +1,7 @@
 #include "../3rdparty/doctest.h"
-#include "../connector.h"
-#include "../../manager.h"
-#include "../../wire.h"
+#include "../connector.hpp"
+#include "../../manager.hpp"
+#include "../../wire.hpp"
 
 TEST_SUITE("Manager")
 {

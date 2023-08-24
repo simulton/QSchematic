@@ -1,8 +1,8 @@
-#include "commands.h"
-#include "wirenet_rename.h"
-#include "../items/label.h"
-#include "../items/wire.h"
-#include "../items/wirenet.h"
+#include "commands.hpp"
+#include "wirenet_rename.hpp"
+#include "../items/label.hpp"
+#include "../items/wire.hpp"
+#include "../items/wirenet.hpp"
 
 using namespace QSchematic;
 using namespace QSchematic::Commands;

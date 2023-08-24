@@ -1,6 +1,6 @@
-#include "viewer.h"
-#include "model.h"
-#include "view.h"
+#include "viewer.hpp"
+#include "model.hpp"
+#include "view.hpp"
 
 #include <QBoxLayout>
 

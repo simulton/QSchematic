@@ -1,6 +1,6 @@
-#include "commands.h"
-#include "rectitem_rotate.h"
-#include "../items/rectitem.h"
+#include "commands.hpp"
+#include "rectitem_rotate.hpp"
+#include "../items/rectitem.hpp"
 
 #include <memory>
 

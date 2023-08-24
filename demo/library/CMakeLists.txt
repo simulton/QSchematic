@@ -1,12 +1,12 @@
 target_sources(
     ${TARGET}
     PRIVATE
-        iteminfo.h
+        iteminfo.hpp
         model.cpp
-        model.h
-        model_item.h
+        model.hpp
+        model_item.hpp
         view.cpp
-        view.h
+        view.hpp
         widget.cpp
-        widget.h
+        widget.hpp
 )

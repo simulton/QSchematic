@@ -1,7 +1,7 @@
-#include "view.h"
+#include "view.hpp"
 
-#include <qschematic/items/item.h>
-#include <qschematic/items/itemmimedata.h>
+#include <qschematic/items/item.hpp>
+#include <qschematic/items/itemmimedata.hpp>
 
 #include <QDrag>
 #include <QPainter>

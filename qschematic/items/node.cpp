@@ -1,7 +1,7 @@
-#include "node.h"
-#include "itemfactory.h"
-#include "../utils.h"
-#include "../scene.h"
+#include "node.hpp"
+#include "itemfactory.hpp"
+#include "../utils.hpp"
+#include "../scene.hpp"
 
 #include <QApplication>
 #include <QGraphicsSceneMouseEvent>

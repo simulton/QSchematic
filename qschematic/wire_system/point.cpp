@@ -1,4 +1,4 @@
-#include "point.h"
+#include "point.hpp"
 
 using namespace wire_system;
 

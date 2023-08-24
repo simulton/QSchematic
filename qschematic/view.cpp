@@ -3,10 +3,10 @@
 #include <QScrollBar>
 #include <QtMath>
 
-#include "view.h"
-#include "scene.h"
-#include "settings.h"
-#include "commands/item_remove.h"
+#include "view.hpp"
+#include "scene.hpp"
+#include "settings.hpp"
+#include "commands/item_remove.hpp"
 
 using namespace QSchematic;
 

@@ -1,8 +1,8 @@
-#include "wire.h"
-#include "line.h"
-#include "net.h"
-#include "manager.h"
-#include "../utils.h"
+#include "wire.hpp"
+#include "line.hpp"
+#include "net.hpp"
+#include "manager.hpp"
+#include "../utils.hpp"
 
 #include <QVector2D>
 #include <QLineF>

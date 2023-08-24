@@ -1,5 +1,5 @@
-#include "net.h"
-#include "wire.h"
+#include "net.hpp"
+#include "wire.hpp"
 
 #include <QString>
 

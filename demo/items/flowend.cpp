@@ -1,8 +1,8 @@
-#include "flowend.h"
-#include "itemtypes.h"
-#include "operationconnector.h"
+#include "flowend.hpp"
+#include "itemtypes.hpp"
+#include "operationconnector.hpp"
 
-#include <qschematic/items/label.h>
+#include <qschematic/items/label.hpp>
 
 #include <QPainter>
 #include <QGraphicsDropShadowEffect>

@@ -1,7 +1,7 @@
-#include "commands.h"
-#include "item_move.h"
-#include "../items/item.h"
-#include "../items/wire.h"
+#include "commands.hpp"
+#include "item_move.hpp"
+#include "../items/item.hpp"
+#include "../items/wire.hpp"
 
 #include <memory>
 

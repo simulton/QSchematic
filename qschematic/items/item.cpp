@@ -1,6 +1,6 @@
-#include "item.h"
-#include "../scene.h"
-#include "../commands/item_move.h"
+#include "item.hpp"
+#include "../scene.hpp"
+#include "../commands/item_move.hpp"
 
 #include <QDebug>
 #include <QPainter>

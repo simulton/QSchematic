@@ -1,5 +1,5 @@
-#include "widget.h"
-#include "../scene.h"
+#include "widget.hpp"
+#include "../scene.hpp"
 
 #include <QGraphicsRectItem>
 #include <QGraphicsProxyWidget>

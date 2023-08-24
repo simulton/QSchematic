@@ -1,5 +1,5 @@
-#include "label.h"
-#include "../scene.h"
+#include "label.hpp"
+#include "../scene.hpp"
 
 #include <QFontMetricsF>
 #include <QPainter>

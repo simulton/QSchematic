@@ -1,8 +1,8 @@
-#include "operationdemo1.h"
-#include "operationconnector.h"
-#include "itemtypes.h"
+#include "operationdemo1.hpp"
+#include "operationconnector.hpp"
+#include "itemtypes.hpp"
 
-#include <qschematic/items/label.h>
+#include <qschematic/items/label.hpp>
 
 struct ConnectorAttribute {
     QPoint point;

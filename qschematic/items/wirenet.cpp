@@ -1,10 +1,10 @@
-#include "connector.h"
-#include "wirenet.h"
-#include "wire.h"
-#include "label.h"
-#include "itemfactory.h"
-#include "../scene.h"
-#include "../utils.h"
+#include "connector.hpp"
+#include "wirenet.hpp"
+#include "wire.hpp"
+#include "label.hpp"
+#include "itemfactory.hpp"
+#include "../scene.hpp"
+#include "../utils.hpp"
 
 #include <QVector2D>
 

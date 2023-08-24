@@ -46,7 +46,7 @@ target_sources(
         ${RESOURCES}
         main.cpp
         mainwindow.cpp
-        mainwindow.h
+        mainwindow.hpp
 )
 target_link_libraries(
     ${TARGET}

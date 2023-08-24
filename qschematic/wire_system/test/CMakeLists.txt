@@ -6,21 +6,21 @@
 ###
 
 set(WIRESYSTEM_SOURCES
-	../connectable.h
+	../connectable.hpp
 	../line.cpp
-	../line.h
+	../line.hpp
 	../manager.cpp
-	../manager.h
+	../manager.hpp
 	../net.cpp
-	../net.h
+	../net.hpp
 	../point.cpp
-	../point.h
+	../point.hpp
 	../wire.cpp
-	../wire.h
+	../wire.hpp
 	../../utils.cpp
-	../../utils.h
+	../../utils.hpp
 	../../settings.cpp
-	../../settings.h
+	../../settings.hpp
 )
 
 set(TESTS
@@ -39,7 +39,7 @@ target_sources(
 	PRIVATE
 		3rdparty/doctest.h
 		test_main.cpp
-		connector.h
+		connector.hpp
 		${WIRESYSTEM_SOURCES}
 		${TESTS}
 )

@@ -1,4 +1,4 @@
-#include "settings.h"
+#include "settings.hpp"
 
 #include <QPointF>
 #include <QRectF>

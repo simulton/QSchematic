@@ -1,5 +1,5 @@
-#include "wire_system/line.h"
-#include "utils.h"
+#include "wire_system/line.hpp"
+#include "utils.hpp"
 
 #include <QPoint>
 #include <QLine>

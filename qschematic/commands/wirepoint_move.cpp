@@ -1,7 +1,7 @@
-#include "commands.h"
-#include "wirepoint_move.h"
-#include "../scene.h"
-#include "../items/item.h"
+#include "commands.hpp"
+#include "wirepoint_move.hpp"
+#include "../scene.hpp"
+#include "../items/item.hpp"
 
 using namespace QSchematic;
 using namespace QSchematic::Commands;

@@ -2,11 +2,11 @@ target_sources(
     ${TARGET}
     PRIVATE
         model.cpp
-        model.h
+        model.hpp
         viewer.cpp
-        viewer.h
+        viewer.hpp
         view.cpp
-        view.h
+        view.hpp
         widget.cpp
-        widget.h
+        widget.hpp
 )

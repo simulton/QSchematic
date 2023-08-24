@@ -1,13 +1,13 @@
-#include "operation.h"
-#include "operationconnector.h"
+#include "operation.hpp"
+#include "operationconnector.hpp"
 #include "popup/popup_operation.hpp"
-#include "../commands/node_add_connector.h"
+#include "../commands/node_add_connector.hpp"
 
-#include <qschematic/scene.h>
-#include <qschematic/items/label.h>
-#include <qschematic/commands/item_remove.h>
-#include <qschematic/commands/item_visibility.h>
-#include <qschematic/commands/label_rename.h>
+#include <qschematic/scene.hpp>
+#include <qschematic/items/label.hpp>
+#include <qschematic/commands/item_remove.hpp>
+#include <qschematic/commands/item_visibility.hpp>
+#include <qschematic/commands/label_rename.hpp>
 
 #include <QPainter>
 #include <QMenu>

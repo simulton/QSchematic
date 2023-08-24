@@ -1,5 +1,5 @@
-#include "commands.h"
-#include "base.h"
+#include "commands.hpp"
+#include "base.hpp"
 
 using namespace QSchematic::Commands;
 

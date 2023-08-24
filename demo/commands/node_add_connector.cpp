@@ -1,8 +1,8 @@
-#include "commands.h"
-#include "node_add_connector.h"
+#include "commands.hpp"
+#include "node_add_connector.hpp"
 
-#include <qschematic/items/node.h>
-#include <qschematic/items/connector.h>
+#include <qschematic/items/node.hpp>
+#include <qschematic/items/connector.hpp>
 
 using namespace Commands;
 

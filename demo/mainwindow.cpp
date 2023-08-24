@@ -1,20 +1,20 @@
-#include "mainwindow.h"
-#include "items/customitemfactory.h"
-#include "items/operation.h"
-#include "items/operationconnector.h"
-#include "items/fancywire.h"
-#include "library/widget.h"
-#include "netlist/widget.h"
+#include "mainwindow.hpp"
+#include "items/customitemfactory.hpp"
+#include "items/operation.hpp"
+#include "items/operationconnector.hpp"
+#include "items/fancywire.hpp"
+#include "library/widget.hpp"
+#include "netlist/widget.hpp"
 
 #include <gpds/archiver_xml.hpp>
-#include <qschematic/scene.h>
-#include <qschematic/view.h>
-#include <qschematic/commands/item_add.h>
-#include <qschematic/items/node.h>
-#include <qschematic/items/itemfactory.h>
-#include <qschematic/items/widget.h>
-#include <qschematic/netlist.h>
-#include <qschematic/netlistgenerator.h>
+#include <qschematic/scene.hpp>
+#include <qschematic/view.hpp>
+#include <qschematic/commands/item_add.hpp>
+#include <qschematic/items/node.hpp>
+#include <qschematic/items/itemfactory.hpp>
+#include <qschematic/items/widget.hpp>
+#include <qschematic/netlist.hpp>
+#include <qschematic/netlistgenerator.hpp>
 
 #include <QToolBar>
 #include <QAction>

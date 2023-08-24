@@ -1,9 +1,9 @@
-#include "connector.h"
-#include "label.h"
-#include "node.h"
-#include "wire.h"
-#include "../scene.h"
-#include "../utils.h"
+#include "connector.hpp"
+#include "label.hpp"
+#include "node.hpp"
+#include "wire.hpp"
+#include "../scene.hpp"
+#include "../utils.hpp"
 
 #include <QtMath>
 #include <QPainter>

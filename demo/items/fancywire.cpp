@@ -1,10 +1,10 @@
-#include "itemtypes.h"
-#include "fancywire.h"
+#include "itemtypes.hpp"
+#include "fancywire.hpp"
 
-#include <qschematic/commands/wirenet_rename.h>
-#include <qschematic/wire_system/point.h>
-#include <qschematic/items/connector.h>
-#include <qschematic/scene.h>
+#include <qschematic/commands/wirenet_rename.hpp>
+#include <qschematic/wire_system/point.hpp>
+#include <qschematic/items/connector.hpp>
+#include <qschematic/scene.hpp>
 
 #include <QPen>
 #include <QPainter>

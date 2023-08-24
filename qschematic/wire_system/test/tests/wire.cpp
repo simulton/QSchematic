@@ -1,6 +1,6 @@
 #include "../3rdparty/doctest.h"
-#include "../../manager.h"
-#include "../../wire.h"
+#include "../../manager.hpp"
+#include "../../wire.hpp"
 
 #include <QVector2D>
 

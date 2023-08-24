@@ -1,7 +1,7 @@
-#include "model.h"
-#include "../common/treeitem.h"
-#include "../items/operation.h"
-#include "../items/operationconnector.h"
+#include "model.hpp"
+#include "../common/treeitem.hpp"
+#include "../items/operation.hpp"
+#include "../items/operationconnector.hpp"
 
 using namespace Netlist;
 
