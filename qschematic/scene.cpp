@@ -248,6 +248,8 @@ Scene::clearIsDirty()
 {
     if (_undoStack)
         _undoStack->setClean();
+
+    emit netlistChanged();
 }
 
 void
@@ -293,6 +295,7 @@ Scene::addItem(const std::shared_ptr<Items::Item>& item)
 
     // Let the world know
     emit itemAdded(item);
+    emit netlistChanged();
 
     return true;
 }
@@ -322,6 +325,7 @@ Scene::removeItem(const std::shared_ptr<Items::Item> item)
 
     // Let the world know
     emit itemRemoved(item);
+    emit netlistChanged();
 
     // NOTE: In order to keep items alive through this entire event loop round,
     // otherwise crashes because Qt messes with items even after they're removed
@@ -1015,7 +1019,7 @@ Scene::renderCachedBackground()
 }
 
 void
-Scene::updateNodeConnections(const Items::Node* node) const
+Scene::updateNodeConnections(const Items::Node* node)
 {
     // Check if a connector lays on a wirepoint
     for (auto& connector : node->connectors()) {
@@ -1060,6 +1064,8 @@ Scene::updateNodeConnections(const Items::Node* node) const
             }
         }
     }
+
+    emit netlistChanged();
 }
 
 void
@@ -1090,6 +1096,8 @@ Scene::wirePointMoved(wire& rawWire, int index)
                 m_wire_manager->attach_wire_to_connector(&rawWire, index, connector.get());
         }
     }
+
+    emit netlistChanged();
 }
 
 void
@@ -1107,6 +1115,8 @@ Scene::generateConnections()
         if (wire)
             m_wire_manager->attach_wire_to_connector(wire.get(), connector.get());
     }
+
+    emit netlistChanged();
 }
 
 /**
@@ -1124,6 +1134,8 @@ Scene::finishCurrentWire()
     _newWire->simplify();
 //    _newWire->updatePosition();
     _newWire.reset();
+
+    emit netlistChanged();
 }
 
 std::shared_ptr<Items::Wire>
@@ -1218,6 +1230,8 @@ Scene::removeLastWirePoint()
             _newWire->move_point_to(_newWire->pointsAbsolute().count() - 1, mousePos);
         }
     }
+
+    emit netlistChanged();
 }
 
 /**
@@ -1267,6 +1281,8 @@ Scene::removeUnconnectedWires()
     // Remove the wires that have to be removed
     for (const auto& wire : wiresToRemove)
         _undoStack->push(new Commands::ItemRemove(this, wire));
+
+    emit netlistChanged();
 }
 
 bool
@@ -1283,6 +1299,8 @@ Scene::addWire(const std::shared_ptr<Items::Wire>& wire)
             return false;
     }
 
+    emit netlistChanged();
+
     return true;
 }
 
@@ -1297,6 +1315,8 @@ Scene::removeWire(const std::shared_ptr<Items::Wire>& wire)
         if (m_wire_manager->attached_wire(connector.get()) == wire.get())
             m_wire_manager->detach_wire(connector.get());
     }
+
+    emit netlistChanged();
 
     return m_wire_manager->remove_wire(wire);
 }

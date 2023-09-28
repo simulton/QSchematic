@@ -76,6 +76,9 @@ MainWindow::MainWindow(QWidget *parent)
             break;
         }
     });
+    connect(_scene, &QSchematic::Scene::netlistChanged, [](){
+        qDebug() << "Netlist changed";
+    });
 
     // View
     _view = new QSchematic::View(this);

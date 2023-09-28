@@ -189,6 +189,15 @@ namespace QSchematic
         void itemRemoved(std::shared_ptr<Items::Item> item);
         void itemHighlighted(const std::shared_ptr<const Items::Item>& item);
 
+        /**
+         * Signal to indicate that the netlist has likely changed.
+         *
+         * @note It is not guaranteed that the netlist actually changed. It's just likely.
+         */
+        // ToDo: We're currently firing this signal too many times.
+        void
+        netlistChanged();
+
     protected:
         Settings _settings;
 
@@ -228,7 +237,7 @@ namespace QSchematic
     private:
         void renderCachedBackground();
         void setupNewItem(Items::Item& item);
-        void updateNodeConnections(const Items::Node* node) const;
+        void updateNodeConnections(const Items::Node* node);
         void generateConnections();
         void finishCurrentWire();
 
