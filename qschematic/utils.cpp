@@ -45,7 +45,7 @@ Utils::clipPointToRectOutline(QPointF point, const QRectF& rect)
 
     // Figure out to which edge we're closest to
     const auto& nearestEdge = Utils::lineClosestToPoint(edges, point);
-    Q_ASSERT(nearestEdge);
+    Q_ASSERT(nearestEdge != edges.cend());
 
     // Snap to that edge
     point = Utils::pointOnLineClosestToPoint(nearestEdge->p1(), nearestEdge->p2(), point);
