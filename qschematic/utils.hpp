@@ -5,6 +5,7 @@
 #include <QVector>
 
 #include <optional>
+#include <vector>
 
 class QPoint;
 class QPointF;
