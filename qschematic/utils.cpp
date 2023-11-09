@@ -2,7 +2,9 @@
 #include "utils.hpp"
 
 #include <QPoint>
+#include <QPointF>
 #include <QLine>
+#include <QLineF>
 #include <QRectF>
 #include <QPainterPath>
 #include <QVector2D>
