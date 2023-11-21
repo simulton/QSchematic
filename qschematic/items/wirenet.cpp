@@ -18,10 +18,10 @@ WireNet::WireNet(QObject* parent) :
     _label->setPos(0, 0);
     _label->setVisible(false);
     connect(_label.get(), &Label::highlightChanged, this, &WireNet::labelHighlightChanged);
-    connect(_label.get(), &Label::moved, this, [=] { updateLabelPos(); });
+    connect(_label.get(), &Label::moved, this, [this] { updateLabelPos(); });
 
     // Rename net by double clicking on label
-    connect(_label.get(), &Label::doubleClicked, this, [=] {
+    connect(_label.get(), &Label::doubleClicked, this, [this] {
         Wire* wire = dynamic_cast<Wire*>(_label->parentItem());
         if (wire) {
             wire->rename_net();
@@ -108,7 +108,7 @@ bool WireNet::addWire(const std::shared_ptr<wire>& wire)
         connect(wire_net.get(), &Wire::pointMoved, this, &WireNet::wirePointMoved);
         connect(wire_net.get(), &Wire::highlightChanged, this, &WireNet::wireHighlightChanged);
         connect(wire_net.get(), &Wire::toggleLabelRequested, this, &WireNet::toggleLabel);
-        connect(wire_net.get(), &Wire::moved, this, [=] { updateLabelPos(); });
+        connect(wire_net.get(), &Wire::moved, this, [this] { updateLabelPos(); });
     }
 
 
