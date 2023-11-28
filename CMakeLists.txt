@@ -9,8 +9,12 @@ project(
 )
 
 # User options
+set(OPTION_BUILD_SHARED_DEFAULT ON)
+if (MSVC)
+    set(OPTION_BUILD_SHARED_DEFAULT OFF)
+endif()
 option(QSCHEMATIC_BUILD_STATIC "Whether to build a static library" ON)
-option(QSCHEMATIC_BUILD_SHARED "Whether to build a shared library" ON)
+option(QSCHEMATIC_BUILD_SHARED "Whether to build a shared library" ${OPTION_BUILD_SHARED_DEFAULT})
 option(QSCHEMATIC_BUILD_DEMO "Whether to build the demo project" ON)
 option(QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD "Whether to pull the GPDS dependency via FetchContent" ON)
 
