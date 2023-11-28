@@ -134,7 +134,6 @@ function(setup_target_common target)
             OUTPUT_NAME "qschematic"
             ARCHIVE_OUTPUT_NAME "qschematic"
             VERSION ${PROJECT_VERSION}
-            POSITION_INDEPENDENT_CODE 1
     )
 endfunction()
 
