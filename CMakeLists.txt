@@ -9,12 +9,27 @@ project(
 )
 
 # User options
+option(QSCHEMATIC_BUILD_STATIC "Whether to build a static library" ON)
+option(QSCHEMATIC_BUILD_SHARED "Whether to build a shared library" ON)
 option(QSCHEMATIC_BUILD_DEMO "Whether to build the demo project" ON)
 option(QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD "Whether to pull the GPDS dependency via FetchContent" ON)
 
 # User settings
 set(QSCHEMATIC_DEPENDENCY_GPDS_TARGET "gpds::gpds-static" CACHE STRING "The CMake target of the GPDS library to use")
 set(CMAKE_DEBUG_POSTFIX d)
+
+# When using MSVC, only allow enabling either static or shared libs but not both to prevent name conflicts on the resulting *.LIB targets
+if (MSVC)
+    if (QSCHEMATIC_BUILD_STATIC AND QSCHEMATIC_BUILD_SHARED)
+        message(FATAL_ERROR "QSchematic: Can only build either the static or the shared library but not both at the same time when using MSVC.")
+    endif()
+endif()
+
+# Library target for internal usage (i.e. for demos, examples, tests, ...)
+set(QSCHEMATIC_TARGET_INTERNAL qschematic-static)
+if (NOT QSCHEMATIC_BUILD_STATIC)
+    set(QSCHEMATIC_TARGET_INTERNAL qschematic-shared)
+endif()
 
 # Project requirements
 set(QSCHEMATIC_DEPENDENCY_GPDS_MINIMUM_VERSION "1.6.0")
@@ -34,6 +49,8 @@ message(STATUS "QSchematic configuration:")
 message(STATUS "  version      : " ${PROJECT_VERSION})
 message(STATUS "")
 message(STATUS "  Build")
+message(STATUS "    Static     : " ${QSCHEMATIC_BUILD_STATIC})
+message(STATUS "    Shared     : " ${QSCHEMATIC_BUILD_SHARED})
 message(STATUS "    Demo       : " ${QSCHEMATIC_BUILD_DEMO})
 message(STATUS "")
 message(STATUS "  Dependencies")

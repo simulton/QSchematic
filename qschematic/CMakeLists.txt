@@ -143,22 +143,26 @@ endfunction()
 # Shared library                                                               #
 ################################################################################
 
-add_library(${TARGET_SHARED} SHARED)
-setup_target_common(${TARGET_SHARED})
+if (QSCHEMATIC_BUILD_SHARED)
+    add_library(${TARGET_SHARED} SHARED)
+    setup_target_common(${TARGET_SHARED})
+endif()
 
 
 ################################################################################
 # Static library                                                               #
 ################################################################################
 
-add_library(${TARGET_STATIC} STATIC)
-setup_target_common(${TARGET_STATIC})
+if (QSCHEMATIC_BUILD_STATIC)
+    add_library(${TARGET_STATIC} STATIC)
+    setup_target_common(${TARGET_STATIC})
 
-target_compile_definitions(
-    ${TARGET_STATIC}
-    PUBLIC
-        QSCHEMATIC_STATIC_DEFINE
-)
+    target_compile_definitions(
+        ${TARGET_STATIC}
+            PUBLIC
+            QSCHEMATIC_STATIC_DEFINE
+    )
+endif()
 
 
 ################################################################################
@@ -171,10 +175,15 @@ include(CMakePackageConfigHelpers)
 set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/cmake/qschematic)
 
 # Targets
+if (QSCHEMATIC_BUILD_STATIC)
+    list(APPEND INSTALL_TARGETS_LIST ${TARGET_STATIC})
+endif()
+if (QSCHEMATIC_BUILD_SHARED)
+    list(APPEND INSTALL_TARGETS_LIST ${TARGET_SHARED})
+endif()
 install(
     TARGETS
-        ${TARGET_STATIC}
-        ${TARGET_SHARED}
+        ${INSTALL_TARGETS_LIST}
     EXPORT qschematic-targets
     FILE_SET
         HEADERS

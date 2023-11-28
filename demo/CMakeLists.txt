@@ -51,7 +51,7 @@ target_sources(
 target_link_libraries(
     ${TARGET}
     PRIVATE
-        qschematic-static
+        ${QSCHEMATIC_TARGET_INTERNAL}
         Qt::PrintSupport
 )
 set_target_properties(
