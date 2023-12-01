@@ -17,7 +17,7 @@ FancyWire::FancyWire(QGraphicsItem* parent) :
     QSchematic::Items::WireRoundedCorners(::ItemType::FancyWireType, parent)
 {
     auto action = new QAction("Rename ...", this);
-    connect(action, &QAction::triggered, this, [=] {
+    connect(action, &QAction::triggered, this, [this] {
         bool ok = false;
         const QString name = QInputDialog::getText(
             nullptr,

@@ -31,7 +31,7 @@ Scene::Scene(QObject* parent) :
 
     // Wire system
     m_wire_manager = std::make_shared<wire_system::manager>();
-    m_wire_manager->set_net_factory([=] { return std::make_shared<Items::WireNet>(); });
+    m_wire_manager->set_net_factory([this] { return std::make_shared<Items::WireNet>(); });
     connect(m_wire_manager.get(), &wire_system::manager::wire_point_moved, this, &Scene::wirePointMoved);
 
     // Undo stack
