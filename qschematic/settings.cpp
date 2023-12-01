@@ -36,7 +36,7 @@ Settings::snapToGrid(const QVector2D& sceneVector) const
     int xV = qRound(sceneVector.x() / gridSize) * gridSize;
     int yV = qRound(sceneVector.y() / gridSize) * gridSize;
 
-    return {xV, yV};
+    return {static_cast<float>(xV), static_cast<float>(yV)};
 }
 
 QSize
