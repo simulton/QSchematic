@@ -221,7 +221,7 @@ bool MainWindow::load(const QString& filepath)
     // Archiver
     const auto& [success, message] = gpds::from_stream<gpds::archiver_xml>(stream, *_scene, QSchematic::Scene::gpds_name);
     if (!success) {
-        qDebug() << "MainWindow::load(): Could not load scene: " << message;
+        qDebug() << "MainWindow::load(): Could not load scene: " << QString::fromStdString(message);
         return false;
     }
 
