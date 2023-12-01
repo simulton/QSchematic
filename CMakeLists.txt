@@ -19,7 +19,7 @@ option(QSCHEMATIC_BUILD_DEMO "Whether to build the demo project" ON)
 option(QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD "Whether to pull the GPDS dependency via FetchContent" ON)
 
 # User settings
-set(QSCHEMATIC_DEPENDENCY_GPDS_TARGET "gpds::gpds-shared" CACHE STRING "The CMake target of the GPDS library to use")
+set(QSCHEMATIC_DEPENDENCY_GPDS_TARGET "gpds::gpds-static" CACHE STRING "The CMake target of the GPDS library to use")
 set(CMAKE_DEBUG_POSTFIX d)
 
 # When using MSVC, only allow enabling either static or shared libs but not both to prevent name conflicts on the resulting *.LIB targets
