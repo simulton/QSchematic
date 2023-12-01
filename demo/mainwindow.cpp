@@ -213,15 +213,17 @@ bool MainWindow::load(const QString& filepath)
     // Open the file
     QFile file(filepath);
     file.open(QFile::ReadOnly);
-    if (!file.isOpen()) {
+    if (!file.isOpen())
         return false;
-    }
-
-    // Archiver
-    gpds::archiver_xml ar;
     std::stringstream stream;
     stream << file.readAll().data();
-    ar.load(stream, *_scene, QSchematic::Scene::gpds_name);
+
+    // Archiver
+    const auto& [success, message] = gpds::from_stream<gpds::archiver_xml>(stream, *_scene, QSchematic::Scene::gpds_name);
+    if (!success) {
+        qDebug() << "MainWindow::load(): Could not load scene: " << message;
+        return false;
+    }
 
     // Clean up
     file.close();
