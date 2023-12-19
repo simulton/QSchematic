@@ -282,10 +282,10 @@ namespace QSchematic
         QPointF _lastMousePos;
         QMap<std::shared_ptr<Items::Item>, QPointF> _initialItemPositions;
         QPointF _initialCursorPosition;
-        QUndoStack* _undoStack;
+        QUndoStack* _undoStack = nullptr;
         std::shared_ptr<wire_system::manager> m_wire_manager;
         Items::Item* _highlightedItem = nullptr;
-        QTimer* _popupTimer;
+        QTimer* _popupTimer = nullptr;
         std::shared_ptr<QGraphicsProxyWidget> _popup;
     };
 
