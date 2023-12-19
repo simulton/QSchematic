@@ -28,7 +28,7 @@ Feature overview:
     - Widgets (embed any `QWidget` into the scene)
 
 Technical stuff:
-  - Written in C++17
+  - Written in C++20
   - Works with Qt5 and Qt6
   - Everything is contained within the `QSchematic` namespace
   - MIT licensed
@@ -62,8 +62,9 @@ The following targets are provided:
 | `qschematic-demo`   | Builds a simple demo application. | 
 
 Dependencies:
+  - A C++20 capable compiler
   - Qt5 (>= 5.15) or Qt6
-  - [GPDS](https://github.com/simulton/gpds) for (de)serialization.
+  - [GPDS](https://github.com/simulton/gpds) for (de)serialization
 
 If the cmake option `QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD` is enabled (default), cmake will automatically pull the `GPDS` dependency.
 Therefore, assuming a system with a working Qt5 or Qt6 installation, all you have to do is:

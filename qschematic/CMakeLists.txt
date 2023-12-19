@@ -20,7 +20,7 @@ function(setup_target_common target)
     target_compile_features(
         ${target}
         PUBLIC
-            cxx_std_17
+            cxx_std_20
     )
 
     target_sources(
