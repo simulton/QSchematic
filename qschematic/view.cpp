@@ -255,7 +255,7 @@ View::fitInView()
     }
 
     // Add some padding
-    const auto& adj = std::max(0.0, fitall_padding);
+    const auto adj = std::max(0.0, fitall_padding);
     rect.adjust(-adj, -adj, adj, adj);
 
     // Update and cap the scale factor
