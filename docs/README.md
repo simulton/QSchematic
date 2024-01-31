@@ -174,7 +174,7 @@ junctions that are on the first segment to the second segment.
 
 The `wire_system::wire` class only implements the logic that is related to the
 wire. For the graphical stuff, `QSchematic` uses a subclass named
-`QSchematic::Wire`. This class also inherits from `QSchematic::Item` and takes
+`QSchematic::Wire`. This class also inherits from `QSchematic::Items::Item` and takes
 care of rendering the wire and handles the events like when the user drags a
 point etc. As the wire has to be redrawn when the points are modified, the
 `wire_system::wire` class provides two virtual methods, `about_to_change()` and
@@ -243,8 +243,8 @@ the manager so that it can make sure the wires stay connected to it.
 
 ### Connectors
 
-`QSchematic` uses a subclass of `connectable` called `Connector` that inherits
-from `QSchematic::Item` and implements everything that relates to the graphics.
+`QSchematic` uses a subclass of `connectable` called `Connector` that inherits
+from `QSchematic::Items::Item` and implements everything that relates to the graphics.
 
 ## Net
 

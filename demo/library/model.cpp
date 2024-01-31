@@ -89,7 +89,7 @@ const QSchematic::Items::Item* Model::itemFromIndex(const QModelIndex& index) co
         return nullptr;
     }
 
-    // Retrieve the QSchematic::Item
+    // Retrieve the QSchematic::Items::Item
     return itemInfo->item;
 }
 

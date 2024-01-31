@@ -20,7 +20,7 @@ namespace QSchematic::ItemUtils
          */
         ~ItemsCustodian()
         {
-            if constexpr (std::is_base_of_v<QSchematic::Item, CustodyItemT>) {
+            if constexpr (std::is_base_of_v<QSchematic::Items::Item, CustodyItemT>) {
                 for ( auto const& item : _custody_items )
                     item->setParentItem(nullptr);
             }
