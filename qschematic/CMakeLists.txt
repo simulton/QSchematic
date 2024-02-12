@@ -23,6 +23,9 @@ function(setup_target_common target)
             cxx_std_20
     )
 
+    # add alias to support cmake superbuild pattern
+    add_library(qschematic::${target} ALIAS ${target})
+
     target_sources(
         ${target}
         PUBLIC
