@@ -36,7 +36,8 @@ if (NOT QSCHEMATIC_BUILD_STATIC)
 endif()
 
 # Project requirements
-set(QSCHEMATIC_DEPENDENCY_GPDS_MINIMUM_VERSION "1.8.1")
+set(QSCHEMATIC_DEPENDENCY_GPDS_MINIMUM_VERSION  "1.8.1")
+set(QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD_VERSION "1.8.3")
 
 # Include the library
 add_subdirectory(qschematic)
