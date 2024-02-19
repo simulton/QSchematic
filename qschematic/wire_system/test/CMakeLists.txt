@@ -53,5 +53,5 @@ target_compile_features(
 target_link_libraries(
 	${TARGET}
 	PUBLIC
-		qschematic-static
+		${QSCHEMATIC_TARGET_INTERNAL}
 )
