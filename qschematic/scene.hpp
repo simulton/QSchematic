@@ -284,7 +284,7 @@ namespace QSchematic
         QPointF _initialCursorPosition;
         QUndoStack* _undoStack = nullptr;
         std::shared_ptr<wire_system::manager> m_wire_manager;
-        Items::Item* _highlightedItem = nullptr;
+        std::shared_ptr<Items::Item> _highlightedItem = nullptr;
         QTimer* _popupTimer = nullptr;
         std::shared_ptr<QGraphicsProxyWidget> _popup;
     };

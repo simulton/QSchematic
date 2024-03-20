@@ -733,7 +733,7 @@ Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             Items::Item* item = dynamic_cast<Items::Item*>(itemAt(newMousePos, QTransform()));
             if (item && item->highlightEnabled()) {
                 // Skip if the item is already highlighted
-                if (item == _highlightedItem)
+                if (item == _highlightedItem.get())
                     break;
 
                 // Disable the highlighting on the previous item
@@ -742,7 +742,7 @@ Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                     itemHoverLeave(_highlightedItem->shared_from_this());
                     _highlightedItem->update();
                     emit _highlightedItem->highlightChanged(*_highlightedItem, false);
-                    _highlightedItem = nullptr;
+                    _highlightedItem = { };
                 }
 
                 // Highlight the item
@@ -750,7 +750,7 @@ Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                 itemHoverEnter(item->shared_from_this());
                 item->update();
                 emit item->highlightChanged(*item, true);
-                _highlightedItem = item;
+                _highlightedItem = item->shared_from_this();
             }
 
             // No item selected
