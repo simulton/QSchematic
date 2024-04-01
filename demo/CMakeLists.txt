@@ -16,18 +16,6 @@ if (NOT Qt6_FOUND)
     )
 endif()
 
-# Source files
-set(SOURCES_PRIVATE
-    main.cpp
-    mainwindow.cpp
-)
-
-# Resources files
-set(RESOURCES
-    resources/examples/examples.qrc
-    resources/icons/icons.qrc
-)
-
 # Define a target name
 set(TARGET qschematic-demo)
 
@@ -39,11 +27,11 @@ add_subdirectory(common)
 add_subdirectory(items)
 add_subdirectory(library)
 add_subdirectory(netlist)
+add_subdirectory(resources)
 
 target_sources(
     ${TARGET}
     PRIVATE
-        ${RESOURCES}
         main.cpp
         mainwindow.cpp
         mainwindow.hpp
@@ -58,7 +46,6 @@ set_target_properties(
     ${TARGET}
     PROPERTIES
         AUTOMOC ON
-        AUTORCC ON
 )
 
 # Set window settings
