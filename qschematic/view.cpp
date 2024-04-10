@@ -11,7 +11,8 @@
 using namespace QSchematic;
 
 View::View(QWidget* parent) :
-    QGraphicsView(parent)
+    QGraphicsView(parent),
+    _scaleFactor(qLn(zoom_factor_min/1.0) / qLn(zoom_factor_min / zoom_factor_max))
 {
     // Scroll bars
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
