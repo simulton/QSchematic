@@ -37,7 +37,7 @@ Scene::Scene(QObject* parent) :
     // Undo stack
     _undoStack = new QUndoStack(this);
     connect(_undoStack, &QUndoStack::cleanChanged, [this](bool isClean) {
-        emit isDirtyChanged(!isClean);
+        Q_EMIT isDirtyChanged(!isClean);
     });
 
     // Popup timer
@@ -219,7 +219,7 @@ Scene::setMode(int mode)
     update();
 
     // Let the world know
-    emit modeChanged(_mode);
+    Q_EMIT modeChanged(_mode);
 }
 
 int
@@ -249,7 +249,7 @@ Scene::clearIsDirty()
     if (_undoStack)
         _undoStack->setClean();
 
-    emit netlistChanged();
+    Q_EMIT netlistChanged();
 }
 
 void
@@ -294,8 +294,8 @@ Scene::addItem(const std::shared_ptr<Items::Item>& item)
     _items << item;
 
     // Let the world know
-    emit itemAdded(item);
-    emit netlistChanged();
+    Q_EMIT itemAdded(item);
+    Q_EMIT netlistChanged();
 
     return true;
 }
@@ -324,8 +324,8 @@ Scene::removeItem(const std::shared_ptr<Items::Item> item)
     update(itemBoundsToUpdate);
 
     // Let the world know
-    emit itemRemoved(item);
-    emit netlistChanged();
+    Q_EMIT itemRemoved(item);
+    Q_EMIT netlistChanged();
 
     // NOTE: In order to keep items alive through this entire event loop round,
     // otherwise crashes because Qt messes with items even after they're removed
@@ -741,7 +741,7 @@ Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                     _highlightedItem->setHighlighted(false);
                     itemHoverLeave(_highlightedItem->shared_from_this());
                     _highlightedItem->update();
-                    emit _highlightedItem->highlightChanged(*_highlightedItem, false);
+                    Q_EMIT _highlightedItem->highlightChanged(*_highlightedItem, false);
                     _highlightedItem = { };
                 }
 
@@ -749,7 +749,7 @@ Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                 item->setHighlighted(true);
                 itemHoverEnter(item->shared_from_this());
                 item->update();
-                emit item->highlightChanged(*item, true);
+                Q_EMIT item->highlightChanged(*item, true);
                 _highlightedItem = item->shared_from_this();
             }
 
@@ -758,7 +758,7 @@ Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                 _highlightedItem->setHighlighted(false);
                 itemHoverLeave(_highlightedItem->shared_from_this());
                 _highlightedItem->update();
-                emit _highlightedItem->highlightChanged(*_highlightedItem, false);
+                Q_EMIT _highlightedItem->highlightChanged(*_highlightedItem, false);
                 _highlightedItem = nullptr;
             }
 
@@ -1065,7 +1065,7 @@ Scene::updateNodeConnections(const Items::Node* node)
         }
     }
 
-    emit netlistChanged();
+    Q_EMIT netlistChanged();
 }
 
 void
@@ -1097,7 +1097,7 @@ Scene::wirePointMoved(wire& rawWire, int index)
         }
     }
 
-    emit netlistChanged();
+    Q_EMIT netlistChanged();
 }
 
 void
@@ -1116,7 +1116,7 @@ Scene::generateConnections()
             m_wire_manager->attach_wire_to_connector(wire.get(), connector.get());
     }
 
-    emit netlistChanged();
+    Q_EMIT netlistChanged();
 }
 
 /**
@@ -1135,7 +1135,7 @@ Scene::finishCurrentWire()
 //    _newWire->updatePosition();
     _newWire.reset();
 
-    emit netlistChanged();
+    Q_EMIT netlistChanged();
 }
 
 std::shared_ptr<Items::Wire>
@@ -1172,7 +1172,7 @@ Scene::connectors() const
 void
 Scene::itemHoverEnter(const std::shared_ptr<const Items::Item>& item)
 {
-    emit itemHighlighted(item);
+    Q_EMIT itemHighlighted(item);
 
     // Start popup timer
     _popupTimer->start(_settings.popupDelay);
@@ -1183,7 +1183,7 @@ Scene::itemHoverLeave([[maybe_unused]] const std::shared_ptr<const Items::Item>&
 {
     // ToDo: clear _highlightedItem ?
 
-    emit itemHighlighted(nullptr);
+    Q_EMIT itemHighlighted(nullptr);
 
     // Stop popup timer
     _popupTimer->stop();
@@ -1231,7 +1231,7 @@ Scene::removeLastWirePoint()
         }
     }
 
-    emit netlistChanged();
+    Q_EMIT netlistChanged();
 }
 
 /**
@@ -1282,7 +1282,7 @@ Scene::removeUnconnectedWires()
     for (const auto& wire : wiresToRemove)
         _undoStack->push(new Commands::ItemRemove(this, wire));
 
-    emit netlistChanged();
+    Q_EMIT netlistChanged();
 }
 
 bool
@@ -1299,7 +1299,7 @@ Scene::addWire(const std::shared_ptr<Items::Wire>& wire)
             return false;
     }
 
-    emit netlistChanged();
+    Q_EMIT netlistChanged();
 
     return true;
 }
@@ -1316,7 +1316,7 @@ Scene::removeWire(const std::shared_ptr<Items::Wire>& wire)
             m_wire_manager->detach_wire(connector.get());
     }
 
-    emit netlistChanged();
+    Q_EMIT netlistChanged();
 
     return m_wire_manager->remove_wire(wire);
 }

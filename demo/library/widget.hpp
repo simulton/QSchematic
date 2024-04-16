@@ -25,13 +25,13 @@ namespace Library
 
         void expandAll();
 
-    signals:
+    Q_SIGNALS:
         void itemClicked(const QSchematic::Items::Item* item);
 
-    public slots:
+    public Q_SLOTS:
         void setPixmapScale(qreal scale);
 
-    private slots:
+    private Q_SLOTS:
         void itemClickedSlot(const QModelIndex& index);
 
     private:

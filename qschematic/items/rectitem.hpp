@@ -17,7 +17,7 @@ namespace QSchematic::Items
         Q_OBJECT
         Q_DISABLE_COPY_MOVE(RectItem)
 
-    signals:
+    Q_SIGNALS:
         void sizeChanged();
 
     public:

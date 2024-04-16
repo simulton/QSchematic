@@ -45,7 +45,7 @@ namespace QSchematic::Items
         bool movingWirePoint() const;
         void rename_net();
 
-    signals:
+    Q_SIGNALS:
         void pointMoved(Wire& wire, point& point);
         void toggleLabelRequested();
 
