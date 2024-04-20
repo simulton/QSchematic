@@ -8,8 +8,6 @@ project(
     HOMEPAGE_URL https://github.com/simulton/qschematic
 )
 
-add_definitions(-DQT_NO_KEYWORDS)
-
 # User options
 set(OPTION_BUILD_SHARED_DEFAULT ON)
 if (MSVC)
