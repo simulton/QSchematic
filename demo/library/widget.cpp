@@ -43,7 +43,7 @@ void Widget::itemClickedSlot(const QModelIndex& index)
         return;
     }
 
-    emit itemClicked(item);
+    Q_EMIT itemClicked(item);
 }
 
 void Widget::expandAll()

@@ -15,7 +15,7 @@ namespace QSchematic::Items
 
         friend class CommandLabelRename;
 
-    signals:
+    Q_SIGNALS:
         void textChanged(const QString& newText);
         void doubleClicked();
 

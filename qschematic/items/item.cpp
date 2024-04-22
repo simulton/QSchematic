@@ -224,7 +224,7 @@ void Item::setSettings(const Settings& settings)
     _settings = settings;
 
     // Let everyone know
-    emit settingsChanged();
+    Q_EMIT settingsChanged();
 
     // Update
     update();
@@ -371,7 +371,7 @@ void Item::posChanged()
     const QPointF& newPos = pos();
     QVector2D movedBy(newPos - _oldPos);
     if (!movedBy.isNull()) {
-        emit moved(*this, movedBy);
+        Q_EMIT moved(*this, movedBy);
     }
 
     _oldPos = newPos;
@@ -379,7 +379,7 @@ void Item::posChanged()
 
 void Item::scenePosChanged()
 {
-    emit movedInScene(*this);
+    Q_EMIT movedInScene(*this);
 }
 
 void Item::rotChanged()
@@ -387,7 +387,7 @@ void Item::rotChanged()
     const qreal newRot = rotation();
     qreal rotationChange = newRot - _oldRot;
     if (!qFuzzyIsNull(rotationChange)) {
-        emit rotated(*this, rotationChange);
+        Q_EMIT rotated(*this, rotationChange);
     }
 
     _oldRot = newRot;

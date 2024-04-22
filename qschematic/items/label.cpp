@@ -95,7 +95,7 @@ void Label::setText(const QString& text)
 {
     _text = text;
     calculateTextRect();
-    emit textChanged(_text);
+    Q_EMIT textChanged(_text);
 }
 
 void Label::setFont(const QFont& font)
@@ -206,5 +206,5 @@ void Label::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWi
 
 void Label::mouseDoubleClickEvent([[maybe_unused]] QGraphicsSceneMouseEvent* event)
 {
-    emit doubleClicked();
+    Q_EMIT doubleClicked();
 }

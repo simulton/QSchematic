@@ -214,19 +214,19 @@ void Wire::setRenameAction(QAction* action)
 void Wire::prepend_point(const QPointF& point)
 {
     wire::prepend_point(point);
-    emit pointMoved(*this, wirePointsRelative().first());
+    Q_EMIT pointMoved(*this, wirePointsRelative().first());
 }
 
 void Wire::append_point(const QPointF& point)
 {
     wire::append_point(point);
-    emit pointMoved(*this, wirePointsRelative().last());
+    Q_EMIT pointMoved(*this, wirePointsRelative().last());
 }
 
 void Wire::insert_point(int index, const QPointF& point)
 {
     wire::insert_point(index, point);
-    emit pointMoved(*this, wirePointsRelative()[index]);
+    Q_EMIT pointMoved(*this, wirePointsRelative()[index]);
 }
 
 void Wire::removeFirstPoint()
@@ -255,7 +255,7 @@ void Wire::move_point_to(int index, const QPointF& moveTo)
     prepareGeometryChange();
     wire_system::wire::move_point_to(index, moveTo);
 
-    emit pointMoved(*this, wirePointsRelative()[index]);
+    Q_EMIT pointMoved(*this, wirePointsRelative()[index]);
     calculateBoundingRect();
     update();
 }

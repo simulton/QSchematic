@@ -246,7 +246,7 @@ void manager::point_moved_by_user(wire& rawWire, int index)
 {
     point point = rawWire.points().at(index);
 
-    emit wire_point_moved(rawWire, index);
+    Q_EMIT wire_point_moved(rawWire, index);
 
     // Detach wires
     if (index == 0 || index == rawWire.points_count() - 1){

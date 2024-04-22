@@ -129,7 +129,7 @@ namespace QSchematic::Items
         Scene* scene() const;
         virtual std::unique_ptr<QWidget> popup() const { return nullptr; }
 
-    signals:
+    Q_SIGNALS:
         void moved(Item& item, const QVector2D& movedBy);
         void movedInScene(Item& item);
         void rotated(Item& item, qreal rotation);
@@ -145,7 +145,7 @@ namespace QSchematic::Items
         bool isHighlighted() const;
         QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value) override;
 
-    private slots:
+    private Q_SLOTS:
         void posChanged();
         void scenePosChanged();
         void rotChanged();

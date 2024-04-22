@@ -65,11 +65,11 @@ namespace QSchematic
         qreal
         zoomValue() const;
 
-    signals:
+    Q_SIGNALS:
         void zoomChanged(qreal factor);
         void modeChanged(Mode newMode);
 
-    public slots:
+    public Q_SLOTS:
         /**
          * Set the zoom value.
          *

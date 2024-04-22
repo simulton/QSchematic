@@ -182,7 +182,7 @@ namespace QSchematic
         QUndoStack*
         undoStack() const;
 
-    signals:
+    Q_SIGNALS:
         void modeChanged(int newMode);
         void isDirtyChanged(bool isDirty);
         void itemAdded(std::shared_ptr<Items::Item> item);
@@ -231,7 +231,7 @@ namespace QSchematic
         QPixmap
         renderBackground(const QRect& rect) const;
 
-    private slots:
+    private Q_SLOTS:
         void wirePointMoved(wire& rawWire, int index);
 
     private:

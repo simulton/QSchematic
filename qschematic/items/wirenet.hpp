@@ -57,11 +57,11 @@ namespace QSchematic::Items
         QList<QPointF> points() const;
         std::shared_ptr<Label> label();
 
-    signals:
+    Q_SIGNALS:
         void highlightChanged(bool highlighted);
         void contextMenuRequested(const QPoint& pos);
 
-    private slots:
+    private Q_SLOTS:
         void labelHighlightChanged(const Item& item, bool highlighted);
         void wireHighlightChanged(const Item& item, bool highlighted);
         void toggleLabel();

@@ -113,7 +113,7 @@ void RectItem::setSize(QSizeF size)
     setTransformOriginPoint(sizeRect().center());
 
     sizeChangedEvent(oldSize, _size);
-    emit sizeChanged();
+    Q_EMIT sizeChanged();
 }
 
 void RectItem::setSize(qreal width, qreal height)

@@ -222,7 +222,7 @@ View::updateScale()
     // Apply the new scale
     setTransform(QTransform::fromScale(zoom, zoom));
 
-    emit zoomChanged(zoom);
+    Q_EMIT zoomChanged(zoom);
 }
 
 void
@@ -230,7 +230,7 @@ View::setMode(const Mode newMode)
 {
     _mode = newMode;
 
-    emit modeChanged(_mode);
+    Q_EMIT modeChanged(_mode);
 }
 
 qreal
