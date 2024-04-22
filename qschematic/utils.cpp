@@ -59,10 +59,10 @@ QPointF
 Utils::pointOnLineClosestToPoint(const QPointF& p1, const QPointF& p2, const QPointF& point)
 {
     // Algorithm based on: http://nic-gamedev.blogspot.ch/2011/11/using-vector-mathematics-and-bit-of_08.html
-    QVector2D lineDiffVector = QVector2D(p2 - p1);
+    QVector2D lineDiffVector{p2 - p1};
     float lineSegSqrLength = lineDiffVector.lengthSquared();
 
-    QVector2D lineToPointVect = QVector2D(point - p1);
+    QVector2D lineToPointVect{point - p1};
     float dotProduct = QVector2D::dotProduct(lineDiffVector, lineToPointVect);
 
     float percAlongLine = dotProduct / lineSegSqrLength;
