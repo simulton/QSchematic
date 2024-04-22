@@ -12,5 +12,4 @@ qschematic/*.dll
 .vs
 .vscode
 .idea
-.vscode
 cmake-build-*
