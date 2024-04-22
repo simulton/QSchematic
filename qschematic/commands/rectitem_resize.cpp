@@ -31,7 +31,7 @@ RectItemResize::mergeWith(const QUndoCommand* command)
         return false;
 
     // Check item
-    const RectItemResize* myCommand = static_cast<const RectItemResize*>(command);
+    auto myCommand = dynamic_cast<const RectItemResize*>(command);
     if (_item != myCommand->_item)
         return false;
 

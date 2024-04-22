@@ -9,6 +9,7 @@ struct connector :
 {
     QPointF pos;
 
+    [[nodiscard]]
     QPointF
     position() const override
     {

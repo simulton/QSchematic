@@ -26,7 +26,7 @@ ItemVisibility::mergeWith(const QUndoCommand* command)
     if (id() != command->id())
         return false;
 
-    const ItemVisibility* myCommand = dynamic_cast<const ItemVisibility*>(command);
+    auto myCommand = dynamic_cast<const ItemVisibility*>(command);
     if (!myCommand || _item != myCommand->_item)
         return false;
 

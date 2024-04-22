@@ -35,7 +35,7 @@ namespace QSchematic::Commands
     private:
         QPointer<Scene> _scene;
         std::shared_ptr<Items::Item> _item;
-        QGraphicsItem* _itemParent;
+        QGraphicsItem* _itemParent = nullptr;   // ToDo: Should this be a smart-ptr too?
     };
 
 }
