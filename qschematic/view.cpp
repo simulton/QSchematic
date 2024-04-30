@@ -24,6 +24,9 @@ View::View(QWidget* parent) :
 
     // Rendering options
     setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+
+    // Set initial zoom value
+    setZoomValue(1.0);
 }
 
 void
