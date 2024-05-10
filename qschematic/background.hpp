@@ -30,6 +30,13 @@ namespace QSchematic
         QPen m_grid_pen;
         QBrush m_grid_brush;
 
+        [[nodiscard]]
+        Settings
+        settings() const noexcept
+        {
+            return m_settings;
+        }
+
     private:
         Settings m_settings;
     };
