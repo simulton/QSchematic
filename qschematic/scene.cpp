@@ -943,6 +943,12 @@ Scene::dropEvent(QGraphicsSceneDragDropEvent* event)
     }
 }
 
+std::unique_ptr<Background>
+Scene::makeBackground() const
+{
+    return std::make_unique<Background>();
+}
+
 QVector2D
 Scene::itemsMoveSnap(const std::shared_ptr<Items::Item>& items, const QVector2D& moveBy) const
 {
@@ -954,10 +960,19 @@ Scene::itemsMoveSnap(const std::shared_ptr<Items::Item>& items, const QVector2D&
 void
 Scene::setupBackground()
 {
-    _background = new Background(nullptr);
-    _background->setRect(sceneRect());
-    _background->setZValue(z_value_background);
-    _background->setSettings(_settings);
+    auto bg = makeBackground();
+    if (!bg)
+        return;
+
+    // Configure
+    bg->setRect(sceneRect());
+    bg->setZValue(z_value_background);
+    bg->setSettings(_settings);
+
+    // Bookkeeping
+    _background = bg.release();
+
+    // Add to scene
     QGraphicsScene::addItem(_background);
 }
 

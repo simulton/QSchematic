@@ -216,6 +216,18 @@ namespace QSchematic
         void dropEvent(QGraphicsSceneDragDropEvent* event) override;
 
         /**
+         * Factory function to make a background item.
+         *
+         * Sub-classes may re-implement this to provide their own implementations.
+         *
+         * @return The background item.
+         */
+        [[nodiscard]]
+        virtual
+        std::unique_ptr<Background>
+        makeBackground() const;
+
+        /**
          * This gets called just before the item is actually being moved by moveBy. Subclasses may
          * implement this to implement snapping to elements other than the grid
          */
