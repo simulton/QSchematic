@@ -25,6 +25,8 @@ namespace QSchematic
         class WireNet;
     }
 
+    class Background;
+
     /**
      * The QSchematic Scene.
      *
@@ -40,6 +42,8 @@ namespace QSchematic
 
     public:
         static constexpr const char* gpds_name = "qschematic";
+
+        qreal z_value_background = -10'000;
 
         enum Mode {
             NormalMode,
@@ -210,7 +214,6 @@ namespace QSchematic
         void dragMoveEvent(QGraphicsSceneDragDropEvent* event) override;
         void dragLeaveEvent(QGraphicsSceneDragDropEvent* event) override;
         void dropEvent(QGraphicsSceneDragDropEvent* event) override;
-        void drawBackground(QPainter* painter, const QRectF& rect) override;
 
         /**
          * This gets called just before the item is actually being moved by moveBy. Subclasses may
@@ -221,21 +224,11 @@ namespace QSchematic
         QVector2D
         itemsMoveSnap(const std::shared_ptr<Items::Item>& item, const QVector2D& moveBy) const;
 
-        /**
-         * Renders the background.
-         *
-         * @param rect The scene rectangle. This is guaranteed to be non-null & valid.
-         */
-        [[nodiscard]]
-        virtual
-        QPixmap
-        renderBackground(const QRect& rect) const;
-
     private Q_SLOTS:
         void wirePointMoved(wire& rawWire, int index);
 
     private:
-        void renderCachedBackground();
+        void setupBackground();
         void setupNewItem(Items::Item& item);
         void updateNodeConnections(const Items::Node* node);
         void generateConnections();
@@ -272,7 +265,6 @@ namespace QSchematic
         // ItemUtils::ItemsCustodian<Item> _items;
         // ItemUtils::ItemsCustodian<WireNet> m_nets;
 
-        QPixmap _backgroundPixmap;
         std::function<std::shared_ptr<Items::Wire>()> _wireFactory;
         int _mode = NormalMode;
         std::shared_ptr<Items::Wire> _newWire;
@@ -287,6 +279,7 @@ namespace QSchematic
         std::shared_ptr<Items::Item> _highlightedItem = nullptr;
         QTimer* _popupTimer = nullptr;
         std::shared_ptr<QGraphicsProxyWidget> _popup;
+        Background* _background = nullptr;
     };
 
 }

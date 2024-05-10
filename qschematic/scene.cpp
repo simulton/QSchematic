@@ -9,6 +9,7 @@
 #include <QTimer>
 
 #include "scene.hpp"
+#include "background.hpp"
 #include "commands/item_move.hpp"
 #include "commands/item_add.hpp"
 #include "commands/item_remove.hpp"
@@ -54,13 +55,16 @@ Scene::Scene(QObject* parent) :
         _popup->setPos(_lastMousePos + QPointF{ 5, 5 });
     });
 
-    // Stuff
-    connect(this, &QGraphicsScene::sceneRectChanged, [this]{
-        renderCachedBackground();
+    // Background
+    setupBackground();
+    connect(this, &QGraphicsScene::sceneRectChanged, [this](const QRectF rect){
+        if (_background) {
+            // Adjust scene rect (make it smaller) because otherwise the scene resizes automatically to a larger size to accomodate
+            // the background rect and we end up in an infinite loop.
+            // ToDo
+            //_background->setRect(rect.adjusted(10, 10, -10, -10));
+        }
     });
-
-    // Prepare the background
-    renderCachedBackground();
 }
 
 Scene::~Scene()
@@ -170,6 +174,10 @@ Scene::from_container(const gpds::container& container)
 void
 Scene::setSettings(const Settings& settings)
 {
+    // Update background
+    if (_background)
+        _background->setSettings(settings);
+
     // Update settings of all items
     for (auto& item : items())
         item->setSettings(settings);
@@ -181,7 +189,6 @@ Scene::setSettings(const Settings& settings)
     _settings = settings;
 
     // Redraw
-    renderCachedBackground();
     update();
 }
 
@@ -273,8 +280,11 @@ Scene::clear()
     // Now that all the top-level items are safeguarded we can call the underlying scene's clear()
     QGraphicsScene::clear();
 
-    // NO longer dirty
+    // No longer dirty
     clearIsDirty();
+
+    // Setup the background again
+    setupBackground();
 }
 
 bool
@@ -933,14 +943,6 @@ Scene::dropEvent(QGraphicsSceneDragDropEvent* event)
     }
 }
 
-void
-Scene::drawBackground(QPainter* painter, const QRectF& rect)
-{
-    const QPointF& pixmapTopleft = rect.topLeft() - sceneRect().topLeft();
-
-    painter->drawPixmap(rect, _backgroundPixmap, QRectF(pixmapTopleft.x(), pixmapTopleft.y(), rect.width(), rect.height()));
-}
-
 QVector2D
 Scene::itemsMoveSnap(const std::shared_ptr<Items::Item>& items, const QVector2D& moveBy) const
 {
@@ -949,73 +951,14 @@ Scene::itemsMoveSnap(const std::shared_ptr<Items::Item>& items, const QVector2D&
     return moveBy;
 }
 
-QPixmap
-Scene::renderBackground(const QRect& rect) const
-{
-    // Create pixmap
-    QPixmap pixmap(rect.width(), rect.height());
-
-    // Grid pen
-    QPen gridPen;
-    gridPen.setStyle(Qt::SolidLine);
-    gridPen.setColor(Qt::gray);
-    gridPen.setCapStyle(Qt::RoundCap);
-    gridPen.setWidth(_settings.gridPointSize);
-
-    // Grid brush
-    QBrush gridBrush;
-    gridBrush.setStyle(Qt::NoBrush);
-
-    // Create a painter
-    QPainter painter(&pixmap);
-    painter.setRenderHint(QPainter::Antialiasing, _settings.antialiasing);
-
-    // Draw background
-    pixmap.fill(Qt::white);
-
-    // Draw the grid if supposed to
-    if (_settings.showGrid && (_settings.gridSize > 0)) {
-        qreal left = int(rect.left()) - (int(rect.left()) % _settings.gridSize);
-        qreal top = int(rect.top()) - (int(rect.top()) % _settings.gridSize);
-
-        // Create a list of points
-        QVector<QPointF> points;
-        for (qreal x = left; x < rect.right(); x += _settings.gridSize) {
-            for (qreal y = top; y < rect.bottom(); y += _settings.gridSize)
-                points.append(QPointF(x,y));
-        }
-
-        // Draw the actual grid points
-        painter.setPen(gridPen);
-        painter.setBrush(gridBrush);
-        painter.drawPoints(points.data(), points.size());
-    }
-
-    // Mark the origin if supposed to
-    if (_settings.debug) {
-        painter.setPen(Qt::NoPen);
-        painter.setBrush(QBrush(Qt::red));
-        painter.drawEllipse(-6, -6, 12, 12);
-    }
-
-    painter.end();
-
-    return pixmap;
-}
-
 void
-Scene::renderCachedBackground()
+Scene::setupBackground()
 {
-    // Create the pixmap
-    const QRect& rect = sceneRect().toRect();
-    if (rect.isNull() || !rect.isValid())
-        return;
-
-    // Render background
-    _backgroundPixmap = std::move(renderBackground(rect));
-
-    // Update
-    update();
+    _background = new Background(nullptr);
+    _background->setRect(sceneRect());
+    _background->setZValue(z_value_background);
+    _background->setSettings(_settings);
+    QGraphicsScene::addItem(_background);
 }
 
 void
