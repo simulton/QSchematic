@@ -1,7 +1,5 @@
 #include "background.hpp"
 
-#include <QPen>
-#include <QBrush>
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
 
@@ -10,6 +8,22 @@ using namespace QSchematic;
 Background::Background(QGraphicsItem* parent) :
     QGraphicsRectItem(parent)
 {
+    // Background pen
+    m_background_pen.setStyle(Qt::NoPen);
+
+    // Background brush
+    m_background_brush.setStyle(Qt::SolidPattern);
+    m_background_brush.setColor(Qt::white);
+
+    // Grid pen
+    m_grid_pen.setStyle(Qt::SolidLine);
+    m_grid_pen.setColor(Qt::gray);
+    m_grid_pen.setCapStyle(Qt::RoundCap);
+    m_grid_pen.setWidth(m_settings.gridPointSize);
+
+    // Grid brush
+    m_grid_brush.setStyle(Qt::NoBrush);
+
     setFlag(QGraphicsItem::ItemUsesExtendedStyleOption, true);  // For QStyleOptionGraphicsItem::exposedRect
 }
 
@@ -22,26 +36,6 @@ Background::setSettings(const Settings& settings)
 void
 Background::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-    // Background pen
-    QPen backgroundPen;
-    backgroundPen.setStyle(Qt::NoPen);
-
-    // Background brush
-    QBrush backgroundBrush;
-    backgroundBrush.setStyle(Qt::SolidPattern);
-    backgroundBrush.setColor(Qt::white);
-
-    // Grid pen
-    QPen gridPen;
-    gridPen.setStyle(Qt::SolidLine);
-    gridPen.setColor(Qt::gray);
-    gridPen.setCapStyle(Qt::RoundCap);
-    gridPen.setWidth(m_settings.gridPointSize);
-
-    // Grid brush
-    QBrush gridBrush;
-    gridBrush.setStyle(Qt::NoBrush);
-
     // Get the rectangle of interest (er = "exposed rect")
     const QRectF er = (option ? option->exposedRect : rect());
 
@@ -50,8 +44,8 @@ Background::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWi
     painter->setRenderHint(QPainter::Antialiasing, m_settings.antialiasing);
 
     // Draw background
-    painter->setPen(backgroundPen);
-    painter->setBrush(backgroundBrush);
+    painter->setPen(m_background_pen);
+    painter->setBrush(m_background_brush);
     painter->drawRect(er);
 
     // Draw the grid if supposed to
@@ -59,8 +53,8 @@ Background::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWi
         const qreal left = int(er.left()) - (int(er.left()) % m_settings.gridSize);
         const qreal top = int(er.top()) - (int(er.top()) % m_settings.gridSize);
 
-        painter->setPen(gridPen);
-        painter->setBrush(gridBrush);
+        painter->setPen(m_grid_pen);
+        painter->setBrush(m_grid_brush);
         for (qreal x = left; x < er.right(); x += m_settings.gridSize) {
             for (qreal y = top; y < er.bottom(); y += m_settings.gridSize)
                 painter->drawPoint(x, y);
