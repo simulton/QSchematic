@@ -252,6 +252,10 @@ View::fitInView()
     // Find the combined bounding rect of all the items
     QRectF rect;
     for (const auto& item : _scene->QGraphicsScene::items()) {
+        // Ignore the background item
+        if (_scene->isBackground(item))
+            continue;
+
         QRectF boundingRect = item->boundingRect();
         boundingRect.moveTo(item->scenePos());
         rect = rect.united(boundingRect);
