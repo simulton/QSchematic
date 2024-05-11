@@ -345,6 +345,15 @@ Scene::removeItem(const std::shared_ptr<Items::Item> item)
     return true;
 }
 
+bool
+Scene::isBackground(const QGraphicsItem* item) const
+{
+    // Note: Using dynamic_cast instead of qgraphicsitem_cast becase we are not registering the background as a custom
+    //       item.
+
+    return dynamic_cast<const Background*>(item) == _background;
+}
+
 QList<std::shared_ptr<Items::Item>>
 Scene::items() const
 {

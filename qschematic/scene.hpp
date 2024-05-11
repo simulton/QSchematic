@@ -147,6 +147,16 @@ namespace QSchematic
             return ret;
         }
 
+        /**
+         * Check whether an item is the current background item.
+         *
+         * @param item The item to check.
+         * @return Whether the item is the current background item.
+         */
+        [[nodiscard]]
+        bool
+        isBackground(const QGraphicsItem* item) const;
+
         QList<std::shared_ptr<Items::Item>> itemsAt(const QPointF& scenePos, Qt::SortOrder order = Qt::DescendingOrder) const;
         std::vector<std::shared_ptr<Items::Item>> selectedItems() const;
         std::vector<std::shared_ptr<Items::Item>> selectedTopLevelItems() const;
