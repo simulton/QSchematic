@@ -320,7 +320,7 @@ QPixmap Item::toPixmap(QPointF& hotSpot, qreal scale)
         
         painter.save();
         painter.translate(child->pos());
-        child->paint(&painter, nullptr, nullptr);
+        child->paint(&painter, &option, nullptr);
         painter.restore();
     }
 
