@@ -6,6 +6,7 @@
 #include <QPainter>
 #include <QVector2D>
 #include <QGraphicsSceneHoverEvent>
+#include <QStyleOptionGraphicsItem>
 #include <QWidget>
 
 using namespace QSchematic;
@@ -311,7 +312,8 @@ QPixmap Item::toPixmap(QPointF& hotSpot, qreal scale)
     painter.setRenderHint(QPainter::TextAntialiasing, _settings.antialiasing);
     painter.scale(scale, scale);
     painter.translate(hotSpot);
-    paint(&painter, nullptr, nullptr);
+    QStyleOptionGraphicsItem option;
+    paint(&painter, &option, nullptr);
     for (QGraphicsItem* child : childItems()) {
         if (!child)
             continue;
