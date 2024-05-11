@@ -24,7 +24,13 @@ Background::Background(QGraphicsItem* parent) :
     // Grid brush
     m_grid_brush.setStyle(Qt::NoBrush);
 
+    // Configuration
     setFlag(QGraphicsItem::ItemUsesExtendedStyleOption, true);  // For QStyleOptionGraphicsItem::exposedRect
+    setFlag(QGraphicsItem::ItemIsMovable, false);
+    setFlag(QGraphicsItem::ItemIsSelectable, false);
+    setFlag(QGraphicsItem::ItemIsFocusable, false);
+    setFlag(QGraphicsItem::ItemSendsGeometryChanges, false);
+    setFlag(QGraphicsItem::ItemSendsScenePositionChanges, false);
 }
 
 void
