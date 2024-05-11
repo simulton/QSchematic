@@ -59,10 +59,10 @@ Scene::Scene(QObject* parent) :
     setupBackground();
     connect(this, &QGraphicsScene::sceneRectChanged, [this](const QRectF rect){
         if (_background) {
-            // Adjust scene rect (make it smaller) because otherwise the scene resizes automatically to a larger size to accomodate
-            // the background rect and we end up in an infinite loop.
-            // ToDo
-            //_background->setRect(rect.adjusted(10, 10, -10, -10));
+            // Note: We adjust the scene rect (make it smaller) before we set it as the background rect because the scene automatically resizes
+            //       to accommodate all items. If we were not ot do this, the scene would resize (get larger) after setting the background rect
+            //       triggering this slot again and we'd end up in an infinite loop.
+            _background->setRect(rect.adjusted(1, 1, -1, -1));
         }
     });
 }
