@@ -35,6 +35,7 @@ namespace QSchematic::Items
             ConnectorType,
             LabelType,
             SplineWireType,
+            BackgroundType,
 
             QSchematicItemUserType = QGraphicsItem::UserType + 100
         };

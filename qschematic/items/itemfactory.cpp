@@ -54,6 +54,9 @@ Factory::from_container(const gpds::container& container) const
     case Item::LabelType:
         return std::make_shared<Label>();
 
+    case Item::BackgroundType:
+        return { };
+
     case Item::QSchematicItemUserType:
         break;
     }
