@@ -40,7 +40,9 @@ namespace QSchematic::Items
         };
         Q_ENUM(ItemType)
 
+        explicit
         Item(int type, QGraphicsItem* parent = nullptr);
+
         ~Item() override;
 
         /**
