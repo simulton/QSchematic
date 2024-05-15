@@ -91,46 +91,127 @@ namespace QSchematic::Items
         }
         /// @}
 
-        gpds::container to_container() const override;
-        void from_container(const gpds::container& container) override;
-        virtual std::shared_ptr<Item> deepCopy() const = 0;
+        gpds::container
+        to_container() const override;
 
-        int type() const final;
-        void setGridPos(const QPoint& gridPos);
-        void setGridPos(int x, int y);
-        void setGridPosX(int x);
-        void setGridPosY(int y);
-        QPoint gridPos() const;
-        int gridPosX() const;
-        int gridPosY() const;
-        void setPos(const QPointF& pos);
-        void setPos(qreal x, qreal y);
-        void setPosX(qreal x);
-        void setPosY(qreal y);
-        QPointF pos() const;
-        qreal posX() const;
-        qreal posY() const;
-        void setScenePos(const QPointF& point);
-        void setScenePos(qreal x, qreal y);
-        void setScenePosX(qreal x);
-        void setScenePosY(qreal y);
-        QPointF scenePos() const;
-        qreal scenePosX() const;
-        qreal scenePosY() const;
-        void moveBy(const QVector2D& moveBy);
-        void setSettings(const Settings& settings);
-        const Settings& settings() const;
-        void setMovable(bool enabled);
-        bool isMovable() const;
-        void setSnapToGrid(bool enabled);
-        bool snapToGrid() const;
-        void setHighlighted(bool isHighlighted);
-        void setHighlightEnabled(bool enabled);
-        bool highlightEnabled() const;
-        QPixmap toPixmap(QPointF& hotSpot, qreal scale = 1.0);
-        virtual void update();
-        Scene* scene() const;
-        virtual std::unique_ptr<QWidget> popup() const { return nullptr; }
+        void
+        from_container(const gpds::container& container) override;
+
+        virtual
+        std::shared_ptr<Item>
+        deepCopy() const = 0;
+
+        // QGraphicsObject overload
+        int
+        type() const final;
+
+        void
+        setGridPos(const QPoint& gridPos);
+
+        void
+        setGridPos(int x, int y);
+
+        void
+        setGridPosX(int x);
+
+        void
+        setGridPosY(int y);
+
+        QPoint
+        gridPos() const;
+
+        int
+        gridPosX() const;
+
+        int
+        gridPosY() const;
+
+        void
+        setPos(const QPointF& pos);
+
+        void
+        setPos(qreal x, qreal y);
+
+        void
+        setPosX(qreal x);
+
+        void
+        setPosY(qreal y);
+
+        QPointF
+        pos() const;
+
+        qreal
+        posX() const;
+
+        qreal
+        posY() const;
+
+        void
+        setScenePos(const QPointF& point);
+
+        void
+        setScenePos(qreal x, qreal y);
+
+        void
+        setScenePosX(qreal x);
+
+        void
+        setScenePosY(qreal y);
+
+        QPointF
+        scenePos() const;
+
+        qreal
+        scenePosX() const;
+
+        qreal
+        scenePosY() const;
+
+        void
+        moveBy(const QVector2D& moveBy);
+
+        void
+        setSettings(const Settings& settings);
+
+        const Settings&
+        settings() const;
+
+        void
+        setMovable(bool enabled);
+
+        bool
+        isMovable() const;
+
+        void
+        setSnapToGrid(bool enabled);
+
+        bool
+        snapToGrid() const;
+
+        void
+        setHighlighted(bool isHighlighted);
+
+        void
+        setHighlightEnabled(bool enabled);
+
+        bool
+        highlightEnabled() const;
+
+        QPixmap
+        toPixmap(QPointF& hotSpot, qreal scale = 1.0);
+
+        virtual void
+        update();
+
+        Scene*
+        scene() const;
+
+        virtual
+        std::unique_ptr<QWidget> popup() const
+        {
+            return nullptr;
+        }
 
     Q_SIGNALS:
         void moved(Item& item, const QVector2D& movedBy);
@@ -142,11 +223,17 @@ namespace QSchematic::Items
     protected:
         Settings _settings;
 
-        void copyAttributes(Item& dest) const;
-        void addItemTypeIdToContainer(gpds::container& container) const;
+        void
+        copyAttributes(Item& dest) const;
 
-        bool isHighlighted() const;
-        QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value) override;
+        void
+        addItemTypeIdToContainer(gpds::container& container) const;
+
+        bool
+        isHighlighted() const;
+
+        QVariant
+        itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value) override;
 
     private Q_SLOTS:
         void posChanged();
