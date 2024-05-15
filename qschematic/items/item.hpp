@@ -91,17 +91,20 @@ namespace QSchematic::Items
         }
         /// @}
 
+        [[nodiscard]]
         gpds::container
         to_container() const override;
 
         void
         from_container(const gpds::container& container) override;
 
+        [[nodiscard]]
         virtual
         std::shared_ptr<Item>
         deepCopy() const = 0;
 
         // QGraphicsObject overload
+        [[nodiscard]]
         int
         type() const final;
 
@@ -117,12 +120,15 @@ namespace QSchematic::Items
         void
         setGridPosY(int y);
 
+        [[nodiscard]]
         QPoint
         gridPos() const;
 
+        [[nodiscard]]
         int
         gridPosX() const;
 
+        [[nodiscard]]
         int
         gridPosY() const;
 
@@ -138,12 +144,15 @@ namespace QSchematic::Items
         void
         setPosY(qreal y);
 
+        [[nodiscard]]
         QPointF
         pos() const;
 
+        [[nodiscard]]
         qreal
         posX() const;
 
+        [[nodiscard]]
         qreal
         posY() const;
 
@@ -159,12 +168,15 @@ namespace QSchematic::Items
         void
         setScenePosY(qreal y);
 
+        [[nodiscard]]
         QPointF
         scenePos() const;
 
+        [[nodiscard]]
         qreal
         scenePosX() const;
 
+        [[nodiscard]]
         qreal
         scenePosY() const;
 
@@ -174,18 +186,21 @@ namespace QSchematic::Items
         void
         setSettings(const Settings& settings);
 
+        [[nodiscard]]
         const Settings&
         settings() const;
 
         void
         setMovable(bool enabled);
 
+        [[nodiscard]]
         bool
         isMovable() const;
 
         void
         setSnapToGrid(bool enabled);
 
+        [[nodiscard]]
         bool
         snapToGrid() const;
 
@@ -195,20 +210,26 @@ namespace QSchematic::Items
         void
         setHighlightEnabled(bool enabled);
 
+        [[nodiscard]]
         bool
         highlightEnabled() const;
 
+        [[nodiscard]]
         QPixmap
         toPixmap(QPointF& hotSpot, qreal scale = 1.0);
 
-        virtual void
+        virtual
+        void
         update();
 
+        [[nodiscard]]
         Scene*
         scene() const;
 
+        [[nodiscard]]
         virtual
-        std::unique_ptr<QWidget> popup() const
+        std::unique_ptr<QWidget>
+        popup() const
         {
             return nullptr;
         }
@@ -229,6 +250,7 @@ namespace QSchematic::Items
         void
         addItemTypeIdToContainer(gpds::container& container) const;
 
+        [[nodiscard]]
         bool
         isHighlighted() const;
 
