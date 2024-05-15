@@ -267,7 +267,9 @@ void Item::setHighlighted(bool highlighted)
 
     // Ripple through children
     for (QGraphicsItem* child : childItems()) {
-        if (Item* childItem = qgraphicsitem_cast<Item*>(child); childItem)
+        // Note: Using dynamic_cast instead of qgraphicsitem_cast to cope with user defined / custom items that might not
+        //       be registered via QGraphicsItem tag based item conversion system.
+        if (Item* childItem = dynamic_cast<Item*>(child); childItem)
             childItem->setHighlighted(highlighted);
     }
 }
