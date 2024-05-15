@@ -267,10 +267,8 @@ void Item::setHighlighted(bool highlighted)
 
     // Ripple through children
     for (QGraphicsItem* child : childItems()) {
-        Item* childItem = qgraphicsitem_cast<Item*>(child);
-        if (childItem) {
+        if (Item* childItem = qgraphicsitem_cast<Item*>(child); childItem)
             childItem->setHighlighted(highlighted);
-        }
     }
 }
 
