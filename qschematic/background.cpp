@@ -31,6 +31,7 @@ Background::Background(QGraphicsItem* parent) :
     setFlag(QGraphicsItem::ItemIsFocusable, false);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, false);
     setFlag(QGraphicsItem::ItemSendsScenePositionChanges, false);
+    setFlag(QGraphicsItem::ItemDoesntPropagateOpacityToChildren, false);
 }
 
 void
