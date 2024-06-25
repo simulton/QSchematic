@@ -36,6 +36,22 @@ namespace QSchematic
             return QSchematic::Items::Item::ItemType::BackgroundType;
         }
 
+        /**
+         * Do not provide a shape.
+         *
+         * @note We do this to prevent this background item to participate in things such as:
+         *         - Mouse interactions
+         *         - Collision detection
+         *         - Hit detection
+         *         - Show up in QGraphicsScene::items()
+         */
+        [[nodiscard]]
+        QPainterPath
+        shape() const override
+        {
+            return { };
+        }
+
         void
         paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
 
