@@ -276,7 +276,7 @@ void RectItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
     {
         // Sanity check
         if (!_allowMouseResize) {
-            qFatal("RectItem::mouseMoveEvent(): _mode is 'Resize' although _allowMouseResize is false");
+            qWarning("RectItem::mouseMoveEvent(): _mode is 'Resize' although _allowMouseResize is false. This should not happen.");
             break;
         }
 
@@ -397,7 +397,7 @@ void RectItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
     {
         // Sanity check
         if (!_allowMouseRotate) {
-            qFatal("RectItem::mouseMoveEvent(): _mode is 'Rotate' although _allowMouseRotate is false");
+            qWarning("RectItem::mouseMoveEvent(): _mode is 'Rotate' although _allowMouseRotate is false. This should not happen.");
             break;
         }
 
