@@ -384,33 +384,7 @@ Scene::items(int itemType) const
 std::vector<std::shared_ptr<Items::Item>>
 Scene::selectedItems() const
 {
-
-    // 111
-    // auto items = ItemUtils::mapItemListToSharedPtrList<std::vector>(QGraphicsScene::selectedItems());
-
-
-    // 222
-    // const auto& rawItems = QGraphicsScene::selectedItems();
-    // // Retrieve corresponding smart pointers
-    // auto items = std::vector<std::shared_ptr<Items::Item>>{};
-    // items.reserve(rawItems.count());
-    // for ( auto item_ptr : rawItems ) {
-    //     if ( auto qs_item = dynamic_cast<Item*>(item_ptr) ) {
-    //         if ( auto item_sh_ptr = qs_item->sharedPtr() ) {
-    //             items.push_back(item_sh_ptr );
-    //         }
-    //     }
-    // }
-
-    // ???
-    // TODO: XXX
-    // - get items but sort out only those in root(?)
-    // - this will break for group style (ExdDes)
-    // - but QS-demo behaves wickedly if child-items are allowed to be selected since it didn't support that before
-
-    auto items = ItemUtils::mapItemListToSharedPtrList<std::vector>(QGraphicsScene::selectedItems());
-
-    return items;
+    return ItemUtils::mapItemListToSharedPtrList<std::vector>(QGraphicsScene::selectedItems());
 }
 
 /**
