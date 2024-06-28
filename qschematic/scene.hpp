@@ -53,20 +53,45 @@ namespace QSchematic
         };
         Q_ENUM(Mode)
 
-        explicit Scene(QObject* parent = nullptr);
+        /**
+         * Constructor.
+         */
+        explicit
+        Scene(QObject* parent = nullptr);
+
+        /**
+         * Destructor.
+         */
         ~Scene() override;
 
-        gpds::container to_container() const override;
-        void from_container(const gpds::container& container) override;
+        [[nodiscard]]
+        gpds::container
+        to_container() const override;
 
-        void setSettings(const Settings& settings);
-        void setWireFactory(const std::function<std::shared_ptr<Items::Wire>()>& factory);
-        void setMode(int mode);
-        int mode() const;
-        void toggleWirePosture();
+        void
+        from_container(const gpds::container& container) override;
 
-        bool isDirty() const;
-        void clearIsDirty();
+        void
+        setSettings(const Settings& settings);
+
+        void
+        setWireFactory(const std::function<std::shared_ptr<Items::Wire>()>& factory);
+
+        void
+        setMode(int mode);
+
+        [[nodiscard]]
+        int
+        mode() const;
+
+        void
+        toggleWirePosture();
+
+        bool
+        isDirty() const;
+
+        void
+        clearIsDirty();
 
         /**
          * Clears the scene.
@@ -157,21 +182,59 @@ namespace QSchematic
         bool
         isBackground(const QGraphicsItem* item) const;
 
-        QList<std::shared_ptr<Items::Item>> itemsAt(const QPointF& scenePos, Qt::SortOrder order = Qt::DescendingOrder) const;
-        std::vector<std::shared_ptr<Items::Item>> selectedItems() const;
-        std::vector<std::shared_ptr<Items::Item>> selectedTopLevelItems() const;
-        QList<std::shared_ptr<Items::Node>> nodes() const;
-        [[nodiscard]] std::shared_ptr<Items::Node> nodeFromConnector(const Items::Connector& connector) const;
-        QList<QPointF> connectionPoints() const;
-        QList<std::shared_ptr<Items::Connector>> connectors() const;
-        std::shared_ptr<wire_system::manager> wire_manager() const;
-        void itemHoverEnter(const std::shared_ptr<const Items::Item>& item);
-        void itemHoverLeave(const std::shared_ptr<const Items::Item>& item);
-        void removeLastWirePoint();
-        void removeUnconnectedWires();
-        bool addWire(const std::shared_ptr<Items::Wire>& wire);
-        bool removeWire(const std::shared_ptr<Items::Wire>& wire);
-        QList<std::shared_ptr<Items::WireNet>> nets(const std::shared_ptr<net> wireNet) const;
+        [[nodiscard]]
+        QList<std::shared_ptr<Items::Item>>
+        itemsAt(const QPointF& scenePos, Qt::SortOrder order = Qt::DescendingOrder) const;
+
+        [[nodiscard]]
+        std::vector<std::shared_ptr<Items::Item>>
+        selectedItems() const;
+
+        [[nodiscard]]
+        std::vector<std::shared_ptr<Items::Item>>
+        selectedTopLevelItems() const;
+
+        [[nodiscard]]
+        QList<std::shared_ptr<Items::Node>>
+        nodes() const;
+
+        [[nodiscard]]
+        std::shared_ptr<Items::Node>
+        nodeFromConnector(const Items::Connector& connector) const;
+
+        [[nodiscard]]
+        QList<QPointF>
+        connectionPoints() const;
+
+        [[nodiscard]]
+        QList<std::shared_ptr<Items::Connector>>
+        connectors() const;
+
+        [[nodiscard]]
+        std::shared_ptr<wire_system::manager>
+        wire_manager() const;
+
+        void
+        itemHoverEnter(const std::shared_ptr<const Items::Item>& item);
+
+        void
+        itemHoverLeave(const std::shared_ptr<const Items::Item>& item);
+
+        void
+        removeLastWirePoint();
+
+        void
+        removeUnconnectedWires();
+
+        bool
+        addWire(const std::shared_ptr<Items::Wire>& wire);
+
+        bool
+        removeWire(const std::shared_ptr<Items::Wire>& wire);
+
+        [[nodiscard]]
+        QList<std::shared_ptr<Items::WireNet>>
+        nets(const std::shared_ptr<net> wireNet) const;
 
         /**
          * Undo to last command.
@@ -250,11 +313,20 @@ namespace QSchematic
         void wirePointMoved(wire& rawWire, int index);
 
     private:
-        void setupBackground();
-        void setupNewItem(Items::Item& item);
-        void updateNodeConnections(const Items::Node* node);
-        void generateConnections();
-        void finishCurrentWire();
+        void
+        setupBackground();
+
+        void
+        setupNewItem(Items::Item& item);
+
+        void
+        updateNodeConnections(const Items::Node* node);
+
+        void
+        generateConnections();
+
+        void
+        finishCurrentWire();
 
         /**
          * Make new wire.
