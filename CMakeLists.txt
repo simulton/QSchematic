@@ -37,7 +37,7 @@ endif()
 
 # Project requirements
 set(QSCHEMATIC_DEPENDENCY_GPDS_MINIMUM_VERSION  "1.8.4")
-set(QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD_VERSION "1.8.4")
+set(QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD_VERSION "1.9.0")
 
 # Include the library
 add_subdirectory(qschematic)
