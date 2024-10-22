@@ -87,6 +87,11 @@ This library can be integrated easily into other cmake projects. There are two m
 ```cmake
 include(FetchContent)
 
+# Set QSchematic CMake options
+set(QSCHEMATIC_BUILD_DEMO               OFF          CACHE INTERNAL "")
+set(QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD OFF          CACHE INTERNAL "")
+set(QSCHEMATIC_DEPENDENCY_GPDS_TARGET  "gpds-shared" CACHE INTERNAL "")
+
 # Fetch QSchematic
 FetchContent_Declare(
     qschematic
@@ -99,28 +104,10 @@ FetchContent_MakeAvailable(qschematic)
 target_link_libraries(
     my_app
     PRIVATE
-        qschematic-static
+        qschematic::qschematic-static
 )
 ```
 Note that any serious consumer might want to specify an actual git tag or a commit hash via `GIT_TAG` rather than a branch name.
-To change options & variables, the call to `FetchContent_MakeAvailable()` shown above can be replaced with:
-```cmake
-FetchContent_Declare(
-    qschematic
-    GIT_REPOSITORY https://github.com/simulton/qschematic
-    GIT_TAG        master
-)
-FetchContent_GetProperties(qschematic)
-if(NOT qschematic_POPULATED)
-    FetchContent_Populate(qschematic)
-    
-    set(QSCHEMATIC_BUILD_DEMO OFF CACHE INTERNAL "")
-    set(QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD OFF CACHE INTERNAL "")
-    set(QSCHEMATIC_DEPENDENCY_GPDS_TARGET "gpds-shared" CACHE INTERNAL "")
-    
-    add_subdirectory(${qschematic_SOURCE_DIR} ${qschematic_BINARY_DIR})
-endif()
-```
 
 #### find_package()
 The QSchematic static & shared library cmake targets are exported which allows for easy integration into a client application/library.
