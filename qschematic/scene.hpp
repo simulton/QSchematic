@@ -45,7 +45,8 @@ namespace QSchematic
 
         qreal z_value_background = -10'000;
 
-        enum Mode {
+        enum Mode
+        {
             NormalMode,
             WireMode,
 
@@ -278,7 +279,7 @@ namespace QSchematic
     protected:
         Settings _settings;
 
-        // QGraphicsScene
+        // QGraphicsScene overrides
         void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
         void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
         void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
