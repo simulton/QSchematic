@@ -88,6 +88,7 @@ namespace QSchematic
         void
         toggleWirePosture();
 
+        [[nodiscard]]
         bool
         isDirty() const;
 
