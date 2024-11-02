@@ -1,21 +1,6 @@
 # Pull in external dependencies
 include(../qschematic/external.cmake)
 
-# Qt
-find_package(
-    Qt6
-    COMPONENTS
-        PrintSupport
-)
-if (NOT Qt6_FOUND)
-    find_package(
-        Qt5
-        REQUIRED
-        COMPONENTS
-            PrintSupport
-    )
-endif()
-
 # Define a target name
 set(TARGET qschematic-demo)
 
