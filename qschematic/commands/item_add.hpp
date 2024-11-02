@@ -1,5 +1,7 @@
 #pragma once
 
+#include <qschematic-export.h>
+
 #include "base.hpp"
 
 #include <QPointer>
@@ -17,7 +19,7 @@ namespace QSchematic::Items
 
 namespace QSchematic::Commands
 {
-    class ItemAdd :
+    class QSCHEMATIC_EXPORT ItemAdd :
         public Base
     {
     public:

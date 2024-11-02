@@ -1,5 +1,7 @@
 #pragma once
 
+#include <qschematic-export.h>
+
 #include "item.hpp"
 #include "../types.hpp"
 
@@ -11,7 +13,7 @@ class QGraphicsSceneHoverEvent;
 namespace QSchematic::Items
 {
 
-    class RectItem :
+    class QSCHEMATIC_EXPORT RectItem :
         public Item
     {
         Q_OBJECT

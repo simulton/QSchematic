@@ -1,3 +1,7 @@
+#pragma once
+
+#include <qschematic-export.h>
+
 #include "item.hpp"
 
 #include <QMimeData>
@@ -8,7 +12,7 @@ namespace QSchematic::Items
 {
     const QString MIME_TYPE_NODE = "qschematic/node";
 
-    class MimeData :
+    class QSCHEMATIC_EXPORT MimeData :
         public QMimeData
     {
         Q_OBJECT

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <qschematic-export.h>
+
 #include "../wire_system/line.hpp"
 #include "../wire_system/net.hpp"
 
@@ -29,7 +31,7 @@ namespace QSchematic::Items
     class Label;
 
     // ToDo: Technically, this class does not belong into the `Items` namespace
-    class WireNet :
+    class QSCHEMATIC_EXPORT WireNet :
         public QObject,
         public gpds::serialize,
         public wire_system::net

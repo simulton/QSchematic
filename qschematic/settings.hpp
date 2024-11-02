@@ -1,5 +1,7 @@
 #pragma once
 
+#include <qschematic-export.h>
+
 #include <chrono>
 
 class QPoint;
@@ -15,7 +17,7 @@ namespace QSchematic
     /**
      * Settings for the QSchematic scene.
      */
-    class Settings
+    class QSCHEMATIC_EXPORT Settings
     {
     public:
         bool debug                  = false;

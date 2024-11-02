@@ -1,5 +1,7 @@
 #pragma once
 
+#include <qschematic-export.h>
+
 #include "settings.hpp"
 #include "items/item.hpp"   // For QGraphicsItem::type() overload
 
@@ -17,7 +19,7 @@ namespace QSchematic
      *       participate in any user facing logic. However, we still have to return a proper type for the
      *       QGraphicsItem::type() overload for qgraphicsitem_cast<> to work properly.
      */
-    class Background :
+    class QSCHEMATIC_EXPORT Background :
         public QGraphicsRectItem
     {
     public:

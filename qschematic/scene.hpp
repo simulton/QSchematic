@@ -1,5 +1,7 @@
 #pragma once
 
+#include <qschematic-export.h>
+
 #include "settings.hpp"
 #include "items/item.hpp"
 #include "items/wire.hpp"
@@ -33,7 +35,7 @@ namespace QSchematic
      * @details This type holds & represents the actual diagram/schematic/graph. This would be analogous to a proper
      *          "document" type.
      */
-    class Scene :
+    class QSCHEMATIC_EXPORT Scene :
         public QGraphicsScene,
         public gpds::serialize
     {

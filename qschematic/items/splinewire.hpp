@@ -1,11 +1,13 @@
 #pragma once
 
+#include <qschematic-export.h>
+
 #include "wire.hpp"
 
 namespace QSchematic::Items
 {
 
-    class SplineWire :
+    class QSCHEMATIC_EXPORT SplineWire :
         public QSchematic::Items::Wire
     {
         Q_OBJECT
