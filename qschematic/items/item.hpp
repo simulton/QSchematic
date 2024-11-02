@@ -1,5 +1,7 @@
 #pragma once
 
+#include <qschematic-export.h>
+
 #include "itemfunctions.hpp"
 #include "../types.hpp"
 #include "../settings.hpp"
@@ -19,7 +21,7 @@ namespace QSchematic
 namespace QSchematic::Items
 {
 
-    class Item :
+    class QSCHEMATIC_EXPORT Item :
         public QGraphicsObject,
         public gpds::serialize,
         public std::enable_shared_from_this<Item>

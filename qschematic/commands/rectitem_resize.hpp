@@ -1,5 +1,7 @@
 #pragma once
 
+#include <qschematic-export.h>
+
 #include "base.hpp"
 
 #include <QPointer>
@@ -14,7 +16,7 @@ namespace QSchematic::Items
 namespace QSchematic::Commands
 {
 
-    class RectItemResize :
+    class QSCHEMATIC_EXPORT RectItemResize :
         public Base
     {
     public:

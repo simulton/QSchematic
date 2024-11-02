@@ -1,5 +1,7 @@
 #pragma once
 
+#include <qschematic-export.h>
+
 #include "base.hpp"
 
 #include <QVector>
@@ -17,7 +19,7 @@ namespace QSchematic::Items
 namespace QSchematic::Commands
 {
 
-    class ItemMove :
+    class QSCHEMATIC_EXPORT ItemMove :
         public Base
     {
     public:

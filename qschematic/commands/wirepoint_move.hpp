@@ -1,5 +1,7 @@
 #pragma once
 
+#include <qschematic-export.h>
+
 #include "base.hpp"
 #include "../items/wire.hpp"
 
@@ -13,7 +15,7 @@ class QVector2D;
 namespace QSchematic::Commands
 {
 
-    class WirepointMove :
+    class QSCHEMATIC_EXPORT WirepointMove :
         public Base
     {
     public:

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <qschematic-export.h>
+
 #include "scene.hpp"
 
 #include <QGraphicsView>
@@ -10,7 +12,7 @@ namespace QSchematic
     /**
      * A QWidget to display & interact with a QSchematic scene.
      */
-    class View :
+    class QSCHEMATIC_EXPORT View :
         public QGraphicsView
     {
         Q_OBJECT

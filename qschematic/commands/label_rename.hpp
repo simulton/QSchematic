@@ -1,5 +1,7 @@
 #pragma once
 
+#include <qschematic-export.h>
+
 #include "base.hpp"
 
 #include <QPointer>
@@ -12,7 +14,7 @@ namespace QSchematic::Items
 namespace QSchematic::Commands
 {
 
-    class LabelRename :
+    class QSCHEMATIC_EXPORT LabelRename :
         public Base
     {
     public:

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <qschematic-export.h>
+
 #include "item.hpp"
 #include "../wire_system/connectable.hpp"
 
@@ -9,7 +11,7 @@ namespace QSchematic::Items
     class Label;
     class Wire;
 
-    class Connector :
+    class QSCHEMATIC_EXPORT Connector :
         public Item,
         public wire_system::connectable
     {

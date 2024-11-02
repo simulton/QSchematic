@@ -1,5 +1,7 @@
 #pragma once
 
+#include <qschematic-export.h>
+
 #include "point.hpp"
 
 #include <QList>
@@ -21,7 +23,7 @@ namespace wire_system
      * @details A wire consists of zero or more line segments. A line segment's point can connect to connectables or
      *          other wire segments.
      */
-    class wire
+    class QSCHEMATIC_EXPORT wire
     {
     public:
         wire();

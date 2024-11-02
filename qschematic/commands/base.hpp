@@ -1,10 +1,11 @@
 #pragma once
 
+#include <qschematic-export.h>
 #include <QUndoCommand>
 
 namespace QSchematic::Commands
 {
-    class Base :
+    class QSCHEMATIC_EXPORT Base :
         public QObject,
         public QUndoCommand
     {

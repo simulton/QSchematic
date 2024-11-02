@@ -1,5 +1,7 @@
 #pragma once
 
+#include <qschematic-export.h>
+
 #include "item.hpp"
 
 #include <QFont>
@@ -7,7 +9,7 @@
 namespace QSchematic::Items
 {
 
-    class Label :
+    class QSCHEMATIC_EXPORT Label :
         public Item
     {
         Q_OBJECT

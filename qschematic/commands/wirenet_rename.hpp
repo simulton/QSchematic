@@ -1,5 +1,7 @@
 #pragma once
 
+#include <qschematic-export.h>
+
 #include "base.hpp"
 
 #include <memory>
@@ -13,7 +15,7 @@ namespace QSchematic::Items
 namespace QSchematic::Commands
 {
 
-    class WirenetRename :
+    class QSCHEMATIC_EXPORT WirenetRename :
         public Base
     {
     public:

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <qschematic-export.h>
+
 #include "base.hpp"
 
 #include <memory>
@@ -14,7 +16,7 @@ namespace QSchematic::Commands
 
     class Item;
 
-    class ItemVisibility :
+    class QSCHEMATIC_EXPORT ItemVisibility :
         public Base
     {
     public:

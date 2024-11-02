@@ -1,5 +1,7 @@
 #pragma once
 
+#include <qschematic-export.h>
+
 #include "rectitem.hpp"
 #include "connector.hpp"
 #include "../types.hpp"
@@ -14,7 +16,7 @@ namespace QSchematic::Items
 
     class Connector;
 
-    class Node :
+    class QSCHEMATIC_EXPORT Node :
         public RectItem
     {
         Q_OBJECT

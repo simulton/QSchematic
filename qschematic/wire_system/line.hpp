@@ -1,5 +1,7 @@
 #pragma once
 
+#include <qschematic-export.h>
+
 #include <QPointF>
 
 class QLineF;
@@ -10,7 +12,7 @@ namespace wire_system
     /**
      * A straight line between two points.
      */
-    class line
+    class QSCHEMATIC_EXPORT line
     {
     public:
         line() = default;

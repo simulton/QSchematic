@@ -1,5 +1,7 @@
 #pragma once
 
+#include <qschematic-export.h>
+
 #include "rectitem.hpp"
 
 class QGraphicsProxyWidget;
@@ -12,7 +14,7 @@ namespace QSchematic::Items
      *
      * @details This class allows encapsulating a QWidget in the scene.
      */
-    class Widget :
+    class QSCHEMATIC_EXPORT Widget :
         public RectItem
     {
         Q_OBJECT

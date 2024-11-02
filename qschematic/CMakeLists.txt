@@ -26,6 +26,13 @@ function(setup_target_common target)
     # add alias to support cmake superbuild pattern
     add_library(qschematic::${target} ALIAS ${target})
 
+    # exporting the library
+    include(GenerateExportHeader)
+    generate_export_header(${target}
+        EXPORT_FILE_NAME ${CMAKE_BINARY_DIR}/qschematic-export.h
+        BASE_NAME qschematic
+    )
+
     target_sources(
         ${target}
         PUBLIC
@@ -113,6 +120,7 @@ function(setup_target_common target)
     target_include_directories(
         ${target}
         PUBLIC
+            $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}>
             $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/..>
             $<INSTALL_INTERFACE:..>
     )

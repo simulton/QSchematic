@@ -1,5 +1,7 @@
 #pragma once
 
+#include <qschematic-export.h>
+
 #include "../settings.hpp"
 
 #include <QObject>
@@ -23,7 +25,7 @@ namespace wire_system
     class wire;
     struct connectable;
 
-    class manager :
+    class QSCHEMATIC_EXPORT manager :
         public QObject
     {
         Q_OBJECT

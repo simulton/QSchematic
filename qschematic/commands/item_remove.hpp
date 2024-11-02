@@ -1,5 +1,7 @@
 #pragma once
 
+#include <qschematic-export.h>
+
 #include "base.hpp"
 
 #include <QPointer>
@@ -21,7 +23,7 @@ namespace QSchematic::Items
 namespace QSchematic::Commands
 {
 
-    class ItemRemove :
+    class QSCHEMATIC_EXPORT ItemRemove :
         public Base
     {
     public:

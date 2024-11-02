@@ -1,5 +1,7 @@
 #pragma once
 
+#include <qschematic-export.h>
+
 #include "item.hpp"
 
 #include <functional>
@@ -12,7 +14,7 @@ namespace QSchematic::Items
 
     class Item;
 
-    class Factory
+    class QSCHEMATIC_EXPORT Factory
     {
     public:
         [[nodiscard]]

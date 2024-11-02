@@ -1,5 +1,7 @@
 #pragma once
 
+#include <qschematic-export.h>
+
 #include "item.hpp"
 #include "wirenet.hpp"
 #include "../wire_system/point.hpp"
@@ -16,7 +18,7 @@ namespace QSchematic::Items
      * IMPORTANT NOTE: The points coordinates are RELATIVE and in SCENE COORDINATES.
      *                 Wires must be movable so we can move entire groups of stuff.
      */
-    class Wire :
+    class QSCHEMATIC_EXPORT Wire :
         public Item,
         public wire_system::wire
     {
