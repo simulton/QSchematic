@@ -19,6 +19,7 @@ namespace QSchematic::Items
         Q_DISABLE_COPY_MOVE(Widget)
 
     public:
+        explicit
         Widget(int type, QGraphicsItem* parent = nullptr);
         ~Widget() override = default;
 
@@ -35,7 +36,7 @@ namespace QSchematic::Items
         sizeChangedEvent(QSizeF oldSize, QSizeF newSize) override;
 
         void
-        paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
+        paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
 
     protected:
         int m_border_width    = 15;
