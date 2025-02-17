@@ -24,7 +24,7 @@ namespace QSchematic
 
         qreal zoom_factor_min  = 0.25;
         qreal zoom_factor_max  = 10.0;
-        qreal zoom_factor_step = 0.10;
+        qreal zoom_factor_step = 0.05;
         qreal fitall_padding   = 20.0;
 
         /**
