@@ -20,17 +20,17 @@ jobs:
           [
             {
               name: "Ubuntu GCC (Qt5)",
-              cxx: "g++-11",
-              cc: "gcc-11",
-              packages: "gcc-11 g++-11 libspdlog-dev libfmt-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools",
-              os: ubuntu-22.04,
+              cxx: "g++",
+              cc: "gcc",
+              packages: "libspdlog-dev libfmt-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools",
+              os: ubuntu-latest,
             },
             {
               name: "Ubuntu GCC (Qt6)",
-              cxx: "g++-11",
-              cc: "gcc-11",
-              packages: "gcc-11 g++-11 libspdlog-dev libfmt-dev qt6-base-dev libglx-dev libgl1-mesa-dev",
-              os: ubuntu-22.04,
+              cxx: "g++",
+              cc: "gcc",
+              packages: "libspdlog-dev libfmt-dev qt6-base-dev libglx-dev libgl1-mesa-dev",
+              os: ubuntu-latest,
             }
           ]
         exclude:
