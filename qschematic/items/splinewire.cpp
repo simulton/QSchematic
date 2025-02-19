@@ -16,7 +16,6 @@ using namespace QSchematic::Items;
 SplineWire::SplineWire(int type, QGraphicsItem* parent) :
     Wire(type, parent)
 {
-
 }
 
 void SplineWire::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)

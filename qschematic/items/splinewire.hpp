@@ -10,8 +10,11 @@ namespace QSchematic::Items
     {
         Q_OBJECT
         Q_DISABLE_COPY_MOVE(SplineWire)
+
     public:
+        explicit
         SplineWire(int type = Item::SplineWireType, QGraphicsItem* parent = nullptr);
+
         ~SplineWire() override = default;
 
         void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
