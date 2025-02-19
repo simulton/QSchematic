@@ -28,7 +28,7 @@ Feature overview:
     - Widgets (embed any `QWidget` into the scene)
 
 Technical stuff:
-  - Written in C++20
+  - Written in C++23
   - Works with Qt6
   - Everything is contained within the `QSchematic` namespace
   - MIT licensed
@@ -62,7 +62,7 @@ The following targets are provided:
 | `qschematic-demo`   | Builds a simple demo application. | 
 
 Dependencies:
-  - A C++20 capable compiler
+  - A C++23 capable compiler
   - Qt6
   - [GPDS](https://github.com/simulton/gpds) for (de)serialization
 
