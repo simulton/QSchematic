@@ -130,13 +130,8 @@ View::mouseMoveEvent(QMouseEvent* event)
             break;
 
         case PanMode:
-#       if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
             horizontalScrollBar()->setValue(horizontalScrollBar()->value() - (event->position().x() - _panStart.x()));
             verticalScrollBar()->setValue(verticalScrollBar()->value() - (event->position().y() - _panStart.y()));
-#       else
-            horizontalScrollBar()->setValue(horizontalScrollBar()->value() - (event->x() - _panStart.x()));
-            verticalScrollBar()->setValue(verticalScrollBar()->value() - (event->y() - _panStart.y()));
-#       endif
             _panStart = event->pos();
             event->accept();
             return;

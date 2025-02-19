@@ -93,11 +93,7 @@ void wire::move_junctions_to_new_segment(const line& oldSegment, const line& new
                 // Only move in the direction of the segment if it is hor. or vert.
                 if (!junctionSeg.is_null()) {
                     QPointF intersection;
-#                   if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-                        auto type = junctionSeg.toLineF().intersects(newSegment.toLineF(), &intersection);
-#                   else
-                        auto type = junctionSeg.toLineF().intersect(newSegment.toLineF(), &intersection);
-#                   endif
+                    auto type = junctionSeg.toLineF().intersects(newSegment.toLineF(), &intersection);
                     if (type != QLineF::NoIntersection) {
                         wire->move_point_by(jIndex, QVector2D(intersection - point.toPointF()));
                     }

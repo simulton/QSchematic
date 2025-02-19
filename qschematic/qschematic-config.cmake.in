@@ -15,16 +15,6 @@ find_dependency(
         Gui
         Widgets
 )
-if (NOT Qt6_FOUND)
-    find_dependency(
-        Qt5 5.15
-        REQUIRED
-        COMPONENTS
-            Core
-            Gui
-            Widgets
-    )
-endif()
 
 # GPDS
 if (NOT QSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD)

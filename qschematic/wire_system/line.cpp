@@ -108,11 +108,7 @@ bool line::contains_point(const QLineF& line, const QPointF& point, qreal tolera
         lineAdjusted.setLength(line.length() + 2 * tolerance);
 
         // Check if the lines are intersecting
-#       if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
         if (lineAdjusted.intersects(normal, nullptr) == QLineF::BoundedIntersection) {
-#       else
-        if (lineAdjusted.intersect(normal, nullptr) == QLineF::BoundedIntersection) {
-#       endif
             return true;
         }
     }
