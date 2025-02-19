@@ -19,13 +19,6 @@ jobs:
         toolchain:
           [
             {
-              name: "Ubuntu GCC (Qt5)",
-              cxx: "g++",
-              cc: "gcc",
-              packages: "libspdlog-dev libfmt-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools",
-              os: ubuntu-latest,
-            },
-            {
               name: "Ubuntu GCC (Qt6)",
               cxx: "g++",
               cc: "gcc",
