@@ -56,6 +56,5 @@ jobs:
       - name: Build
         run: cmake --build build
 
-        # ToDo: Use CTest instead
       - name: Run tests
-        run: ./build/qschematic/wire_system/test/qschematic-wiresystem-tests
+        run:  ctest --test-dir build --output-on-failure

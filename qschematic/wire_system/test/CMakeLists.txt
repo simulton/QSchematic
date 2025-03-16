@@ -55,3 +55,5 @@ target_link_libraries(
 	PUBLIC
 		${QSCHEMATIC_TARGET_INTERNAL}
 )
+
+add_test(NAME ${TARGET} COMMAND ${TARGET})

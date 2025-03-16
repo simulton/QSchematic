@@ -8,6 +8,9 @@ project(
     HOMEPAGE_URL https://github.com/simulton/qschematic
 )
 
+# Enable CTest
+enable_testing()
+
 # User options
 set(OPTION_BUILD_SHARED_DEFAULT ON)
 if (MSVC)
