@@ -8,7 +8,7 @@ project(
     HOMEPAGE_URL https://github.com/simulton/qschematic
 )
 
-# enable ctest
+# Enable CTest
 enable_testing()
 
 # User options
