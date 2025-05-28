@@ -190,7 +190,7 @@ make it possible for wires to attach to them.
 ### Connections
 
 The connections between `wire` and `connectable` are stored in the
-`manager::m_connections` as a `QMap<const connectable*, QPair<wire*, int>>`.
+`manager::m_connections` as a `QMap<const connectable*, std::pair<wire*, int>>`.
 This store the `connectable`, the `wire` and the index of the point in the
 wire.
 
