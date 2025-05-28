@@ -7,7 +7,6 @@
 
 #include <list>
 #include <memory>
-#include <optional>
 #include <utility>
 #include <vector>
 
@@ -131,7 +130,7 @@ namespace wire_system
         std::list<std::shared_ptr<net>> m_nets;
         Settings m_settings;
         QMap<const connectable*, std::pair<wire*, int>> m_connections;
-        std::optional<std::function<std::shared_ptr<net>()>> m_net_factory;
+        std::function<std::shared_ptr<net>()> m_net_factory;
 
         [[nodiscard]]
         static
