@@ -9,10 +9,6 @@
 
 using namespace wire_system;
 
-manager::manager()
-{
-}
-
 void
 manager::add_net(const std::shared_ptr<net> wireNet)
 {
