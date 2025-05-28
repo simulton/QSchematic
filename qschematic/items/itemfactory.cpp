@@ -2,7 +2,7 @@
 #include "node.hpp"
 #include "wire.hpp"
 #include "wireroundedcorners.hpp"
-#include "splinewire.hpp"
+#include "bezierwire.hpp"
 #include "connector.hpp"
 #include "label.hpp"
 
@@ -45,8 +45,8 @@ Factory::from_container(const gpds::container& container) const
     case Item::WireRoundedCornersType:
         return std::make_shared<WireRoundedCorners>();
 
-    case Item::SplineWireType:
-        return std::make_shared<SplineWire>();
+    case Item::BezierWireType:
+        return std::make_shared<BezierWire>();
 
     case Item::ConnectorType:
         return std::make_shared<Connector>();

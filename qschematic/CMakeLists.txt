@@ -44,6 +44,7 @@ function(setup_target_common target)
                 commands/commands.hpp
                 commands/wirenet_rename.hpp
                 commands/wirepoint_move.hpp
+                items/bezierwire.hpp
                 items/itemfunctions.hpp
                 items/connector.hpp
                 items/item.hpp
@@ -52,7 +53,6 @@ function(setup_target_common target)
                 items/label.hpp
                 items/node.hpp
                 items/rectitem.hpp
-                items/splinewire.hpp
                 items/widget.hpp
                 items/wire.hpp
                 items/wirenet.hpp
@@ -86,6 +86,7 @@ function(setup_target_common target)
             commands/rectitem_rotate.cpp
             commands/wirenet_rename.cpp
             commands/wirepoint_move.cpp
+            items/bezierwire.cpp
             items/connector.cpp
             items/item.cpp
             items/itemfactory.cpp
@@ -93,7 +94,6 @@ function(setup_target_common target)
             items/label.cpp
             items/node.cpp
             items/rectitem.cpp
-            items/splinewire.cpp
             items/widget.cpp
             items/wire.cpp
             items/wirenet.cpp

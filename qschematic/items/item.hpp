@@ -34,7 +34,7 @@ namespace QSchematic::Items
             WireRoundedCornersType,
             ConnectorType,
             LabelType,
-            SplineWireType,
+            BezierWireType,
             BackgroundType,
 
             QSchematicItemUserType = QGraphicsItem::UserType + 100
