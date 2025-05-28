@@ -137,7 +137,7 @@ TEST_SUITE("Manager")
             manager.attach_wire_to_connector(wire.get(), &conn);
 
             // Make sure the wire has been attached
-            REQUIRE_EQ(manager.attached_wire(&conn), wire.get());
+            REQUIRE_EQ(manager.attached_wire(&conn).first, wire.get());
             REQUIRE_EQ(manager.point_is_attached(wire.get(), 0), false);
             REQUIRE_EQ(manager.point_is_attached(wire.get(), 1), true);
         }
@@ -148,7 +148,7 @@ TEST_SUITE("Manager")
             manager.attach_wire_to_connector(wire.get(), &conn);
 
             // Make sure the wire has not been attached
-            REQUIRE_EQ(manager.attached_wire(&conn), nullptr);
+            REQUIRE_EQ(manager.attached_wire(&conn).first, nullptr);
             REQUIRE_EQ(manager.point_is_attached(wire.get(), 0), false);
             REQUIRE_EQ(manager.point_is_attached(wire.get(), 1), false);
         }
@@ -229,42 +229,42 @@ TEST_SUITE("Manager")
         manager.attach_wire_to_connector(wire.get(), &conn2);
 
         // Make sure the correct points are attached to the connectors
-        REQUIRE_EQ(manager.attached_point(&conn1), 0);
-        REQUIRE_EQ(manager.attached_point(&conn2), 1);
+        REQUIRE_EQ(manager.attached_wire(&conn1).second, 0);
+        REQUIRE_EQ(manager.attached_wire(&conn2).second, 1);
 
         // Insert a point between the two points
         wire->insert_point(1, QPointF(40, 40));
 
         // Make sure the correct points are attached to the connectors
-        REQUIRE_EQ(manager.attached_point(&conn1), 0);
-        REQUIRE_EQ(manager.attached_point(&conn2), 2);
+        REQUIRE_EQ(manager.attached_wire(&conn1).second, 0);
+        REQUIRE_EQ(manager.attached_wire(&conn2).second, 2);
 
         // Prepend a point
         wire->prepend_point(QPointF(0, 20));
 
         // Make sure the correct points are attached to the connectors
-        REQUIRE_EQ(manager.attached_point(&conn1), 0);
-        REQUIRE_EQ(manager.attached_point(&conn2), 3);
+        REQUIRE_EQ(manager.attached_wire(&conn1).second, 0);
+        REQUIRE_EQ(manager.attached_wire(&conn2).second, 3);
 
         // Append a point
         wire->append_point(QPointF(80, 20));
 
         // Make sure the correct points are attached to the connectors
-        REQUIRE_EQ(manager.attached_point(&conn1), 0);
-        REQUIRE_EQ(manager.attached_point(&conn2), 4);
+        REQUIRE_EQ(manager.attached_wire(&conn1).second, 0);
+        REQUIRE_EQ(manager.attached_wire(&conn2).second, 4);
 
         // Simplify the wire
         wire->simplify();
 
         // Make sure the correct points are attached to the connectors
-        REQUIRE_EQ(manager.attached_point(&conn1), 0);
-        REQUIRE_EQ(manager.attached_point(&conn2), 2);
+        REQUIRE_EQ(manager.attached_wire(&conn1).second, 0);
+        REQUIRE_EQ(manager.attached_wire(&conn2).second, 2);
 
         // Remove the middle point
         wire->remove_point(1);
 
         // Make sure the correct points are attached to the connectors
-        REQUIRE_EQ(manager.attached_point(&conn1), 0);
-        REQUIRE_EQ(manager.attached_point(&conn2), 1);
+        REQUIRE_EQ(manager.attached_wire(&conn1).second, 0);
+        REQUIRE_EQ(manager.attached_wire(&conn2).second, 1);
     }
 }

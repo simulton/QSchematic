@@ -85,16 +85,15 @@ namespace wire_system
         void
         attach_wire_to_connector(wire* wire, const connectable* connector);
 
-        [[nodiscard]]
-        wire*
-        attached_wire(const connectable* connector);
-
-        [[nodiscard]]
-        int
-        attached_point(const connectable* connector);
-
         void
         detach_wire(const connectable* connector);
+
+        /**
+         * Get wire connected to the specified connector.
+         */
+        [[nodiscard]]
+        std::pair<wire*, int>
+        attached_wire(const connectable* connector);
 
         [[nodiscard]]
         std::shared_ptr<wire>

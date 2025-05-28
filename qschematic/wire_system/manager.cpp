@@ -388,6 +388,15 @@ manager::detach_wire(const connectable* connector)
     m_connections.remove(connector);
 }
 
+std::pair<wire*, int>
+manager::attached_wire(const connectable* connector)
+{
+    if (!m_connections.contains(connector))
+        return { nullptr, -1 };
+
+    return m_connections.value(connector);
+}
+
 std::shared_ptr<wire>
 manager::wire_with_extremity_at(const QPointF& point)
 {
@@ -412,24 +421,6 @@ manager::detach_wire_from_all(const wire* wire)
 
         m_connections.remove(connector);
     }
-}
-
-wire*
-manager::attached_wire(const connectable* connector)
-{
-    if (!m_connections.contains(connector)) {
-        return nullptr;
-    }
-    return m_connections.value(connector).first;
-}
-
-int
-manager::attached_point(const connectable* connector)
-{
-    if (!m_connections.contains(connector)) {
-        return -1;
-    }
-    return m_connections.value(connector).second;
 }
 
 void

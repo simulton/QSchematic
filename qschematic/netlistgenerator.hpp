@@ -115,7 +115,7 @@ namespace QSchematic
                             continue;
 
                         // Create the Connector/Node pairs
-                        const auto* wire = scene.wire_manager()->attached_wire(connector.get());
+                        const auto [wire, pointIndex] = scene.wire_manager()->attached_wire(connector.get());
                         if (std::find(net.wires.begin(), net.wires.end(), wire) != net.wires.end()) {
 
                             // Create list of all nodes in this net

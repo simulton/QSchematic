@@ -558,10 +558,10 @@ QVariant Wire::itemChange(QGraphicsItem::GraphicsItemChange change, const QVaria
                 }
             }
             // Move point onto the connector
-            if (!isSelected && scene()->wire_manager()->attached_wire(conn.get()) == this) {
-                int index = scene()->wire_manager()->attached_point(conn.get());
-                QVector2D moveBy(conn->scenePos() - pointsAbsolute().at(index));
-                move_point_by(index, moveBy);
+            const auto [wire, pointIndex] = scene()->wire_manager()->attached_wire(conn.get());
+            if (!isSelected && wire == this) {
+                QVector2D moveBy(conn->scenePos() - pointsAbsolute().at(pointIndex));
+                move_point_by(pointIndex, moveBy);
             }
         }
         break;
