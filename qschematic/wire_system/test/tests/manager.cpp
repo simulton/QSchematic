@@ -53,7 +53,7 @@ TEST_SUITE("Manager")
         manager.generate_junctions();
 
         // Make sure the wires are connected
-        REQUIRE_EQ(manager.wires_connected_to(wire1).count(), 2);
+        REQUIRE_EQ(manager.wires_connected_to(wire1).size(), 2);
         REQUIRE(wire1->net().get());
         REQUIRE_EQ(wire1->net().get(), wire2->net().get());
     }
@@ -81,7 +81,7 @@ TEST_SUITE("Manager")
         manager.connect_wire(wire1.get(), wire2.get(), 1);
 
         // Make sure the wires are connected
-        REQUIRE_EQ(manager.wires_connected_to(wire1).count(), 2);
+        REQUIRE_EQ(manager.wires_connected_to(wire1).size(), 2);
         REQUIRE(wire1->net().get());
         REQUIRE_EQ(wire1->net().get(), wire2->net().get());
         REQUIRE(wire2->points().last().is_junction());

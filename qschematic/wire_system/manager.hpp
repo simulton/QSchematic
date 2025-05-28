@@ -9,6 +9,7 @@
 #include <memory>
 #include <optional>
 #include <utility>
+#include <vector>
 
 namespace QSchematic::Items
 {
@@ -70,7 +71,7 @@ namespace wire_system
         remove_wire(const std::shared_ptr<wire> wire);
 
         [[nodiscard]]
-        QVector<std::shared_ptr<wire>>
+        std::vector<std::shared_ptr<wire>>
         wires_connected_to(const std::shared_ptr<wire>& wire) const;
 
         void
