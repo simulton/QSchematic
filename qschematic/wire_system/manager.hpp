@@ -3,9 +3,9 @@
 #include "../settings.hpp"
 
 #include <QObject>
-#include <QList>
 #include <QMap>
 
+#include <list>
 #include <memory>
 #include <optional>
 #include <utility>
@@ -48,11 +48,11 @@ namespace wire_system
         add_net(const std::shared_ptr<net> wireNet);
 
         [[nodiscard]]
-        QList<std::shared_ptr<net>>
+        std::list<std::shared_ptr<net>>
         nets() const;
 
         [[nodiscard]]
-        QList<std::shared_ptr<wire>>
+        std::list<std::shared_ptr<wire>>
         wires() const;
 
         void
@@ -128,7 +128,7 @@ namespace wire_system
         connector_moved(const connectable* connector);
 
     private:
-        QList<std::shared_ptr<net>> m_nets;
+        std::list<std::shared_ptr<net>> m_nets;
         Settings m_settings;
         QMap<const connectable*, std::pair<wire*, int>> m_connections;
         std::optional<std::function<std::shared_ptr<net>()>> m_net_factory;

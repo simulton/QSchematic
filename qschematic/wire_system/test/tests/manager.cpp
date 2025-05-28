@@ -17,7 +17,7 @@ TEST_SUITE("Manager")
 
         manager.add_wire(wire1);
 
-        REQUIRE_EQ(manager.wires().count(), 1);
+        REQUIRE_EQ(manager.wires().size(), 1);
         REQUIRE(wire1->net().get());
 
         auto wire2 = std::make_shared<wire_system::wire>();
@@ -29,7 +29,7 @@ TEST_SUITE("Manager")
 
         manager.add_wire(wire2);
 
-        REQUIRE_EQ(manager.wires().count(), 2);
+        REQUIRE_EQ(manager.wires().size(), 2);
         REQUIRE(wire2->net().get());
     }
 

@@ -87,7 +87,7 @@ WirepointMove::undo()
             tmpNet->removeWire(wire);
         }
         // If not already in the scene add the existing net
-        if (!_scene->wire_manager()->nets().contains(_oldNet)) {
+        if (!std::ranges::contains(_scene->wire_manager()->nets(), _oldNet)) {
             _scene->wire_manager()->add_net(_oldNet);
         }
         // Remove the tmp net
@@ -114,7 +114,7 @@ WirepointMove::redo()
             tmpNet->removeWire(wire);
         }
         // If not already in the scene add the existing net
-        if (!_scene->wire_manager()->nets().contains(_newNet)) {
+        if (!std::ranges::contains(_scene->wire_manager()->nets(), _newNet)) {
             _scene->wire_manager()->add_net(_newNet);
         }
         // Remove the tmp net

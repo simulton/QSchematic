@@ -56,7 +56,7 @@ ItemAdd::redo()
     auto wire = std::dynamic_pointer_cast<Items::Wire>(_item);
     if (wire) {
         if (wire->net()) {
-            if (!_scene->wire_manager()->nets().contains(wire->net()))
+            if (!std::ranges::contains(_scene->wire_manager()->nets(), wire->net()))
                 _scene->wire_manager()->add_net(wire->net());
 
             wire->net()->addWire(wire);

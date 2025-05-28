@@ -19,13 +19,13 @@ manager::add_net(const std::shared_ptr<net> wireNet)
     wireNet->set_manager(this);
 
     // Keep track of stuff
-    m_nets.append(wireNet);
+    m_nets.push_back(wireNet);
 }
 
 /**
  * Returns a list of all the nets
  */
-QList<std::shared_ptr<net>>
+std::list<std::shared_ptr<net>>
 manager::nets() const
 {
     return m_nets;
@@ -34,14 +34,14 @@ manager::nets() const
 /**
  * Returns a list of all the wires
  */
-QList<std::shared_ptr<wire>>
+std::list<std::shared_ptr<wire>>
 manager::wires() const
 {
-    QList<std::shared_ptr<wire>> list;
+    std::list<std::shared_ptr<wire>> list;
 
     for (const auto& wireNet : m_nets) {
         for (const auto& wire : wireNet->wires()) {
-            list.append(wire);
+            list.push_back(wire);
         }
     }
 
@@ -110,7 +110,7 @@ manager::merge_nets(std::shared_ptr<net>& net, std::shared_ptr<wire_system::net>
 void
 manager::remove_net(std::shared_ptr<net> net)
 {
-    m_nets.removeAll(net);
+    m_nets.remove(net);     // Removes ALL 
 }
 
 void
@@ -143,14 +143,14 @@ manager::remove_wire(const std::shared_ptr<wire> wire)
     }
 
     // Remove the wire from the list
-    QList<std::shared_ptr<net>> netsToDelete;
+    std::list<std::shared_ptr<net>> netsToDelete;
     for (auto& net : m_nets) {
         if (net->contains(wire)) {
             net->removeWire(wire);
         }
 
         if (net->wires().count() < 1) {
-            netsToDelete.append(net);
+            netsToDelete.push_back(net);
         }
     }
 
