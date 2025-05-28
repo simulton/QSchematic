@@ -23,7 +23,7 @@ Feature overview:
     - Wires
       - Straight
       - Square
-      - Spline / Bezier
+      - Bezier
     - Connectors
     - Widgets (embed any `QWidget` into the scene)
 

@@ -5,17 +5,17 @@
 namespace QSchematic::Items
 {
 
-    class SplineWire :
+    class BezierWire :
         public QSchematic::Items::Wire
     {
         Q_OBJECT
-        Q_DISABLE_COPY_MOVE(SplineWire)
+        Q_DISABLE_COPY_MOVE(BezierWire)
 
     public:
         explicit
-        SplineWire(int type = Item::SplineWireType, QGraphicsItem* parent = nullptr);
+        BezierWire(int type = Item::BezierWireType, QGraphicsItem* parent = nullptr);
 
-        ~SplineWire() override = default;
+        ~BezierWire() override = default;
 
         void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
         QPainterPath path() const;
