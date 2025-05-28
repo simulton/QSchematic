@@ -13,7 +13,8 @@ manager::manager()
 {
 }
 
-void manager::add_net(const std::shared_ptr<net> wireNet)
+void
+manager::add_net(const std::shared_ptr<net> wireNet)
 {
     // Sanity check
     if (!wireNet) {
@@ -29,7 +30,8 @@ void manager::add_net(const std::shared_ptr<net> wireNet)
 /**
  * Returns a list of all the nets
  */
-QList<std::shared_ptr<net>> manager::nets() const
+QList<std::shared_ptr<net>>
+manager::nets() const
 {
     return m_nets;
 }
@@ -37,7 +39,8 @@ QList<std::shared_ptr<net>> manager::nets() const
 /**
  * Returns a list of all the wires
  */
-QList<std::shared_ptr<wire>> manager::wires() const
+QList<std::shared_ptr<wire>>
+manager::wires() const
 {
     QList<std::shared_ptr<wire>> list;
 
@@ -50,7 +53,8 @@ QList<std::shared_ptr<wire>> manager::wires() const
     return list;
 }
 
-void manager::generate_junctions()
+void
+manager::generate_junctions()
 {
     for (const auto& wire: wires()) {
         for (auto& otherWire: wires()) {
@@ -72,7 +76,8 @@ void manager::generate_junctions()
  * @param wire The wire to connect to
  * @param rawWire The wire to connect
  */
-void manager::connect_wire(wire* wire, wire_system::wire* rawWire, std::size_t point)
+void
+manager::connect_wire(wire* wire, wire_system::wire* rawWire, std::size_t point)
 {
     if (!wire->connect_wire(rawWire)) {
         return;
@@ -93,7 +98,8 @@ void manager::connect_wire(wire* wire, wire_system::wire* rawWire, std::size_t p
  * \param otherNet The net to merge into the other one
  * \return Whether the two nets where merged successfully or not
  */
-bool manager::merge_nets(std::shared_ptr<net>& net, std::shared_ptr<wire_system::net>& otherNet)
+bool
+manager::merge_nets(std::shared_ptr<net>& net, std::shared_ptr<wire_system::net>& otherNet)
 {
     // Ignore if it's the same net
     if (net == otherNet) {
@@ -106,17 +112,20 @@ bool manager::merge_nets(std::shared_ptr<net>& net, std::shared_ptr<wire_system:
     return true;
 }
 
-void manager::remove_net(std::shared_ptr<net> net)
+void
+manager::remove_net(std::shared_ptr<net> net)
 {
     m_nets.removeAll(net);
 }
 
-void manager::clear()
+void
+manager::clear()
 {
     m_nets.clear();
 }
 
-bool manager::remove_wire(const std::shared_ptr<wire> wire)
+bool
+manager::remove_wire(const std::shared_ptr<wire> wire)
 {
     // Detach from all connectors
     detach_wire_from_all(wire.get());
@@ -163,7 +172,8 @@ bool manager::remove_wire(const std::shared_ptr<wire> wire)
  * Generates a list of all the wires connected to a certain wire including the
  * wire itself.
  */
-QVector<std::shared_ptr<wire>> manager::wires_connected_to(const std::shared_ptr<wire>& wire) const
+QVector<std::shared_ptr<wire>>
+manager::wires_connected_to(const std::shared_ptr<wire>& wire) const
 {
     QVector<std::shared_ptr<wire_system::wire>> connectedWires;
 
@@ -204,7 +214,8 @@ QVector<std::shared_ptr<wire>> manager::wires_connected_to(const std::shared_ptr
  * \param wire The wire that the other is attached to
  * \param otherWire The wire that is being disconnected
  */
-void manager::disconnect_wire(const std::shared_ptr<wire_system::wire>& wire, wire_system::wire* otherWire)
+void
+manager::disconnect_wire(const std::shared_ptr<wire_system::wire>& wire, wire_system::wire* otherWire)
 {
     wire->disconnectWire(otherWire);
     auto net = otherWire->net();
@@ -225,7 +236,8 @@ void manager::disconnect_wire(const std::shared_ptr<wire_system::wire>& wire, wi
     }
 }
 
-bool manager::add_wire(const std::shared_ptr<wire>& wire)
+bool
+manager::add_wire(const std::shared_ptr<wire>& wire)
 {
     // Sanity check
     if (!wire) {
@@ -242,7 +254,8 @@ bool manager::add_wire(const std::shared_ptr<wire>& wire)
     return true;
 }
 
-void manager::point_moved_by_user(wire& rawWire, int index)
+void
+manager::point_moved_by_user(wire& rawWire, int index)
 {
     point point = rawWire.points().at(index);
 
@@ -297,7 +310,8 @@ void manager::point_moved_by_user(wire& rawWire, int index)
     }
 }
 
-void manager::attach_wire_to_connector(wire* wire, int index, const connectable* connector)
+void
+manager::attach_wire_to_connector(wire* wire, int index, const connectable* connector)
 {
     if (!wire || !connector) {
         return;
@@ -320,7 +334,8 @@ void manager::attach_wire_to_connector(wire* wire, int index, const connectable*
  * Connects a wire to a connector and finds out with end should be connected.
  * \remark If the connector is not on one of the ends, it does nothing
  */
-void manager::attach_wire_to_connector(wire* wire, const connectable* connector)
+void
+manager::attach_wire_to_connector(wire* wire, const connectable* connector)
 {
     // Check if it's the first point
     if (wire->points().first().toPoint() == connector->position().toPoint()) {
@@ -333,7 +348,8 @@ void manager::attach_wire_to_connector(wire* wire, const connectable* connector)
     }
 }
 
-void manager::point_inserted(const wire* wire, int index)
+void
+manager::point_inserted(const wire* wire, int index)
 {
     for (const auto& connector : m_connections.keys()) {
         // Skip if it's not the connected to the wire
@@ -354,7 +370,8 @@ void manager::point_inserted(const wire* wire, int index)
     }
 }
 
-void manager::point_removed(const wire* wire, int index)
+void
+manager::point_removed(const wire* wire, int index)
 {
     for (const auto& connector : m_connections.keys()) {
         // Skip if it's not the connected to the wire
@@ -370,12 +387,14 @@ void manager::point_removed(const wire* wire, int index)
     }
 }
 
-void manager::detach_wire(const connectable* connector)
+void
+manager::detach_wire(const connectable* connector)
 {
     m_connections.remove(connector);
 }
 
-std::shared_ptr<wire> manager::wire_with_extremity_at(const QPointF& point)
+std::shared_ptr<wire>
+manager::wire_with_extremity_at(const QPointF& point)
 {
     for (const auto& wire : wires()) {
         for (const auto& p : wire->points()) {
@@ -387,7 +406,8 @@ std::shared_ptr<wire> manager::wire_with_extremity_at(const QPointF& point)
     return nullptr;
 }
 
-void manager::detach_wire_from_all(const wire* wire)
+void
+manager::detach_wire_from_all(const wire* wire)
 {
     for (const auto& connector : m_connections.keys()) {
         // Skip if it's not the connected to the wire
@@ -399,7 +419,8 @@ void manager::detach_wire_from_all(const wire* wire)
     }
 }
 
-wire* manager::attached_wire(const connectable* connector)
+wire*
+manager::attached_wire(const connectable* connector)
 {
     if (!m_connections.contains(connector)) {
         return nullptr;
@@ -407,7 +428,8 @@ wire* manager::attached_wire(const connectable* connector)
     return m_connections.value(connector).first;
 }
 
-int manager::attached_point(const connectable* connector)
+int
+manager::attached_point(const connectable* connector)
 {
     if (!m_connections.contains(connector)) {
         return -1;
@@ -415,7 +437,8 @@ int manager::attached_point(const connectable* connector)
     return m_connections.value(connector).second;
 }
 
-void manager::connector_moved(const connectable* connector)
+void
+manager::connector_moved(const connectable* connector)
 {
     if (!m_connections.contains(connector)) {
         return;
@@ -436,7 +459,8 @@ void manager::connector_moved(const connectable* connector)
 /**
  * Returns whether the wire's point is attached to a connector
  */
-bool manager::point_is_attached(wire_system::wire* wire, int index) const
+bool
+manager::point_is_attached(wire_system::wire* wire, int index) const
 {
     for (const auto& wire_point : m_connections.values()) {
         if (wire_point.first != wire) {
@@ -449,22 +473,26 @@ bool manager::point_is_attached(wire_system::wire* wire, int index) const
     return false;
 }
 
-void manager::set_settings(const Settings& settings)
+void
+manager::set_settings(const Settings& settings)
 {
     m_settings = settings;
 }
 
-Settings manager::settings() const
+Settings
+manager::settings() const
 {
     return m_settings;
 }
 
-void manager::set_net_factory(std::function<std::shared_ptr<net>()> func)
+void
+manager::set_net_factory(std::function<std::shared_ptr<net>()> func)
 {
     m_net_factory = func;
 }
 
-std::shared_ptr<net> manager::create_net()
+std::shared_ptr<net>
+manager::create_net()
 {
     std::shared_ptr<net> net;
     if (m_net_factory.has_value()) {
