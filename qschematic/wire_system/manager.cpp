@@ -483,7 +483,7 @@ manager::settings() const
 void
 manager::set_net_factory(std::function<std::shared_ptr<net>()> func)
 {
-    m_net_factory = func;
+    m_net_factory = std::move(func);
 }
 
 std::shared_ptr<net>
