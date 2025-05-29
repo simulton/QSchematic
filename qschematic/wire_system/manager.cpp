@@ -119,7 +119,7 @@ manager::clear()
     m_nets.clear();
 }
 
-bool
+void
 manager::remove_wire(const std::shared_ptr<wire> wire)
 {
     // Detach from all connectors
@@ -158,8 +158,6 @@ manager::remove_wire(const std::shared_ptr<wire> wire)
     for (auto& net : netsToDelete) {
         remove_net(net);
     }
-
-    return true;
 }
 
 

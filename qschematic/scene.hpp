@@ -231,7 +231,7 @@ namespace QSchematic
         bool
         addWire(const std::shared_ptr<Items::Wire>& wire);
 
-        bool
+        void
         removeWire(const std::shared_ptr<Items::Wire>& wire);
 
         [[nodiscard]]

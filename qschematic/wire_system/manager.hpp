@@ -66,7 +66,7 @@ namespace wire_system
         void
         clear();
 
-        bool
+        void
         remove_wire(std::shared_ptr<wire> wire);
 
         [[nodiscard]]
