@@ -195,7 +195,11 @@ manager::wires_connected_to(const std::shared_ptr<wire>& wire) const
             }
         }
 
-        connectedWires.append_range(newList);
+        #ifdef __cpp_lib_containers_ranges
+            connectedWires.append_range(newList);
+        #else
+            connectedWires.insert(std::end(connectedWires), std::cbegin(newList), std::cend(newList));
+        #endif
     } while (!newList.empty());
 
     return connectedWires;
