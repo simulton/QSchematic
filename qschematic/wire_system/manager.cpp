@@ -9,17 +9,16 @@
 using namespace wire_system;
 
 void
-manager::add_net(const std::shared_ptr<net> wireNet)
+manager::add_net(std::shared_ptr<net> wireNet)
 {
     // Sanity check
-    if (!wireNet) {
+    if (!wireNet)
         return;
-    }
 
     wireNet->set_manager(this);
 
     // Keep track of stuff
-    m_nets.push_back(wireNet);
+    m_nets.push_back(std::move(wireNet));
 }
 
 /**
