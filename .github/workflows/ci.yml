@@ -22,7 +22,7 @@ jobs:
               name: "Ubuntu GCC (Qt6)",
               cxx: "g++",
               cc: "gcc",
-              packages: "libspdlog-dev libfmt-dev qt6-base-dev libglx-dev libgl1-mesa-dev gcc-15 g++15", # ToDo: Remove gcc-15 and g++-15 once they are default on ubuntu-latest
+              packages: "libspdlog-dev libfmt-dev qt6-base-dev libglx-dev libgl1-mesa-dev",
               os: ubuntu-latest,
             }
           ]
@@ -49,13 +49,6 @@ jobs:
         run: |
           sudo apt update
           sudo apt install ${{ matrix.toolchain.packages }} -y
-
-      # ToDo: Remove this once gcc-15 is the default on ubuntu-latest runner
-      - name: Force GCC-15 on linux
-        if: matrix.configuration.os == "ubuntu-latest"
-        run: |
-          sudo echo "CC="gcc-15" >> $GITHUB_ENV
-          sudo echo "CXX=g++15" >> $GITHUB_ENV
 
       - name: Configure
         run: cmake -Bbuild -GNinja -DQSCHEMATIC_BUILD_STATIC=${{ matrix.build_static }} -DQSCHEMATIC_BUILD_SHARED=${{ matrix.build_shared }} -DQSCHEMATIC_BUILD_DEMO=ON -DQSCHEMATIC_DEPENDENCY_GPDS_DOWNLOAD=ON
