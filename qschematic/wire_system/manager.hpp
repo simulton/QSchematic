@@ -3,12 +3,15 @@
 #include "../settings.hpp"
 
 #include <QObject>
-#include <QMap>
 
 #include <list>
 #include <memory>
+#include <unordered_map>
 #include <utility>
 #include <vector>
+
+#define USE_QMAP 0
+#include <QMap>
 
 namespace QSchematic::Items
 {
@@ -128,7 +131,11 @@ namespace wire_system
     private:
         std::list<std::shared_ptr<net>> m_nets;
         Settings m_settings;
+#if USE_QMAP
         QMap<const connectable*, std::pair<wire*, int>> m_connections;
+#else
+        std::unordered_map<const connectable*, std::pair<wire*, int>> m_connections;
+#endif
         std::function<std::shared_ptr<net>()> m_net_factory;
 
         [[nodiscard]]
