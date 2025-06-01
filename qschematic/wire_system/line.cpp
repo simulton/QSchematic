@@ -31,86 +31,100 @@ line::line(const QPointF& p1, const QPointF& p2) :
 {
 }
 
-QPointF line::p1() const
+QPointF
+line::p1() const
 {
     return m_p1;
 }
 
-QPointF line::p2() const
+QPointF
+line::p2() const
 {
     return m_p2;
 }
 
-bool line::is_null() const
+bool
+line::is_null() const
 {
     return qFuzzyCompare(m_p1.x(), m_p2.x()) && qFuzzyCompare(m_p1.y(), m_p2.y());
 }
 
-bool line::is_horizontal() const
+bool
+line::is_horizontal() const
 {
     return qFuzzyCompare(m_p1.y(), m_p2.y());
 }
 
-bool line::is_vertical() const
+bool
+line::is_vertical() const
 {
     return qFuzzyCompare(m_p1.x(), m_p2.x());
 }
 
-qreal line::length() const
+qreal
+line::length() const
 {
     return ::QLineF(m_p1, m_p2).length();
 }
 
-QPointF line::mid_point() const
+QPointF
+line::mid_point() const
 {
     return (m_p1 + m_p2) / 2;
 }
 
-bool line::contains_point(const QPointF& point, qreal tolerance) const
+bool
+line::contains_point(const QPointF& point, qreal tolerance) const
 {
     return contains_point(QLineF(m_p1, m_p2), point, tolerance);
 }
 
-QPointF line::point_on_line_closest_to(const QPointF& point)
+QPointF
+line::point_on_line_closest_to(const QPointF& point)
 {
     return QSchematic::Utils::pointOnLineClosestToPoint(m_p1, m_p2, point);
 }
 
-QLineF line::toLineF() const
+QLineF
+line::toLineF() const
 {
     return { m_p1, m_p2 };
 }
 
-bool line::contains_point(const QLineF& line, const QPointF& point, qreal tolerance)
+bool
+line::contains_point(const QLineF& line, const QPointF& point, qreal tolerance)
 {
     const qreal MIN_LENGTH = 0.01;
     tolerance = qMax(tolerance, MIN_LENGTH);
 
     if (line.isNull()) {
         QPointF linePoint = line.p1();
-        if (QVector2D(linePoint).distanceToPoint(QVector2D(point)) <= tolerance) {
+        if (QVector2D(linePoint).distanceToPoint(QVector2D(point)) <= tolerance)
             return true;
-        }
-    } else {
+    }
+    else {
         // Find perpendicular line
         QLineF normal = line.normalVector();
+
         // Move line to point
         QPointF offset = point - normal.p1();
         normal.translate(offset);
+
         // Set length to double the tolerance
         normal.setLength(2 * tolerance);
+
         // Move line so that the center lays on the point
         QVector2D unit(normal.unitVector().dx(), normal.unitVector().dy());
         offset = (unit * -tolerance).toPointF();
         normal.translate(offset);
+
         // Make the line longer by 2 * tolerance
         QLineF lineAdjusted = line;
         lineAdjusted.setLength(line.length() + 2 * tolerance);
 
         // Check if the lines are intersecting
-        if (lineAdjusted.intersects(normal, nullptr) == QLineF::BoundedIntersection) {
+        if (lineAdjusted.intersects(normal, nullptr) == QLineF::BoundedIntersection)
             return true;
-        }
     }
 
     return false;

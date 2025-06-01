@@ -23,18 +23,49 @@ namespace wire_system
         virtual ~line() = default;
         line& operator=(const line&) = default;
 
-        [[nodiscard]] QPointF p1() const;
-        [[nodiscard]] QPointF p2() const;
-        [[nodiscard]] bool is_null() const;
-        [[nodiscard]] bool is_horizontal() const;
-        [[nodiscard]] bool is_vertical() const;
-        [[nodiscard]] qreal length() const;
-        [[nodiscard]] QPointF mid_point() const;
-        [[nodiscard]] bool contains_point(const QPointF& point, qreal tolerance = 0) const;
-        [[nodiscard]] QPointF point_on_line_closest_to(const QPointF& point);
-        [[nodiscard]] QLineF toLineF() const;
+        [[nodiscard]]
+        QPointF
+        p1() const;
 
-        static bool contains_point(const QLineF& line, const QPointF& point, qreal tolerance = 0);
+        [[nodiscard]]
+        QPointF
+        p2() const;
+
+        [[nodiscard]]
+        bool
+        is_null() const;
+
+        [[nodiscard]]
+        bool
+        is_horizontal() const;
+
+        [[nodiscard]]
+        bool
+        is_vertical() const;
+
+        [[nodiscard]]
+        qreal
+        length() const;
+
+        [[nodiscard]]
+        QPointF
+        mid_point() const;
+
+        [[nodiscard]]
+        bool
+        contains_point(const QPointF& point, qreal tolerance = 0) const;
+
+        [[nodiscard]]
+        QPointF
+        point_on_line_closest_to(const QPointF& point);
+
+        [[nodiscard]]
+        QLineF
+        toLineF() const;
+
+        static
+        bool
+        contains_point(const QLineF& line, const QPointF& point, qreal tolerance = 0);
 
     private:
         QPointF m_p1;
