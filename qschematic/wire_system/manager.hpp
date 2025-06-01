@@ -30,7 +30,7 @@ namespace wire_system
 
     public:
         // Construction
-        manager();
+        manager() = default;
         manager(const manager& other) = delete;
         manager(manager&& other) = delete;
         ~manager() override = default;
