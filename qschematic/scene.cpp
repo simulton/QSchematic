@@ -1251,12 +1251,7 @@ Scene::removeWire(const std::shared_ptr<Items::Wire>& wire)
     // Remove the wire from the scene
     removeItem(wire);
 
-    // Disconnect from connectors
-    for (const auto& connector: connectors()) {
-        if (m_wire_manager->attached_wire(connector.get()) == wire.get())
-            m_wire_manager->detach_wire(connector.get());
-    }
-
+    // Remove the wire from the wire system
     m_wire_manager->remove_wire(wire);
 
     Q_EMIT netlistChanged();
