@@ -18,7 +18,7 @@ namespace wire_system
         using QPointF::ry;
         using QPointF::toPoint;
 
-        point();
+        point() = default;
         point(const point& other);
         point(point&&) = default;
         point(const QPoint& point);
@@ -26,14 +26,22 @@ namespace wire_system
         point(int x, int y);
         point(qreal x, qreal y);
         virtual ~point() = default;
+
         point& operator=(const point&) = default;
 
-        QPointF toPointF() const;
-        void set_is_junction(bool isJunction);
-        [[nodiscard]] bool is_junction() const;
+        [[nodiscard]]
+        QPointF
+        toPointF() const;
+
+        void
+        set_is_junction(bool isJunction);
+
+        [[nodiscard]]
+        bool
+        is_junction() const;
 
     private:
-        bool m_is_junction;
+        bool m_is_junction = false;
     };
 
 }
