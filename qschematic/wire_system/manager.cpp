@@ -422,7 +422,8 @@ void manager::connector_moved(const connectable* connector)
     }
     const auto wirePoint = m_connections.value(connector);
 
-    if (wirePoint.second < -1 || wirePoint.first->points_count() <= wirePoint.second) {
+    // Boundary check
+    if (wirePoint.second < 0 || wirePoint.second >= wirePoint.first->points_count()) {
         return;
     }
 
