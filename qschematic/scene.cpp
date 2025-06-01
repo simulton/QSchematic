@@ -1245,7 +1245,7 @@ Scene::addWire(const std::shared_ptr<Items::Wire>& wire)
     return true;
 }
 
-bool
+void
 Scene::removeWire(const std::shared_ptr<Items::Wire>& wire)
 {
     // Remove the wire from the scene
@@ -1257,7 +1257,7 @@ Scene::removeWire(const std::shared_ptr<Items::Wire>& wire)
             m_wire_manager->detach_wire(connector.get());
     }
 
-    Q_EMIT netlistChanged();
+    m_wire_manager->remove_wire(wire);
 
-    return m_wire_manager->remove_wire(wire);
+    Q_EMIT netlistChanged();
 }

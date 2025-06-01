@@ -46,7 +46,7 @@ namespace wire_system
         void connect_wire(wire* wire, wire_system::wire* rawWire, std::size_t point);
         void remove_net(std::shared_ptr<net> net);
         void clear();
-        bool remove_wire(const std::shared_ptr<wire> wire);
+        void remove_wire(const std::shared_ptr<wire> wire);
         [[nodiscard]] QVector<std::shared_ptr<wire>> wires_connected_to(const std::shared_ptr<wire>& wire) const;
         void disconnect_wire(const std::shared_ptr<wire_system::wire>& wire, wire_system::wire* otherWire);
         bool add_wire(const std::shared_ptr<wire>& wire);
