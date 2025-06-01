@@ -8,6 +8,7 @@
 
 #include <memory>
 #include <optional>
+#include <utility>
 
 namespace QSchematic::Items
 {
@@ -128,7 +129,7 @@ namespace wire_system
     private:
         QList<std::shared_ptr<net>> m_nets;
         Settings m_settings;
-        QMap<const connectable*, QPair<wire*, int>> m_connections;
+        QMap<const connectable*, std::pair<wire*, int>> m_connections;
         std::optional<std::function<std::shared_ptr<net>()>> m_net_factory;
 
         [[nodiscard]]
