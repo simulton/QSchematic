@@ -31,7 +31,8 @@ namespace wire_system
         name() const;
 
         [[nodiscard]]
-        QList<std::shared_ptr<wire>> wires() const;
+        QList<std::shared_ptr<wire>>
+        wires() const;
 
         virtual
         bool
