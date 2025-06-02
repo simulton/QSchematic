@@ -301,6 +301,7 @@ manager::point_moved_by_user(wire& rawWire, int index)
 void
 manager::attach_wire_to_connector(wire* wire, int index, const connectable* connector)
 {
+    // Sanity check
     if (!wire || !connector)
         return;
 
