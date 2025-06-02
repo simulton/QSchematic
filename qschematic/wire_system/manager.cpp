@@ -304,8 +304,8 @@ manager::attach_wire_to_connector(wire* wire, int index, const connectable* conn
     if (!wire || !connector)
         return;
 
-    // TODO: Check if it make sense for the index to be -1 or is this an error?
-    if (index < -1 || wire->points().count() < index)
+    // Boundary check
+    if (index < 0 || index >= wire->points().count())
         return;
 
     // Ignore if there is already one attached
