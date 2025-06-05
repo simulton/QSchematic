@@ -31,6 +31,18 @@ namespace wire_system
         Q_OBJECT
 
     public:
+        /**
+         * Structure used to record a connection of a wire.
+         */
+        struct connection_record
+        {
+            /// The wire
+            class wire* wire = nullptr;
+
+            /// The index of the point of the wire
+            int point_index = -1;
+        };
+
         // Construction
         manager() = default;
         manager(const manager& other) = delete;
@@ -98,7 +110,7 @@ namespace wire_system
 
         // ToDo: Rename to attached_wire()
         [[nodiscard]]
-        std::optional<std::pair<wire*, int>>
+        std::optional<connection_record>
         attached_wire2(const connectable* connector);
 
         [[nodiscard]]
@@ -138,7 +150,7 @@ namespace wire_system
         std::vector<std::shared_ptr<net>> m_nets;
         Settings m_settings;
         std::function<std::shared_ptr<net>()> m_net_factory;
-        std::unordered_map<const connectable*, std::pair<wire*, int>> m_connections;
+        std::unordered_map<const connectable*, connection_record> m_connections;
 
         [[nodiscard]]
         static
