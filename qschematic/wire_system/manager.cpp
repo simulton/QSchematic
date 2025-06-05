@@ -7,6 +7,8 @@
 #include <QVector>
 #include <QVector2D>
 
+#include <ranges>
+
 using namespace wire_system;
 
 void
@@ -309,11 +311,16 @@ manager::attach_wire_to_connector(wire* wire, int index, const connectable* conn
     if (index < 0 || index >= wire->points().count())
         return;
 
+#if USE_QMAP
     // Ignore if there is already one attached
     if (m_connections.contains(connector))
         return;
 
     m_connections.insert(connector, {wire, index});
+#else
+    // Note: Does nothing if the key already exists
+    m_connections.try_emplace(connector, std::make_pair(wire, index));
+#endif
 }
 
 /**
@@ -335,6 +342,7 @@ manager::attach_wire_to_connector(wire* wire, const connectable* connector)
 void
 manager::point_inserted(const wire* wire, int index)
 {
+#if USE_QMAP
     for (const auto& connector : m_connections.keys()) {
         // Skip if it's not the connected to the wire
         auto wirePoint = m_connections.value(connector);
@@ -352,11 +360,38 @@ manager::point_inserted(const wire* wire, int index)
         // Update the connection
         m_connections.insert(connector, wirePoint);
     }
+#else
+    // Find the connection record
+    auto it = std::ranges::find_if(
+            m_connections,
+            [wire](const auto& item){
+                const auto& wire_point = item.second;
+                return wire_point.first == wire;
+            }
+    );
+    if (it == std::cend(m_connections))
+        return;
+
+    // ToDo: Can we take an lvalue ref and modify it "in place" without a call to insert_or_assign?
+    auto wire_point = it->second;
+
+    // Do nothing if the connected point is the first
+    if (wire_point.second == 0)
+        return;
+
+        // Inserted point comes before the connected point or the last point is connected
+    else if (wire_point.second >= index || wire_point.second == wire->points_count() - 2)
+        wire_point.second++;
+
+    // Update the connection
+    m_connections.insert_or_assign(it->first, wire_point);
+#endif
 }
 
 void
 manager::point_removed(const wire* wire, int index)
 {
+#if USE_QMAP
     for (const auto& connector : m_connections.keys()) {
         // Skip if it's not the connected to the wire
         auto wirePoint = m_connections.value(connector);
@@ -369,12 +404,37 @@ manager::point_removed(const wire* wire, int index)
         // Update the connection
         m_connections.insert(connector, wirePoint);
     }
+#else
+    // Find the connection record
+    auto it = std::ranges::find_if(
+        m_connections,
+        [wire](const auto& item){
+            const auto& wire_point = item.second;
+            return wire_point.first == wire;
+        }
+    );
+    if (it == std::cend(m_connections))
+        return;
+
+    // ToDo: Can we take an lvalue ref and modify it "in place" without a call to insert_or_assign?
+    auto wire_point = it->second;
+
+    if (wire_point.second >= index)
+        wire_point.second--;
+
+    // Update the connection
+    m_connections.insert_or_assign(it->first, wire_point);
+#endif
 }
 
 void
 manager::detach_wire(const connectable* connector)
 {
+#if USE_QMAP
     m_connections.remove(connector);
+#else
+    m_connections.erase(connector);
+#endif
 }
 
 std::shared_ptr<wire>
@@ -393,6 +453,7 @@ manager::wire_with_extremity_at(const QPointF& point)
 void
 manager::detach_wire_from_all(const wire* wire)
 {
+#if USE_QMAP
     for (const auto& connector : m_connections.keys()) {
         // Skip if it's not the connected to the wire
         if (m_connections.value(connector).first != wire)
@@ -400,29 +461,70 @@ manager::detach_wire_from_all(const wire* wire)
 
         m_connections.remove(connector);
     }
+#else
+    std::erase_if(
+        m_connections,
+        [wire](const auto& item) {
+            const auto& wire_point = item.second;
+
+            return wire_point.first == wire;
+        }
+    );
+#endif
 }
 
 wire*
 manager::attached_wire(const connectable* connector)
 {
+#if USE_QMAP
     if (!m_connections.contains(connector))
         return nullptr;
 
     return m_connections.value(connector).first;
+#else
+    const auto wire_point = attached_wire2(connector);
+    if (!wire_point)
+        return nullptr;
+
+    return wire_point->first;
+#endif
 }
 
 int
 manager::attached_point(const connectable* connector)
 {
+#if USE_QMAP
     if (!m_connections.contains(connector))
         return -1;
 
     return m_connections.value(connector).second;
+#else
+    const auto wire_point = attached_wire2(connector);
+    if (!wire_point)
+        return -1;
+
+    return wire_point->second;
+#endif
+}
+
+std::optional<std::pair<wire*, int>>
+manager::attached_wire2(const connectable* connector)
+{
+    // Sanity check
+    if (!connector) [[unlikely]]
+        return std::nullopt;
+
+    const auto it = m_connections.find(connector);
+    if (it == std::cend(m_connections))
+        return std::nullopt;
+
+    return it->second;
 }
 
 void
 manager::connector_moved(const connectable* connector)
 {
+#if USE_QMAP
     if (!m_connections.contains(connector))
         return;
 
@@ -436,6 +538,22 @@ manager::connector_moved(const connectable* connector)
     QVector2D moveBy = QVector2D(connector->position() - oldPos);
     if (!moveBy.isNull())
         wirePoint.first->move_point_by(wirePoint.second, moveBy);
+#else
+    // Sanity check
+    if (!connector) [[unlikely]]
+        return;
+
+    // Find wire_point
+    const auto it = m_connections.find(connector);
+    if (it == std::cend(m_connections))
+        return;
+    const auto wire_point = it->second;
+
+    QPointF oldPos = wire_point.first->points().at(wire_point.second).toPointF();
+    QVector2D moveBy = QVector2D(connector->position() - oldPos);
+    if (!moveBy.isNull())
+        wire_point.first->move_point_by(wire_point.second, moveBy);
+#endif
 }
 
 /**
@@ -444,6 +562,7 @@ manager::connector_moved(const connectable* connector)
 bool
 manager::point_is_attached(wire_system::wire* wire, int index) const
 {
+#if USE_QMAP
     for (const auto& wire_point : m_connections.values()) {
         if (wire_point.first != wire)
             continue;
@@ -452,6 +571,21 @@ manager::point_is_attached(wire_system::wire* wire, int index) const
     }
 
     return false;
+#else
+    // Sanity check
+    if (!wire) [[unlikely]]
+        return false;
+
+    const auto it = std::ranges::find_if(
+        m_connections,
+        [wire, index](const auto& item) {
+            const auto& wire_point = item.second;
+            return wire_point.first == wire && wire_point.second == index;
+        }
+    );
+
+    return it != std::cend(m_connections);
+#endif
 }
 
 void

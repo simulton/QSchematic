@@ -4,11 +4,18 @@
 
 #include <QObject>
 #include <QList>
-#include <QMap>
 
 #include <memory>
 #include <optional>
 #include <utility>
+
+#define USE_QMAP 0
+
+#ifdef USE_QMAP
+#include <QMap>
+#else
+#include <unordered_map>
+#endif
 
 namespace QSchematic::Items
 {
@@ -82,16 +89,23 @@ namespace wire_system
         void
         attach_wire_to_connector(wire* wire, const connectable* connector);
 
+        void
+        detach_wire(const connectable* connector);
+
+        [[deprecated("use attached_wire2() instead")]]
         [[nodiscard]]
         wire*
         attached_wire(const connectable* connector);
 
+        [[deprecated("use attached_wire2() instead")]]
         [[nodiscard]]
         int
         attached_point(const connectable* connector);
 
-        void
-        detach_wire(const connectable* connector);
+        // ToDo: Rename to attached_wire()
+        [[nodiscard]]
+        std::optional<std::pair<wire*, int>>
+        attached_wire2(const connectable* connector);
 
         [[nodiscard]]
         std::shared_ptr<wire>
@@ -129,8 +143,12 @@ namespace wire_system
     private:
         QList<std::shared_ptr<net>> m_nets;
         Settings m_settings;
-        QMap<const connectable*, std::pair<wire*, int>> m_connections;
         std::optional<std::function<std::shared_ptr<net>()>> m_net_factory;
+#if USE_QMAP
+        QMap<const connectable*, std::pair<wire*, int>> m_connections;
+#else
+        std::unordered_map<const connectable*, std::pair<wire*, int>> m_connections;
+#endif
 
         [[nodiscard]]
         static
