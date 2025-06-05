@@ -136,7 +136,7 @@ namespace wire_system
     private:
         QList<std::shared_ptr<net>> m_nets;
         Settings m_settings;
-        std::optional<std::function<std::shared_ptr<net>()>> m_net_factory;
+        std::function<std::shared_ptr<net>()> m_net_factory;
         std::unordered_map<const connectable*, std::pair<wire*, int>> m_connections;
 
         [[nodiscard]]

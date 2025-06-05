@@ -505,15 +505,15 @@ manager::settings() const
 void
 manager::set_net_factory(std::function<std::shared_ptr<net>()> func)
 {
-    m_net_factory = func;
+    m_net_factory = std::move(func);
 }
 
 std::shared_ptr<net>
 manager::create_net()
 {
     std::shared_ptr<net> net;
-    if (m_net_factory.has_value())
-        net = m_net_factory.value()();
+    if (m_net_factory)
+        net = m_net_factory();
     else
         net = std::make_shared<class net>();
 
