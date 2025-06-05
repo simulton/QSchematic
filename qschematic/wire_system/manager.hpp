@@ -54,7 +54,7 @@ namespace wire_system
         manager& operator=(manager&& rhs) = delete;
 
         void
-        add_net(const std::shared_ptr<net> wireNet);
+        add_net(std::shared_ptr<net> wireNet);
 
         [[nodiscard]]
         std::vector<std::shared_ptr<net>>
