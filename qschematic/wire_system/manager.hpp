@@ -7,15 +7,8 @@
 
 #include <memory>
 #include <optional>
-#include <utility>
-
-#define USE_QMAP 0
-
-#ifdef USE_QMAP
-#include <QMap>
-#else
 #include <unordered_map>
-#endif
+#include <utility>
 
 namespace QSchematic::Items
 {
@@ -144,11 +137,7 @@ namespace wire_system
         QList<std::shared_ptr<net>> m_nets;
         Settings m_settings;
         std::optional<std::function<std::shared_ptr<net>()>> m_net_factory;
-#if USE_QMAP
-        QMap<const connectable*, std::pair<wire*, int>> m_connections;
-#else
         std::unordered_map<const connectable*, std::pair<wire*, int>> m_connections;
-#endif
 
         [[nodiscard]]
         static
