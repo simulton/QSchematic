@@ -4,6 +4,8 @@
 #include "../items/wire.hpp"
 #include "../scene.hpp"
 
+#include <ranges>
+
 using namespace QSchematic;
 using namespace QSchematic::Commands;
 
@@ -43,7 +45,7 @@ ItemRemove::undo()
     // Is this a wire?
     if ( auto wire = std::dynamic_pointer_cast<Items::Wire>(_item) ) {
         auto oldNet = wire->net();
-        if (!_scene->wire_manager()->nets().contains(oldNet))
+        if (!std::ranges::contains(_scene->wire_manager()->nets(), oldNet))
             _scene->wire_manager()->add_net(wire->net());
 
         wire->net()->addWire(wire);

@@ -3,12 +3,13 @@
 #include "../settings.hpp"
 
 #include <QObject>
-#include <QList>
 
+#include <list>
 #include <memory>
 #include <optional>
 #include <unordered_map>
 #include <utility>
+#include <vector>
 
 namespace QSchematic::Items
 {
@@ -44,11 +45,11 @@ namespace wire_system
         add_net(const std::shared_ptr<net> wireNet);
 
         [[nodiscard]]
-        QList<std::shared_ptr<net>>
+        std::vector<std::shared_ptr<net>>
         nets() const;
 
         [[nodiscard]]
-        QList<std::shared_ptr<wire>>
+        std::vector<std::shared_ptr<wire>>
         wires() const;
 
         void
@@ -67,7 +68,7 @@ namespace wire_system
         remove_wire(const std::shared_ptr<wire> wire);
 
         [[nodiscard]]
-        QVector<std::shared_ptr<wire>>
+        std::list<std::shared_ptr<wire>>
         wires_connected_to(const std::shared_ptr<wire>& wire) const;
 
         void
@@ -134,7 +135,7 @@ namespace wire_system
         void wire_point_moved(wire& wire, int index);
 
     private:
-        QList<std::shared_ptr<net>> m_nets;
+        std::vector<std::shared_ptr<net>> m_nets;
         Settings m_settings;
         std::function<std::shared_ptr<net>()> m_net_factory;
         std::unordered_map<const connectable*, std::pair<wire*, int>> m_connections;

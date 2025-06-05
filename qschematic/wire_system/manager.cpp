@@ -4,7 +4,6 @@
 #include "wire.hpp"
 #include "connectable.hpp"
 
-#include <QVector>
 #include <QVector2D>
 
 #include <ranges>
@@ -21,13 +20,13 @@ manager::add_net(const std::shared_ptr<net> wireNet)
     wireNet->set_manager(this);
 
     // Keep track of stuff
-    m_nets.append(wireNet);
+    m_nets.push_back(std::move(wireNet));
 }
 
 /**
  * Returns a list of all the nets
  */
-QList<std::shared_ptr<net>>
+std::vector<std::shared_ptr<net>>
 manager::nets() const
 {
     return m_nets;
@@ -36,14 +35,14 @@ manager::nets() const
 /**
  * Returns a list of all the wires
  */
-QList<std::shared_ptr<wire>>
+std::vector<std::shared_ptr<wire>>
 manager::wires() const
 {
-    QList<std::shared_ptr<wire>> list;
+    std::vector<std::shared_ptr<wire>> list;
 
     for (const auto& wireNet : m_nets) {
         for (const auto& wire : wireNet->wires())
-            list.append(wire);
+            list.push_back(wire);
     }
 
     return list;
@@ -110,7 +109,7 @@ manager::merge_nets(std::shared_ptr<net>& net, std::shared_ptr<wire_system::net>
 void
 manager::remove_net(std::shared_ptr<net> net)
 {
-    m_nets.removeAll(net);
+    std::erase(m_nets, net);
 }
 
 void
@@ -161,38 +160,42 @@ manager::remove_wire(const std::shared_ptr<wire> wire)
  * Generates a list of all the wires connected to a certain wire including the
  * wire itself.
  */
-QVector<std::shared_ptr<wire>>
+std::list<std::shared_ptr<wire>>
 manager::wires_connected_to(const std::shared_ptr<wire>& wire) const
 {
-    QVector<std::shared_ptr<wire_system::wire>> connectedWires;
+    std::list<std::shared_ptr<wire_system::wire>> connectedWires;
 
     // Add the wire itself to the list
     connectedWires.push_back(wire);
 
-    QVector<std::shared_ptr<wire_system::wire>> newList;
+    std::list<std::shared_ptr<wire_system::wire>> newList;
     do {
         newList.clear();
         // Go through all the wires in the net
         for (const auto& otherWire: wire->net()->wires()) {
             // Ignore if the wire is already in the list
-            if (connectedWires.contains(otherWire))
+            if (std::ranges::contains(connectedWires, otherWire))
                 continue;
 
             // If they are connected to one of the wire in the list add them to the new list
             for (const auto& wire2 : connectedWires) {
                 if (wire2->connected_wires().contains(otherWire.get())) {
-                    newList << otherWire;
+                    newList.push_back(otherWire);
                     break;
                 }
                 if (otherWire->connected_wires().contains(wire2.get())) {
-                    newList << otherWire;
+                    newList.push_back(otherWire);
                     break;
                 }
             }
         }
 
-        connectedWires << newList;
-    } while (!newList.isEmpty());
+        #ifdef __cpp_lib_containers_ranges
+            connectedWires.append_range(newList);
+        #else
+            connectedWires.insert(connectedWires.end(), newList.cbegin(), newList.cend());
+        #endif
+    } while (!std::empty(newList));
 
     return connectedWires;
 }
@@ -209,15 +212,15 @@ manager::disconnect_wire(const std::shared_ptr<wire_system::wire>& wire, wire_sy
     auto net = otherWire->net();
 
     // Create a list of wires that will stay in the old net
-    QVector<std::shared_ptr<wire_system::wire>> oldWires = wires_connected_to(wire);
+    std::list<std::shared_ptr<wire_system::wire>> oldWires = wires_connected_to(wire);
 
     // If there are wires that are not in the list create a new net
-    if (net->wires().count() != oldWires.count()) {
+    if (net->wires().count() != std::size(oldWires)) {
         // Create new net and add the wire
         auto newNet = create_net();
         add_net(std::static_pointer_cast<wire_system::net>(newNet));
         for (auto wireToMove: net->wires()) {
-            if (oldWires.contains(wireToMove))
+            if (std::ranges::contains(oldWires, wireToMove))
                 continue;
 
             newNet->addWire(wireToMove);
