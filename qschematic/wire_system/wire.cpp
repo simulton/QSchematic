@@ -54,7 +54,7 @@ wire::line_segments() const
 {
     // A line segment requires at least two points... duuuh
     if (points_count() < 2)
-        return QList<line>();
+        return { };
 
     QList<line> ret;
     for (int i = 0; i < points_count() - 1; i++)
