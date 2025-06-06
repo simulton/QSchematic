@@ -146,7 +146,7 @@ manager::remove_wire(const std::shared_ptr<wire> wire)
         if (net->contains(wire))
             net->removeWire(wire);
 
-        if (net->wires().count() < 1)
+        if (std::size(net->wires()) < 1)
             netsToDelete.append(net);
     }
 
@@ -215,7 +215,7 @@ manager::disconnect_wire(const std::shared_ptr<wire_system::wire>& wire, wire_sy
     std::list<std::shared_ptr<wire_system::wire>> oldWires = wires_connected_to(wire);
 
     // If there are wires that are not in the list create a new net
-    if (net->wires().count() != std::size(oldWires)) {
+    if (std::size(net->wires()) != std::size(oldWires)) {
         // Create new net and add the wire
         auto newNet = create_net();
         add_net(std::static_pointer_cast<wire_system::net>(newNet));

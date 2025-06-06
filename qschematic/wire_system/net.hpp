@@ -1,8 +1,9 @@
 #pragma once
 
-#include <QList>
+#include <QString>
 
 #include <memory>
+#include <vector>
 
 namespace wire_system
 {
@@ -31,7 +32,7 @@ namespace wire_system
         name() const;
 
         [[nodiscard]]
-        QList<std::shared_ptr<wire>>
+        std::vector<std::shared_ptr<wire>>
         wires() const;
 
         virtual
@@ -58,7 +59,7 @@ namespace wire_system
         }
 
     private:
-        QList<std::weak_ptr<wire>> m_wires;
+        std::vector<std::weak_ptr<wire>> m_wires;
         class manager* m_manager = nullptr;
         QString m_name;
     };

@@ -27,7 +27,7 @@ TEST_SUITE("Net")
         net->addWire(wire2);
 
         // Make sure the wires are in the net
-        CHECK_EQ(net->wires().count(), 2);
+        CHECK_EQ(std::size(net->wires()), 2);
         CHECK(net->contains(wire1));
         CHECK(net->contains(wire2));
 
@@ -36,7 +36,7 @@ TEST_SUITE("Net")
         net->removeWire(wire2);
 
         // Make sure the wires are not in the net
-        CHECK_EQ(net->wires().count(), 0);
+        CHECK_EQ(std::size(net->wires()), 0);
         CHECK_FALSE(net->contains(wire1));
         CHECK_FALSE(net->contains(wire2));
     }

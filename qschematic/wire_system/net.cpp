@@ -23,13 +23,13 @@ net::name() const
     return m_name;
 }
 
-QList<std::shared_ptr<wire>>
+std::vector<std::shared_ptr<wire>>
 net::wires() const
 {
-    QList<std::shared_ptr<wire>> list;
+    std::vector<std::shared_ptr<wire>> list;
 
     for (const auto& wire: m_wires)
-        list.append(wire.lock());
+        list.push_back(wire.lock());
 
     return list;
 }
@@ -58,7 +58,7 @@ net::addWire(const std::shared_ptr<wire>& wire)
     wire->set_manager(manager());
 
     // Add the wire
-    m_wires.append(wire);
+    m_wires.push_back(wire);
 
     return true;
 }
