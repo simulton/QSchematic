@@ -14,7 +14,7 @@ namespace wire_system
         public std::enable_shared_from_this<net>
     {
     public:
-        net();
+        net() = default;
         net(const net&) = delete;
         net(net&&) = delete;
         virtual ~net() = default;

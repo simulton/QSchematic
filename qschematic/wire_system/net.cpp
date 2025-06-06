@@ -5,11 +5,6 @@
 
 using namespace wire_system;
 
-net::net()
-{
-
-}
-
 void
 net::set_name(const std::string& name)
 {
