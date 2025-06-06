@@ -64,13 +64,13 @@ operator==(const point& a, const QPointF& b)
     return operator==(a.toPointF(), b);
 }
 
-const QPoint
+QPoint
 operator+(const point& a, const QPoint& b)
 {
     return operator+(a.toPoint(), b);
 }
 
-const QPointF
+QPointF
 operator+(const point& a, const QPointF& b)
 {
     return operator+(a.toPointF(), b);

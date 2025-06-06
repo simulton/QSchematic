@@ -49,5 +49,5 @@ namespace wire_system
 bool operator==(const wire_system::point& a, const wire_system::point& b);
 bool operator==(const wire_system::point& a, const QPoint& b);
 bool operator==(const wire_system::point& a, const QPointF& b);
-const QPoint operator+(const wire_system::point& a, const QPoint& b);
-const QPointF operator+(const wire_system::point& a, const QPointF& b);
+QPoint operator+(const wire_system::point& a, const QPoint& b);
+QPointF operator+(const wire_system::point& a, const QPointF& b);
