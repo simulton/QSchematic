@@ -2,7 +2,7 @@
 [![Packaging status](https://repology.org/badge/vertical-allrepos/qschematic.svg)](https://repology.org/project/qschematic/versions)
 
 # Introduction
-QSchematic is a library to draw diagrams & schematics with Qt. It uses Qt's [graphics view framework](http://doc.qt.io/qt-5/graphicsview.html).
+QSchematic is a library to draw diagrams & schematics with Qt. It uses Qt's [graphics view framework](https://doc.qt.io/qt-6/graphicsview.html).
 
 The library provides base classes for objects such as nodes and wires and implements logic to move objects around while keeping the wires connected, generating netlists and so on. A typical application would include this library and subclass the `Item` class to implement custom items.
 
