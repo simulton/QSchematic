@@ -73,6 +73,10 @@ manager::generate_junctions()
 void
 manager::connect_wire(wire* wire, wire_system::wire* rawWire, std::size_t point)
 {
+    // Sanity checks
+    if (!wire || !rawWire) [[unlikely]]
+        return;
+
     if (!wire->connect_wire(rawWire))
         return;
 
@@ -94,6 +98,10 @@ manager::connect_wire(wire* wire, wire_system::wire* rawWire, std::size_t point)
 bool
 manager::merge_nets(std::shared_ptr<net>& net, std::shared_ptr<wire_system::net>& otherNet)
 {
+    // Sanity checks
+    if (!net || !otherNet) [[unlikely]]
+        return false;
+
     // Ignore if it's the same net
     if (net == otherNet)
         return false;
@@ -109,6 +117,10 @@ manager::merge_nets(std::shared_ptr<net>& net, std::shared_ptr<wire_system::net>
 void
 manager::remove_net(std::shared_ptr<net> net)
 {
+    // Sanity check
+    if (!net) [[unlikely]]
+        return;
+
     std::erase(m_nets, net);
 }
 
@@ -121,6 +133,10 @@ manager::clear()
 void
 manager::remove_wire(const std::shared_ptr<wire> wire)
 {
+    // Sanity check
+    if (!wire) [[unlikely]]
+        return;
+
     // Detach from all connectors
     detach_wire_from_all(wire.get());
 
@@ -163,6 +179,10 @@ manager::remove_wire(const std::shared_ptr<wire> wire)
 std::list<std::shared_ptr<wire>>
 manager::wires_connected_to(const std::shared_ptr<wire>& wire) const
 {
+    // Sanity check
+    if (!wire) [[unlikely]]
+        return { };
+
     std::list<std::shared_ptr<wire_system::wire>> connectedWires;
 
     // Add the wire itself to the list
@@ -208,6 +228,10 @@ manager::wires_connected_to(const std::shared_ptr<wire>& wire) const
 void
 manager::disconnect_wire(const std::shared_ptr<wire_system::wire>& wire, wire_system::wire* otherWire)
 {
+    // Sanity checks
+    if (!wire || !otherWire) [[unlikely]]
+        return;
+
     wire->disconnectWire(otherWire);
     auto net = otherWire->net();
 
@@ -325,6 +349,10 @@ manager::attach_wire_to_connector(wire* wire, int index, const connectable* conn
 void
 manager::attach_wire_to_connector(wire* wire, const connectable* connector)
 {
+    // Sanity checks
+    if (!wire || !connector) [[unlikely]]
+        return;
+
     // Check if it's the first point
     if (wire->points().first().toPoint() == connector->position().toPoint())
         attach_wire_to_connector(wire, 0, connector);
@@ -398,6 +426,10 @@ manager::point_removed(const wire* wire, int index)
 void
 manager::detach_wire(const connectable* connector)
 {
+    // Sanity check
+    if (!connector) [[unlikely]]
+        return;
+
     m_connections.erase(connector);
 }
 
@@ -417,6 +449,10 @@ manager::wire_with_extremity_at(const QPointF& point)
 void
 manager::detach_wire_from_all(const wire* wire)
 {
+    // Sanity check
+    if (!wire) [[unlikely]]
+        return;
+
     std::erase_if(
         m_connections,
         [wire](const auto& item) {
@@ -430,6 +466,10 @@ manager::detach_wire_from_all(const wire* wire)
 wire*
 manager::attached_wire(const connectable* connector)
 {
+    // Sanity check
+    if (!connector) [[unlikely]]
+        return nullptr;
+
     const auto cr = attached_wire2(connector);
     if (!cr)
         return nullptr;
@@ -440,6 +480,10 @@ manager::attached_wire(const connectable* connector)
 int
 manager::attached_point(const connectable* connector)
 {
+    // Sanity check
+    if (!connector) [[unlikely]]
+        return -1;
+
     const auto cr = attached_wire2(connector);
     if (!cr)
         return -1;
