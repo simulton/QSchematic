@@ -130,7 +130,21 @@ namespace QSchematic
                     }
                 }
 
-                nets.push_back( net );
+                // Check if the net makes a connection
+                // A net is considered to make a connection if at least two wire points are on connectors.
+                // Note: This implicitly also ensures that the connectors are individual/separate connectors as long as we
+                //       ensure that the net::connectors collection does not contain duplicate items.
+                bool netMakesConnection = false;
+                int connectionsCount = 0;
+                for (const auto& conn : net.connectors) {
+                    if (conn->hasConnection())
+                        connectionsCount++;
+                }
+                netMakesConnection = connectionsCount >= 2;
+
+                // Add the net (if supposed to)
+                if (netMakesConnection)
+                    nets.push_back( net );
             }
 
             // Set the netlist
