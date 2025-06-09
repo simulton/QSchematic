@@ -47,6 +47,7 @@ namespace QSchematic
         Netlist<TNode, TConnector, TWire, TNet>&
         operator=(const Netlist<TNode, TConnector, TWire, TNet>& rhs) = default;
 
+        [[nodiscard]]
         std::forward_list<TNet>
         netsWithNode(const TNode node) const
         {
@@ -68,6 +69,7 @@ namespace QSchematic
             return nets;
         }
 
+        [[nodiscard]]
         std::optional<TNet>
         netFromConnector(const TConnector connector) const
         {
