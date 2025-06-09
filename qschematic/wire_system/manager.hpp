@@ -30,6 +30,9 @@ namespace wire_system
     {
         Q_OBJECT
 
+    Q_SIGNALS:
+        void wire_point_moved(wire& wire, int index);
+
     public:
         /**
          * Structure used to record a connection of a wire.
@@ -142,9 +145,6 @@ namespace wire_system
 
         void
         connector_moved(const connectable* connector);
-
-    Q_SIGNALS:
-        void wire_point_moved(wire& wire, int index);
 
     private:
         std::vector<std::shared_ptr<net>> m_nets;
