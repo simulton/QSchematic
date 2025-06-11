@@ -34,6 +34,18 @@ net::wires() const
     return list;
 }
 
+std::vector<point>
+net::points() const
+{
+    std::vector<point> points;
+
+    for (const auto& wire : wires()) {
+        points.append_range(wire->points());
+    }
+
+    return points;
+}
+
 bool
 net::addWire(const std::shared_ptr<wire>& wire)
 {

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "point.hpp"
+
 #include <QString>
 
 #include <memory>
@@ -34,6 +36,10 @@ namespace wire_system
         [[nodiscard]]
         std::vector<std::shared_ptr<wire>>
         wires() const;
+
+        [[nodiscard]]
+        std::vector<point>
+        points() const;
 
         virtual
         bool
