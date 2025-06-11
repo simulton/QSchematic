@@ -55,7 +55,6 @@ namespace QSchematic::Items
         void updateLabelPos(bool updateParent = false) const;
         void wirePointMoved(Wire& wire, const point& point);
 
-        QList<line> lineSegments() const;
         std::shared_ptr<Label> label();
 
     Q_SIGNALS:

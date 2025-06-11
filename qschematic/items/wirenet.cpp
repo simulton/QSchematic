@@ -207,21 +207,6 @@ void WireNet::setScene(Scene* scene)
     _scene = scene;
 }
 
-QList<line> WireNet::lineSegments() const
-{
-    QList<line> list;
-
-    for (const auto& wire : wires()) {
-        if (!wire) {
-            continue;
-        }
-
-        list.append(wire->line_segments());
-    }
-
-    return list;
-}
-
 std::shared_ptr<Label> WireNet::label()
 {
     return _label;
