@@ -23,13 +23,62 @@ manager::add_net(const std::shared_ptr<net> wireNet)
     m_nets.push_back(std::move(wireNet));
 }
 
-/**
- * Returns a list of all the nets
- */
 std::vector<std::shared_ptr<net>>
 manager::nets() const
 {
     return m_nets;
+}
+
+std::vector<manager::global_net>
+manager::global_nets() const
+{
+    std::vector<global_net> global_nets;
+    global_nets.reserve(std::size(m_nets));
+
+    std::size_t anon_net_counter = 1;   // Used to generate global net names for unnamed nets
+    for (const auto& net : m_nets) {
+        // Sanity check
+        if (!net) [[unlikely]]
+            continue;
+
+        // Determine if we need to create a new global net
+        bool create_new = true;
+        for (auto& global_net : global_nets) {
+            // We need a new global net if this net is anonymous
+            if (net->name().isEmpty()) {
+                create_new = true;
+                break;
+            }
+
+            // At this point we know that the net is not anonymous. Now we check if the current global net
+            // has the same name. If yes, we add the net to the global net. If not, we need to create a
+            // new global net (down below).
+            if (net->name().toStdString() == global_net.name) {
+                create_new = false;
+                global_net.nets.push_back(net);
+                break;
+            }
+        }
+
+        // Create a new global net if necessary
+        if (create_new) {
+            global_net gn;
+
+            // Assign a net name if the net is anonymous
+            if (net->name().isEmpty())
+                gn.name = QString("N%1").arg(anon_net_counter++, 3, 10, QChar('0')).toStdString();
+            else
+                gn.name = net->name().toStdString();
+
+            // Add the net
+            gn.nets.push_back(net);
+
+            // Add the global net
+            global_nets.push_back(std::move(gn));
+        }
+    }
+
+    return global_nets;
 }
 
 /**

@@ -1,6 +1,7 @@
 #include "../3rdparty/doctest.h"
 #include "../connector.hpp"
 #include "../../manager.hpp"
+#include "../../net.hpp"
 #include "../../wire.hpp"
 
 TEST_SUITE("Manager")
@@ -266,5 +267,171 @@ TEST_SUITE("Manager")
         // Make sure the correct points are attached to the connectors
         REQUIRE_EQ(manager.attached_point(&conn1), 0);
         REQUIRE_EQ(manager.attached_point(&conn2), 1);
+    }
+
+    TEST_CASE("global_nets()") {
+        SUBCASE("no shared net names") {
+            wire_system::manager m;
+
+            // Create & add nets
+            {
+                auto wn1 = std::make_shared<wire_system::net>();
+                wn1->set_name(std::string{"A"});
+
+                auto wn2 = std::make_shared<wire_system::net>();
+                wn2->set_name(std::string{"B"});
+
+                auto wn3 = std::make_shared<wire_system::net>();
+                wn3->set_name(std::string{"C"});
+
+                m.add_net(wn1);
+                m.add_net(wn2);
+                m.add_net(wn3);
+
+                // Sanity check
+                CHECK_EQ(std::size(m.nets()), 3);
+            }
+
+            // Generate global nets and check stuff
+            {
+                const auto gn = m.global_nets();
+                REQUIRE_EQ(std::size(gn), 3);
+
+                CHECK_EQ(gn[0].name, "A");
+                CHECK_EQ(std::size(gn[0].nets), 1);
+
+                CHECK_EQ(gn[1].name, "B");
+                CHECK_EQ(std::size(gn[1].nets), 1);
+
+                CHECK_EQ(gn[2].name, "C");
+                CHECK_EQ(std::size(gn[2].nets), 1);
+            }
+        }
+
+        SUBCASE("some shared net names") {
+            wire_system::manager m;
+
+            // Create & add nets
+            {
+                auto wn1 = std::make_shared<wire_system::net>();
+                wn1->set_name(std::string{"A"});
+
+                auto wn2 = std::make_shared<wire_system::net>();
+                wn2->set_name(std::string{"B"});
+
+                auto wn3 = std::make_shared<wire_system::net>();
+                wn3->set_name(std::string{"C"});
+
+                auto wn4 = std::make_shared<wire_system::net>();
+                wn4->set_name(std::string{"A"});
+
+                m.add_net(wn1);
+                m.add_net(wn2);
+                m.add_net(wn3);
+                m.add_net(wn4);
+
+                // Sanity check
+                CHECK_EQ(std::size(m.nets()), 4);
+            }
+
+            // Generate global nets and check stuff
+            {
+                const auto gn = m.global_nets();
+                REQUIRE_EQ(std::size(gn), 3);
+
+                CHECK_EQ(gn[0].name, "A");
+                CHECK_EQ(std::size(gn[0].nets), 2);
+
+                CHECK_EQ(gn[1].name, "B");
+                CHECK_EQ(std::size(gn[1].nets), 1);
+
+                CHECK_EQ(gn[2].name, "C");
+                CHECK_EQ(std::size(gn[2].nets), 1);
+            }
+        }
+
+        SUBCASE("all anonymous net names") {
+            wire_system::manager m;
+
+            // Create & add nets
+            m.add_net(std::make_shared<wire_system::net>());
+            m.add_net(std::make_shared<wire_system::net>());
+            m.add_net(std::make_shared<wire_system::net>());
+            m.add_net(std::make_shared<wire_system::net>());
+
+            // Generate global nets and check stuff
+            {
+                const auto gn = m.global_nets();
+                REQUIRE_EQ(std::size(gn), 4);
+
+                CHECK_EQ(gn[0].name, "N001");
+                CHECK_EQ(std::size(gn[0].nets), 1);
+
+                CHECK_EQ(gn[1].name, "N002");
+                CHECK_EQ(std::size(gn[0].nets), 1);
+
+                CHECK_EQ(gn[2].name, "N003");
+                CHECK_EQ(std::size(gn[0].nets), 1);
+
+                CHECK_EQ(gn[3].name, "N004");
+                CHECK_EQ(std::size(gn[0].nets), 1);
+            }
+        }
+
+        SUBCASE("some anonymous net names with shared net names") {
+            wire_system::manager m;
+
+            // Create & add nets
+            {
+                auto wn1 = std::make_shared<wire_system::net>();
+                wn1->set_name(std::string{"A"});
+
+                auto wn2 = std::make_shared<wire_system::net>();
+                wn2->set_name(std::string{""});
+
+                auto wn3 = std::make_shared<wire_system::net>();
+                wn3->set_name(std::string{""});
+
+                auto wn4 = std::make_shared<wire_system::net>();
+                wn4->set_name(std::string{"A"});
+
+                auto wn5 = std::make_shared<wire_system::net>();
+                wn5->set_name(std::string{"B"});
+
+                auto wn6 = std::make_shared<wire_system::net>();
+                wn6->set_name(std::string{""});
+
+                m.add_net(wn1);
+                m.add_net(wn2);
+                m.add_net(wn3);
+                m.add_net(wn4);
+                m.add_net(wn5);
+                m.add_net(wn6);
+
+                // Sanity check
+                CHECK_EQ(std::size(m.nets()), 6);
+            }
+
+            // Generate global nets and check stuff
+            {
+                const auto gn = m.global_nets();
+                REQUIRE_EQ(std::size(gn), 5);
+
+                CHECK_EQ(gn[0].name, "A");
+                CHECK_EQ(std::size(gn[0].nets), 2);
+
+                CHECK_EQ(gn[1].name, "N001");
+                CHECK_EQ(std::size(gn[1].nets), 1);
+
+                CHECK_EQ(gn[2].name, "N002");
+                CHECK_EQ(std::size(gn[2].nets), 1);
+
+                CHECK_EQ(gn[3].name, "B");
+                CHECK_EQ(std::size(gn[3].nets), 1);
+
+                CHECK_EQ(gn[4].name, "N003");
+                CHECK_EQ(std::size(gn[4].nets), 1);
+            }
+        }
     }
 }

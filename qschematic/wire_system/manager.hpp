@@ -46,6 +46,15 @@ namespace wire_system
             int point_index = -1;
         };
 
+        /**
+         * Structure to represent zero or more nets which share the same name.
+         */
+        struct global_net
+        {
+            std::string name;
+            std::vector<std::shared_ptr<net>> nets;
+        };
+
         // Construction
         manager() = default;
         manager(const manager& other) = delete;
@@ -59,9 +68,21 @@ namespace wire_system
         void
         add_net(std::shared_ptr<net> wireNet);
 
+        /**
+         * Return a collection of all nets.
+         */
         [[nodiscard]]
         std::vector<std::shared_ptr<net>>
         nets() const;
+
+        /**
+         * Return a collection of all global nets.
+         *
+         * Anonymous (unnamed nets) will be assigned an auto-generated global net name.
+         */
+        [[nodiscard]]
+        std::vector<global_net>
+        global_nets() const;
 
         [[nodiscard]]
         std::vector<std::shared_ptr<wire>>
