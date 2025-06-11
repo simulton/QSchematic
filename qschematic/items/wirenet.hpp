@@ -38,8 +38,10 @@ namespace QSchematic::Items
         Q_DISABLE_COPY_MOVE(WireNet)
 
     public:
+        explicit
         WireNet(QObject* parent = nullptr);
-        ~WireNet()  override;
+
+        ~WireNet() override;
 
         gpds::container to_container() const override;
         void from_container(const gpds::container& container) override;
