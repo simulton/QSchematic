@@ -43,9 +43,10 @@ Special thank goes to Professor François Corthay (Switzerland) for initially pr
 
 # Screenshots
 The library allows complete customization of every visual aspect. Therefore, screenshots are not really a telling thing as they are just showing an application specific implementation of the paint functions. But meh... I guess people still want to see some stuff so here we go:
+![Screenshot 06](docs/screenshots/screenshot_06.png)
 ![Screenshot 04](docs/screenshots/screenshot_04.png)
 ![Screenshot 05](docs/screenshots/screenshot_05.png)
-![Screenshot 06](docs/screenshots/screenshot_06.png)
+![Screenshot 07](docs/screenshots/screenshot_07.png)
 
 For more, check out the `docs/screenshots` folder.
 
