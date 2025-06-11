@@ -105,6 +105,13 @@ namespace wire_system
         void
         remove_point(int index);
 
+        [[nodiscard]]
+        class manager*
+        manager() noexcept
+        {
+            return m_manager;
+        }
+
     protected:
         QVector<point> m_points;
 
@@ -113,13 +120,6 @@ namespace wire_system
 
         void
         move_line_segment_by(int index, const QVector2D& moveBy);
-
-        [[nodiscard]]
-        class manager*
-        manager() noexcept
-        {
-            return m_manager;
-        }
 
     private:
         QList<wire*> m_connectedWires;

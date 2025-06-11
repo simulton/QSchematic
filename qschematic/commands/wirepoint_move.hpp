@@ -1,7 +1,6 @@
 #pragma once
 
 #include "base.hpp"
-#include "../items/wire.hpp"
 
 #include <QVector>
 #include <QVector2D>
@@ -9,6 +8,11 @@
 #include <memory>
 
 class QVector2D;
+
+namespace QSchematic::Items
+{
+    class Wire;
+}
 
 namespace QSchematic::Commands
 {
@@ -18,10 +22,9 @@ namespace QSchematic::Commands
     {
     public:
         WirepointMove(
-            Scene* scene,
-            const std::shared_ptr<Items::Wire>& wire,
+            std::shared_ptr<Items::Wire> wire,
             int index,
-            const QPointF& pos,
+            const QPointF& pos,     // New wire point position (absolute/scene position)
             QUndoCommand* parent = nullptr
         );
 
@@ -31,12 +34,14 @@ namespace QSchematic::Commands
         void redo() override;
 
     private:
+        struct WirePoint {
+            int pointIndex = -1;
+            QPointF pos;
+        };
+
         std::shared_ptr<Items::Wire> _wire;
-        QVector<QPointF> _oldPos;
-        QVector<QPointF> _newPos;
-        std::shared_ptr<net> _oldNet;
-        std::shared_ptr<net> _newNet;
-        Scene* _scene = nullptr;
+        WirePoint _old;
+        WirePoint _new;
     };
 
 }
