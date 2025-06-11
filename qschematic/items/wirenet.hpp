@@ -43,19 +43,38 @@ namespace QSchematic::Items
 
         ~WireNet() override;
 
-        gpds::container to_container() const override;
-        void from_container(const gpds::container& container) override;
+        gpds::container
+        to_container() const override;
 
-        bool addWire(const std::shared_ptr<wire>& wire) override;
-        bool removeWire(const std::shared_ptr<wire> wire) override;
-        void simplify();
-        void set_name(const QString& name) override;
-        void setHighlighted(bool highlighted);
-        void setScene(Scene* scene);
-        void updateLabelPos(bool updateParent = false) const;
-        void wirePointMoved(Wire& wire, const point& point);
+        void
+        from_container(const gpds::container& container) override;
 
-        std::shared_ptr<Label> label();
+        bool
+        addWire(const std::shared_ptr<wire>& wire) override;
+
+        bool
+        removeWire(const std::shared_ptr<wire> wire) override;
+
+        void
+        simplify();
+
+        void
+        set_name(const QString& name) override;
+
+        void
+        setHighlighted(bool highlighted);
+
+        void
+        setScene(Scene* scene);
+
+        void
+        updateLabelPos(bool updateParent = false) const;
+
+        void
+        wirePointMoved(Wire& wire, const point& point);
+
+        std::shared_ptr<Label>
+        label();
 
     Q_SIGNALS:
         void highlightChanged(bool highlighted);
@@ -67,11 +86,14 @@ namespace QSchematic::Items
         void toggleLabel();
 
     private:
-        QList<std::shared_ptr<WireNet>> nets() const;
-        void highlight_global_net(bool highlighted);
-
         std::shared_ptr<Label> _label;
         Scene* _scene{};
+
+        QList<std::shared_ptr<WireNet>>
+        nets() const;
+
+        void
+        highlight_global_net(bool highlighted);
     };
 
 }
