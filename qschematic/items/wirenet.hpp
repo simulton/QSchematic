@@ -88,8 +88,9 @@ namespace QSchematic::Items
 
     private:
         std::shared_ptr<Label> _label;
-        Scene* _scene{};
+        Scene* _scene = nullptr;
 
+        [[nodiscard]]
         QList<std::shared_ptr<WireNet>>
         nets() const;
 
