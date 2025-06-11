@@ -40,7 +40,12 @@ net::points() const
     std::vector<point> points;
 
     for (const auto& wire : wires()) {
-        points.append_range(wire->points());
+        #ifdef __cpp_lib_containers_ranges
+            points.append_range(wire->points());
+        #else
+            const auto wps = wire->points();
+            points.insert(points.end(), wps.cbegin(), wps.cend());
+        #endif
     }
 
     return points;
