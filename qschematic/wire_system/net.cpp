@@ -1,3 +1,4 @@
+#include "line.hpp"
 #include "net.hpp"
 #include "wire.hpp"
 
@@ -102,6 +103,27 @@ net::contains(const std::shared_ptr<wire>& wire) const
     }
 
     return false;
+}
+
+std::vector<line>
+net::line_segments() const
+{
+    std::vector<line> list;
+
+    for (const auto& wire : m_wires) {
+        auto w = wire.lock();
+        if (!w) [[unlikely]]
+            continue;
+
+        #ifdef __cpp_lib_containers_ranges
+            list.append_range(w->line_segments());
+        #else
+            auto ls = w->line_segments();
+            list.insert(list.end(), ls.cbegin(), ls.cend());
+        #endif
+    }
+
+    return list;
 }
 
 void

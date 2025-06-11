@@ -10,8 +10,9 @@
 namespace wire_system
 {
 
-    class wire;
+    class line;
     class manager;
+    class wire;
 
     class net :
         public std::enable_shared_from_this<net>
@@ -52,6 +53,13 @@ namespace wire_system
         [[nodiscard]]
         bool
         contains(const std::shared_ptr<wire>& wire) const;
+
+        /**
+         * Returns a list of line segments defined by the wire points.
+         */
+        [[nodiscard]]
+        std::vector<line>
+        line_segments() const;
 
         void
         set_manager(wire_system::manager* manager);
