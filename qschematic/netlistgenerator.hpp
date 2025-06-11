@@ -25,12 +25,6 @@ namespace QSchematic
         bool
         generate(Netlist<TNode, TConnector, TWire, TNet>& netlist, const Scene& scene)
         {
-            struct GlobalNet
-            {
-                QString name;
-                QList<std::shared_ptr<Items::WireNet>> wireNets;
-            };
-
             // Get the wiresystem manager
             auto wm = scene.wire_manager();
             if (!wm)
@@ -46,55 +40,22 @@ namespace QSchematic
                 nodes.push_back( static_cast<TNode>( node.get() ) );
             }
 
-            // Create a list of global nets (WireNets that share the same net name)
-            std::vector<GlobalNet> globalNets;
-            unsigned anonNetCounter = 0;
-            for (const auto& net : wm->nets()) {
-
-                // Get the wire net
-                auto wireNet = std::dynamic_pointer_cast<Items::WireNet>(net);
-                if (!wireNet)
-                    continue;
-
-                // Figure out whether we need a new global net
-                bool createNewNet = true;
-                for (auto& globalNet : globalNets) {
-                    if (wireNet->name().isEmpty()) {
-                        createNewNet = true;
-                        break;
-                    }
-                    if (QString::compare(globalNet.name, wireNet->name(), Qt::CaseSensitive) == 0) {
-                        globalNet.wireNets.append(wireNet);
-                        createNewNet = false;
-                        break;
-                    }
-                }
-
-                // Create a new net if supposed to
-                if (createNewNet) {
-                    GlobalNet newGlobalNet;
-                    newGlobalNet.wireNets.append(wireNet);
-                    newGlobalNet.name = wireNet->name();
-
-                    // Prevent empty names
-                    if (newGlobalNet.name.isEmpty())
-                        newGlobalNet.name = QString("N%1").arg(anonNetCounter++, 3, 10, QChar('0'));
-
-                    globalNets.push_back(newGlobalNet);
-                }
-            }
+            // Get global nets from the wiresystem
+            auto globalNets = wm->global_nets();
 
             // Export nets
             std::vector<TNet> nets;
             for (const auto& globalNet : globalNets) {
                 // Create the new Net
                 TNet net;
-                net.name = globalNet.name;
+                net.name = QString::fromStdString(globalNet.name);
 
                 // Build a list of all wire net points in scene coordinates
                 QList<QPointF> wireScenePoints;
-                for (const auto& wireNet : globalNet.wireNets) {
-                    wireScenePoints << wireNet->points();
+                for (const auto& wireNet : globalNet.nets) {
+                    for (const auto& p : wireNet->points()) {
+                        wireScenePoints << p.toPointF();
+                    }
 
                     // Store wires
                     for ( const auto& wire : wireNet->wires()) {
