@@ -53,7 +53,7 @@ namespace QSchematic::Items
         addWire(const std::shared_ptr<wire>& wire) override;
 
         bool
-        removeWire(const std::shared_ptr<wire> wire) override;
+        removeWire(std::shared_ptr<wire> wire) override;
 
         void
         simplify();
@@ -73,6 +73,7 @@ namespace QSchematic::Items
         void
         wirePointMoved(Wire& wire, const point& point);
 
+        [[nodiscard]]
         std::shared_ptr<Label>
         label();
 
