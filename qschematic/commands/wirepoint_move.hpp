@@ -36,7 +36,7 @@ namespace QSchematic::Commands
         QVector<QPointF> _newPos;
         std::shared_ptr<net> _oldNet;
         std::shared_ptr<net> _newNet;
-        Scene* _scene;
+        Scene* _scene = nullptr;
     };
 
 }
