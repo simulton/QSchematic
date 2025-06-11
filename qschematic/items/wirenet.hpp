@@ -54,7 +54,6 @@ namespace QSchematic::Items
         void wirePointMoved(Wire& wire, const point& point);
 
         QList<line> lineSegments() const;
-        QList<QPointF> points() const;
         std::shared_ptr<Label> label();
 
     Q_SIGNALS:

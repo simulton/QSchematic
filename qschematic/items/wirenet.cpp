@@ -222,19 +222,6 @@ QList<line> WireNet::lineSegments() const
     return list;
 }
 
-QList<QPointF> WireNet::points() const
-{
-    QList<QPointF> list;
-
-    for (const auto& wire : wires()) {
-        for (const auto& point : wire->points()) {
-            list.append(point.toPointF());
-        }
-    }
-
-    return list;
-}
-
 std::shared_ptr<Label> WireNet::label()
 {
     return _label;
