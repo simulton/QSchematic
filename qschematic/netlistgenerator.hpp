@@ -31,6 +31,11 @@ namespace QSchematic
                 QList<std::shared_ptr<Items::WireNet>> wireNets;
             };
 
+            // Get the wiresystem manager
+            auto wm = scene.wire_manager();
+            if (!wm)
+                return false;
+
             // Add all nodes
             std::vector<TNode> nodes;
             for (const auto& node : scene.nodes()) {
@@ -44,11 +49,10 @@ namespace QSchematic
             // Create a list of global nets (WireNets that share the same net name)
             std::vector<GlobalNet> globalNets;
             unsigned anonNetCounter = 0;
-            for (const auto& net : scene.wire_manager()->nets()) {
+            for (const auto& net : wm->nets()) {
 
+                // Get the wire net
                 auto wireNet = std::dynamic_pointer_cast<Items::WireNet>(net);
-
-                // Sanity check
                 if (!wireNet)
                     continue;
 
@@ -115,7 +119,7 @@ namespace QSchematic
                             continue;
 
                         // Create the Connector/Node pairs
-                        const auto* wire = scene.wire_manager()->attached_wire(connector.get());
+                        const auto* wire = wm->attached_wire(connector.get());
                         if (std::find(net.wires.begin(), net.wires.end(), wire) != net.wires.end()) {
 
                             // Create list of all nodes in this net
