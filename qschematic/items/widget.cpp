@@ -62,9 +62,6 @@ Widget::setWidget(QWidget* widget)
     if (widget->parent())
         return;
 
-    // Widget
-    widget->move(m_border_width, m_border_width);
-
     // Proxy
     m_proxy->setWidget(widget);
 
