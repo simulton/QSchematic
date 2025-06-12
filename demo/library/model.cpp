@@ -47,7 +47,7 @@ void Model::createModel()
     endInsertRows();
 
     // Root basics
-    auto rootBasics = new model_item(RootBascis, nullptr, _rootItem);
+    auto rootBasics = new model_item(RootBasics, nullptr, _rootItem);
     beginInsertRows(QModelIndex(), _rootItem->childCount(), _rootItem->childCount());
     _rootItem->appendChild(rootBasics);
     endInsertRows();
@@ -206,7 +206,7 @@ QVariant Model::data(const QModelIndex& index, int role) const
             }
         }
 
-        case Model::RootBascis: {
+        case Model::RootBasics: {
             switch (role) {
                 case Qt::DisplayRole:
                     return "Basics";
