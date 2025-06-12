@@ -88,10 +88,19 @@ Scene::to_container() const
         scene.add_value("rect", r);
     }
 
-    // Nodes
-    gpds::container nodesList;
-    for (const auto& node : nodes())
-        nodesList.add_value("node", node->to_container());
+    // Items
+    gpds::container itemsList;
+    for (const auto& item : items()) {
+        // Sanity check
+        if (!item) [[unlikely]]
+            continue;
+
+        // Ignore wire items as they will be added by the nets below
+        if (auto wire = std::dynamic_pointer_cast<Items::Wire>(item); wire)
+            continue;
+
+        itemsList.add_value("item", item->to_container());
+    }
 
     // Nets
     gpds::container netsList;
@@ -108,7 +117,7 @@ Scene::to_container() const
     // Root
     gpds::container c;
     c.add_value("scene", scene);
-    c.add_value("nodes", nodesList);
+    c.add_value("items", itemsList);
     c.add_value("nets", netsList);
 
     return c;
@@ -132,17 +141,17 @@ Scene::from_container(const gpds::container& container)
         }
     }
 
-    // Nodes
-    if (const gpds::container* nodesContainer = container.get_value<gpds::container*>("nodes").value_or(nullptr); nodesContainer) {
-        for (const auto& nodeContainer : nodesContainer->get_values<gpds::container*>("node")) {
-            if (!nodeContainer)
+    // Items
+    if (const gpds::container* itemsContainer = container.get_value<gpds::container*>("items").value_or(nullptr); itemsContainer) {
+        for (const auto& itemContainer : itemsContainer->get_values<gpds::container*>("item")) {
+            if (!itemContainer)
                 continue;
 
-            auto node = Items::Factory::instance().from_container(*nodeContainer);
-            if (!node)
+            auto item = Items::Factory::instance().from_container(*itemContainer);
+            if (!item)
                 continue;
-            node->from_container(*nodeContainer);
-            addItem(node);
+            item->from_container(*itemContainer);
+            addItem(item);
         }
     }
 
