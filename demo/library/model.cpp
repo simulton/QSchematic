@@ -4,6 +4,7 @@
 #include "../items/operationdemo1.hpp"
 #include "../items/flowstart.hpp"
 #include "../items/flowend.hpp"
+#include "../items/widgets/dial.hpp"
 
 #include <qschematic/items/itemmimedata.hpp>
 #include <qschematic/items/label.hpp>
@@ -52,6 +53,12 @@ void Model::createModel()
     _rootItem->appendChild(rootBasics);
     endInsertRows();
 
+    // Root widgets
+    auto rootWidgets = new model_item(RootWidgets, nullptr, _rootItem);
+    beginInsertRows(QModelIndex(), _rootItem->childCount(), _rootItem->childCount());
+    _rootItem->appendChild(rootWidgets);
+    endInsertRows();
+
     // Operations
     addTreeItem("Generic", QIcon(), new ::Operation, rootOperations);
     addTreeItem("Demo 1", QIcon(), new ::OperationDemo1, rootOperations);
@@ -59,6 +66,9 @@ void Model::createModel()
     // Flows
     addTreeItem("Start", QIcon(), new ::FlowStart, rootFlows);
     addTreeItem("End", QIcon(), new ::FlowEnd, rootFlows);
+
+    // Widgets
+    addTreeItem("Dial", QIcon(), new ::Items::Widgets::Dial, rootWidgets);
 
     // Basics
     auto label = new QSchematic::Items::Label;
@@ -227,6 +237,27 @@ QVariant Model::data(const QModelIndex& index, int role) const
             }
         }
 
+        case Model::RootWidgets: {
+            switch (role) {
+                case Qt::DisplayRole:
+                    return "Widgets";
+
+                default:
+                    return {};
+            }
+        }
+
+        case Model::Widgets: {
+            switch (role) {
+                case Qt::DisplayRole:
+                    Q_ASSERT(itemInfo);
+                    return itemInfo->name;
+
+                default:
+                    return {};
+            }
+        }
+
         default:
             return {};
 
@@ -279,6 +310,7 @@ QMimeData* Model::mimeData(const QModelIndexList& indexes) const
 
     switch (modelItem->type()) {
         case Operation:
+        case Widgets:
         {
             // Retrieve the widget info
             auto itemInfo = static_cast<const ItemInfo*>(modelItem->data());

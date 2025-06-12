@@ -8,5 +8,5 @@ using namespace Items::Widgets;
 Dial::Dial(QGraphicsItem* parent) :
     QSchematic::Items::Widget(::ItemType::WidgetDial, parent)
 {
-    setWidget(new QDial);
+    setWidget([]{ return new QDial; });
 }

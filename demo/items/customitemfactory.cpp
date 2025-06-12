@@ -6,6 +6,7 @@
 #include "fancywire.hpp"
 #include "flowstart.hpp"
 #include "flowend.hpp"
+#include "widgets/dial.hpp"
 
 #include <qschematic/items/itemfactory.hpp>
 
@@ -32,6 +33,9 @@ std::shared_ptr<QSchematic::Items::Item> CustomItemFactory::from_container(const
 
     case ItemType::FlowEndType:
         return std::make_shared<FlowEnd>();
+
+    case ItemType::WidgetDial:
+        return std::make_shared<Items::Widgets::Dial>();
     }
 
     return {};

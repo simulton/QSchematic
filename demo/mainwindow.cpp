@@ -149,18 +149,6 @@ MainWindow::MainWindow(QWidget *parent)
     debugToolbar->addAction(_actionDebugMode);
     addToolBar(debugToolbar);
 
-    {
-        auto _deleteme2 = new QAction("Widget");
-        debugToolbar->addAction(_deleteme2);
-        connect(_deleteme2, &QAction::triggered, [this]{
-            // Create item
-            auto item = std::make_shared<::Items::Widgets::Dial>();
-
-            // Add to scene
-            _scene->undoStack()->push(new QSchematic::Commands::ItemAdd(_scene, std::move(item)));
-        });
-    }
-
     // Central widget
     setCentralWidget(_view);
 

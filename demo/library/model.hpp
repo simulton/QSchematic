@@ -28,7 +28,9 @@ namespace Library
             RootFlows,
             Flow,
             RootBasics,
-            Basic
+            Basic,
+            RootWidgets,
+            Widgets,
         };
         Q_ENUM(LibraryItems)
 
