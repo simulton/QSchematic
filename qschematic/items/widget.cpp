@@ -19,6 +19,23 @@ Widget::Widget(int type, QGraphicsItem* parent) :
     setZValue(10);
 }
 
+gpds::container
+Widget::to_container() const
+{
+    gpds::container root;
+    addItemTypeIdToContainer(root);
+    root.add_value("rect_item", RectItem::to_container());
+
+    return root;
+}
+
+void
+Widget::from_container(const gpds::container& container)
+{
+    // Root
+    RectItem::from_container(*container.get_value<gpds::container*>("rect_item").value());
+}
+
 void
 Widget::setWidget(widgetFactory factory)
 {

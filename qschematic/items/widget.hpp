@@ -27,6 +27,12 @@ namespace QSchematic::Items
         Widget(int type, QGraphicsItem* parent = nullptr);
         ~Widget() override = default;
 
+        gpds::container
+        to_container() const override;
+
+        void
+        from_container(const gpds::container& container) override;
+
         std::shared_ptr<Item>
         deepCopy() const override;
 
