@@ -20,11 +20,29 @@ Widget::Widget(int type, QGraphicsItem* parent) :
 }
 
 void
+Widget::setWidget(widgetFactory factory)
+{
+    // Bookkeeping
+    m_factory = std::move(factory);
+
+    // Nothing else to do if there's no factory
+    if (!m_factory)
+        return;
+
+    // Create widget
+    setWidget(m_factory());
+}
+
+void
 Widget::setWidget(QWidget* widget)
 {
-    if (!widget)
+    // Sanity check
+    if (!widget) [[unlikely]]
         return;
-    if (widget->parent())    // Requirement according to QGraphicsProxyWidget documentation
+
+    // Requirement according to QGraphicsProxyWidget documentation
+    // Note: No need to delete the widget as it has a parent
+    if (widget->parent())
         return;
 
     // Widget
@@ -43,10 +61,27 @@ Widget::setWidget(QWidget* widget)
 std::shared_ptr<Item>
 Widget::deepCopy() const
 {
-    // Note: This is not copyable as we'd need a way to clone the underlying widget too (eg. via a user supplied
-    //       factory or similar.
+    if (!m_factory)
+        return { };
 
-    return { };
+    // Create the clone
+    auto clone = std::make_shared<Widget>(type(), parentItem());
+    copyAttributes(*clone);
+
+    // Set the widget
+    clone->setWidget(m_factory);
+
+    return clone;
+}
+
+void
+Widget::copyAttributes(Widget& dest) const
+{
+    // Base class
+    RectItem::copyAttributes(dest);
+
+    // Attributes
+    dest.m_factory = m_factory;
 }
 
 QRectF
