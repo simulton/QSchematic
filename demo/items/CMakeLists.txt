@@ -1,4 +1,5 @@
 add_subdirectory(popup)
+add_subdirectory(widgets)
 
 target_sources(
     ${TARGET}

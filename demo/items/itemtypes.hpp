@@ -8,5 +8,6 @@ enum ItemType {
     FancyWireType,
     OperationDemo1Type,
     FlowStartType,
-    FlowEndType
+    FlowEndType,
+    WidgetDial,
 };

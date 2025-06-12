@@ -3,6 +3,7 @@
 #include "items/operation.hpp"
 #include "items/operationconnector.hpp"
 #include "items/fancywire.hpp"
+#include "items/widgets/dial.hpp"
 #include "library/widget.hpp"
 #include "netlist/widget.hpp"
 
@@ -19,7 +20,6 @@
 #include <QToolBar>
 #include <QAction>
 #include <QActionGroup>
-#include <QDial>    // For QSchematic::Items::Widget demo
 #include <QFile>
 #include <QDir>
 #include <QMenuBar>
@@ -154,8 +154,7 @@ MainWindow::MainWindow(QWidget *parent)
         debugToolbar->addAction(_deleteme2);
         connect(_deleteme2, &QAction::triggered, [this]{
             // Create item
-            auto item = std::make_shared<QSchematic::Items::Widget>(4242);
-            item->setWidget(new QDial);
+            auto item = std::make_shared<::Items::Widgets::Dial>();
 
             // Add to scene
             _scene->undoStack()->push(new QSchematic::Commands::ItemAdd(_scene, std::move(item)));
