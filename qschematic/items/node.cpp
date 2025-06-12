@@ -55,10 +55,6 @@ gpds::container Node::to_container() const
     gpds::container root;
     addItemTypeIdToContainer(root);
     root.add_value("rect_item", RectItem::to_container());
-    root.add_value("width", size().width());
-    root.add_value("height", size().height());
-    root.add_value("allow_mouse_resize", allowMouseResize());
-    root.add_value("allow_mouse_rotate", allowMouseRotate());
     root.add_value("connectors_configuration", connectorsConfigurationContainer);
     root.add_value("connectors", connectorsContainer);
 
@@ -69,9 +65,6 @@ void Node::from_container(const gpds::container& container)
 {
     // Root
     RectItem::from_container(*container.get_value<gpds::container*>("rect_item").value());
-    setSize(container.get_value<double>("width").value_or(0), container.get_value<double>("height").value_or(0));
-    setAllowMouseResize(container.get_value<bool>("allow_mouse_resize").value_or(true));
-    setAllowMouseRotate(container.get_value<bool>("allow_mouse_rotate").value_or(true));
 
     // Connectors configuration
     const gpds::container* connectorsConfigurationContainer = container.get_value<gpds::container*>("connectors_configuration").value_or(nullptr);
