@@ -10,4 +10,5 @@ enum ItemType {
     FlowStartType,
     FlowEndType,
     WidgetDial,
+    WidgetTextedit,
 };

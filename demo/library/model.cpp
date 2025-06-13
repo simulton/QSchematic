@@ -5,6 +5,7 @@
 #include "../items/flowstart.hpp"
 #include "../items/flowend.hpp"
 #include "../items/widgets/dial.hpp"
+#include "../items/widgets/textedit.hpp"
 
 #include <qschematic/items/itemmimedata.hpp>
 #include <qschematic/items/label.hpp>
@@ -69,6 +70,7 @@ void Model::createModel()
 
     // Widgets
     addTreeItem("Dial", QIcon(), new ::Items::Widgets::Dial, rootWidgets);
+    addTreeItem("TextEdit", QIcon(), new ::Items::Widgets::Textedit, rootWidgets);
 
     // Basics
     auto label = new QSchematic::Items::Label;

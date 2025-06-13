@@ -3,4 +3,6 @@ target_sources(
     PRIVATE
         dial.cpp
         dial.hpp
+        textedit.cpp
+        textedit.hpp
 )
