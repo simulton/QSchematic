@@ -91,7 +91,7 @@ void Item::copyAttributes(Item& dest) const
 
 void Item::addItemTypeIdToContainer(gpds::container& container) const
 {
-    container.add_attribute( "type_id", type() );
+    container.add_attribute( "type-id", type() );
 }
 
 QSchematic::Scene* Item::scene() const

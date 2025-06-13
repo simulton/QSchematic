@@ -67,5 +67,5 @@ Factory::from_container(const gpds::container& container) const
 Item::ItemType
 Factory::extractType(const gpds::container& container)
 {
-    return static_cast<Item::ItemType>( container.get_attribute<int>( "type_id" ).value_or( -1 ) );
+    return static_cast<Item::ItemType>( container.get_attribute<int>( "type-id" ).value_or( -1 ) );
 }

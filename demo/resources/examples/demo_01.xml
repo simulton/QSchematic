@@ -1,12 +1,12 @@
 <qschematic version="2">
     <items>
-        <item type_id="65637">
-            <label type_id="65541">
+        <item type-id="65637">
+            <label type-id="65541">
                 <connection_point enabled="true">
                     <x>80.</x>
                     <y>40.</y>
                 </connection_point>
-                <item type_id="65541">
+                <item type-id="65541">
                     <highlight>true</highlight>
                     <movable>true</movable>
                     <rotation direction="cw" unit="degrees">0.</rotation>
@@ -17,12 +17,12 @@
                 </item>
                 <text>Operation 1</text>
             </label>
-            <node type_id="65637">
+            <node type-id="65637">
                 <connectors>
-                    <connector type_id="65638">
-                        <connector type_id="65638">
+                    <connector type-id="65638">
+                        <connector type-id="65638">
                             <force_text_direction>false</force_text_direction>
-                            <item type_id="65638">
+                            <item type-id="65638">
                                 <highlight>true</highlight>
                                 <movable>true</movable>
                                 <rotation direction="cw" unit="degrees">0.</rotation>
@@ -31,12 +31,12 @@
                                 <x>160.</x>
                                 <y>40.</y>
                             </item>
-                            <label type_id="65541">
+                            <label type-id="65541">
                                 <connection_point enabled="true">
                                     <x>0.</x>
                                     <y>0.</y>
                                 </connection_point>
-                                <item type_id="65541">
+                                <item type-id="65541">
                                     <highlight>true</highlight>
                                     <movable>true</movable>
                                     <rotation direction="cw" unit="degrees">0.</rotation>
@@ -51,10 +51,10 @@
                             <text_direction></text_direction>
                         </connector>
                     </connector>
-                    <connector type_id="65638">
-                        <connector type_id="65638">
+                    <connector type-id="65638">
+                        <connector type-id="65638">
                             <force_text_direction>false</force_text_direction>
-                            <item type_id="65638">
+                            <item type-id="65638">
                                 <highlight>true</highlight>
                                 <movable>true</movable>
                                 <rotation direction="cw" unit="degrees">0.</rotation>
@@ -63,12 +63,12 @@
                                 <x>0.</x>
                                 <y>40.</y>
                             </item>
-                            <label type_id="65541">
+                            <label type-id="65541">
                                 <connection_point enabled="true">
                                     <x>0.</x>
                                     <y>0.</y>
                                 </connection_point>
-                                <item type_id="65541">
+                                <item type-id="65541">
                                     <highlight>true</highlight>
                                     <movable>true</movable>
                                     <rotation direction="cw" unit="degrees">0.</rotation>
@@ -89,11 +89,11 @@
                     <snap_policy>2</snap_policy>
                     <snap_to_grid>true</snap_to_grid>
                 </connectors_configuration>
-                <rect_item type_id="65637">
+                <rect_item type-id="65637">
                     <allow_mouse_resize>true</allow_mouse_resize>
                     <allow_mouse_rotate>true</allow_mouse_rotate>
                     <height>80.</height>
-                    <item type_id="65637">
+                    <item type-id="65637">
                         <highlight>true</highlight>
                         <movable>true</movable>
                         <rotation direction="cw" unit="degrees">0.</rotation>
@@ -108,13 +108,13 @@
                 </rect_item>
             </node>
         </item>
-        <item type_id="65637">
-            <label type_id="65541">
+        <item type-id="65637">
+            <label type-id="65541">
                 <connection_point enabled="true">
                     <x>80.</x>
                     <y>40.</y>
                 </connection_point>
-                <item type_id="65541">
+                <item type-id="65541">
                     <highlight>true</highlight>
                     <movable>true</movable>
                     <rotation direction="cw" unit="degrees">0.</rotation>
@@ -125,12 +125,12 @@
                 </item>
                 <text>Operation 2</text>
             </label>
-            <node type_id="65637">
+            <node type-id="65637">
                 <connectors>
-                    <connector type_id="65638">
-                        <connector type_id="65638">
+                    <connector type-id="65638">
+                        <connector type-id="65638">
                             <force_text_direction>false</force_text_direction>
-                            <item type_id="65638">
+                            <item type-id="65638">
                                 <highlight>true</highlight>
                                 <movable>true</movable>
                                 <rotation direction="cw" unit="degrees">0.</rotation>
@@ -139,12 +139,12 @@
                                 <x>160.</x>
                                 <y>40.</y>
                             </item>
-                            <label type_id="65541">
+                            <label type-id="65541">
                                 <connection_point enabled="true">
                                     <x>0.</x>
                                     <y>0.</y>
                                 </connection_point>
-                                <item type_id="65541">
+                                <item type-id="65541">
                                     <highlight>true</highlight>
                                     <movable>true</movable>
                                     <rotation direction="cw" unit="degrees">0.</rotation>
@@ -159,10 +159,10 @@
                             <text_direction></text_direction>
                         </connector>
                     </connector>
-                    <connector type_id="65638">
-                        <connector type_id="65638">
+                    <connector type-id="65638">
+                        <connector type-id="65638">
                             <force_text_direction>false</force_text_direction>
-                            <item type_id="65638">
+                            <item type-id="65638">
                                 <highlight>true</highlight>
                                 <movable>true</movable>
                                 <rotation direction="cw" unit="degrees">0.</rotation>
@@ -171,12 +171,12 @@
                                 <x>0.</x>
                                 <y>40.</y>
                             </item>
-                            <label type_id="65541">
+                            <label type-id="65541">
                                 <connection_point enabled="true">
                                     <x>0.</x>
                                     <y>0.</y>
                                 </connection_point>
-                                <item type_id="65541">
+                                <item type-id="65541">
                                     <highlight>true</highlight>
                                     <movable>true</movable>
                                     <rotation direction="cw" unit="degrees">0.</rotation>
@@ -197,11 +197,11 @@
                     <snap_policy>2</snap_policy>
                     <snap_to_grid>true</snap_to_grid>
                 </connectors_configuration>
-                <rect_item type_id="65637">
+                <rect_item type-id="65637">
                     <allow_mouse_resize>true</allow_mouse_resize>
                     <allow_mouse_rotate>true</allow_mouse_rotate>
                     <height>80.</height>
-                    <item type_id="65637">
+                    <item type-id="65637">
                         <highlight>true</highlight>
                         <movable>true</movable>
                         <rotation direction="cw" unit="degrees">0.</rotation>
@@ -216,13 +216,13 @@
                 </rect_item>
             </node>
         </item>
-        <item type_id="65641">
-            <node type_id="65641">
+        <item type-id="65641">
+            <node type-id="65641">
                 <connectors>
-                    <connector type_id="65638">
-                        <connector type_id="65638">
+                    <connector type-id="65638">
+                        <connector type-id="65638">
                             <force_text_direction>false</force_text_direction>
-                            <item type_id="65638">
+                            <item type-id="65638">
                                 <highlight>true</highlight>
                                 <movable>true</movable>
                                 <rotation direction="cw" unit="degrees">0.</rotation>
@@ -231,12 +231,12 @@
                                 <x>20.</x>
                                 <y>0.</y>
                             </item>
-                            <label type_id="65541">
+                            <label type-id="65541">
                                 <connection_point enabled="true">
                                     <x>0.</x>
                                     <y>0.</y>
                                 </connection_point>
-                                <item type_id="65541">
+                                <item type-id="65541">
                                     <highlight>true</highlight>
                                     <movable>false</movable>
                                     <rotation direction="cw" unit="degrees">0.</rotation>
@@ -257,11 +257,11 @@
                     <snap_policy>2</snap_policy>
                     <snap_to_grid>true</snap_to_grid>
                 </connectors_configuration>
-                <rect_item type_id="65641">
+                <rect_item type-id="65641">
                     <allow_mouse_resize>false</allow_mouse_resize>
                     <allow_mouse_rotate>true</allow_mouse_rotate>
                     <height>40.</height>
-                    <item type_id="65641">
+                    <item type-id="65641">
                         <highlight>true</highlight>
                         <movable>true</movable>
                         <rotation direction="cw" unit="degrees">0.</rotation>
@@ -276,13 +276,13 @@
                 </rect_item>
             </node>
         </item>
-        <item type_id="65641">
-            <node type_id="65641">
+        <item type-id="65641">
+            <node type-id="65641">
                 <connectors>
-                    <connector type_id="65638">
-                        <connector type_id="65638">
+                    <connector type-id="65638">
+                        <connector type-id="65638">
                             <force_text_direction>false</force_text_direction>
-                            <item type_id="65638">
+                            <item type-id="65638">
                                 <highlight>true</highlight>
                                 <movable>true</movable>
                                 <rotation direction="cw" unit="degrees">0.</rotation>
@@ -291,12 +291,12 @@
                                 <x>20.</x>
                                 <y>0.</y>
                             </item>
-                            <label type_id="65541">
+                            <label type-id="65541">
                                 <connection_point enabled="true">
                                     <x>0.</x>
                                     <y>0.</y>
                                 </connection_point>
-                                <item type_id="65541">
+                                <item type-id="65541">
                                     <highlight>true</highlight>
                                     <movable>false</movable>
                                     <rotation direction="cw" unit="degrees">0.</rotation>
@@ -317,11 +317,11 @@
                     <snap_policy>2</snap_policy>
                     <snap_to_grid>true</snap_to_grid>
                 </connectors_configuration>
-                <rect_item type_id="65641">
+                <rect_item type-id="65641">
                     <allow_mouse_resize>false</allow_mouse_resize>
                     <allow_mouse_rotate>true</allow_mouse_rotate>
                     <height>40.</height>
-                    <item type_id="65641">
+                    <item type-id="65641">
                         <highlight>true</highlight>
                         <movable>true</movable>
                         <rotation direction="cw" unit="degrees">0.</rotation>
@@ -336,13 +336,13 @@
                 </rect_item>
             </node>
         </item>
-        <item type_id="65637">
-            <label type_id="65541">
+        <item type-id="65637">
+            <label type-id="65541">
                 <connection_point enabled="true">
                     <x>80.</x>
                     <y>210.</y>
                 </connection_point>
-                <item type_id="65541">
+                <item type-id="65541">
                     <highlight>true</highlight>
                     <movable>true</movable>
                     <rotation direction="cw" unit="degrees">0.</rotation>
@@ -353,12 +353,12 @@
                 </item>
                 <text>Demo 1</text>
             </label>
-            <node type_id="65637">
+            <node type-id="65637">
                 <connectors>
-                    <connector type_id="65638">
-                        <connector type_id="65638">
+                    <connector type-id="65638">
+                        <connector type-id="65638">
                             <force_text_direction>false</force_text_direction>
-                            <item type_id="65638">
+                            <item type-id="65638">
                                 <highlight>true</highlight>
                                 <movable>true</movable>
                                 <rotation direction="cw" unit="degrees">0.</rotation>
@@ -367,12 +367,12 @@
                                 <x>0.</x>
                                 <y>40.</y>
                             </item>
-                            <label type_id="65541">
+                            <label type-id="65541">
                                 <connection_point enabled="true">
                                     <x>0.</x>
                                     <y>0.</y>
                                 </connection_point>
-                                <item type_id="65541">
+                                <item type-id="65541">
                                     <highlight>true</highlight>
                                     <movable>true</movable>
                                     <rotation direction="cw" unit="degrees">0.</rotation>
@@ -387,10 +387,10 @@
                             <text_direction></text_direction>
                         </connector>
                     </connector>
-                    <connector type_id="65638">
-                        <connector type_id="65638">
+                    <connector type-id="65638">
+                        <connector type-id="65638">
                             <force_text_direction>false</force_text_direction>
-                            <item type_id="65638">
+                            <item type-id="65638">
                                 <highlight>true</highlight>
                                 <movable>true</movable>
                                 <rotation direction="cw" unit="degrees">0.</rotation>
@@ -399,12 +399,12 @@
                                 <x>0.</x>
                                 <y>200.</y>
                             </item>
-                            <label type_id="65541">
+                            <label type-id="65541">
                                 <connection_point enabled="true">
                                     <x>0.</x>
                                     <y>0.</y>
                                 </connection_point>
-                                <item type_id="65541">
+                                <item type-id="65541">
                                     <highlight>true</highlight>
                                     <movable>true</movable>
                                     <rotation direction="cw" unit="degrees">0.</rotation>
@@ -419,10 +419,10 @@
                             <text_direction></text_direction>
                         </connector>
                     </connector>
-                    <connector type_id="65638">
-                        <connector type_id="65638">
+                    <connector type-id="65638">
+                        <connector type-id="65638">
                             <force_text_direction>false</force_text_direction>
-                            <item type_id="65638">
+                            <item type-id="65638">
                                 <highlight>true</highlight>
                                 <movable>true</movable>
                                 <rotation direction="cw" unit="degrees">0.</rotation>
@@ -431,12 +431,12 @@
                                 <x>0.</x>
                                 <y>380.</y>
                             </item>
-                            <label type_id="65541">
+                            <label type-id="65541">
                                 <connection_point enabled="true">
                                     <x>0.</x>
                                     <y>0.</y>
                                 </connection_point>
-                                <item type_id="65541">
+                                <item type-id="65541">
                                     <highlight>true</highlight>
                                     <movable>true</movable>
                                     <rotation direction="cw" unit="degrees">0.</rotation>
@@ -451,10 +451,10 @@
                             <text_direction></text_direction>
                         </connector>
                     </connector>
-                    <connector type_id="65638">
-                        <connector type_id="65638">
+                    <connector type-id="65638">
+                        <connector type-id="65638">
                             <force_text_direction>false</force_text_direction>
-                            <item type_id="65638">
+                            <item type-id="65638">
                                 <highlight>true</highlight>
                                 <movable>true</movable>
                                 <rotation direction="cw" unit="degrees">0.</rotation>
@@ -463,12 +463,12 @@
                                 <x>160.</x>
                                 <y>40.</y>
                             </item>
-                            <label type_id="65541">
+                            <label type-id="65541">
                                 <connection_point enabled="true">
                                     <x>0.</x>
                                     <y>0.</y>
                                 </connection_point>
-                                <item type_id="65541">
+                                <item type-id="65541">
                                     <highlight>true</highlight>
                                     <movable>true</movable>
                                     <rotation direction="cw" unit="degrees">0.</rotation>
@@ -489,11 +489,11 @@
                     <snap_policy>2</snap_policy>
                     <snap_to_grid>true</snap_to_grid>
                 </connectors_configuration>
-                <rect_item type_id="65637">
+                <rect_item type-id="65637">
                     <allow_mouse_resize>true</allow_mouse_resize>
                     <allow_mouse_rotate>true</allow_mouse_rotate>
                     <height>420.</height>
-                    <item type_id="65637">
+                    <item type-id="65637">
                         <highlight>true</highlight>
                         <movable>true</movable>
                         <rotation direction="cw" unit="degrees">0.</rotation>
@@ -508,13 +508,13 @@
                 </rect_item>
             </node>
         </item>
-        <item type_id="65637">
-            <label type_id="65541">
+        <item type-id="65637">
+            <label type-id="65541">
                 <connection_point enabled="true">
                     <x>80.</x>
                     <y>60.</y>
                 </connection_point>
-                <item type_id="65541">
+                <item type-id="65541">
                     <highlight>true</highlight>
                     <movable>true</movable>
                     <rotation direction="cw" unit="degrees">0.</rotation>
@@ -525,12 +525,12 @@
                 </item>
                 <text>Operation 3</text>
             </label>
-            <node type_id="65637">
+            <node type-id="65637">
                 <connectors>
-                    <connector type_id="65638">
-                        <connector type_id="65638">
+                    <connector type-id="65638">
+                        <connector type-id="65638">
                             <force_text_direction>false</force_text_direction>
-                            <item type_id="65638">
+                            <item type-id="65638">
                                 <highlight>true</highlight>
                                 <movable>true</movable>
                                 <rotation direction="cw" unit="degrees">0.</rotation>
@@ -539,12 +539,12 @@
                                 <x>160.</x>
                                 <y>60.</y>
                             </item>
-                            <label type_id="65541">
+                            <label type-id="65541">
                                 <connection_point enabled="true">
                                     <x>0.</x>
                                     <y>0.</y>
                                 </connection_point>
-                                <item type_id="65541">
+                                <item type-id="65541">
                                     <highlight>true</highlight>
                                     <movable>true</movable>
                                     <rotation direction="cw" unit="degrees">0.</rotation>
@@ -559,10 +559,10 @@
                             <text_direction></text_direction>
                         </connector>
                     </connector>
-                    <connector type_id="65638">
-                        <connector type_id="65638">
+                    <connector type-id="65638">
+                        <connector type-id="65638">
                             <force_text_direction>false</force_text_direction>
-                            <item type_id="65638">
+                            <item type-id="65638">
                                 <highlight>true</highlight>
                                 <movable>true</movable>
                                 <rotation direction="cw" unit="degrees">0.</rotation>
@@ -571,12 +571,12 @@
                                 <x>0.</x>
                                 <y>40.</y>
                             </item>
-                            <label type_id="65541">
+                            <label type-id="65541">
                                 <connection_point enabled="true">
                                     <x>0.</x>
                                     <y>0.</y>
                                 </connection_point>
-                                <item type_id="65541">
+                                <item type-id="65541">
                                     <highlight>true</highlight>
                                     <movable>true</movable>
                                     <rotation direction="cw" unit="degrees">0.</rotation>
@@ -591,10 +591,10 @@
                             <text_direction></text_direction>
                         </connector>
                     </connector>
-                    <connector type_id="65638">
-                        <connector type_id="65638">
+                    <connector type-id="65638">
+                        <connector type-id="65638">
                             <force_text_direction>false</force_text_direction>
-                            <item type_id="65638">
+                            <item type-id="65638">
                                 <highlight>true</highlight>
                                 <movable>true</movable>
                                 <rotation direction="cw" unit="degrees">0.</rotation>
@@ -603,12 +603,12 @@
                                 <x>0.</x>
                                 <y>80.</y>
                             </item>
-                            <label type_id="65541">
+                            <label type-id="65541">
                                 <connection_point enabled="true">
                                     <x>0.</x>
                                     <y>0.</y>
                                 </connection_point>
-                                <item type_id="65541">
+                                <item type-id="65541">
                                     <highlight>true</highlight>
                                     <movable>true</movable>
                                     <rotation direction="cw" unit="degrees">0.</rotation>
@@ -629,11 +629,11 @@
                     <snap_policy>2</snap_policy>
                     <snap_to_grid>true</snap_to_grid>
                 </connectors_configuration>
-                <rect_item type_id="65637">
+                <rect_item type-id="65637">
                     <allow_mouse_resize>true</allow_mouse_resize>
                     <allow_mouse_rotate>true</allow_mouse_rotate>
                     <height>120.</height>
-                    <item type_id="65637">
+                    <item type-id="65637">
                         <highlight>true</highlight>
                         <movable>true</movable>
                         <rotation direction="cw" unit="degrees">0.</rotation>
@@ -648,13 +648,13 @@
                 </rect_item>
             </node>
         </item>
-        <item type_id="65642">
-            <node type_id="65642">
+        <item type-id="65642">
+            <node type-id="65642">
                 <connectors>
-                    <connector type_id="65638">
-                        <connector type_id="65638">
+                    <connector type-id="65638">
+                        <connector type-id="65638">
                             <force_text_direction>false</force_text_direction>
-                            <item type_id="65638">
+                            <item type-id="65638">
                                 <highlight>true</highlight>
                                 <movable>true</movable>
                                 <rotation direction="cw" unit="degrees">0.</rotation>
@@ -663,12 +663,12 @@
                                 <x>20.</x>
                                 <y>0.</y>
                             </item>
-                            <label type_id="65541">
+                            <label type-id="65541">
                                 <connection_point enabled="true">
                                     <x>0.</x>
                                     <y>0.</y>
                                 </connection_point>
-                                <item type_id="65541">
+                                <item type-id="65541">
                                     <highlight>true</highlight>
                                     <movable>false</movable>
                                     <rotation direction="cw" unit="degrees">0.</rotation>
@@ -689,11 +689,11 @@
                     <snap_policy>2</snap_policy>
                     <snap_to_grid>true</snap_to_grid>
                 </connectors_configuration>
-                <rect_item type_id="65642">
+                <rect_item type-id="65642">
                     <allow_mouse_resize>false</allow_mouse_resize>
                     <allow_mouse_rotate>true</allow_mouse_rotate>
                     <height>40.</height>
-                    <item type_id="65642">
+                    <item type-id="65642">
                         <highlight>true</highlight>
                         <movable>true</movable>
                         <rotation direction="cw" unit="degrees">0.</rotation>
@@ -711,12 +711,12 @@
     </items>
     <nets>
         <net>
-            <label type_id="65541">
+            <label type-id="65541">
                 <connection_point enabled="true">
                     <x>0.</x>
                     <y>0.</y>
                 </connection_point>
-                <item type_id="65541">
+                <item type-id="65541">
                     <highlight>true</highlight>
                     <movable>true</movable>
                     <rotation direction="cw" unit="degrees">0.</rotation>
@@ -729,9 +729,9 @@
             </label>
             <name></name>
             <wires>
-                <wire type_id="65639">
-                    <wire type_id="65639">
-                        <item type_id="65639">
+                <wire type-id="65639">
+                    <wire type-id="65639">
+                        <item type-id="65639">
                             <highlight>true</highlight>
                             <movable>true</movable>
                             <rotation direction="cw" unit="degrees">0.</rotation>
@@ -752,9 +752,9 @@
                         </points>
                     </wire>
                 </wire>
-                <wire type_id="65639">
-                    <wire type_id="65639">
-                        <item type_id="65639">
+                <wire type-id="65639">
+                    <wire type-id="65639">
+                        <item type-id="65639">
                             <highlight>true</highlight>
                             <movable>true</movable>
                             <rotation direction="cw" unit="degrees">0.</rotation>
@@ -782,12 +782,12 @@
             </wires>
         </net>
         <net>
-            <label type_id="65541">
+            <label type-id="65541">
                 <connection_point enabled="true">
                     <x>0.</x>
                     <y>0.</y>
                 </connection_point>
-                <item type_id="65541">
+                <item type-id="65541">
                     <highlight>true</highlight>
                     <movable>true</movable>
                     <rotation direction="cw" unit="degrees">0.</rotation>
@@ -800,9 +800,9 @@
             </label>
             <name></name>
             <wires>
-                <wire type_id="65639">
-                    <wire type_id="65639">
-                        <item type_id="65639">
+                <wire type-id="65639">
+                    <wire type-id="65639">
+                        <item type-id="65639">
                             <highlight>true</highlight>
                             <movable>true</movable>
                             <rotation direction="cw" unit="degrees">0.</rotation>
@@ -826,12 +826,12 @@
             </wires>
         </net>
         <net>
-            <label type_id="65541">
+            <label type-id="65541">
                 <connection_point enabled="true">
                     <x>0.</x>
                     <y>0.</y>
                 </connection_point>
-                <item type_id="65541">
+                <item type-id="65541">
                     <highlight>true</highlight>
                     <movable>true</movable>
                     <rotation direction="cw" unit="degrees">0.</rotation>
@@ -844,9 +844,9 @@
             </label>
             <name></name>
             <wires>
-                <wire type_id="65639">
-                    <wire type_id="65639">
-                        <item type_id="65639">
+                <wire type-id="65639">
+                    <wire type-id="65639">
+                        <item type-id="65639">
                             <highlight>true</highlight>
                             <movable>true</movable>
                             <rotation direction="cw" unit="degrees">0.</rotation>
@@ -870,12 +870,12 @@
             </wires>
         </net>
         <net>
-            <label type_id="65541">
+            <label type-id="65541">
                 <connection_point enabled="true">
                     <x>0.</x>
                     <y>0.</y>
                 </connection_point>
-                <item type_id="65541">
+                <item type-id="65541">
                     <highlight>true</highlight>
                     <movable>true</movable>
                     <rotation direction="cw" unit="degrees">0.</rotation>
@@ -888,9 +888,9 @@
             </label>
             <name></name>
             <wires>
-                <wire type_id="65639">
-                    <wire type_id="65639">
-                        <item type_id="65639">
+                <wire type-id="65639">
+                    <wire type-id="65639">
+                        <item type-id="65639">
                             <highlight>true</highlight>
                             <movable>true</movable>
                             <rotation direction="cw" unit="degrees">0.</rotation>
@@ -911,9 +911,9 @@
                         </points>
                     </wire>
                 </wire>
-                <wire type_id="65639">
-                    <wire type_id="65639">
-                        <item type_id="65639">
+                <wire type-id="65639">
+                    <wire type-id="65639">
+                        <item type-id="65639">
                             <highlight>true</highlight>
                             <movable>true</movable>
                             <rotation direction="cw" unit="degrees">0.</rotation>
@@ -949,12 +949,12 @@
             </wires>
         </net>
         <net>
-            <label type_id="65541">
+            <label type-id="65541">
                 <connection_point enabled="true">
                     <x>0.</x>
                     <y>0.</y>
                 </connection_point>
-                <item type_id="65541">
+                <item type-id="65541">
                     <highlight>true</highlight>
                     <movable>true</movable>
                     <rotation direction="cw" unit="degrees">0.</rotation>
@@ -967,9 +967,9 @@
             </label>
             <name></name>
             <wires>
-                <wire type_id="65639">
-                    <wire type_id="65639">
-                        <item type_id="65639">
+                <wire type-id="65639">
+                    <wire type-id="65639">
+                        <item type-id="65639">
                             <highlight>true</highlight>
                             <movable>true</movable>
                             <rotation direction="cw" unit="degrees">0.</rotation>
@@ -993,12 +993,12 @@
             </wires>
         </net>
         <net>
-            <label type_id="65541">
+            <label type-id="65541">
                 <connection_point enabled="true">
                     <x>0.</x>
                     <y>0.</y>
                 </connection_point>
-                <item type_id="65541">
+                <item type-id="65541">
                     <highlight>true</highlight>
                     <movable>true</movable>
                     <rotation direction="cw" unit="degrees">0.</rotation>
@@ -1011,9 +1011,9 @@
             </label>
             <name></name>
             <wires>
-                <wire type_id="65639">
-                    <wire type_id="65639">
-                        <item type_id="65639">
+                <wire type-id="65639">
+                    <wire type-id="65639">
+                        <item type-id="65639">
                             <highlight>true</highlight>
                             <movable>true</movable>
                             <rotation direction="cw" unit="degrees">0.</rotation>
