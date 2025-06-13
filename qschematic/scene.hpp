@@ -43,6 +43,8 @@ namespace QSchematic
     public:
         static constexpr const char* gpds_name = "qschematic";
 
+        constexpr static std::size_t serdes_version = 2;
+
         qreal z_value_background = -10'000;
 
         enum Mode

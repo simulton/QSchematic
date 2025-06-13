@@ -116,6 +116,7 @@ Scene::to_container() const
 
     // Root
     gpds::container c;
+    c.add_attribute("version", serdes_version);
     c.add_value("scene", scene);
     c.add_value("items", itemsList);
     c.add_value("nets", netsList);
@@ -126,6 +127,11 @@ Scene::to_container() const
 void
 Scene::from_container(const gpds::container& container)
 {
+    // Check the version
+    const std::size_t version = container.get_attribute<std::size_t>("version").value_or(-1);
+    if (version != serdes_version)
+        return;
+
     // Scene
     if (const gpds::container* sceneContainer = container.get_value<gpds::container*>("scene").value_or(nullptr); sceneContainer) {
         // Rect
