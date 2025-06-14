@@ -80,9 +80,19 @@ namespace QSchematic
         void
         setWireFactory(const std::function<std::shared_ptr<Items::Wire>()>& factory);
 
+        /**
+         * Set the current scene mode.
+         *
+         * @note This accepts an integer instead of an enum to support custom user modes via Scene::Modes::UserMode.
+         */
         void
         setMode(int mode);
 
+        /**
+         * Get the current scene mode.
+         *
+         * @note This returns an integer instead of an enum to support custom user modes via Scene::Modes::UserMode.
+         */
         [[nodiscard]]
         int
         mode() const;
