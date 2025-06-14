@@ -38,16 +38,15 @@ WireNet::~WireNet()
 gpds::container
 WireNet::to_container() const
 {
-    // Wires
-    gpds::container wiresContainer;
-    for (const auto& wire : wires()) {
-        if (auto wire_net = std::dynamic_pointer_cast<Wire>(wire))
-            wiresContainer.add_value("wire", wire_net->to_container());
-    }
-
     // Root
     gpds::container root;
     root.add_value("name", name().toStdString() );
+
+    // Wires
+    for (const auto& wire : wires()) {
+        if (auto wire_net = std::dynamic_pointer_cast<Wire>(wire))
+            root.add_value("wire", wire_net->to_container());
+    }
 
     // The coordinates of the label need to be in the scene space
     if (_label->parentItem())
@@ -58,8 +57,6 @@ WireNet::to_container() const
     // Move the label back to the correct position
     if (_label->parentItem())
         _label->moveBy(-QVector2D(_label->parentItem()->pos()));
-
-    root.add_value("wires", wiresContainer);
 
     return root;
 }
@@ -77,24 +74,21 @@ WireNet::from_container(const gpds::container& container)
         _label->from_container(*labelContainer);
 
     // Wires
-    {
-        const gpds::container& wiresContainer = *container.get_value<gpds::container*>("wires").value();
-        for (const gpds::container* wireContainer : wiresContainer.get_values<gpds::container*>("wire")) {
-            Q_ASSERT(wireContainer);
+    for (const gpds::container* wireContainer : container.get_values<gpds::container*>("wire")) {
+        Q_ASSERT(wireContainer);
 
-            auto newWire = Items::Factory::instance().from_container(*wireContainer);
-            auto sharedNewWire = std::dynamic_pointer_cast<Wire>( newWire );
-            if (!sharedNewWire) {
-                continue;
-            }
-            sharedNewWire->from_container(*wireContainer);
-            addWire(sharedNewWire);
-            if (!_scene) {
-                qCritical("WireNet::from_container(): The scene has not been set.");
-                return;
-            }
-            _scene->addItem(sharedNewWire);
+        auto newWire = Items::Factory::instance().from_container(*wireContainer);
+        auto sharedNewWire = std::dynamic_pointer_cast<Wire>( newWire );
+        if (!sharedNewWire) {
+            continue;
         }
+        sharedNewWire->from_container(*wireContainer);
+        addWire(sharedNewWire);
+        if (!_scene) {
+            qCritical("WireNet::from_container(): The scene has not been set.");
+            return;
+        }
+        _scene->addItem(sharedNewWire);
     }
 }
 
