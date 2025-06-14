@@ -56,7 +56,7 @@ gpds::container Node::to_container() const
     addItemTypeIdToContainer(root);
     root.add_value("rect_item", RectItem::to_container());
     root.add_value("connectors_configuration", connectorsConfigurationContainer);
-    root.add_value("connectors", connectorsContainer);
+    root += connectorsContainer;
 
     return root;
 }
@@ -75,17 +75,14 @@ void Node::from_container(const gpds::container& container)
     }
 
     // Connectors
-    const gpds::container* connectorsContainer = container.get_value<gpds::container*>("connectors").value_or(nullptr);
-    if (connectorsContainer) {
-        clearConnectors();
-        for (const gpds::container* connectorContainer : connectorsContainer->get_values<gpds::container*>("connector")) {
-            auto connector = std::dynamic_pointer_cast<Connector>(Items::Factory::instance().from_container(*connectorContainer));
-            if (!connector) {
-                continue;
-            }
-            connector->from_container(*connectorContainer);
-            addConnector(connector);
-        }
+    clearConnectors();
+    for (const gpds::container* connectorContainer : container.get_values<gpds::container*>("connector")) {
+        auto connector = std::dynamic_pointer_cast<Connector>(Items::Factory::instance().from_container(*connectorContainer));
+        if (!connector)
+            continue;
+
+        connector->from_container(*connectorContainer);
+        addConnector(connector);
     }
 }
 
