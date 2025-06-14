@@ -1147,7 +1147,7 @@ Scene::removeLastWirePoint()
     if (!_newWire)
         return;
 
-    // If we're supposed to preseve right angles, two points have to be removed
+    // If we're supposed to preserve right angles, two points have to be removed
     if (_settings.routeStraightAngles) {
         // Do nothing if there are not at least 4 points
         if (_newWire->pointsAbsolute().count() > 3) {
