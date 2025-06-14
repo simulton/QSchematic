@@ -695,322 +695,320 @@
             </node>
         </item>
     </items>
-    <nets>
-        <net>
-            <label type-id="65541">
-                <connection_point enabled="true">
-                    <x>0.</x>
-                    <y>0.</y>
-                </connection_point>
-                <item type-id="65541">
+    <net>
+        <label type-id="65541">
+            <connection_point enabled="true">
+                <x>0.</x>
+                <y>0.</y>
+            </connection_point>
+            <item type-id="65541">
+                <highlight>true</highlight>
+                <movable>true</movable>
+                <rotation direction="cw" unit="degrees">0.</rotation>
+                <snap_to_grid>false</snap_to_grid>
+                <visible>false</visible>
+                <x>0.</x>
+                <y>0.</y>
+            </item>
+            <text></text>
+        </label>
+        <name></name>
+        <wire type-id="65639">
+            <wire type-id="65639">
+                <item type-id="65639">
                     <highlight>true</highlight>
                     <movable>true</movable>
                     <rotation direction="cw" unit="degrees">0.</rotation>
-                    <snap_to_grid>false</snap_to_grid>
-                    <visible>false</visible>
-                    <x>0.</x>
-                    <y>0.</y>
+                    <snap_to_grid>true</snap_to_grid>
+                    <visible>true</visible>
+                    <x>-360.</x>
+                    <y>40.</y>
                 </item>
-                <text></text>
-            </label>
-            <name></name>
-            <wire type-id="65639">
-                <wire type-id="65639">
-                    <item type-id="65639">
-                        <highlight>true</highlight>
-                        <movable>true</movable>
-                        <rotation direction="cw" unit="degrees">0.</rotation>
-                        <snap_to_grid>true</snap_to_grid>
-                        <visible>true</visible>
+                <points>
+                    <point index="0">
                         <x>-360.</x>
                         <y>40.</y>
-                    </item>
-                    <points>
-                        <point index="0">
-                            <x>-360.</x>
-                            <y>40.</y>
-                        </point>
-                        <point index="1">
-                            <x>-260.</x>
-                            <y>40.</y>
-                        </point>
-                    </points>
-                </wire>
+                    </point>
+                    <point index="1">
+                        <x>-260.</x>
+                        <y>40.</y>
+                    </point>
+                </points>
             </wire>
+        </wire>
+        <wire type-id="65639">
             <wire type-id="65639">
-                <wire type-id="65639">
-                    <item type-id="65639">
-                        <highlight>true</highlight>
-                        <movable>true</movable>
-                        <rotation direction="cw" unit="degrees">0.</rotation>
-                        <snap_to_grid>true</snap_to_grid>
-                        <visible>true</visible>
+                <item type-id="65639">
+                    <highlight>true</highlight>
+                    <movable>true</movable>
+                    <rotation direction="cw" unit="degrees">0.</rotation>
+                    <snap_to_grid>true</snap_to_grid>
+                    <visible>true</visible>
+                    <x>-260.</x>
+                    <y>200.</y>
+                </item>
+                <points>
+                    <point index="0">
                         <x>-260.</x>
                         <y>200.</y>
-                    </item>
-                    <points>
-                        <point index="0">
-                            <x>-260.</x>
-                            <y>200.</y>
-                        </point>
-                        <point index="1">
-                            <x>-300.</x>
-                            <y>200.</y>
-                        </point>
-                        <point index="2">
-                            <x>-300.</x>
-                            <y>40.</y>
-                        </point>
-                    </points>
-                </wire>
+                    </point>
+                    <point index="1">
+                        <x>-300.</x>
+                        <y>200.</y>
+                    </point>
+                    <point index="2">
+                        <x>-300.</x>
+                        <y>40.</y>
+                    </point>
+                </points>
             </wire>
-        </net>
-        <net>
-            <label type-id="65541">
-                <connection_point enabled="true">
-                    <x>0.</x>
-                    <y>0.</y>
-                </connection_point>
-                <item type-id="65541">
+        </wire>
+    </net>
+    <net>
+        <label type-id="65541">
+            <connection_point enabled="true">
+                <x>0.</x>
+                <y>0.</y>
+            </connection_point>
+            <item type-id="65541">
+                <highlight>true</highlight>
+                <movable>true</movable>
+                <rotation direction="cw" unit="degrees">0.</rotation>
+                <snap_to_grid>false</snap_to_grid>
+                <visible>false</visible>
+                <x>0.</x>
+                <y>0.</y>
+            </item>
+            <text></text>
+        </label>
+        <name></name>
+        <wire type-id="65639">
+            <wire type-id="65639">
+                <item type-id="65639">
                     <highlight>true</highlight>
                     <movable>true</movable>
                     <rotation direction="cw" unit="degrees">0.</rotation>
-                    <snap_to_grid>false</snap_to_grid>
-                    <visible>false</visible>
-                    <x>0.</x>
-                    <y>0.</y>
+                    <snap_to_grid>true</snap_to_grid>
+                    <visible>true</visible>
+                    <x>-100.</x>
+                    <y>40.</y>
                 </item>
-                <text></text>
-            </label>
-            <name></name>
-            <wire type-id="65639">
-                <wire type-id="65639">
-                    <item type-id="65639">
-                        <highlight>true</highlight>
-                        <movable>true</movable>
-                        <rotation direction="cw" unit="degrees">0.</rotation>
-                        <snap_to_grid>true</snap_to_grid>
-                        <visible>true</visible>
+                <points>
+                    <point index="0">
                         <x>-100.</x>
                         <y>40.</y>
-                    </item>
-                    <points>
-                        <point index="0">
-                            <x>-100.</x>
-                            <y>40.</y>
-                        </point>
-                        <point index="1">
-                            <x>20.</x>
-                            <y>40.</y>
-                        </point>
-                    </points>
-                </wire>
+                    </point>
+                    <point index="1">
+                        <x>20.</x>
+                        <y>40.</y>
+                    </point>
+                </points>
             </wire>
-        </net>
-        <net>
-            <label type-id="65541">
-                <connection_point enabled="true">
-                    <x>0.</x>
-                    <y>0.</y>
-                </connection_point>
-                <item type-id="65541">
+        </wire>
+    </net>
+    <net>
+        <label type-id="65541">
+            <connection_point enabled="true">
+                <x>0.</x>
+                <y>0.</y>
+            </connection_point>
+            <item type-id="65541">
+                <highlight>true</highlight>
+                <movable>true</movable>
+                <rotation direction="cw" unit="degrees">0.</rotation>
+                <snap_to_grid>false</snap_to_grid>
+                <visible>false</visible>
+                <x>0.</x>
+                <y>0.</y>
+            </item>
+            <text></text>
+        </label>
+        <name></name>
+        <wire type-id="65639">
+            <wire type-id="65639">
+                <item type-id="65639">
                     <highlight>true</highlight>
                     <movable>true</movable>
                     <rotation direction="cw" unit="degrees">0.</rotation>
-                    <snap_to_grid>false</snap_to_grid>
-                    <visible>false</visible>
-                    <x>0.</x>
-                    <y>0.</y>
+                    <snap_to_grid>true</snap_to_grid>
+                    <visible>true</visible>
+                    <x>20.</x>
+                    <y>200.</y>
                 </item>
-                <text></text>
-            </label>
-            <name></name>
-            <wire type-id="65639">
-                <wire type-id="65639">
-                    <item type-id="65639">
-                        <highlight>true</highlight>
-                        <movable>true</movable>
-                        <rotation direction="cw" unit="degrees">0.</rotation>
-                        <snap_to_grid>true</snap_to_grid>
-                        <visible>true</visible>
+                <points>
+                    <point index="0">
                         <x>20.</x>
                         <y>200.</y>
-                    </item>
-                    <points>
-                        <point index="0">
-                            <x>20.</x>
-                            <y>200.</y>
-                        </point>
-                        <point index="1">
-                            <x>-100.</x>
-                            <y>200.</y>
-                        </point>
-                    </points>
-                </wire>
+                    </point>
+                    <point index="1">
+                        <x>-100.</x>
+                        <y>200.</y>
+                    </point>
+                </points>
             </wire>
-        </net>
-        <net>
-            <label type-id="65541">
-                <connection_point enabled="true">
-                    <x>0.</x>
-                    <y>0.</y>
-                </connection_point>
-                <item type-id="65541">
+        </wire>
+    </net>
+    <net>
+        <label type-id="65541">
+            <connection_point enabled="true">
+                <x>0.</x>
+                <y>0.</y>
+            </connection_point>
+            <item type-id="65541">
+                <highlight>true</highlight>
+                <movable>true</movable>
+                <rotation direction="cw" unit="degrees">0.</rotation>
+                <snap_to_grid>false</snap_to_grid>
+                <visible>false</visible>
+                <x>0.</x>
+                <y>0.</y>
+            </item>
+            <text></text>
+        </label>
+        <name></name>
+        <wire type-id="65639">
+            <wire type-id="65639">
+                <item type-id="65639">
                     <highlight>true</highlight>
                     <movable>true</movable>
                     <rotation direction="cw" unit="degrees">0.</rotation>
-                    <snap_to_grid>false</snap_to_grid>
-                    <visible>false</visible>
-                    <x>0.</x>
-                    <y>0.</y>
+                    <snap_to_grid>true</snap_to_grid>
+                    <visible>true</visible>
+                    <x>20.</x>
+                    <y>380.</y>
                 </item>
-                <text></text>
-            </label>
-            <name></name>
-            <wire type-id="65639">
-                <wire type-id="65639">
-                    <item type-id="65639">
-                        <highlight>true</highlight>
-                        <movable>true</movable>
-                        <rotation direction="cw" unit="degrees">0.</rotation>
-                        <snap_to_grid>true</snap_to_grid>
-                        <visible>true</visible>
+                <points>
+                    <point index="0">
                         <x>20.</x>
                         <y>380.</y>
-                    </item>
-                    <points>
-                        <point index="0">
-                            <x>20.</x>
-                            <y>380.</y>
-                        </point>
-                        <point index="1">
-                            <x>-360.</x>
-                            <y>380.</y>
-                        </point>
-                    </points>
-                </wire>
+                    </point>
+                    <point index="1">
+                        <x>-360.</x>
+                        <y>380.</y>
+                    </point>
+                </points>
             </wire>
+        </wire>
+        <wire type-id="65639">
             <wire type-id="65639">
-                <wire type-id="65639">
-                    <item type-id="65639">
-                        <highlight>true</highlight>
-                        <movable>true</movable>
-                        <rotation direction="cw" unit="degrees">0.</rotation>
-                        <snap_to_grid>true</snap_to_grid>
-                        <visible>true</visible>
+                <item type-id="65639">
+                    <highlight>true</highlight>
+                    <movable>true</movable>
+                    <rotation direction="cw" unit="degrees">0.</rotation>
+                    <snap_to_grid>true</snap_to_grid>
+                    <visible>true</visible>
+                    <x>380.</x>
+                    <y>80.</y>
+                </item>
+                <points>
+                    <point index="0">
                         <x>380.</x>
                         <y>80.</y>
-                    </item>
-                    <points>
-                        <point index="0">
-                            <x>380.</x>
-                            <y>80.</y>
-                        </point>
-                        <point index="1">
-                            <x>280.</x>
-                            <y>80.</y>
-                        </point>
-                        <point index="2">
-                            <x>280.</x>
-                            <y>560.</y>
-                        </point>
-                        <point index="3">
-                            <x>-40.</x>
-                            <y>560.</y>
-                        </point>
-                        <point index="4">
-                            <x>-40.</x>
-                            <y>380.</y>
-                        </point>
-                    </points>
-                </wire>
+                    </point>
+                    <point index="1">
+                        <x>280.</x>
+                        <y>80.</y>
+                    </point>
+                    <point index="2">
+                        <x>280.</x>
+                        <y>560.</y>
+                    </point>
+                    <point index="3">
+                        <x>-40.</x>
+                        <y>560.</y>
+                    </point>
+                    <point index="4">
+                        <x>-40.</x>
+                        <y>380.</y>
+                    </point>
+                </points>
             </wire>
-        </net>
-        <net>
-            <label type-id="65541">
-                <connection_point enabled="true">
-                    <x>0.</x>
-                    <y>0.</y>
-                </connection_point>
-                <item type-id="65541">
+        </wire>
+    </net>
+    <net>
+        <label type-id="65541">
+            <connection_point enabled="true">
+                <x>0.</x>
+                <y>0.</y>
+            </connection_point>
+            <item type-id="65541">
+                <highlight>true</highlight>
+                <movable>true</movable>
+                <rotation direction="cw" unit="degrees">0.</rotation>
+                <snap_to_grid>false</snap_to_grid>
+                <visible>false</visible>
+                <x>0.</x>
+                <y>0.</y>
+            </item>
+            <text></text>
+        </label>
+        <name></name>
+        <wire type-id="65639">
+            <wire type-id="65639">
+                <item type-id="65639">
                     <highlight>true</highlight>
                     <movable>true</movable>
                     <rotation direction="cw" unit="degrees">0.</rotation>
-                    <snap_to_grid>false</snap_to_grid>
-                    <visible>false</visible>
-                    <x>0.</x>
-                    <y>0.</y>
+                    <snap_to_grid>true</snap_to_grid>
+                    <visible>true</visible>
+                    <x>380.</x>
+                    <y>20.</y>
                 </item>
-                <text></text>
-            </label>
-            <name></name>
-            <wire type-id="65639">
-                <wire type-id="65639">
-                    <item type-id="65639">
-                        <highlight>true</highlight>
-                        <movable>true</movable>
-                        <rotation direction="cw" unit="degrees">0.</rotation>
-                        <snap_to_grid>true</snap_to_grid>
-                        <visible>true</visible>
+                <points>
+                    <point index="0">
                         <x>380.</x>
-                        <y>20.</y>
-                    </item>
-                    <points>
-                        <point index="0">
-                            <x>380.</x>
-                            <y>40.</y>
-                        </point>
-                        <point index="1">
-                            <x>180.</x>
-                            <y>40.</y>
-                        </point>
-                    </points>
-                </wire>
+                        <y>40.</y>
+                    </point>
+                    <point index="1">
+                        <x>180.</x>
+                        <y>40.</y>
+                    </point>
+                </points>
             </wire>
-        </net>
-        <net>
-            <label type-id="65541">
-                <connection_point enabled="true">
-                    <x>0.</x>
-                    <y>0.</y>
-                </connection_point>
-                <item type-id="65541">
+        </wire>
+    </net>
+    <net>
+        <label type-id="65541">
+            <connection_point enabled="true">
+                <x>0.</x>
+                <y>0.</y>
+            </connection_point>
+            <item type-id="65541">
+                <highlight>true</highlight>
+                <movable>true</movable>
+                <rotation direction="cw" unit="degrees">0.</rotation>
+                <snap_to_grid>false</snap_to_grid>
+                <visible>false</visible>
+                <x>0.</x>
+                <y>0.</y>
+            </item>
+            <text></text>
+        </label>
+        <name></name>
+        <wire type-id="65639">
+            <wire type-id="65639">
+                <item type-id="65639">
                     <highlight>true</highlight>
                     <movable>true</movable>
                     <rotation direction="cw" unit="degrees">0.</rotation>
-                    <snap_to_grid>false</snap_to_grid>
-                    <visible>false</visible>
-                    <x>0.</x>
-                    <y>0.</y>
+                    <snap_to_grid>true</snap_to_grid>
+                    <visible>true</visible>
+                    <x>540.</x>
+                    <y>60.</y>
                 </item>
-                <text></text>
-            </label>
-            <name></name>
-            <wire type-id="65639">
-                <wire type-id="65639">
-                    <item type-id="65639">
-                        <highlight>true</highlight>
-                        <movable>true</movable>
-                        <rotation direction="cw" unit="degrees">0.</rotation>
-                        <snap_to_grid>true</snap_to_grid>
-                        <visible>true</visible>
+                <points>
+                    <point index="0">
                         <x>540.</x>
                         <y>60.</y>
-                    </item>
-                    <points>
-                        <point index="0">
-                            <x>540.</x>
-                            <y>60.</y>
-                        </point>
-                        <point index="1">
-                            <x>620.</x>
-                            <y>60.</y>
-                        </point>
-                    </points>
-                </wire>
+                    </point>
+                    <point index="1">
+                        <x>620.</x>
+                        <y>60.</y>
+                    </point>
+                </points>
             </wire>
-        </net>
-    </nets>
+        </wire>
+    </net>
     <scene>
         <rect>
             <height>3000</height>

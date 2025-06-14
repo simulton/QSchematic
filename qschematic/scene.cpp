@@ -75,6 +75,10 @@ Scene::~Scene()
 gpds::container
 Scene::to_container() const
 {
+    // Root
+    gpds::container c;
+    c.add_attribute("version", serdes_version);
+
     // Scene
     gpds::container scene;
     {
@@ -87,6 +91,7 @@ Scene::to_container() const
         r.add_value("height", rect.height());
         scene.add_value("rect", r);
     }
+    c.add_value("scene", scene);
 
     // Items
     gpds::container itemsList;
@@ -101,25 +106,17 @@ Scene::to_container() const
 
         itemsList.add_value("item", item->to_container());
     }
+    c.add_value("items", itemsList);
 
     // Nets
-    gpds::container netsList;
     for (const auto& net : m_wire_manager->nets()) {
-
         // Make sure it's a WireNet
         auto wire_net = std::dynamic_pointer_cast<Items::WireNet>(net);
         if (!wire_net)
             continue;
 
-        netsList.add_value("net", wire_net->to_container());
+        c.add_value("net", wire_net->to_container());
     }
-
-    // Root
-    gpds::container c;
-    c.add_attribute("version", serdes_version);
-    c.add_value("scene", scene);
-    c.add_value("items", itemsList);
-    c.add_value("nets", netsList);
 
     return c;
 }
@@ -162,18 +159,16 @@ Scene::from_container(const gpds::container& container)
     }
 
     // Nets
-    if (const gpds::container* netsContainer = container.get_value<gpds::container*>("nets").value_or(nullptr); netsContainer) {
-        for (const gpds::container* netContainer : netsContainer->get_values<gpds::container*>("net")) {
-            if (!netContainer)
-                continue;
+    for (const gpds::container* netContainer : container.get_values<gpds::container*>("net")) {
+        if (!netContainer)
+            continue;
 
-            auto net = std::make_shared<Items::WireNet>();
-            net->setScene(this);
-            net->set_manager(wire_manager().get());
-            net->from_container( *netContainer );
+        auto net = std::make_shared<Items::WireNet>();
+        net->setScene(this);
+        net->set_manager(wire_manager().get());
+        net->from_container( *netContainer );
 
-            m_wire_manager->add_net(net);
-        }
+        m_wire_manager->add_net(net);
     }
 
     // Attach the wires to the nodes
