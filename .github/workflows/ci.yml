@@ -37,7 +37,7 @@ jobs:
       CC: ${{ matrix.toolchain.cc }}
       CXX: ${{ matrix.toolchain.cxx }}
 
-    name: "${{ matrix.toolchain.name }} (static: ${{matrix.build_static}}; shared: ${{ matrix.build_shared }}; demo ${{ matrix.build_demo }})"
+    name: "${{ matrix.toolchain.name }} (static: ${{matrix.build_static}}; shared: ${{ matrix.build_shared }}; demo: ${{ matrix.build_demo }})"
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
     steps:
       - uses: actions/checkout@v2
