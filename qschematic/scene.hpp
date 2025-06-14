@@ -246,10 +246,6 @@ namespace QSchematic
         void
         removeWire(const std::shared_ptr<Items::Wire>& wire);
 
-        [[nodiscard]]
-        QList<std::shared_ptr<Items::WireNet>>
-        nets(const std::shared_ptr<net> wireNet) const;
-
         /**
          * Undo to last command.
          */
