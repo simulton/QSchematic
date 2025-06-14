@@ -94,7 +94,6 @@ Scene::to_container() const
     c.add_value("scene", scene);
 
     // Items
-    gpds::container itemsList;
     for (const auto& item : items()) {
         // Sanity check
         if (!item) [[unlikely]]
@@ -104,9 +103,8 @@ Scene::to_container() const
         if (auto wire = std::dynamic_pointer_cast<Items::Wire>(item); wire)
             continue;
 
-        itemsList.add_value("item", item->to_container());
+        c.add_value("item", item->to_container());
     }
-    c.add_value("items", itemsList);
 
     // Nets
     for (const auto& net : m_wire_manager->nets()) {
@@ -145,17 +143,15 @@ Scene::from_container(const gpds::container& container)
     }
 
     // Items
-    if (const gpds::container* itemsContainer = container.get_value<gpds::container*>("items").value_or(nullptr); itemsContainer) {
-        for (const auto& itemContainer : itemsContainer->get_values<gpds::container*>("item")) {
-            if (!itemContainer)
-                continue;
+    for (const auto& itemContainer : container.get_values<gpds::container*>("item")) {
+        if (!itemContainer)
+            continue;
 
-            auto item = Items::Factory::instance().from_container(*itemContainer);
-            if (!item)
-                continue;
-            item->from_container(*itemContainer);
-            addItem(item);
-        }
+        auto item = Items::Factory::instance().from_container(*itemContainer);
+        if (!item)
+            continue;
+        item->from_container(*itemContainer);
+        addItem(item);
     }
 
     // Nets
