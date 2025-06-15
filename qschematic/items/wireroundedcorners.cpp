@@ -21,7 +21,8 @@ WireRoundedCorners::WireRoundedCorners(int type, QGraphicsItem* parent) :
 {
 }
 
-gpds::container WireRoundedCorners::to_container() const
+gpds::container
+WireRoundedCorners::to_container() const
 {
     // Root
     gpds::container root;
@@ -30,14 +31,16 @@ gpds::container WireRoundedCorners::to_container() const
     return root;
 }
 
-void WireRoundedCorners::from_container(const gpds::container& container)
+void
+WireRoundedCorners::from_container(const gpds::container& container)
 {
     // Root
     auto opt = container.get_value<gpds::container*>("wire");
     Wire::from_container(opt ? *opt.value() : gpds::container());
 }
 
-void WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
+void
+WireRoundedCorners::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     Q_UNUSED(option);
     Q_UNUSED(widget);

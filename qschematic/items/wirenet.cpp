@@ -11,7 +11,7 @@
 using namespace QSchematic::Items;
 
 WireNet::WireNet(QObject* parent) :
-    QObject(parent), _scene(nullptr)
+    QObject(parent)
 {
     // Label
     _label = std::make_shared<Label>();

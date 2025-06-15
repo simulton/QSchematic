@@ -78,7 +78,7 @@ namespace QSchematic::Items
         int _lineSegmentToMoveIndex;
         QPointF _prevMousePos;
         QPointF _offset;
-        QAction* _renameAction;
+        QAction* _renameAction = nullptr;
     };
 
 }

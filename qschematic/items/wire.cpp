@@ -27,7 +27,7 @@ const QColor COLOR_SELECTED            = QColor("#0f16af");
 using namespace QSchematic::Items;
 
 Wire::Wire(int type, QGraphicsItem* parent) :
-    Item(type, parent), _renameAction(nullptr)
+    Item(type, parent)
 {
     _pointToMoveIndex = -1;
     _lineSegmentToMoveIndex = -1;
