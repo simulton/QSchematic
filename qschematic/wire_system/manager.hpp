@@ -101,7 +101,7 @@ namespace wire_system
         clear();
 
         void
-        remove_wire(const std::shared_ptr<wire> wire);
+        remove_wire(std::shared_ptr<wire> wire);
 
         [[nodiscard]]
         std::list<std::shared_ptr<wire>>
