@@ -52,21 +52,18 @@ Wire::~Wire()
 
 gpds::container Wire::to_container() const
 {
+    gpds::container rootContainer;
+    addItemTypeIdToContainer(rootContainer);
+    rootContainer.add_value("item", Item::to_container());
+
     // Points
-    gpds::container pointsContainer;
     for (int i = 0; i < points_count(); i++) {
         gpds::container pointContainer;
         pointContainer.add_attribute("index", i);
         pointContainer.add_value("x", m_points.at(i).x());
         pointContainer.add_value("y", m_points.at(i).y());
-        pointsContainer.add_value("point", pointContainer);
+        rootContainer.add_value("point", pointContainer);
     }
-
-    // Root
-    gpds::container rootContainer;
-    addItemTypeIdToContainer(rootContainer);
-    rootContainer.add_value("item", Item::to_container());
-    rootContainer.add_value("points", pointsContainer);
 
     return rootContainer;
 }
@@ -77,23 +74,20 @@ void Wire::from_container(const gpds::container& container)
     Item::from_container(*container.get_value<gpds::container*>("item").value());
 
     // Points
-    const gpds::container* pointsContainer = container.get_value<gpds::container*>("points").value_or(nullptr);
-    if (pointsContainer) {
-        auto points = pointsContainer->get_values<gpds::container*>("point");
-        // Sort points by index
-        std::sort(points.begin(), points.end(), [](gpds::container* a, gpds::container* b) {
-            std::optional<int> index1 = a->get_attribute<int>("index");
-            std::optional<int> index2 = b->get_attribute<int>("index");
-            if (!index1.has_value() || !index2.has_value()) {
-                qCritical("Wire::from_container(): Point has no index.");
-                return false;
-            }
-            return index1.value() < index2.value();
-        });
-        for (const gpds::container* pointContainer : points ) {
-            m_points.append(point(pointContainer->get_value<double>("x").value_or(0),
-                                  pointContainer->get_value<double>("y").value_or(0)));
+    auto points = container.get_values<gpds::container*>("point");
+    // Sort points by index
+    std::sort(points.begin(), points.end(), [](gpds::container* a, gpds::container* b) {
+        std::optional<int> index1 = a->get_attribute<int>("index");
+        std::optional<int> index2 = b->get_attribute<int>("index");
+        if (!index1.has_value() || !index2.has_value()) {
+            qCritical("Wire::from_container(): Point has no index.");
+            return false;
         }
+        return index1.value() < index2.value();
+    });
+    for (const gpds::container* pointContainer : points ) {
+        m_points.append(point(pointContainer->get_value<double>("x").value_or(0),
+                              pointContainer->get_value<double>("y").value_or(0)));
     }
 
     update();
