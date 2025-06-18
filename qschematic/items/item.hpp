@@ -106,7 +106,7 @@ namespace QSchematic::Items
         // QGraphicsObject overload
         [[nodiscard]]
         int
-        type() const final;
+        type() const noexcept final;
 
         void
         setGridPos(const QPoint& gridPos);

@@ -31,7 +31,7 @@ namespace QSchematic
 
         [[nodiscard]]
         int
-        type() const override
+        type() const noexcept override
         {
             return QSchematic::Items::Item::ItemType::BackgroundType;
         }
