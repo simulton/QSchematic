@@ -639,14 +639,6 @@ Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
                     if (const Items::Node* node = dynamic_cast<const Items::Node*>(item.get()); node)
                         updateNodeConnections(node);
                 }
-
-                for (auto& item : m_wire_manager->wires()) {
-                    Items::Wire* wire = dynamic_cast<Items::Wire*>(item.get());
-                    if (wire) {
-                        // wire->updatePosition();
-                        wire->simplify();
-                    }
-                }
             }
             break;
         }
