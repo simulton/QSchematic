@@ -80,7 +80,7 @@ namespace QSchematic
                             continue;
 
                         // Get the connection record
-                        const auto cr = wm->attached_wire2(connector.get());
+                        const auto cr = wm->attached_wire(connector.get());
                         if (!cr)
                             continue;
                         const auto* wire = cr->wire;

@@ -163,7 +163,7 @@ bool Connector::hasConnection() const
         return false;
 
     // Get the connection record
-    const auto cr = wm->attached_wire2(this);
+    const auto cr = wm->attached_wire(this);
     if (!cr)
         return false;
 

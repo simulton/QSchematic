@@ -490,7 +490,7 @@ manager::is_wire_attached_to(const wire* wire, const connectable* connector)
         return false;
 
     // Find the connection record
-    const auto cr = attached_wire2(connector);
+    const auto cr = attached_wire(connector);
     if (!cr)
         return false;
 
@@ -527,36 +527,8 @@ manager::detach_wire_from_all(const wire* wire)
     );
 }
 
-wire*
-manager::attached_wire(const connectable* connector)
-{
-    // Sanity check
-    if (!connector) [[unlikely]]
-        return nullptr;
-
-    const auto cr = attached_wire2(connector);
-    if (!cr)
-        return nullptr;
-
-    return cr->wire;
-}
-
-int
-manager::attached_point(const connectable* connector)
-{
-    // Sanity check
-    if (!connector) [[unlikely]]
-        return -1;
-
-    const auto cr = attached_wire2(connector);
-    if (!cr)
-        return -1;
-
-    return cr->point_index;
-}
-
 std::optional<manager::connection_record>
-manager::attached_wire2(const connectable* connector)
+manager::attached_wire(const connectable* connector)
 {
     // Sanity check
     if (!connector) [[unlikely]]

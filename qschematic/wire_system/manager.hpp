@@ -129,20 +129,12 @@ namespace wire_system
         bool
         is_wire_attached_to(const wire* wire, const connectable* connector);
 
-        [[deprecated("use attached_wire2() instead")]]
-        [[nodiscard]]
-        wire*
-        attached_wire(const connectable* connector);
-
-        [[deprecated("use attached_wire2() instead")]]
-        [[nodiscard]]
-        int
-        attached_point(const connectable* connector);
-
-        // ToDo: Rename to attached_wire()
+        /**
+         * Get the connection record for a specified connector (if any).
+         */
         [[nodiscard]]
         std::optional<connection_record>
-        attached_wire2(const connectable* connector);
+        attached_wire(const connectable* connector);
 
         [[nodiscard]]
         std::shared_ptr<wire>

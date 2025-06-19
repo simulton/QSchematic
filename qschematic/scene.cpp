@@ -975,7 +975,7 @@ Scene::updateNodeConnections(const Items::Node* node)
             continue;
 
         // Get the connection record
-        auto cr = m_wire_manager->attached_wire2(connector.get());
+        auto cr = m_wire_manager->attached_wire(connector.get());
         if (!cr)
             continue;
 
@@ -1004,7 +1004,7 @@ Scene::updateNodeConnections(const Items::Node* node)
                         continue;
 
                     // Get the connection record of the other connector
-                    const auto crOther = m_wire_manager->attached_wire2(otherConnector.get());
+                    const auto crOther = m_wire_manager->attached_wire(otherConnector.get());
                     if (!crOther)
                         continue;
 
@@ -1032,7 +1032,7 @@ Scene::wirePointMoved(wire& rawWire, int index)
         for (const auto& connector: node->connectors()) {
 
             // Get the connection record
-            const auto cr = m_wire_manager->attached_wire2(connector.get());
+            const auto cr = m_wire_manager->attached_wire(connector.get());
             if (!cr)
                 continue;
 
