@@ -974,8 +974,13 @@ Scene::updateNodeConnections(const Items::Node* node)
         if (!connector->isVisible())
             continue;
 
+        // Get the connection record
+        auto cr = m_wire_manager->attached_wire2(connector.get());
+        if (!cr)
+            continue;
+
         // If the connector already has a wire attached, skip
-        if (m_wire_manager->attached_wire(connector.get()) != nullptr)
+        if (cr->wire != nullptr)
             continue;
 
         // Find if there is a point to connect to
@@ -998,8 +1003,12 @@ Scene::updateNodeConnections(const Items::Node* node)
                     if (otherConnector == connector)
                         continue;
 
-                    if (m_wire_manager->attached_wire(connector.get()) == wire.get() &&
-                        m_wire_manager->attached_point(otherConnector.get()) == index) {
+                    // Get the connection record of the other connector
+                    const auto crOther = m_wire_manager->attached_wire2(otherConnector.get());
+                    if (!crOther)
+                        continue;
+
+                    if (cr->wire == wire.get() && crOther->point_index == index) {
                         alreadyConnected = true;
                         break;
                     }
@@ -1021,14 +1030,19 @@ Scene::wirePointMoved(wire& rawWire, int index)
     // Detach from connector
     for (const auto& node: nodes()) {
         for (const auto& connector: node->connectors()) {
-            const wire* wire = m_wire_manager->attached_wire(connector.get());
-            if (!wire)
+
+            // Get the connection record
+            const auto cr = m_wire_manager->attached_wire2(connector.get());
+            if (!cr)
                 continue;
 
-            if (wire != &rawWire)
+            if (!cr->wire)
                 continue;
 
-            if (m_wire_manager->attached_point(connector.get()) == index) {
+            if (cr->wire != &rawWire)
+                continue;
+
+            if (cr->point_index == index) {
                 if (connector->scenePos().toPoint() != rawWire.points().at(index).toPoint())
                     m_wire_manager->detach_wire(connector.get());
             }
@@ -1210,7 +1224,7 @@ Scene::removeUnconnectedWires()
 
         // Find out if it's attached to a node
         for (const auto& connector : connectors()) {
-            if (m_wire_manager->attached_wire(connector.get()) == wire.get()) {
+            if (m_wire_manager->is_wire_attached_to(wire.get(), connector.get())) {
                 isConnected = true;
                 break;
             }

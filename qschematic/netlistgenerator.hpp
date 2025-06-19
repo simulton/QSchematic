@@ -79,8 +79,15 @@ namespace QSchematic
                         if (!templateConnector)
                             continue;
 
+                        // Get the connection record
+                        const auto cr = wm->attached_wire2(connector.get());
+                        if (!cr)
+                            continue;
+                        const auto* wire = cr->wire;
+                        if (!wire)
+                            continue;
+
                         // Create the Connector/Node pairs
-                        const auto* wire = wm->attached_wire(connector.get());
                         if (std::find(net.wires.begin(), net.wires.end(), wire) != net.wires.end()) {
 
                             // Create list of all nodes in this net

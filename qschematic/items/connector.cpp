@@ -162,7 +162,12 @@ bool Connector::hasConnection() const
     if (!wm)
         return false;
 
-    return (wm->attached_wire(this) != nullptr);
+    // Get the connection record
+    const auto cr = wm->attached_wire2(this);
+    if (!cr)
+        return false;
+
+    return cr->wire != nullptr;
 }
 
 void Connector::update()
