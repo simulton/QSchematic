@@ -482,6 +482,21 @@ manager::detach_wire(const connectable* connector)
     m_connections.erase(connector);
 }
 
+bool
+manager::is_wire_attached_to(const wire* wire, const connectable* connector)
+{
+    // Sanity checks
+    if (!wire || !connector) [[unlikely]]
+        return false;
+
+    // Find the connection record
+    const auto cr = attached_wire2(connector);
+    if (!cr)
+        return false;
+
+    return cr->wire == wire;
+}
+
 std::shared_ptr<wire>
 manager::wire_with_extremity_at(const QPointF& point)
 {

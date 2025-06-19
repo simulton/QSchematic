@@ -122,6 +122,13 @@ namespace wire_system
         void
         detach_wire(const connectable* connector);
 
+        /**
+         * Checks if a specified wire is connected to a specified connector.
+         */
+        [[nodiscard]]
+        bool
+        is_wire_attached_to(const wire* wire, const connectable* connector);
+
         [[deprecated("use attached_wire2() instead")]]
         [[nodiscard]]
         wire*
