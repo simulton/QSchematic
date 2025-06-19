@@ -7,6 +7,7 @@
 #include "flowstart.hpp"
 #include "flowend.hpp"
 #include "widgets/dial.hpp"
+#include "widgets/textedit.hpp"
 
 #include <qschematic/items/itemfactory.hpp>
 
@@ -36,6 +37,9 @@ std::shared_ptr<QSchematic::Items::Item> CustomItemFactory::from_container(const
 
     case ItemType::WidgetDial:
         return std::make_shared<Items::Widgets::Dial>();
+
+    case ItemType::WidgetTextedit:
+        return std::make_shared<Items::Widgets::Textedit>();
     }
 
     return {};
