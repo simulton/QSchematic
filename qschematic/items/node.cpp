@@ -164,8 +164,7 @@ bool Node::removeConnector(const std::shared_ptr<Connector>& connector)
 void Node::clearConnectors()
 {
     // Remove from scene
-    auto s = scene();
-    if (s) {
+    if (auto s = scene(); s) {
         for (auto connector : _connectors) {
             s->removeItem(connector);
         }
