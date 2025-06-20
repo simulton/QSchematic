@@ -115,7 +115,6 @@ void Node::copyAttributes(Node& dest) const
     dest._connectorsMovable = _connectorsMovable;
     dest._connectorsSnapPolicy = _connectorsSnapPolicy;
     dest._connectorsSnapToGrid = _connectorsSnapToGrid;
-    dest._specialConnectors = _specialConnectors;
 }
 
 void Node::addSpecialConnector(const std::shared_ptr<Connector>& connector)
