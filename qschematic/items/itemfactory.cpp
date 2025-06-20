@@ -32,7 +32,7 @@ Factory::from_container(const gpds::container& container) const
     }
 
     // Extract the type
-    auto type = Factory::extractType(container);
+    const auto type = Factory::extractType(container);
 
     // Fall back to internal types
     switch (type) {
