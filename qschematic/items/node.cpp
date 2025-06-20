@@ -170,8 +170,9 @@ void Node::clearConnectors()
         }
     }
 
-    // Clear the local list
+    // Clear the local lists
     _connectors.clear();
+    _specialConnectors.clear();
 }
 
 QList<std::shared_ptr<Connector>> Node::connectors() const
