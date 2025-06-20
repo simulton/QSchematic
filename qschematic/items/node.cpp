@@ -107,8 +107,7 @@ void Node::copyAttributes(Node& dest) const
         }
 
         auto connectorClone = std::dynamic_pointer_cast<Connector>(connector->deepCopy());
-        connectorClone->setParentItem(&dest);
-        dest._connectors << connectorClone;
+        dest.addConnector(connectorClone);
     }
 
     // Attributes
