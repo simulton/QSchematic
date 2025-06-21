@@ -7,7 +7,7 @@ QSchematic is a library to draw diagrams & schematics with Qt. It uses Qt's [gra
 The library provides base classes for objects such as nodes and wires and implements logic to move objects around while keeping the wires connected, generating netlists and so on. A typical application would include this library and subclass the `Item` class to implement custom items.
 
 Feature overview:
-  - Add, remove, move, resize nodes
+  - Add, remove, move, resize, rotate nodes
   - Connect nodes with wires
   - Command stack for undo/redo
   - Drag'n'Drop
