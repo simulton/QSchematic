@@ -261,8 +261,6 @@ Scene::clearIsDirty()
 {
     if (_undoStack)
         _undoStack->setClean();
-
-    Q_EMIT netlistChanged();
 }
 
 void
