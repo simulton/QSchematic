@@ -966,16 +966,15 @@ Scene::updateNodeConnections(const Items::Node* node)
         if (!connector->isVisible())
             continue;
 
-        // Get the connection record
+        // Get the connection record (if any)
         auto cr = m_wire_manager->attached_wire(connector.get());
-        if (!cr)
-            continue;
 
         // If the connector already has a wire attached, skip
-        if (cr->wire != nullptr)
+        if (cr && cr->wire != nullptr)
             continue;
 
         // Find if there is a point to connect to
+        // Note: We only consider the first and the last point of a wire as new legal connections
         for (const auto& wire : m_wire_manager->wires()) {
             int index = -1;
 
@@ -1000,9 +999,11 @@ Scene::updateNodeConnections(const Items::Node* node)
                     if (!crOther)
                         continue;
 
-                    if (cr->wire == wire.get() && crOther->point_index == index) {
-                        alreadyConnected = true;
-                        break;
+                    if (cr) {
+                        if (cr->wire == wire.get() && crOther->point_index == index) {
+                            alreadyConnected = true;
+                            break;
+                        }
                     }
                 }
 
