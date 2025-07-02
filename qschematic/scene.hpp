@@ -277,11 +277,10 @@ namespace QSchematic
         void itemHighlighted(const std::shared_ptr<const Items::Item>& item);
 
         /**
-         * Signal to indicate that the netlist has likely changed.
+         * Signal to indicate that the netlist has possibly changed.
          *
-         * @note It is not guaranteed that the netlist actually changed. It's just likely.
+         * @note It is not guaranteed that the netlist actually changed. It's just possible.
          */
-        // ToDo: We're currently firing this signal too many times.
         void
         netlistChanged();
 

@@ -1006,13 +1006,13 @@ Scene::updateNodeConnections(const Items::Node* node)
                 }
 
                 // If it's not already connected, connect it
-                if (!alreadyConnected)
+                if (!alreadyConnected) {
                     m_wire_manager->attach_wire_to_connector(wire.get(), index, connector.get());
+                    Q_EMIT netlistChanged();
+                }
             }
         }
     }
-
-    Q_EMIT netlistChanged();
 }
 
 void
