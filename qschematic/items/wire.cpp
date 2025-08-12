@@ -538,19 +538,24 @@ QVariant Wire::itemChange(QGraphicsItem::GraphicsItemChange change, const QVaria
         if (!scene()) {
             break;
         }
+
         // Move points to their connectors
         for (const auto& conn : scene()->connectors()) {
-            bool isSelected = false;
             // Check if the connector's node is selected
+            // If the connector's node is selected, it means that the connector will move together with our wire. In that
+            // case, we don't want to do anything as the wire point connection update will happen in wire_system::connector_moved().
+            bool isConnectorSelected = false;
             for (const auto& item : scene()->selectedTopLevelItems()) {
                 auto node = item->sharedPtr<Node>();
                 if (node) {
                     if (node->connectors().contains(conn)) {
-                        isSelected = true;
+                        isConnectorSelected = true;
                         break;
                     }
                 }
             }
+            if (isConnectorSelected)
+                break;
 
             // Get the connection record
             const auto cr = scene()->wire_manager()->attached_wire(conn.get());
@@ -558,7 +563,7 @@ QVariant Wire::itemChange(QGraphicsItem::GraphicsItemChange change, const QVaria
                 break;
 
             // Move point onto the connector
-            if (!isSelected && cr->wire == this) {
+            if (cr->wire == this) {
                 const int index = cr->point_index;
                 QVector2D moveBy(conn->scenePos() - pointsAbsolute().at(index));
                 move_point_by(index, moveBy);
