@@ -558,7 +558,7 @@ QVariant Wire::itemChange(QGraphicsItem::GraphicsItemChange change, const QVaria
                     }
                 }
                 if (isConnectorSelected)
-                    break;
+                    continue;
 
                 // Get the connection record
                 const auto cr = scene()->wire_manager()->attached_wire(conn.get());
