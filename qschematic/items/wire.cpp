@@ -543,7 +543,7 @@ QVariant Wire::itemChange(QGraphicsItem::GraphicsItemChange change, const QVaria
                 break;
 
             // Move points to their connectors
-            for (const auto &conn: scene()->connectors()) {
+            for (const auto& conn: scene()->connectors()) {
                 // Check if the connector's node is selected
                 // If the connector's node is selected, it means that the connector will move together with our wire. In that
                 // case, we don't want to do anything as the wire point connection update will happen in wire_system::connector_moved().
