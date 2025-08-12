@@ -527,59 +527,68 @@ QVariant Wire::itemChange(QGraphicsItem::GraphicsItemChange change, const QVaria
 {
     switch (change) {
 
-    case ItemPositionChange: {
-        // Move the wire
-        QPointF newPos = QPointF(_settings.snapToGrid(value.toPointF())) + _offset;
-        QVector2D movedBy = QVector2D(newPos - pos());
-        move(movedBy);
-        return newPos;
-    }
-    case ItemPositionHasChanged:
-        if (!scene()) {
+        case ItemPositionChange:
+        {
+            // Move the wire
+            QPointF newPos = QPointF(_settings.snapToGrid(value.toPointF())) + _offset;
+            QVector2D movedBy = QVector2D(newPos - pos());
+            move(movedBy);
+            return newPos;
+        }
+
+        case ItemPositionHasChanged:
+        {
+            // Sanity check
+            if (!scene())
+                break;
+
+            // Move points to their connectors
+            for (const auto &conn: scene()->connectors()) {
+                // Check if the connector's node is selected
+                // If the connector's node is selected, it means that the connector will move together with our wire. In that
+                // case, we don't want to do anything as the wire point connection update will happen in wire_system::connector_moved().
+                bool isConnectorSelected = false;
+                for (const auto& item: scene()->selectedTopLevelItems()) {
+                    auto node = item->sharedPtr<Node>();
+                    if (node) {
+                        if (node->connectors().contains(conn)) {
+                            isConnectorSelected = true;
+                            break;
+                        }
+                    }
+                }
+                if (isConnectorSelected)
+                    break;
+
+                // Get the connection record
+                const auto cr = scene()->wire_manager()->attached_wire(conn.get());
+                if (!cr)
+                    break;
+
+                // Move point onto the connector
+                if (cr->wire == this) {
+                    const int index = cr->point_index;
+                    QVector2D moveBy(conn->scenePos() - pointsAbsolute().at(index));
+                    move_point_by(index, moveBy);
+                }
+            }
             break;
         }
 
-        // Move points to their connectors
-        for (const auto& conn : scene()->connectors()) {
-            // Check if the connector's node is selected
-            // If the connector's node is selected, it means that the connector will move together with our wire. In that
-            // case, we don't want to do anything as the wire point connection update will happen in wire_system::connector_moved().
-            bool isConnectorSelected = false;
-            for (const auto& item : scene()->selectedTopLevelItems()) {
-                auto node = item->sharedPtr<Node>();
-                if (node) {
-                    if (node->connectors().contains(conn)) {
-                        isConnectorSelected = true;
-                        break;
-                    }
-                }
-            }
-            if (isConnectorSelected)
-                break;
+        case ItemSelectedHasChanged:
+        {
+            if (value.toBool())
+                setZValue(zValue() + 1);
+            else
+                setZValue(zValue() - 1);
 
-            // Get the connection record
-            const auto cr = scene()->wire_manager()->attached_wire(conn.get());
-            if (!cr)
-                break;
+            break;
+        }
 
-            // Move point onto the connector
-            if (cr->wire == this) {
-                const int index = cr->point_index;
-                QVector2D moveBy(conn->scenePos() - pointsAbsolute().at(index));
-                move_point_by(index, moveBy);
-            }
-        }
-        break;
-    case ItemSelectedHasChanged:
-        if (value.toBool()) {
-            setZValue(zValue()+1);
-        } else {
-            setZValue(zValue()-1);
-        }
-        break;
-    default:
-        return Item::itemChange(change, value);
+        default:
+            return Item::itemChange(change, value);
     }
+
     return Item::itemChange(change, value);
 }
 
