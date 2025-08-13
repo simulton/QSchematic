@@ -418,30 +418,22 @@ manager::point_inserted(const wire* wire, int index)
     if (!wire) [[unlikely]]
         return;
 
-    // Find the connection record
-    auto it = std::ranges::find_if(
-        m_connections,
-        [wire](const auto& item){
-            const auto& cr = item.second;
-            return cr.wire == wire;
-        }
-    );
-    if (it == std::cend(m_connections))
-        return;
+    for (auto [conn, cr] : m_connections) {
+        // Skip if the wire is not connected to this connectable
+        if (cr.wire != wire)
+            continue;
 
-    // ToDo: Can we take an lvalue ref and modify it "in place" without a call to insert_or_assign?
-    auto cr = it->second;
+        // Do nothing if the connected point is the first
+        if (cr.point_index == 0)
+            continue;
 
-    // Do nothing if the connected point is the first
-    if (cr.point_index == 0)
-        return;
+        // Inserted point comes before the connected point or the last point is connected
+        if (cr.point_index >= index || cr.point_index == wire->points_count() - 2)
+            cr.point_index++;
 
-    // Inserted point comes before the connected point or the last point is connected
-    else if (cr.point_index >= index || cr.point_index == wire->points_count() - 2)
-        cr.point_index++;
-
-    // Update the connection
-    m_connections.insert_or_assign(it->first, cr);
+        // Update the connection
+        m_connections.insert_or_assign(conn, cr);
+    }
 }
 
 void
@@ -451,25 +443,17 @@ manager::point_removed(const wire* wire, int index)
     if (!wire) [[unlikely]]
         return;
 
-    // Find the connection record
-    auto it = std::ranges::find_if(
-        m_connections,
-        [wire](const auto& item){
-            const auto& cr = item.second;
-            return cr.wire == wire;
-        }
-    );
-    if (it == std::cend(m_connections))
-        return;
+    for (auto [conn, cr] : m_connections) {
+        // Skip if the wire is not connected to this connectable
+        if (cr.wire != wire)
+            continue;
 
-    // ToDo: Can we take an lvalue ref and modify it "in place" without a call to insert_or_assign?
-    auto cr = it->second;
+        if (cr.point_index >= index)
+            cr.point_index--;
 
-    if (cr.point_index >= index)
-        cr.point_index--;
-
-    // Update the connection
-    m_connections.insert_or_assign(it->first, cr);
+        // Update the connection
+        m_connections.insert_or_assign(conn, cr);
+    }
 }
 
 void
