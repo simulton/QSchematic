@@ -74,6 +74,18 @@ namespace QSchematic
         void
         from_container(const gpds::container& container) override;
 
+        /**
+         * Replace the scene content with a previously serialized state.
+         *
+         * @details Unlike from_container(), this removes the current content first and leaves the
+         *          undo stack alone. Leaving the stack alone is what makes it callable from within
+         *          a QUndoCommand, which clearing the stack would destroy.
+         *
+         * @see Commands::SceneRestore
+         */
+        void
+        restore_from_container(const gpds::container& container);
+
         void
         setSettings(const Settings& settings);
 
@@ -322,6 +334,18 @@ namespace QSchematic
         void wirePointMoved(wire& rawWire, int index);
 
     private:
+        /**
+         * Remove all content, leaving the undo stack alone.
+         */
+        void
+        clearContent();
+
+        /**
+         * Add the content of a container to the scene, leaving the undo stack alone.
+         */
+        void
+        loadContent(const gpds::container& container);
+
         void
         setupBackground();
 

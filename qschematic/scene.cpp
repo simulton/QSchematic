@@ -122,6 +122,22 @@ Scene::to_container() const
 void
 Scene::from_container(const gpds::container& container)
 {
+    loadContent(container);
+
+    // Clear the undo history
+    _undoStack->clear();
+}
+
+void
+Scene::restore_from_container(const gpds::container& container)
+{
+    clearContent();
+    loadContent(container);
+}
+
+void
+Scene::loadContent(const gpds::container& container)
+{
     // Check the version
     const std::size_t version = container.get_attribute<std::size_t>("version").value_or(-1);
     if (version != serdes_version)
@@ -172,9 +188,6 @@ Scene::from_container(const gpds::container& container)
 
     // Find junctions
     m_wire_manager->generate_junctions();
-
-    // Clear the undo history
-    _undoStack->clear();
 }
 
 void
@@ -266,11 +279,22 @@ Scene::clearIsDirty()
 void
 Scene::clear()
 {
-    // Ensure no lingering lifespans kept in map-keys, selections or undocommands
+    // Ensure no lingering lifespans kept in undo commands
+    _undoStack->clear();
+
+    clearContent();
+
+    // No longer dirty
+    clearIsDirty();
+}
+
+void
+Scene::clearContent()
+{
+    // Ensure no lingering lifespans kept in map-keys or selections
     _initialItemPositions.clear();
     clearSelection();
     clearFocus();
-    _undoStack->clear();
 
     // Remove from scene
     // Do not use QGraphicsScene::clear() as that would also delete the items. However,
@@ -283,9 +307,6 @@ Scene::clear()
 
     // Now that all the top-level items are safeguarded we can call the underlying scene's clear()
     QGraphicsScene::clear();
-
-    // No longer dirty
-    clearIsDirty();
 
     // Setup the background again
     setupBackground();
