@@ -41,6 +41,7 @@ function(setup_target_common target)
                 commands/label_rename.hpp
                 commands/rectitem_resize.hpp
                 commands/rectitem_rotate.hpp
+                commands/scene_restore.hpp
                 commands/commands.hpp
                 commands/wirenet_rename.hpp
                 commands/wirepoint_move.hpp
@@ -84,6 +85,7 @@ function(setup_target_common target)
             commands/label_rename.cpp
             commands/rectitem_resize.cpp
             commands/rectitem_rotate.cpp
+            commands/scene_restore.cpp
             commands/wirenet_rename.cpp
             commands/wirepoint_move.cpp
             items/bezierwire.cpp
