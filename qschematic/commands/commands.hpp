@@ -12,6 +12,7 @@ namespace QSchematic::Commands
         RectItemRotateCommandType,
         WireNetRenameCommandType,
         WirePointMoveCommandType,
+        SceneRestoreCommandType,
 
         QSchematicCommandUserType = 1000
     };
