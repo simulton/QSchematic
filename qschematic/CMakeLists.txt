@@ -10,6 +10,9 @@ set(QSCHEMATIC_BASE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 # Add the wire system
 add_subdirectory(wire_system)
 
+# Add the tests
+add_subdirectory(test)
+
 # Setup target names
 set(TARGET_BASE_NAME "qschematic")
 set(TARGET_STATIC    ${TARGET_BASE_NAME}-static)
