@@ -8,6 +8,36 @@ to use the superclass' implementation `QGraphicsItem::addItem()`.
 > This is needed to determine which Items should be moved by the scene and
 > which are moved by their parent
 
+# Restoring the Scene
+
+`Scene::from_container()` adds the content of a container to whatever the scene
+already holds, and clears the undo stack when it is done. That suits loading a
+document into a fresh scene.
+
+Restoring a state the scene was in earlier is a different operation and
+`Scene::restore_from_container()` is the one to use. It removes the current
+content first, so states don't accumulate, and it leaves the undo stack
+untouched. Leaving the stack untouched is what makes it usable from within a
+`QUndoCommand`: clearing the stack from inside a command destroys the command
+that is currently executing.
+
+`Commands::SceneRestore` builds on this to turn a bulk change into a single undo
+step. Bulk changes such as importing a document are impractical to express as a
+series of item commands, so the command stores the whole scene on either side of
+the change instead.
+
+```cpp
+const auto before = scene->to_container();
+import_document(scene);
+scene->undoStack()->push(new Commands::SceneRestore(scene, before, tr("Import")));
+```
+
+The state after the change is captured by the command itself, in its
+constructor, which leaves the `redo()` that `QUndoStack::push()` performs with
+nothing to do. That matters beyond saving the work: rebuilding the items on push
+would invalidate the pointers the caller is still holding. Every later `redo()`
+restores the captured state.
+
 # Wire System
 
 The logic related to the wires is implemented in the `wire_system` directory.
