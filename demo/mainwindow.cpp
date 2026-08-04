@@ -199,7 +199,8 @@ bool MainWindow::load(const QString& filepath)
 
     // Open the file
     QFile file(filepath);
-    file.open(QFile::ReadOnly);
+    if (!file.open(QFile::ReadOnly))
+        return false;
     if (!file.isOpen())
         return false;
     std::stringstream stream;
