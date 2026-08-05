@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.23)
 # Project
 project(
     qschematic
-    VERSION 3.0.3
+    VERSION 3.1.0
     LANGUAGES CXX
     HOMEPAGE_URL https://github.com/simulton/qschematic
 )
